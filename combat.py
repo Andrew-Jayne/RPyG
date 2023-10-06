@@ -44,17 +44,17 @@ class Combat:
             ## Player Attacks if they did not drink a potion
                 enemy_instance.damage(player_attack_power)
                 print(f"You Attack with {player_instance.attack} and inflict {player_attack_power} damage")
-                print(f"The {enemy_instance.name} has {enemy_instance.health} health remaining")
+                print(f"The {enemy_instance.name} has {enemy_instance.health} health remaining", end='\n\n')
             if enemy_instance.health == 0:
                 break
 
             ## Enemy Attacks
             player_instance.damage(enemy_attack_power)
             print(f"The {enemy_instance.name} attacks you with {enemy_instance.attack} inflicting {enemy_attack_power} damage")
-            print(f"You have {player_instance.health} Health remaining")  
+            print(f"You have {player_instance.health} Health remaining", end='\n\n')  
             if player_instance.health == 0:
                 break   
 
         ## Display Victory Message
         if player_instance.health != 0 and enemy_instance.health == 0:
-            print(f"The {enemy_instance.name} has been defeated!")
+            print(f"The {enemy_instance.name} has been defeated!", end='\n\n')

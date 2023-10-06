@@ -6,11 +6,8 @@ step = 0
 
 strength = random.randint(1,10)
 intellect = random.randint(1,10)
-gold = intellect * 25
-potions = int(strength / 2) 
-
-
-
+gold = strength * 25
+potions = int(intellect / 2) 
 
 
 # Initialize Player
@@ -26,12 +23,15 @@ player_params = {
 
 player_instance = Player(**player_params)
 
+print(f"Player Int: {player_instance.intellect}")
+print(f"Player Str: {player_instance.strength}")
+
 while step < 100:
     step += 1
     print(step)
-    Encounters.check_for_encounter(player_instance)
+    Encounters.check_for_encounter(player_instance=player_instance,step=step)
     if player_instance.health == 0:
-        print(f"{player_instance.name} has fallen in combat after {step * 10} miles")
+        print(f"{player_instance.name} has fallen in combat after {step * 10} miles" , end='\n\n')
         break
 
 
