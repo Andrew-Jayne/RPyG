@@ -93,7 +93,7 @@ class EnemyEncounters(Encounters):
 
         Combat.combat(player_instance, enemy_instance)
 
-        
+
 
 class MysteryEncounters(Encounters):
     def __init__(self, player_instance):
@@ -117,30 +117,53 @@ class SpecialEncounters(Encounters):
     @classmethod
     def friendly_keep_visit(self, player_instance):
         print("You are welcomed to the Friendly Keep")
+        print("You are fully rested and have a full stock of potions", end="\n\n")
         player_instance.heal(30)
+        player_instance.potions = 5
 
     @classmethod
     def midway_boss(self, player_instance):
-        wizard = Enemy(name="Cobolus The Wizard",health=15, strength=4, intellect=10, attack="Arcane Firestorm")
+        wizard = Enemy(name="Cobolus The Wizard",health=15, strength=4, intellect=8, attack="Arcane Firestorm")
         print(f"You encounter {wizard.name}!")
         enemy_instance = wizard
         Combat.combat(player_instance, enemy_instance)
 
     @classmethod
     def enemy_keep_visit(self, player_instance):
-        print("You Traverse the Enemy's Keep!")
-        player_instance.damage(5) ## this wiil have some custom encounters and a Sub Step count up to 10
+        print("You must traverse Algolon's Keep!")
+        sub_step = 0
+        while sub_step < 10:
+            sub_step += 1
+            print(sub_step)
+            dungeon_chance = random.randint(0,5)
+            match dungeon_chance:
+                case 0:
+                    player_instance.potions += 2
+                    player_instance.heal(2)
+                    print("You find a Store Room with some food & potions")
+                case 1:
+                    sub_step += 2
+                    print("You find a Secret Passage!")
+                case 4:
+                    mage = Enemy(name="Acolyte of Algolon", health=8, strength=3, intellect=7, attack="Arcane Bolt")
+                    print(f"You encounter an {mage.name}!")
+                    enemy_instance = mage
+                    Combat.combat(player_instance, enemy_instance)
+        print("At the end of the Keep you encounter Algolon's Arch Mage!")
+        arch_mage = Enemy(name="Algolon's Arch Mage", health=20, strength=4, intellect=10, attack="Arcane Lightning")
+        enemy_instance = arch_mage
+        Combat.combat(player_instance, enemy_instance)
 
     @classmethod
     def penultimate_boss(self, player_instance):
-        great_wizard = Enemy(name="The Great Wizard Algolon", health=25, strength=5, intellect=12, attack="Cosmic Collision")
+        great_wizard = Enemy(name="The Great Wizard Algolon", health=30, strength=5, intellect=12, attack="Cosmic Collision")
         print(f"You Battle {great_wizard.name}!")
         enemy_instance = great_wizard
         Combat.combat(player_instance, enemy_instance)
 
     @classmethod
     def final_boss(self, player_instance):
-        dragon = Enemy(name="Fortranus the Ancient One", health=40, strength=15, intellect=8, attack="Dragon Fire")
+        dragon = Enemy(name="Fortranus the Ancient One", health=40, strength=15, intellect=10, attack="Dragon Fire")
         print(f"You battle must now battle {dragon.name}!")
         enemy_instance = dragon
         Combat.combat(player_instance, enemy_instance)
