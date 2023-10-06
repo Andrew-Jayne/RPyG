@@ -1,3 +1,6 @@
+warrior_class = CharacterClass("Warrior", 10, 5)
+player_instance = Player("Protagonist", 30, strength, intellect, gold, potions, "Default: you should not see this", warrior_class)
+
 class Inventory:
     def __init__(self, gold:int, potions:int):
         self.gold = gold
@@ -12,13 +15,19 @@ class Attributes:
         self.stamina = strength * 10
 
 
-class Player(Inventory, Attributes):
+class CharacterClass:
+    def __init__(self, name, strength, intellect):
+        self.name = name
+        self.strength = strength
+        self.intellect = intellect
 
-    def __init__(self, name:str, health:int, strength:int, intellect:int, gold:int, potions:int, attack:str):
+class Player(Inventory, Attributes):
+    def __init__(self, name:str, health:int, strength:int, intellect:int, gold:int, potions:int, attack:str, character_class:CharacterClass):
         Inventory.__init__(self, gold=gold, potions=potions)
         Attributes.__init__(self, strength=strength, intellect=intellect)
         self.name = name
         self.health = health
+        self.character_class = character_class
 
     def damage(self, damage_amount:int):
         self.health -= damage_amount
