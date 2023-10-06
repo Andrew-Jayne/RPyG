@@ -1,9 +1,3 @@
-class Inventory:
-    def __init__(self, gold:int, potions:int):
-        self.gold = gold
-        self.potions = potions
-
-
 class Attributes:
     def __init__(self, strength:int, intellect:int):
         self.strength = strength
@@ -11,11 +5,9 @@ class Attributes:
         self.magicka = intellect * 10
         self.stamina = strength * 10
 
+class Enemy(Attributes):
 
-class Player(Inventory, Attributes):
-
-    def __init__(self, name:str, health:int, strength:int, intellect:int, gold:int, potions:int, attack:str):
-        Inventory.__init__(self, gold=gold, potions=potions)
+    def __init__(self, name:str, health:int, strength:int, intellect:int, attack:str):
         Attributes.__init__(self, strength=strength, intellect=intellect)
         self.name = name
         self.health = health
@@ -25,7 +17,7 @@ class Player(Inventory, Attributes):
         self.health -= damage_amount
         if self.health == 0:
             self.health = 1
-            print("You Narrowly Escape Death!")
+            print(f"The {self.name} Narrowly Evades Death!")
         elif self.health < 0:
             self.health = 0
     
@@ -33,6 +25,4 @@ class Player(Inventory, Attributes):
         self.health += heal_amount
         if self.health > 20:
             self.health = 20
-            print("You Are Fully Healed!")
-
-
+            print(f"The {self.name} is Fully Healed!")
