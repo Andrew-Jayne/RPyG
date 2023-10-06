@@ -4,6 +4,10 @@ from encounters import Encounters
 
 step = 0
 
+strength = random.randint(1,10)
+intellect = random.randint(1,10)
+
+
 #Initialize Player
 player_instance = Player("Protagonist", 20)
 
@@ -20,11 +24,6 @@ while step < 100:
 
 
 
-### Todo
-### Upgrade encounter system, to have more than 1 positive and 1 negative encounter
-
-### positive [Inn +5 HP, Tavern +3 HP]
-### Negative [Monster -5 HP, Bandit -3 HP]
 
 ### Add Magicka & Stamina (no function just put them there)
 

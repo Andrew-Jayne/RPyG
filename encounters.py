@@ -57,13 +57,13 @@ class EnemyEncounters(Encounters):
         enemy_chance = random.randint(0,2)
         if enemy_chance == 0:
             player_instance.damage(3)
-            print("An Small Enemy was encountered!")
+            print("You encounter a Feral Imp!")
         elif enemy_chance == 1:
             player_instance.damage(5)
-            print("An Normal Enemy was encountered!")
+            print("You encounter a Dire Wolf!")
         elif enemy_chance == 2:
             player_instance.damage(7)
-            print("An Large Enemy was encountered!")
+            print("You encounter a Cave Troll!")
         
 
 class MysteryEncounters(Encounters):
