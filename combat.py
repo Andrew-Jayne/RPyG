@@ -42,15 +42,15 @@ class Combat:
                 if player_instance.potions == 0 and player_instance.health <= 8:
                     print("You have no remaining potions and must make a stand!")
             ## Player Attacks if they did not drink a potion
-                enemy_instance.damage(player_attack_power)
                 print(f"You Attack with {player_instance.attack} and inflict {player_attack_power} damage")
+                enemy_instance.damage(player_attack_power)
                 print(f"The {enemy_instance.name} has {enemy_instance.health} health remaining", end='\n\n')
             if enemy_instance.health == 0:
                 break
 
             ## Enemy Attacks
-            player_instance.damage(enemy_attack_power)
             print(f"The {enemy_instance.name} attacks you with {enemy_instance.attack} inflicting {enemy_attack_power} damage")
+            player_instance.damage(enemy_attack_power)
             print(f"You have {player_instance.health} Health remaining", end='\n\n')  
             if player_instance.health == 0:
                 break   
