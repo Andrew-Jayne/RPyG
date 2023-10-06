@@ -41,3 +41,11 @@ print(f"Player Mag: {player_instance.magicka}")
 print(f"Player Stam: {player_instance.stamina}")
 print(f"Player Gold: {player_instance.gold}")
 print(f"Player Potions: {player_instance.potions}")
+
+## TODO Add upgraded attacks for player with over 5 int and str, Arcane Strike (Str + Int * .75) for power so maxed out could do 15 damage
+
+## TODO Improve balance
+
+## TODO pass step thru to encounter and have special events at 25,50,75,100 steps
+
+## TODO Sweep for jank
