@@ -19,7 +19,6 @@ class Player(Inventory, Attributes):
         Attributes.__init__(self, strength=strength, intellect=intellect)
         self.name = name
         self.health = health
-        self.attack = attack
 
     def damage(self, damage_amount:int):
         self.health -= damage_amount
@@ -31,8 +30,8 @@ class Player(Inventory, Attributes):
     
     def heal(self, heal_amount:int):
         self.health += heal_amount
-        if self.health > 20:
-            self.health = 20
+        if self.health > 30:
+            self.health = 30
             print("You Are Fully Healed!")
 
 
