@@ -6,11 +6,20 @@ step = 0
 
 strength = random.randint(1,10)
 intellect = random.randint(1,10)
+gold = intellect * 25
+potions = int(strength / 2) 
 
+# Initialize Player
+player_params = {
+    "name": "Protagonist",
+    "health": 20,
+    "strength": strength,
+    "intellect": intellect,
+    "gold": gold,
+    "potions": potions
+}
 
-#Initialize Player
-player_instance = Player("Protagonist", 20)
-
+player_instance = Player(**player_params)
 
 while step < 100:
     step += 1
@@ -19,17 +28,9 @@ while step < 100:
     if player_instance.health == 0:
         print(f"{player_instance.name} has fallen in combat after {step * 10} miles")
         break
-    
 
 
-
-
-
-### Add Magicka & Stamina (no function just put them there)
-
-### add basic attributes (Str, Int, Agl) (No function yet Mostly a placeholder / prep for actor class)
-
-### Inventory System Same idea as attributes, no function but it's there (Gold, Health Potions)
-
-## Inv and Attrib would be classes nested into the player class (eh... we can just have them be part of the class directly for now)
-
+print(f"Player Int: {player_instance.intellect}")
+print(f"Player Str: {player_instance.strength}")
+print(f"Player Gold: {player_instance.gold}")
+print(f"Player Potions: {player_instance.potions}")
