@@ -1,27 +1,23 @@
 import random
 from player import Player
+from encounters import Encounters
+
+step = 0
 
 #Initialize Player
-the_player = Player("Protagonist", 20)
+player_instance = Player("Protagonist", 20)
 
-step = 0 
 
 while step < 100:
     step += 1
-    encounter_check = random.randint(1,8)
-    if encounter_check == 5:
-        print("An Enemy was encountered!")
-        the_player.damage(5)
-        print(f"Your Health is now {the_player.health}")
-        if the_player.health == 0:
-            print(f"{the_player.name} has fallen in combat at step {step}")
-            break
-    elif encounter_check == 1:
-        print("You Find an Inn and Rest")
-        the_player.heal(5)
-        print(f"Your Health is now {the_player.health}")
-    else:
-        print(step)
+    print(step)
+    Encounters.check_for_encounter(player_instance)
+    if player_instance.health == 0:
+        print(f"{player_instance.name} has fallen in combat after {step * 10} miles")
+        break
+    
+
+
 
 
 ### Todo
