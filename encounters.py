@@ -1,4 +1,6 @@
 import random
+from enemies import Enemy
+from combat import Combat
 
 class Encounters:
     def __init__(self, player_instance):
@@ -57,13 +59,16 @@ class EnemyEncounters(Encounters):
         enemy_chance = random.randint(0,2)
         if enemy_chance == 0:
             player_instance.damage(3)
-            print("You encounter a Feral Imp!")
+            small_enemy = Enemy(name="Feral Imp", health=10, strength=1, intellect=5, attack="fireball")
+            print(f"You encounter a {small_enemy.name}!")
         elif enemy_chance == 1:
             player_instance.damage(5)
-            print("You encounter a Dire Wolf!")
+            medium_enemy = Enemy(name="Dire Wolf", health=20, strength=6, intellect=3, attack="Wolf Bite")
+            print(f"You encounter a {medium_enemy.name}!")
         elif enemy_chance == 2:
             player_instance.damage(7)
-            print("You encounter a Cave Troll!")
+            large_enemy = Enemy(name="Cave Troll", health=40, strength=10, intellect=0, attack="Club Smash")
+            print(f"You encounter a {large_enemy.name}!")
         
 
 class MysteryEncounters(Encounters):
