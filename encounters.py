@@ -19,15 +19,12 @@ class Encounters:
 
             if 0 <= encounter_check < 0.125:  # First 12.5% range
                 EnemyEncounters.enemy_encounter(player_instance)
-                __class__.print_health(player_instance)
                 
             elif 0.125 <= encounter_check < 0.25:  # Second 12.5% range
                 RestEncounters.rest_encounter(player_instance)
-                __class__.print_health(player_instance)
                 
             elif 0.25 <= encounter_check < 0.30:  # 5% Chance
                 MysteryEncounters.mystery_encounter(player_instance)
-                __class__.print_health(player_instance)
         else:              
             match step:
                 case 25:
@@ -60,13 +57,17 @@ class RestEncounters(Encounters):
         if rest_chance == 0 or 1:
             player_instance.heal(5)
             print("You Find a Tavern and Rest for a short time")
+            __class__.print_health(player_instance)
         elif rest_chance == 2:
             player_instance.heal(7)
             print("You Find an Inn and Rest for the evening")
+            __class__.print_health(player_instance)
         elif rest_chance == 3:
             player_instance.heal(9)
             print("You Find the King's Vassal's Keep, and take a day to rest.")
+            __class__.print_health(player_instance)
             Interaction.at_merchant(player_instance)
+
 
 
 
