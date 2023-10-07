@@ -3,12 +3,12 @@ class Interaction:
         pass
 
     @staticmethod
-    def post_combat(player_instance):
+    def post_battle(player_instance):
         if player_instance.health < 20 and player_instance.potions != 0:
             player_instance.use_potion()
 
     @staticmethod
-    def in_combat(player_instance):
+    def in_battle(player_instance):
         if player_instance.health <= 4 and player_instance.potions != 0:
                 player_instance.use_potion()
                 return False

@@ -46,7 +46,9 @@ class Encounters:
                           'Hey You! Finally Awake!
                           """)
 
-    
+
+
+   
 class RestEncounters(Encounters):
     def __init__(self, player_instance):
         super().__init__(player_instance)
@@ -64,9 +66,10 @@ class RestEncounters(Encounters):
             __class__.print_health(player_instance)
         elif rest_chance == 3:
             player_instance.heal(9)
-            print("You Find the King's Vassal's Keep, and take a day to rest.")
+            print("You Find the King's Vassal's Keep, and take a day to rest, and replenish your supplies.")
             __class__.print_health(player_instance)
             Interaction.at_merchant(player_instance)
+
 
 
 
@@ -78,24 +81,26 @@ class EnemyEncounters(Encounters):
     def enemy_encounter(player_instance):
         enemy_chance = random.randint(0,4)
         if enemy_chance == 6:
-            print("WTF, You're not supposed to see this, some kind of Cosmic bit flip shit happened")
+            print("WTF, You're not supposed to see this, some kind of Cosmic bit flip happened")
 
         elif enemy_chance == 0 or enemy_chance == 1:
             small_enemy = Enemy(name="Feral Imp", health=8, strength=1, intellect=3, attack_name="fireball")
             print(f"You encounter a {small_enemy.name}!")
-            Combat.combat(player_instance, small_enemy)
+            Combat.battle(player_instance, small_enemy)
 
         elif enemy_chance == 2 or enemy_chance == 3:
             medium_enemy = Enemy(name="Dire Wolf", health=15, strength=5, intellect=3, attack_name="Wolf Bite")
             print(f"You encounter a {medium_enemy.name}!")
-            Combat.combat(player_instance, medium_enemy)
+            Combat.battle(player_instance, medium_enemy)
 
         elif enemy_chance == 4:
             large_enemy = Enemy(name="Cave Troll", health=30, strength=10, intellect=1, attack_name="Club Smash")
             print(f"You encounter a {large_enemy.name}!")
-            Combat.combat(player_instance, large_enemy)
+            Combat.battle(player_instance, large_enemy)
 
-        
+
+
+       
 class MysteryEncounters(Encounters):
     def __init__(self, player_instance):
         super().__init__(player_instance)
@@ -105,14 +110,16 @@ class MysteryEncounters(Encounters):
         print("You Encounter A Strange Figure!")
         mystery_chance = random.randint(0,1)
         if mystery_chance == 0:
-            player_instance.heal(3)
             print("The Figure heals you and vanishes into the darkness!")
+            player_instance.heal(3)
             __class__.print_health(player_instance)
         else:
-            player_instance.damage(3)
             print("The Figure blasts you with an Arcane Bolt and vanishes into a Flash of Light!", end="\n\n")
+            player_instance.damage(3)
             __class__.print_health(player_instance)
             
+
+
 
 class SpecialEncounters(Encounters):
     def __init__(self, player_instance, step: int):
@@ -130,7 +137,7 @@ class SpecialEncounters(Encounters):
         wizard = Enemy(name="Cobolus The Wizard",health=15, strength=4, intellect=8, attack_name="Arcane Firestorm")
         print(f"You encounter {wizard.name}!")
         enemy_instance = wizard
-        Combat.combat(player_instance, enemy_instance)
+        Combat.battle(player_instance, enemy_instance)
 
     @staticmethod
     def enemy_keep_visit(player_instance):
@@ -152,24 +159,24 @@ class SpecialEncounters(Encounters):
                     mage = Enemy(name="Acolyte of Algolon", health=8, strength=3, intellect=7, attack_name="Arcane Bolt")
                     print(f"You encounter an {mage.name}!")
                     enemy_instance = mage
-                    Combat.combat(player_instance, enemy_instance)
+                    Combat.battle(player_instance, enemy_instance)
             if player_instance.health == 0:
                 break
         print("At the end of the Keep you encounter Algolon's Arch Mage!")
         arch_mage = Enemy(name="Algolon's Arch Mage", health=20, strength=4, intellect=10, attack_name="Arcane Lightning")
         enemy_instance = arch_mage
-        Combat.combat(player_instance, enemy_instance)
+        Combat.battle(player_instance, enemy_instance)
 
     @staticmethod
     def penultimate_boss(player_instance):
         great_wizard = Enemy(name="The Great Wizard Algolon", health=25, strength=5, intellect=12, attack_name="Cosmic Collision")
         print(f"You Battle {great_wizard.name}!")
         enemy_instance = great_wizard
-        Combat.combat(player_instance, enemy_instance)
+        Combat.battle(player_instance, enemy_instance)
 
     @staticmethod
     def final_boss(player_instance):
         dragon = Enemy(name="Fortranus the Ancient One", health=40, strength=14, intellect=10, attack_name="Dragon Fire")
         print(f"You battle must now battle {dragon.name}!")
         enemy_instance = dragon
-        Combat.combat(player_instance, enemy_instance)
+        Combat.battle(player_instance, enemy_instance)
