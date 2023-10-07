@@ -38,6 +38,8 @@ print(f"Player Int: {player_instance.intellect}")
 print(f"Player Str: {player_instance.strength}")
 print(f"Player Gold: {player_instance.gold}")
 print(f"Player Potions: {player_instance.potions}")
+print(f"Player Attack: {player_instance.set_player_attack_name()}")
+print(f"Player Skill: {player_instance._get_player_skill()}")
 
 ## TODO Improve balance
 

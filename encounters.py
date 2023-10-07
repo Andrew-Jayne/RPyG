@@ -149,6 +149,8 @@ class SpecialEncounters(Encounters):
                     print(f"You encounter an {mage.name}!")
                     enemy_instance = mage
                     Combat.combat(player_instance, enemy_instance)
+            if player_instance.health == 0:
+                break
         print("At the end of the Keep you encounter Algolon's Arch Mage!")
         arch_mage = Enemy(name="Algolon's Arch Mage", health=20, strength=4, intellect=10, attack_name="Arcane Lightning")
         enemy_instance = arch_mage
