@@ -75,10 +75,9 @@ class EnemyEncounters(Encounters):
     def __init__(self, player_instance):
         super().__init__(player_instance)
     
-    @classmethod
-    def enemy_encounter(self, player_instance):
+    @staticmethod
+    def enemy_encounter(player_instance):
         enemy_chance = random.randint(0,4)
-        print(f"Enemy chance is {enemy_chance}")
         if enemy_chance == 6:
             print("WTF, You're not supposed to see this, some kind of Cosmic bit flip shit happened")
 
@@ -98,9 +97,6 @@ class EnemyEncounters(Encounters):
             Combat.combat(player_instance, large_enemy)
 
         
-
-
-
 class MysteryEncounters(Encounters):
     def __init__(self, player_instance):
         super().__init__(player_instance)
