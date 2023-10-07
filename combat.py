@@ -1,3 +1,4 @@
+from interaction import Interaction
 
 class Combat:
     def __init__(self, player_instance, enemy_instance):
@@ -6,18 +7,14 @@ class Combat:
     
     def combat(player_instance, enemy_instance):
 
-        player_attack_power = player_instance.set_player_attack_power()
-        player_attack_name = player_instance.set_player_attack_name()
-        enemy_attack_power = enemy_instance.set_enemy_attack_power()
-
+        player_attack_power = player_instance.attack_power
+        player_attack_name = player_instance.attack_name
+        enemy_attack_power = enemy_instance.attack_power
+        
         while enemy_instance.health != 0:
   
             ## Check if the player should use a health potion
-            if player_instance.health <= 4 and player_instance.potions != 0 and enemy_instance.health > player_attack_power:
-                player_instance.use_potion()
-            else:
-                if player_instance.potions == 0 and player_instance.health <= 8:
-                    print("You have no remaining potions and must make a stand!")
+            if Interaction.in_combat(player_instance) != False:
             ## Player Attacks if they did not drink a potion
                 print(f"You Attack with {player_attack_name} and inflict {player_attack_power} damage")
                 enemy_instance.damage(player_attack_power)
@@ -35,8 +32,7 @@ class Combat:
         ## Display Victory Message
         if player_instance.health != 0 and enemy_instance.health == 0:
             print(f"{enemy_instance.name} has been defeated!", end='\n\n')
-            while player_instance.health < 25 and player_instance.potions != 0:
-                player_instance.use_potion()
+            Interaction.post_combat(player_instance)
         
 
         
