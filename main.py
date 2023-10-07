@@ -1,4 +1,3 @@
-import random
 from player import Player
 from encounters import Encounters
 
