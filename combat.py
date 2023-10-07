@@ -4,7 +4,7 @@ class Combat:
         self.player_instance = player_instance
         self.enemy_instance = enemy_instance
     
-    def combat (player_instance, enemy_instance):
+    def combat(player_instance, enemy_instance):
 
         player_attack_power = player_instance.set_player_attack_power()
         player_attack_name = player_instance.set_player_attack_name()
