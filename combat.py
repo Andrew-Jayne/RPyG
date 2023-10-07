@@ -8,7 +8,7 @@ class Combat:
     def battle(player_instance, enemy_instance):
         while enemy_instance.health != 0:
             ## Check if the player should use a health potion
-            if Interaction.in_battle(player_instance) != False:
+            if Interaction.in_battle(player_instance) == True:
                 ## Player Attacks if they did not drink a potion
                 __class__._player_attack(player_instance, enemy_instance)
             ## End combat if enemy dies
