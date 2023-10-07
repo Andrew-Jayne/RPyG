@@ -15,6 +15,6 @@ class Actor:
     
     def heal(self, heal_amount:int):
         self.health += heal_amount
-        if self.health > 20:
-            self.health = 20
+        if self.health > 30:
+            self.health = 30
             print(f"{self.name} has Fully Healed!")
