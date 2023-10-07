@@ -19,7 +19,7 @@ class Player(Actor, Inventory):
     def use_potion(self):
         print("Your drink a potion")
         self.potions -= 1
-        self.health += 8
+        self.health += 10
         print(f"You have {self.potions} remaining")
         print(f"Your health is now {self.health}", end="\n\n")
 
