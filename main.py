@@ -13,9 +13,9 @@ potions = int(intellect / 2)
 # Initialize Player
 player_params = {
     "name": "The Protagonist",
-    "health": 50,
-    "strength": 10,#strength,
-    "intellect": 10,#intellect,
+    "health": 30,
+    "strength": strength,
+    "intellect": intellect,
     "gold": gold,
     "potions": potions
 }
@@ -41,6 +41,5 @@ print(f"Player Potions: {player_instance.potions}")
 print(f"Player Attack: {player_instance.set_player_attack_name()}")
 print(f"Player Skill: {player_instance._get_player_skill()}")
 
-## TODO Improve balance
 
 ## TODO Sweep for jank
