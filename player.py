@@ -30,7 +30,7 @@ class Player(Actor, Inventory):
     def use_potion(self):
         print("You drink a potion")
         self.potions -= 1
-        self.health += 9
+        self.health += 10 + random.randint(-2,2)
         print(f"You have {self.potions} remaining")
         print(f"Your health is now {self.health}", end="\n\n")
 
