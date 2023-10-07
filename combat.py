@@ -35,7 +35,7 @@ class Combat:
         ## Display Victory Message
         if player_instance.health != 0 and enemy_instance.health == 0:
             print(f"{enemy_instance.name} has been defeated!", end='\n\n')
-            while player_instance.health < 20 and player_instance.potions != 0:
+            while player_instance.health < 25 and player_instance.potions != 0:
                 player_instance.use_potion()
         
 
