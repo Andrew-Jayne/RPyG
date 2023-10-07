@@ -1,6 +1,7 @@
 import random
 from enemy import Enemy
 from combat import Combat
+from interaction import Interaction
 
 class Encounters:
     def __init__(self, player_instance, step:int):
@@ -65,10 +66,8 @@ class RestEncounters(Encounters):
         elif rest_chance == 3:
             player_instance.heal(9)
             print("You Find the King's Vassal's Keep, and take a day to rest.")
-            while player_instance.potions > 9 and player_instance.gold != 0:
-                player_instance.gold -= 25
-                player_instance.potions += 1
-                print(f"You purchase a potion. You now have {player_instance.potions}")
+            Interaction.at_merchant(player_instance)
+
 
 
 class EnemyEncounters(Encounters):
@@ -111,6 +110,7 @@ class MysteryEncounters(Encounters):
         else:
             player_instance.damage(3)
             print("The Figure blasts you with an Arcane Bolt and vanishes into a Flash of Light!", end="\n\n")
+            
 
 class SpecialEncounters(Encounters):
     def __init__(self, player_instance, step: int):
