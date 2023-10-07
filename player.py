@@ -19,7 +19,7 @@ class Player(Actor, Inventory):
     def use_potion(self):
         print("Your drink a potion")
         self.potions -= 1
-        self.health += 6
+        self.health += 8
         print(f"You have {self.potions} remaining")
         print(f"Your health is now {self.health}", end="\n\n")
 
@@ -27,36 +27,41 @@ class Player(Actor, Inventory):
         if self.strength > self.intellect:
             self.attack_power = self.strength
         elif self.strength >= 7 and self.intellect >= 7:
-            self.attack_power = self.strength + self.intellect / 2
+            self.attack_power = int(self.strength + self.intellect * .75)
         else:
             self.attack_power = self.intellect
 
         return self.attack_power
-    
-    def set_player_attack_name(self):
+
+    def _get_player_skill(self):
         strength_skill = ""
         intellect_skill = ""
         player_skill = ""
 
-        if self.strength == 1 or 2 or 3:
+        if self.strength in range(1, 4):
             strength_skill = "weak"
-        elif self.strength == 4 or 5 or 6:
+        elif self.strength in range(4, 7):
             strength_skill = "fair"
-        elif self.strength == 7 or 8 or 9:
+        elif self.strength in range(7, 10):
             strength_skill = "strong"
         elif self.strength == 10:
             strength_skill = "mighty"
 
-        if self.intellect == 1 or 2 or 3:
+        if self.intellect in range(1, 4):
             intellect_skill = "dull"
-        elif self.intellect == 4 or 5 or 6:
+        elif self.intellect in range(4, 7):
             intellect_skill = "ordinary"
-        elif self.intellect == 7 or 8 or 9:
+        elif self.intellect in range(7, 10):
             intellect_skill = "smart"
         elif self.intellect == 10:
             intellect_skill = "brilliant"
                 
         player_skill = str(f"{strength_skill}:{intellect_skill}")
+
+        return player_skill
+    
+    def set_player_attack_name(self):
+        player_skill = __class__._get_player_skill(self)
 
         match player_skill:
             case "weak:dull":
