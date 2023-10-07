@@ -4,6 +4,7 @@ class Actor:
         self.health = health
         self.strength = strength
         self.intellect = intellect
+        self.base_health = health
 
     def damage(self, damage_amount:int):
         self.health -= damage_amount
@@ -15,6 +16,6 @@ class Actor:
     
     def heal(self, heal_amount:int):
         self.health += heal_amount
-        if self.health > 30:
-            self.health = 30
+        if self.health > self.base_health:
+            self.health = self.base_health
             print(f"{self.name} has Fully Healed!")

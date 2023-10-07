@@ -34,7 +34,10 @@ class Player(Actor, Inventory):
         print(f"You have {self.potions} remaining")
         print(f"Your health is now {self.health}", end="\n\n")
 
-    ### Hidden Methods
+
+
+
+    ## Hidden Methods
     def _set_player_attack_power(self):
         if self.strength > self.intellect:
             self.attack_power = self.strength
