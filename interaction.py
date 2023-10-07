@@ -12,8 +12,10 @@ class Interaction:
         if player_instance.health <= 4 and player_instance.potions != 0:
                 player_instance.use_potion()
                 return False
+        elif player_instance.potions == 0:
+                print("You have no remaining potions and must make a stand!")
+                return True
         else:
-            print("You have no remaining potions and must make a stand!")
             return True
 
     @staticmethod
