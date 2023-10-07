@@ -5,10 +5,10 @@ class Combat:
         self.player_instance = player_instance
         self.enemy_instance = enemy_instance
     
-    def combat(player_instance, enemy_instance):
+    def battle(player_instance, enemy_instance):
         while enemy_instance.health != 0:
             ## Check if the player should use a health potion
-            if Interaction.in_combat(player_instance) != False:
+            if Interaction.in_battle(player_instance) != False:
                 ## Player Attacks if they did not drink a potion
                 __class__._player_attack(player_instance, enemy_instance)
             ## End combat if enemy dies
@@ -24,7 +24,7 @@ class Combat:
         ## Display Victory Message if player does not die
         if player_instance.health != 0 and enemy_instance.health == 0:
             print(f"{enemy_instance.name} has been defeated!", end='\n\n')
-            Interaction.post_combat(player_instance)
+            Interaction.post_battle(player_instance)
 
 
     ## Hidden Methods
