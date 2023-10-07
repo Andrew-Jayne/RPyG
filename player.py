@@ -1,4 +1,5 @@
 from actor import Actor
+import random
 
 class Inventory:
     def __init__(self, gold:int, potions:int):
@@ -6,24 +7,35 @@ class Inventory:
         self.potions = potions
 
 class Player(Actor, Inventory):
-    def __init__(self, name:str, health:int, strength:int, intellect:int, gold:int, potions:int):
+    def __init__(self, name:str):
+        ## Setup Player Stats
+        strength = random.randint(1,10)
+        intellect = random.randint(1,10)
+        health = 10 + int((strength + intellect) * 2)
+        gold = strength * 25
+        potions = int(intellect / 2) 
+
+        ## Init Inherited Classes
         Actor.__init__(self, name=name, health=health, strength=strength, intellect=intellect)
         Inventory.__init__(self, gold=gold, potions=potions)
+
+        ## Copy values to instance
         self.name = name
         self.health = health
         self.strength = strength
         self.intellect = intellect
-        self.attack_name = "init_default"
-        self.attack_power = 0
+        self.attack_name = __class__._set_player_attack_name(self)
+        self.attack_power = __class__._set_player_attack_power(self)
 
     def use_potion(self):
-        print("Your drink a potion")
+        print("You drink a potion")
         self.potions -= 1
-        self.health += 10
+        self.health += 9
         print(f"You have {self.potions} remaining")
         print(f"Your health is now {self.health}", end="\n\n")
 
-    def set_player_attack_power(self):
+    ### Hidden Methods
+    def _set_player_attack_power(self):
         if self.strength > self.intellect:
             self.attack_power = self.strength
         elif self.strength >= 7 and self.intellect >= 7:
@@ -60,7 +72,7 @@ class Player(Actor, Inventory):
 
         return player_skill
     
-    def set_player_attack_name(self):
+    def _set_player_attack_name(self):
         player_skill = __class__._get_player_skill(self)
 
         match player_skill:
