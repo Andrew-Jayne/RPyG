@@ -54,7 +54,7 @@ class RestEncounters(Encounters):
     @staticmethod
     def rest_encounter(player_instance):
         rest_chance = random.randint(0,3)
-        if rest_chance == 0 or 1:
+        if rest_chance in range(0,2):
             player_instance.heal(5)
             print("You Find a Tavern and Rest for a short time")
             __class__.print_health(player_instance)
@@ -67,7 +67,6 @@ class RestEncounters(Encounters):
             print("You Find the King's Vassal's Keep, and take a day to rest.")
             __class__.print_health(player_instance)
             Interaction.at_merchant(player_instance)
-
 
 
 
