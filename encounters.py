@@ -108,9 +108,11 @@ class MysteryEncounters(Encounters):
         if mystery_chance == 0:
             player_instance.heal(3)
             print("The Figure heals you and vanishes into the darkness!")
+            __class__.print_health(player_instance)
         else:
             player_instance.damage(3)
             print("The Figure blasts you with an Arcane Bolt and vanishes into a Flash of Light!", end="\n\n")
+            __class__.print_health(player_instance)
             
 
 class SpecialEncounters(Encounters):
