@@ -75,23 +75,29 @@ class EnemyEncounters(Encounters):
     def __init__(self, player_instance):
         super().__init__(player_instance)
     
-    @staticmethod
-    def enemy_encounter(player_instance):
+    @classmethod
+    def enemy_encounter(self, player_instance):
         enemy_chance = random.randint(0,4)
-        if enemy_chance == 0 or 1:
+        print(f"Enemy chance is {enemy_chance}")
+        if enemy_chance == 6:
+            print("WTF, You're not supposed to see this, some kind of Cosmic bit flip shit happened")
+
+        elif enemy_chance == 0 or enemy_chance == 1:
             small_enemy = Enemy(name="Feral Imp", health=8, strength=1, intellect=3, attack_name="fireball")
             print(f"You encounter a {small_enemy.name}!")
-            enemy_instance = small_enemy
-        elif enemy_chance == 2 or 3:
+            Combat.combat(player_instance, small_enemy)
+
+        elif enemy_chance == 2 or enemy_chance == 3:
             medium_enemy = Enemy(name="Dire Wolf", health=15, strength=5, intellect=3, attack_name="Wolf Bite")
             print(f"You encounter a {medium_enemy.name}!")
-            enemy_instance = medium_enemy
+            Combat.combat(player_instance, medium_enemy)
+
         elif enemy_chance == 4:
             large_enemy = Enemy(name="Cave Troll", health=30, strength=10, intellect=1, attack_name="Club Smash")
             print(f"You encounter a {large_enemy.name}!")
-            enemy_instance = large_enemy
+            Combat.combat(player_instance, large_enemy)
 
-        Combat.combat(player_instance, enemy_instance)
+        
 
 
 
@@ -119,7 +125,7 @@ class SpecialEncounters(Encounters):
         print("You are welcomed to the Friendly Keep")
         print("You are fully rested and have a full stock of potions", end="\n\n")
         player_instance.heal(30)
-        player_instance.potions = 5
+        player_instance.potions = 9
 
     @staticmethod
     def midway_boss(player_instance):
