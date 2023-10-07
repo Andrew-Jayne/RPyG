@@ -8,9 +8,9 @@ class Enemy(Actor):
         self.strength = strength
         self.intellect = intellect
         self.attack_name = attack_name
-        self.attack_power = None
+        self.attack_power = __class__._set_enemy_attack_power(self)
 
-    def set_enemy_attack_power(self):
+    def _set_enemy_attack_power(self):
         if self.strength > self.intellect:
             self.attack_power = self.strength
         else:
