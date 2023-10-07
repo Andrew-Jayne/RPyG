@@ -13,7 +13,7 @@ class Combat:
         while enemy_instance.health != 0:
   
             ## Check if the player should use a health potion
-            if player_instance.health <= 8 and player_instance.potions != 0:
+            if player_instance.health <= 4 and player_instance.potions != 0:
                 player_instance.use_potion()
             else:
                 if player_instance.potions == 0 and player_instance.health <= 8:

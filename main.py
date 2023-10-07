@@ -13,7 +13,7 @@ potions = int(intellect / 2)
 # Initialize Player
 player_params = {
     "name": "The Protagonist",
-    "health": 40,
+    "health": 50,
     "strength": 10,#strength,
     "intellect": 10,#intellect,
     "gold": gold,
