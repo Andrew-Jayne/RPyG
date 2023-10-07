@@ -1,5 +1,5 @@
 import random
-from enemies import Enemy
+from enemy import Enemy
 from combat import Combat
 
 class Encounters:
@@ -79,15 +79,15 @@ class EnemyEncounters(Encounters):
     def enemy_encounter(self, player_instance):
         enemy_chance = random.randint(0,4)
         if enemy_chance == 0 or 1:
-            small_enemy = Enemy(name="Feral Imp", health=8, strength=1, intellect=3, attack="fireball")
+            small_enemy = Enemy(name="Feral Imp", health=8, strength=1, intellect=3, attack_name="fireball")
             print(f"You encounter a {small_enemy.name}!")
             enemy_instance = small_enemy
         elif enemy_chance == 2 or 3:
-            medium_enemy = Enemy(name="Dire Wolf", health=15, strength=5, intellect=3, attack="Wolf Bite")
+            medium_enemy = Enemy(name="Dire Wolf", health=15, strength=5, intellect=3, attack_name="Wolf Bite")
             print(f"You encounter a {medium_enemy.name}!")
             enemy_instance = medium_enemy
         elif enemy_chance == 4:
-            large_enemy = Enemy(name="Cave Troll", health=40, strength=10, intellect=1, attack="Club Smash")
+            large_enemy = Enemy(name="Cave Troll", health=40, strength=10, intellect=1, attack_name="Club Smash")
             print(f"You encounter a {large_enemy.name}!")
             enemy_instance = large_enemy
 
@@ -123,7 +123,7 @@ class SpecialEncounters(Encounters):
 
     @classmethod
     def midway_boss(self, player_instance):
-        wizard = Enemy(name="Cobolus The Wizard",health=15, strength=4, intellect=8, attack="Arcane Firestorm")
+        wizard = Enemy(name="Cobolus The Wizard",health=15, strength=4, intellect=8, attack_name="Arcane Firestorm")
         print(f"You encounter {wizard.name}!")
         enemy_instance = wizard
         Combat.combat(player_instance, enemy_instance)
@@ -145,25 +145,25 @@ class SpecialEncounters(Encounters):
                     sub_step += 2
                     print("You find a Secret Passage!")
                 case 4:
-                    mage = Enemy(name="Acolyte of Algolon", health=8, strength=3, intellect=7, attack="Arcane Bolt")
+                    mage = Enemy(name="Acolyte of Algolon", health=8, strength=3, intellect=7, attack_name="Arcane Bolt")
                     print(f"You encounter an {mage.name}!")
                     enemy_instance = mage
                     Combat.combat(player_instance, enemy_instance)
         print("At the end of the Keep you encounter Algolon's Arch Mage!")
-        arch_mage = Enemy(name="Algolon's Arch Mage", health=20, strength=4, intellect=10, attack="Arcane Lightning")
+        arch_mage = Enemy(name="Algolon's Arch Mage", health=20, strength=4, intellect=10, attack_name="Arcane Lightning")
         enemy_instance = arch_mage
         Combat.combat(player_instance, enemy_instance)
 
     @classmethod
     def penultimate_boss(self, player_instance):
-        great_wizard = Enemy(name="The Great Wizard Algolon", health=30, strength=5, intellect=12, attack="Cosmic Collision")
+        great_wizard = Enemy(name="The Great Wizard Algolon", health=30, strength=5, intellect=12, attack_name="Cosmic Collision")
         print(f"You Battle {great_wizard.name}!")
         enemy_instance = great_wizard
         Combat.combat(player_instance, enemy_instance)
 
     @classmethod
     def final_boss(self, player_instance):
-        dragon = Enemy(name="Fortranus the Ancient One", health=40, strength=15, intellect=10, attack="Dragon Fire")
+        dragon = Enemy(name="Fortranus the Ancient One", health=40, strength=15, intellect=10, attack_name="Dragon Fire")
         print(f"You battle must now battle {dragon.name}!")
         enemy_instance = dragon
         Combat.combat(player_instance, enemy_instance)
