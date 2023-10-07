@@ -57,15 +57,15 @@ class RestEncounters(Encounters):
     def rest_encounter(self ,player_instance):
         rest_chance = random.randint(0,3)
         if rest_chance == 0 or 1:
-            player_instance.heal(3)
+            player_instance.heal(5)
             print("You Find a Tavern and Rest for a short time")
         elif rest_chance == 2:
-            player_instance.heal(5)
+            player_instance.heal(7)
             print("You Find an Inn and Rest for the evening")
         elif rest_chance == 3:
-            player_instance.heal(7)
+            player_instance.heal(9)
             print("You Find the King's Vassal's Keep, and take a day to rest.")
-            while player_instance.potions > 5 and player_instance.gold != 0:
+            while player_instance.potions > 9 and player_instance.gold != 0:
                 player_instance.gold -= 25
                 player_instance.potions += 1
                 print(f"You purchase a potion. You now have {player_instance.potions}")
@@ -87,7 +87,7 @@ class EnemyEncounters(Encounters):
             print(f"You encounter a {medium_enemy.name}!")
             enemy_instance = medium_enemy
         elif enemy_chance == 4:
-            large_enemy = Enemy(name="Cave Troll", health=40, strength=10, intellect=1, attack_name="Club Smash")
+            large_enemy = Enemy(name="Cave Troll", health=30, strength=10, intellect=1, attack_name="Club Smash")
             print(f"You encounter a {large_enemy.name}!")
             enemy_instance = large_enemy
 
@@ -158,14 +158,14 @@ class SpecialEncounters(Encounters):
 
     @classmethod
     def penultimate_boss(self, player_instance):
-        great_wizard = Enemy(name="The Great Wizard Algolon", health=30, strength=5, intellect=12, attack_name="Cosmic Collision")
+        great_wizard = Enemy(name="The Great Wizard Algolon", health=25, strength=5, intellect=12, attack_name="Cosmic Collision")
         print(f"You Battle {great_wizard.name}!")
         enemy_instance = great_wizard
         Combat.combat(player_instance, enemy_instance)
 
     @classmethod
     def final_boss(self, player_instance):
-        dragon = Enemy(name="Fortranus the Ancient One", health=40, strength=15, intellect=10, attack_name="Dragon Fire")
+        dragon = Enemy(name="Fortranus the Ancient One", health=40, strength=14, intellect=10, attack_name="Dragon Fire")
         print(f"You battle must now battle {dragon.name}!")
         enemy_instance = dragon
         Combat.combat(player_instance, enemy_instance)
