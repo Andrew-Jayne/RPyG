@@ -1,37 +1,99 @@
+from actor import Actor
+
 class Inventory:
     def __init__(self, gold:int, potions:int):
         self.gold = gold
         self.potions = potions
 
-
-class Attributes:
-    def __init__(self, strength:int, intellect:int):
-        self.strength = strength
-        self.intellect = intellect
-        self.magicka = intellect * 10
-        self.stamina = strength * 10
-
-
-class Player(Inventory, Attributes):
-
-    def __init__(self, name:str, health:int, strength:int, intellect:int, gold:int, potions:int, attack:str):
+class Player(Actor, Inventory):
+    def __init__(self, name:str, health:int, strength:int, intellect:int, gold:int, potions:int):
+        Actor.__init__(self, name=name, health=health, strength=strength, intellect=intellect)
         Inventory.__init__(self, gold=gold, potions=potions)
-        Attributes.__init__(self, strength=strength, intellect=intellect)
         self.name = name
         self.health = health
+        self.strength = strength
+        self.intellect = intellect
+        self.attack_name = "init_default"
+        self.attack_power = 0
 
-    def damage(self, damage_amount:int):
-        self.health -= damage_amount
-        if self.health == 0:
-            self.health = 1
-            print("You Narrowly Escape Death!")
-        elif self.health < 0:
-            self.health = 0
+    def use_potion(self):
+        print("Your drink a potion")
+        self.potions -= 1
+        self.health += 6
+        print(f"You have {self.potions} remaining")
+        print(f"Your health is now {self.health}", end="\n\n")
+
+    def set_player_attack_power(self):
+        if self.strength > self.intellect:
+            self.attack_power = self.strength
+        elif self.strength >= 7 and self.intellect >= 7:
+            self.attack_power = self.strength + self.intellect / 2
+        else:
+            self.attack_power = self.intellect
+
+        return self.attack_power
     
-    def heal(self, heal_amount:int):
-        self.health += heal_amount
-        if self.health > 30:
-            self.health = 30
-            print("You Are Fully Healed!")
+    def set_player_attack_name(self):
+        strength_skill = ""
+        intellect_skill = ""
+        player_skill = ""
 
+        if self.strength == 1 or 2 or 3:
+            strength_skill = "weak"
+        elif self.strength == 4 or 5 or 6:
+            strength_skill = "fair"
+        elif self.strength == 7 or 8 or 9:
+            strength_skill = "strong"
+        elif self.strength == 10:
+            strength_skill = "mighty"
+
+        if self.intellect == 1 or 2 or 3:
+            intellect_skill = "dull"
+        elif self.intellect == 4 or 5 or 6:
+            intellect_skill = "ordinary"
+        elif self.intellect == 7 or 8 or 9:
+            intellect_skill = "smart"
+        elif self.intellect == 10:
+            intellect_skill = "brilliant"
+                
+        player_skill = str(f"{strength_skill}:{intellect_skill}")
+
+        match player_skill:
+            case "weak:dull":
+                self.attack_name = "Clumsy Punch"
+            case "fair:dull":
+                self.attack_name = "Axe Chop"
+            case "strong:dull":
+                self.attack_name = "Warhammer Slam"
+            case "mighty:dull":
+                self.attack_name = "Greatsword Cleave"
+
+            case "weak:ordinary":
+                self.attack_name = "Dagger Slash"
+            case "fair:ordinary":
+                self.attack_name = "Shorsword Slash"
+            case "strong:ordinary":
+                self.attack_name = "Longsword Thrust"
+            case "mighty:ordinary":
+                self.attack_name = "Greatsword Thrust"
+
+            case "weak:smart":
+                self.attack_name = "Arcane Bolt"
+            case "fair:smart":
+                self.attack_name = "Fireball"
+            case "strong:smart":
+                self.attack_name = "Arcane Longsword Strike"
+            case "mighty:smart":
+                self.attack_name = "Arcane Greatsword Cleave"
+
+            case "weak:brilliant":
+                self.attack_name = "Arcane Lighting"
+            case "fair:brilliant":
+                self.attack_name = "Great Fireball"
+            case "strong:brilliant":
+                self.attack_name = "Seismic Hammer Slam"
+            case "mighty:brilliant" :
+                self.attack_name = "Cosmic Greatsword Cleave"
+
+        return self.attack_name
 
