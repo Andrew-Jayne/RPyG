@@ -16,8 +16,26 @@ Note: All Prompts in this game are case insensitive
     Interaction.global_game_mode = game_mode
 
     
-
 def player_start():
+    players = []
+    player_name_message = """
+Now before your Journey Can Begin Please enter the name of your Character
+
+
+Note: Case is respected but names longer than 32 Characters will be truncated
+
+"""
+    if Interaction.global_game_mode == "MANUAL":
+            player_name = str(input(f"{player_name_message}"))[:32]
+            players.append(player_name)
+    else:
+            players.append(f"The Protagonist")
+
+    return players
+
+
+
+def multiplayer_start(): ## Unused for now, pending other changes to the gameplay
     players = []
     count_choices = ["1","2","3","4"]
     count_message = """
@@ -40,11 +58,11 @@ Note: Case is respected but names longer than 32 Characters will be truncated
 """
 
     if Interaction.global_game_mode == "MANUAL":
-        for count in range(1,Interaction.global_player_count):
+        for count in range(0,Interaction.global_player_count):
             player_name = str(input(f"{player_name_message}"))[:32]
             players.append(player_name)
     else:
-         for count in range(1,Interaction.global_player_count):
+         for count in range(0,Interaction.global_player_count):
             players.append(f"The Protagonist{count}")
 
     return players
