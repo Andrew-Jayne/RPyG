@@ -4,8 +4,6 @@ from combat import Combat
 from interaction import Interaction
 
 class Encounters:
-    def __init__(self, player_instance, step:int):
-        self.player_instance = player_instance
 
     @staticmethod
     def print_health(player_instance):
@@ -50,8 +48,6 @@ class Encounters:
 
    
 class RestEncounters(Encounters):
-    def __init__(self, player_instance):
-        super().__init__(player_instance)
     
     @staticmethod
     def rest_encounter(player_instance):
@@ -74,8 +70,6 @@ class RestEncounters(Encounters):
 
 
 class EnemyEncounters(Encounters):
-    def __init__(self, player_instance):
-        super().__init__(player_instance)
     
     @staticmethod
     def enemy_encounter(player_instance):
@@ -102,8 +96,6 @@ class EnemyEncounters(Encounters):
 
        
 class MysteryEncounters(Encounters):
-    def __init__(self, player_instance):
-        super().__init__(player_instance)
     
     @staticmethod
     def mystery_encounter(player_instance):
@@ -122,8 +114,6 @@ class MysteryEncounters(Encounters):
 
 
 class SpecialEncounters(Encounters):
-    def __init__(self, player_instance, step: int):
-        super().__init__(player_instance, step)
 
     @staticmethod
     def friendly_keep_visit(player_instance):
