@@ -1,4 +1,4 @@
-from actor import Actor
+from actors import Actor
 
 class Enemy(Actor):
     def __init__(self, name:str, health:int, strength:int, intellect:int, luck:str, attack_name:str):
