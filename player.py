@@ -5,7 +5,7 @@ class Player(PlayableActor):
 
     def __init__(self, name:str):
         ## Setup Player Stats
-        strength = 8#random.randint(1,10)
+        strength = random.randint(1,10)
         intellect = random.randint(1,10)
         luck = random.randint(1,10)
         health = 10 + int((strength + intellect) * 2)
