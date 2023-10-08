@@ -11,12 +11,13 @@ class Player(Actor, Inventory):
         ## Setup Player Stats
         strength = random.randint(1,10)
         intellect = random.randint(1,10)
+        luck = random.randint(1,10)
         health = 10 + int((strength + intellect) * 2)
         gold = strength * 25
         potions = int(intellect / 2) 
 
         ## Init Inherited Classes
-        Actor.__init__(self, name=name, health=health, strength=strength, intellect=intellect)
+        Actor.__init__(self, name=name, health=health, strength=strength, intellect=intellect, luck=luck)
         Inventory.__init__(self, gold=gold, potions=potions)
 
         ## Copy values to instance
