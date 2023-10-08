@@ -1,6 +1,5 @@
 class Interaction:
-    def __init__(self):
-        pass
+    global_game_mode = "AUTO" ## this is a default value that should be can be updated to "manual" during the welcome function 
 
     @staticmethod
     def post_battle(player_instance):
