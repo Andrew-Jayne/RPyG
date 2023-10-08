@@ -1,9 +1,10 @@
 class Actor:
-    def __init__(self, name:str, health:int, strength:int, intellect:int):
+    def __init__(self, name:str, health:int, strength:int, intellect:int, luck:int):
         self.name = name
         self.health = health
         self.strength = strength
         self.intellect = intellect
+        self.luck = luck
         self.base_health = health
 
     def damage(self, damage_amount:int):
