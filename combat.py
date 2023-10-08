@@ -60,11 +60,11 @@ class Combat:
     ## Hidden Methods
     def _player_attack(player_instance, enemy_instance):
         if __class__._check_for_critical(player_instance) == True:
-            print(f"You Attack with {player_instance.attack_name} and inflicts {player_instance.attack_power * 2} damage")
+            print(f"You Attack with {player_instance.attack_name} and inflict {player_instance.attack_power * 2} damage")
             enemy_instance.damage(player_instance.attack_power * 2)
             print(f"{player_instance.name} got a critical hit!!")
         else:
-            print(f"You Attack with {player_instance.attack_name} and inflicts {player_instance.attack_power} damage")
+            print(f"You Attack with {player_instance.attack_name} and inflict {player_instance.attack_power} damage")
             enemy_instance.damage(player_instance.attack_power)
         print(f"{enemy_instance.name} has {enemy_instance.health} health remaining", end='\n\n')
 
