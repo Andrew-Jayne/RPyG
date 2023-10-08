@@ -124,7 +124,7 @@ class SpecialEncounters(Encounters):
 
     @staticmethod
     def midway_boss(player_instance):
-        wizard = Enemy(name="Cobolus The Wizard",health=15, strength=4, intellect=8, luck=4, attack_name="Arcane Firestorm")
+        wizard = Enemy(name="Cobolus The Wizard",health=15, strength=4, intellect=8, luck=6, attack_name="Arcane Firestorm")
         print(f"You encounter {wizard.name}!")
         enemy_instance = wizard
         Combat.battle(player_instance, enemy_instance)
@@ -146,27 +146,27 @@ class SpecialEncounters(Encounters):
                     sub_step += 2
                     print("You find a Secret Passage!")
                 case 4:
-                    mage = Enemy(name="Acolyte of Algolon", health=8, strength=3, intellect=7, luck=4, attack_name="Arcane Bolt")
+                    mage = Enemy(name="Acolyte of Algolon", health=8, strength=3, intellect=7, luck=6, attack_name="Arcane Bolt")
                     print(f"You encounter an {mage.name}!")
                     enemy_instance = mage
                     Combat.battle(player_instance, enemy_instance)
             if player_instance.health == 0:
                 break
         print("At the end of the Keep you encounter Algolon's Arch Mage!")
-        arch_mage = Enemy(name="Algolon's Arch Mage", health=20, strength=4, intellect=10, luck=4, attack_name="Arcane Lightning")
+        arch_mage = Enemy(name="Algolon's Arch Mage", health=20, strength=4, intellect=10, luck=6, attack_name="Arcane Lightning")
         enemy_instance = arch_mage
         Combat.battle(player_instance, enemy_instance)
 
     @staticmethod
     def penultimate_boss(player_instance):
-        great_wizard = Enemy(name="The Great Wizard Algolon", health=25, strength=5, intellect=12, luck=4, attack_name="Cosmic Collision")
+        great_wizard = Enemy(name="The Great Wizard Algolon", health=25, strength=5, intellect=12, luck=6, attack_name="Cosmic Collision")
         print(f"You Battle {great_wizard.name}!")
         enemy_instance = great_wizard
         Combat.battle(player_instance, enemy_instance)
 
     @staticmethod
     def final_boss(player_instance):
-        dragon = Enemy(name="Fortranus the Ancient One", health=40, strength=14, intellect=10, luck=4, attack_name="Dragon Fire")
+        dragon = Enemy(name="Fortranus the Ancient One", health=40, strength=14, intellect=10, luck=6, attack_name="Dragon Fire")
         print(f"You battle must now battle {dragon.name}!")
         enemy_instance = dragon
         Combat.battle(player_instance, enemy_instance)
