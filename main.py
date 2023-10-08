@@ -1,4 +1,4 @@
-from player import Player
+from actor_player import Player
 from encounters import check_for_encounter
 from welcome import welcome, player_start
 
