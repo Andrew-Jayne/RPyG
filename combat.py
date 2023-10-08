@@ -1,4 +1,5 @@
 from interaction import Interaction
+import random
 
 class Combat:
     def __init__(self, player_instance, enemy_instance):
@@ -36,11 +37,29 @@ class Combat:
 
     ## Hidden Methods
     def _player_attack(player_instance, enemy_instance):
-        print(f"You Attack with {player_instance.attack_name} and inflict {player_instance.attack_power} damage")
-        enemy_instance.damage(player_instance.attack_power)
+        if __class__._check_for_critical(player_instance) == True:
+            enemy_instance.damage(player_instance.attack_power * 2)
+            print(f"You Attack with {player_instance.attack_name} and inflict {player_instance.attack_power * 2} damage")
+            print(f"{player_instance.name} got a critical hit!!")
+        else:
+            enemy_instance.damage(player_instance.attack_power)
+            print(f"You Attack with {player_instance.attack_name} and inflict {player_instance.attack_power} damage")
         print(f"{enemy_instance.name} has {enemy_instance.health} health remaining", end='\n\n')
 
     def _enemy_attack(player_instance, enemy_instance):
-        print(f"{enemy_instance.name} attacks you with {enemy_instance.attack_name} inflicting {enemy_instance.attack_power} damage")
-        player_instance.damage(enemy_instance.attack_power)
+        if __class__._check_for_critical(enemy_instance) == True:
+            print(f"{enemy_instance.name} attacks you with {enemy_instance.attack_name} inflicting {enemy_instance.attack_power * 2} damage")
+            print(f"{enemy_instance.name} got a critical hit!!")
+            player_instance.damage(enemy_instance.attack_power)
+        else:
+            print(f"{enemy_instance.name} attacks you with {enemy_instance.attack_name} inflicting {enemy_instance.attack_power} damage")
+            player_instance.damage(enemy_instance.attack_power)
         print(f"You have {player_instance.health} Health remaining", end='\n\n') 
+
+    @staticmethod
+    def _check_for_critical(combatant_instance):
+        crit_check = random.randint(1,100)
+        if crit_check <= combatant_instance.luck:
+            return True
+        else:
+            return False
