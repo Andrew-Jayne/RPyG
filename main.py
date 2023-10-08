@@ -10,7 +10,6 @@ player_name_list = player_start()
 
 for count in range(0,len(player_name_list)):
     player_instance = Player(name=player_name_list[count])
-    print(player_instance.__dict__)
     player_instance_list.append(player_instance)
 
 
