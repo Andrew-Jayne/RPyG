@@ -1,4 +1,4 @@
-from playable_actor import PlayableActor
+from actor_playable import PlayableActor
 import random
 
 class Follower(PlayableActor):

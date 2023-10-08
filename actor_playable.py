@@ -1,4 +1,4 @@
-from actor import Actor
+from actors import Actor
 import random
 
 class Inventory:
