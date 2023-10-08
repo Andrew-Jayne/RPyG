@@ -17,10 +17,10 @@ class Interaction:
          return chosen_action
 
     @staticmethod
-    def post_battle():
+    def post_battle(player_instance):
         match __class__.global_game_mode:
             case "AUTO":
-                player_action =__class__._auto_post_battle()
+                player_action =__class__._auto_post_battle(player_instance)
                 return player_action
             case "MANUAL":
                   player_action = __class__._manual_post_battle()
@@ -31,10 +31,10 @@ class Interaction:
 
 
     @staticmethod
-    def in_battle():
+    def in_battle(player_instance):
         match __class__.global_game_mode:
             case "AUTO":
-                player_action =__class__._auto_in_battle()
+                player_action =__class__._auto_in_battle(player_instance)
                 return player_action
             case "MANUAL":
                   player_action = __class__._manual_in_battle()
@@ -88,14 +88,16 @@ TRAVEL
 
 ## Automatic Interactions
     @staticmethod
-    def _auto_post_battle(player_instance):
+    def _auto_in_battle(player_instance):
         if player_instance.health <= 4 and player_instance.potions != 0:
             return "HEAL" 
         elif player_instance.potions == 0:
                 print("You have no remaining potions and must make a stand!")
                 return "ATTACK"
+        else:
+             return "ATTACK"
     @staticmethod
-    def _auto_post_combat(player_instance):
+    def _auto_post_battle(player_instance):
         if player_instance.health < 20 and player_instance.potions != 0:
             return "HEAL"
         else:
