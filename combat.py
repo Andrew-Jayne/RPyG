@@ -7,7 +7,7 @@ class Combat:
     
     def battle(player_instance, enemy_instance):
         while enemy_instance.health != 0:
-            player_action = Interaction.in_battle()
+            player_action = Interaction.in_battle(player_instance)
             match player_action:
                 case "ATTACK":
                       __class__._player_attack(player_instance, enemy_instance)
@@ -28,7 +28,7 @@ class Combat:
         if player_instance.health != 0 and enemy_instance.health == 0:
             print(f"{enemy_instance.name} has been defeated!", end='\n\n')
             while player_post_action != "TRAVEL":
-                player_post_action = Interaction.post_battle()
+                player_post_action = Interaction.post_battle(player_instance)
                 if player_post_action == "HEAL":
                     player_instance.use_potion()
 
