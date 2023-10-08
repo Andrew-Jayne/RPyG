@@ -1,14 +1,10 @@
 from playable_actor import PlayableActor
 import random
 
+class Follower(PlayableActor):
 
-
-class Player(PlayableActor):
-
-    def __init__(self, name:str):
+    def __init__(self, name:str, strength:int, intellect:int):
         ## Setup Player Stats
-        strength = random.randint(1,10)
-        intellect = random.randint(1,10)
         luck = random.randint(1,10)
         health = 10 + int((strength + intellect) * 2)
         gold = strength * 25
@@ -24,6 +20,3 @@ class Player(PlayableActor):
         self.intellect = intellect
         self.attack_name = PlayableActor._set_attack_name(self)
         self.attack_power = PlayableActor._set_attack_power(self)
-
-    
-

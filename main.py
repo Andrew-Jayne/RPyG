@@ -23,7 +23,7 @@ print(f"Player Lck: {player_instance.luck}")
 print(f"Player Gold: {player_instance.gold}")
 print(f"Player Potions: {player_instance.potions}")
 print(f"Player Attack: {player_instance.attack_name}")
-print(f"Player Skill: {player_instance._get_player_skill()}")
+print(f"Player Skill: {player_instance._get_skill()}")
 
 
 
