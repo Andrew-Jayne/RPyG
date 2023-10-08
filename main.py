@@ -1,5 +1,5 @@
 from player import Player
-from encounters import Encounters
+from encounters import check_for_encounter
 from welcome import welcome, player_start
 
 step = 0
@@ -16,7 +16,7 @@ for count in range(0,len(player_name_list)):
 while step < 100:
     step += 1
     print(step)
-    Encounters.check_for_encounter(player_instance=player_instance_list[0],step=step) ## [0] forces the 1st instance in the list will be removed when multi player is done
+    check_for_encounter(player_instance=player_instance_list[0],step=step) ## [0] forces the 1st instance in the list will be removed when multi player is done
     if player_instance.health == 0:
         print(f"{player_instance_list[0].name} has fallen in combat after {step * 10} miles" , end='\n\n')
         break
