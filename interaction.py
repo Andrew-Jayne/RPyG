@@ -37,7 +37,7 @@ class Interaction:
                 player_action =__class__._auto_in_battle(player_instance)
                 return player_action
             case "MANUAL":
-                  player_action = __class__._manual_in_battle()
+                  player_action = __class__._manual_in_battle(player_instance.name)
                   return player_action
             case _:
                   print("Ummm How did you do that?, whatever just hit the thing")
@@ -62,9 +62,10 @@ class Interaction:
 
 ## Manual Interactions
     @staticmethod
-    def _manual_in_battle():
+    def _manual_in_battle(player_name):
         battle_options = ["ATTACK", "HEAL"]
-        battle_message = """
+        battle_message = f"""
+{player_name}
 Choose an Action:
 ATTACK
 HEAL
