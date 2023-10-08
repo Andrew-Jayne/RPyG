@@ -25,6 +25,9 @@ print(f"Player Potions: {player_instance.potions}")
 print(f"Player Attack: {player_instance.attack_name}")
 print(f"Player Skill: {player_instance._get_skill()}")
 
+print(f"Player Has Follower is: {player_instance.has_follower}")
+print(f"Player Follower is {player_instance.follower.__dict__}")
+
 
 
 

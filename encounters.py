@@ -2,6 +2,7 @@ import random
 from enemy import Enemy
 from combat import Combat
 from interaction import Interaction
+from follower import Follower
 
 class Encounters:
 
@@ -128,6 +129,8 @@ class SpecialEncounters(Encounters):
         print(f"You encounter {wizard.name}!")
         enemy_instance = wizard
         Combat.battle(player_instance, enemy_instance)
+        if player_instance.strength >= 7 or player_instance.intellect >= 7:
+            __class__._follower_joins(player_instance)
 
     @staticmethod
     def enemy_keep_visit(player_instance):
@@ -170,3 +173,38 @@ class SpecialEncounters(Encounters):
         print(f"You battle must now battle {dragon.name}!")
         enemy_instance = dragon
         Combat.battle(player_instance, enemy_instance)
+
+
+    ## Hidden Methods
+    def _follower_joins(player_instance):
+        
+        mage_names = ["Grace","Torvalds","Knuth"]
+        warrior_name = ["Moore","Neumann","Kilby"]
+        name_choice = random.randint(0,2)
+
+        ## Determine Follower Type
+        if player_instance.intellect >= 7 and player_instance.intellect > player_instance.strength:
+            follower_name_type = mage_names
+        elif player_instance.strength >= 7 and player_instance.strength > player_instance.intellect:
+            follower_name_type = warrior_name
+        elif player_instance.strength == player_instance.intellect:
+            follower_name_type = random.choice(mage_names,warrior_name)
+
+        ## Set Follower Attributes (luck is handled in the class and is random, Follower also has gold and Potions using the same logic as player)
+        if follower_name_type == mage_names:
+            follower_intellect = 5 + random.randint(1,4)
+            follower_strength = 5
+            print(f"Impressed by your intellect, a young mage joins you on your quest")
+        elif follower_name_type == warrior_name:
+            follower_intellect = 5
+            follower_strength = 5 + random.randint(1,4)
+            print(f"Impressed by your strength, a young warrior joins you on your quest")
+        
+        ### setup Follower instance
+
+        player_follower = Follower(name=follower_name_type[name_choice], strength=follower_strength, intellect=follower_intellect)
+
+
+        ## Add Follower to Player Instance
+        player_instance.gain_follower(player_follower)
+        

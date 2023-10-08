@@ -1,8 +1,6 @@
 from playable_actor import PlayableActor
 import random
 
-
-
 class Player(PlayableActor):
 
     def __init__(self, name:str):
@@ -24,6 +22,13 @@ class Player(PlayableActor):
         self.intellect = intellect
         self.attack_name = PlayableActor._set_attack_name(self)
         self.attack_power = PlayableActor._set_attack_power(self)
+        self.has_follower = False
+        self.follower = None
+
+    def gain_follower(self, follower_instance):
+        self.has_follower = True
+        self.follower = follower_instance
+        pass
 
     
 
