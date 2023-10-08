@@ -2,7 +2,7 @@ from actor import Actor
 
 class Enemy(Actor):
     def __init__(self, name:str, health:int, strength:int, intellect:int, luck:str, attack_name:str):
-        Actor.__init__(self, name=name, health=health, strength=strength, intellect=intellect)
+        Actor.__init__(self, name=name, health=health, strength=strength, intellect=intellect, luck=luck)
         self.name = name
         self.health = health
         self.strength = strength
