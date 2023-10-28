@@ -14,7 +14,7 @@ class Combat:
                       __class__._player_attack(player_instance, enemy_instance)
                 case "HEAL":
                     player_instance.use_potion()
-            ## End Battle If player dies
+            ## End Battle If Enemy dies
             if enemy_instance.health == 0:
                 break
             
