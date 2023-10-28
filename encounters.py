@@ -4,9 +4,9 @@ from encounter_enemy import EnemyEncounters
 from encounter_special import SpecialEncounters
 from encounter_mystery import MysteryEncounters
 
-def check_for_encounter(player_instance,step:int):
+def check_for_encounter(player_instance):
 
-    if step not in [25,50,75,99,100]:
+    if player_instance.progress not in [25,50,75,99,100]:
         encounter_check = random.uniform(0, 1)
 
         if 0 <= encounter_check < 0.125:  # First 12.5% range
@@ -18,7 +18,7 @@ def check_for_encounter(player_instance,step:int):
         elif 0.25 <= encounter_check < 0.30:  # 5% Chance
             MysteryEncounters.mystery_encounter(player_instance)
     else:              
-        match step:
+        match player_instance.progress:
             case 25:
                 SpecialEncounters.friendly_keep_visit(player_instance)
             case 50:

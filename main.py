@@ -11,14 +11,18 @@ player_name = player_start()
 player_instance = Player(name=player_name)
 
 
-while player_instance.progress < 100 & player_instance.health:
+while player_instance.progress < 100:
     player_instance.progress += 1
     print(player_instance.progress)
     check_for_encounter(player_instance=player_instance)
     if player_instance.health == 0:
-        print(f"{player_instance[0].name} has fallen in combat after {player_instance.progress * 10} miles" , end='\n\n')
+        print(f"{player_instance.name} has fallen in combat after {player_instance.progress * 10} miles" , end='\n\n')
         break
 
+
+
+
+# Post Game Report
 print(f"Player Name: {player_instance.name}")
 print(f"Player Base Health: {player_instance.base_health}")
 print(f"Player Int: {player_instance.intellect}")

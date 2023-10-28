@@ -7,7 +7,7 @@ class SpecialEncounters():
 
     @staticmethod
     def friendly_keep_visit(player_instance):
-        print("You are welcomed to the Friendly Keep")
+        print("You are welcomed to the Keep of Stallman")
         print("You are fully rested and have a full stock of potions", end="\n\n")
         player_instance.heal(30)
         player_instance.potions = 9
