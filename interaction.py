@@ -77,7 +77,7 @@ HEAL
     
     @staticmethod
     def _manual_post_battle():
-        post_battle_options = ["HEAL", "TRAVEL"]
+        post_battle_options = ["HEAL", "TRAVEL", "SAVE"]
         post_battle_message = """
 Choose an Action:
 HEAL
