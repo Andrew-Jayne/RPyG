@@ -1,5 +1,6 @@
 from interaction import Interaction
 import random
+import json
 
 class Combat:
     def __init__(self, player_instance, enemy_instance):
@@ -54,6 +55,16 @@ class Combat:
                 player_post_action = Interaction.post_battle(player_instance)
                 if player_post_action == "HEAL":
                     player_instance.use_potion()
+                if player_post_action == "SAVE":
+                    # Open the file in write mode. If the file doesn't exist, it will be created.
+                    # If it does exist, it will be overwritten.
+                    with open('savegame.rpygs', 'w') as file:
+                        # Write some text to the file.
+                        json.dump(player_instance.__dict__,file, indent=4)
+                        exit()
+                        # The file is automatically closed when you exit the 'with' block.
+
+                    
 
 
 
