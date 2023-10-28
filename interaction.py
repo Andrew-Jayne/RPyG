@@ -1,6 +1,6 @@
 class Interaction:
     global_game_mode = "AUTO" ## this is a default value that should be can be updated to "MANUAL" during the welcome function
-    global_player_count = "1" ## this si default value that can be updated to a new value in the welcome function
+    global_player_count = "1" ## this is default value that can be updated to a new value in the welcome function
 
     @staticmethod
     def validate_input(choice_list:list, prompt_message:str):

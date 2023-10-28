@@ -17,7 +17,7 @@ Note: All Prompts in this game are case insensitive
 
     
 def player_start():
-    players = []
+    player_name = ""
     player_name_message = """
 Now before your Journey Can Begin Please enter the name of your Character
 
@@ -27,11 +27,9 @@ Note: Case is respected but names longer than 32 Characters will be truncated
 """
     if Interaction.global_game_mode == "MANUAL":
             player_name = str(input(f"{player_name_message}"))[:32]
-            players.append(player_name)
     else:
-            players.append(f"The Protagonist")
-
-    return players
+            player_name = "The Protagonist"
+    return player_name
 
 
 
