@@ -13,8 +13,8 @@ player_instance = Player(name=player_name)
 
 while player_instance.progress < 100:
     player_instance.progress += 1
-    print(player_instance.progress)
-    check_for_encounter(player_instance=player_instance)
+    Display.progress(player_instance)
+    check_for_encounter(player_instance)
     if player_instance.health == 0:
         print(f"{player_instance.name} has fallen in combat after {player_instance.progress * 10} miles" , end='\n\n')
         break
