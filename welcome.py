@@ -26,7 +26,7 @@ Note: Case is respected but names longer than 32 Characters will be truncated
 
 """
     if Interaction.global_game_mode == "MANUAL":
-            player_name = str(input(f"{player_name_message}"))[:32]
+            player_name = Interaction._sanitize(str(input(f"{player_name_message}"))[:32])
     else:
             player_name = "The Protagonist"
     return player_name
