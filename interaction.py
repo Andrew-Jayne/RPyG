@@ -1,3 +1,5 @@
+import re
+
 class Interaction:
     global_game_mode = "AUTO" ## this is a default value that should be can be updated to "MANUAL" during the welcome function
     global_player_count = "1" ## this is default value that can be updated to a new value in the welcome function
@@ -7,7 +9,7 @@ class Interaction:
          chosen_action = ""
          dumb_check = 0
          while chosen_action not in choice_list:
-              chosen_action = input(prompt_message).upper()
+              chosen_action = __class__._sanitize(input(prompt_message).upper())
               if chosen_action not in choice_list:
                    dumb_check += 1
                    print("Invalid Choice Try Again")
@@ -60,6 +62,21 @@ class Interaction:
 
 
 ## Hidden Methods
+
+    @staticmethod
+    def _sanitize(input_string):
+        chars_to_remove = '!#*.[]{}\\|":;/<>\\\()\''
+        control_chars = ''.join(map(chr, range(0, 32)))+ chr(127)
+        literal_control_strings = ['\\n', '\\t', '\\r', '\\x0c', '\\x0b']  # Literal string representations of control chars
+
+        limited_string = input_string[:32] # Limit the input to 32 characters first
+
+        # Remove literal string representations of control characters
+        for literal in literal_control_strings:
+            limited_string = limited_string.replace(literal, '')
+        cleaned_string = ''.join(char for char in limited_string if char not in chars_to_remove and char not in control_chars)
+
+        return cleaned_string
 
 ## Manual Interactions
     @staticmethod
