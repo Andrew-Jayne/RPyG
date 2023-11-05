@@ -9,8 +9,8 @@ class Combat:
         self.enemy_instance = enemy_instance
     
     def battle(player_instance, enemy_instance):
-        Display.clear_display()
         while enemy_instance.health != 0:
+            Display.battle_hud_message(player_instance=player_instance,enemy_instance=enemy_instance)
             player_action = Interaction.in_battle(player_instance)
             match player_action:
                 case "ATTACK":
@@ -48,6 +48,7 @@ class Combat:
             ## End combat if player dies
             if player_instance.health == 0:
                 break
+            Display.clear_display()
 
         ## Display Victory Message if player does not die
         player_post_action = ""
