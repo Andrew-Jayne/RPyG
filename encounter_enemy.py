@@ -5,7 +5,7 @@ from display import Display
 from interaction import Interaction
 
 class EnemyEncounters():
-    
+    ## This can be rebuild to be more Dry there is a heap of redundant code here that can be improved, this will also be better for moving the enemies into lists, then eventually into a yaml file.
     @staticmethod
     def enemy_encounter(player_instance):
         enemy_chance = random.randint(0,4)
