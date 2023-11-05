@@ -15,6 +15,7 @@ Note: All Prompts in this game are case insensitive
 """
     game_mode = Interaction.validate_input(mode_choices, mode_message)
     Interaction.global_game_mode = game_mode
+    Display.clear_display()
 
     
 def player_start():
@@ -30,10 +31,33 @@ Note: Case is respected but names longer than 32 Characters will be truncated
             player_name = Interaction._sanitize(str(input(f"{player_name_message}"))[:32])
     else:
             player_name = "The Protagonist"
+    Display.clear_display()
     return player_name
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### moved this way down here because I don't even want to loook at it lmao
 def multiplayer_start(): ## Unused for now, pending other changes to the gameplay
     players = []
     count_choices = ["1","2","3","4"]
