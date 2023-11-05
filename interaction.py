@@ -1,4 +1,4 @@
-import re
+import random
 
 class Interaction:
     global_game_mode = "AUTO" ## this is a default value that should be can be updated to "MANUAL" during the welcome function
@@ -19,6 +19,19 @@ class Interaction:
               
          return chosen_action
 
+    @staticmethod
+    def encounter_enemy():
+        match __class__.global_game_mode:
+            case "AUTO":
+                player_action =__class__._auto_enemy_encounter()
+                return player_action
+            case "MANUAL":
+                    player_action = __class__._manual_enemy_encounter()
+                    return player_action
+            case _:
+                    print("Ummm How did you do that?, whatever just hit the thing")
+                    return "ATTACK" 
+    
     @staticmethod
     def post_battle(player_instance):
         match __class__.global_game_mode:
@@ -45,6 +58,7 @@ class Interaction:
             case _:
                   print("Ummm How did you do that?, whatever just hit the thing")
                   return "ATTACK"
+             
 
 
 
@@ -82,6 +96,20 @@ class Interaction:
         return cleaned_string
 
 ## Manual Interactions
+
+    @staticmethod
+    def _manual_enemy_encounter():
+        encounter_options = ["ATTACK", "FLEE"]
+        enounter_message = f"""
+Choose an Action:
+ATTACK
+FLEE
+
+"""
+        encounter_choice = __class__.validate_input(encounter_options, enounter_message)
+        return encounter_choice
+
+
     @staticmethod
     def _manual_in_battle(player_name):
         battle_options = ["ATTACK", "HEAL"]
@@ -109,6 +137,12 @@ TRAVEL
 
 
 ## Automatic Interactions
+
+    @staticmethod
+    def _auto_enemy_encounter():
+        encounter_action = random.choice("FLEE","ATTACK")
+        return encounter_action
+
     @staticmethod
     def _auto_in_battle(player_instance):
         if player_instance.health <= 4 and player_instance.potions != 0:
