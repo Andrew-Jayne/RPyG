@@ -1,4 +1,5 @@
 from interaction import Interaction
+from display import Display
 import random
 import json
 
@@ -8,6 +9,7 @@ class Combat:
         self.enemy_instance = enemy_instance
     
     def battle(player_instance, enemy_instance):
+        Display.clear_display()
         while enemy_instance.health != 0:
             player_action = Interaction.in_battle(player_instance)
             match player_action:
@@ -50,7 +52,8 @@ class Combat:
         ## Display Victory Message if player does not die
         player_post_action = ""
         if player_instance.health != 0 and enemy_instance.health == 0:
-            print(f"{enemy_instance.name} has been defeated!", end='\n\n')
+            Display.clear_display()
+            Display.defeated_message(enemy_instance)
             while player_post_action != "TRAVEL":
                 player_post_action = Interaction.post_battle(player_instance)
                 if player_post_action == "HEAL":
@@ -71,33 +74,30 @@ class Combat:
     ## Hidden Methods
     def _player_attack(player_instance, enemy_instance):
         if __class__._check_for_critical(player_instance) == True:
-            print(f"You Attack with {player_instance.attack_name} and inflict {player_instance.attack_power * 2} damage")
+            Display.player_critical_attack_message(player_instance)
             enemy_instance.damage(player_instance.attack_power * 2)
-            print(f"{player_instance.name} got a critical hit!!")
         else:
-            print(f"You Attack with {player_instance.attack_name} and inflict {player_instance.attack_power} damage")
+            Display.player_attack_message(player_instance)
             enemy_instance.damage(player_instance.attack_power)
-        print(f"{enemy_instance.name} has {enemy_instance.health} health remaining", end='\n\n')
+            Display.actor_health_message(enemy_instance)
 
     def _enemy_attack(player_instance, enemy_instance):
         if __class__._check_for_critical(enemy_instance) == True:
-            print(f"{enemy_instance.name} attacks with {enemy_instance.attack_name} inflicting {enemy_instance.attack_power * 2} damage")
-            print(f"{enemy_instance.name} got a critical hit!!")
+            Display.actor_critical_attack_message(enemy_instance)
             player_instance.damage(enemy_instance.attack_power)
         else:
-            print(f"{enemy_instance.name} attacks with {enemy_instance.attack_name} inflicting {enemy_instance.attack_power} damage")
+            Display.actor_attack_message(enemy_instance)
             player_instance.damage(enemy_instance.attack_power)
-        print(f"{player_instance.name} has {player_instance.health} Health remaining", end='\n\n') 
+        Display.actor_health_message(player_instance) 
 
     def _follower_attack(follower_instance, enemy_instance):
         if __class__._check_for_critical(follower_instance) == True:
-            print(f"{follower_instance.name} Attacks with {follower_instance.attack_name} and inflicts {follower_instance.attack_power * 2} damage")
+            Display.actor_critical_attack_message(follower_instance)
             enemy_instance.damage(follower_instance.attack_power * 2)
-            print(f"{follower_instance.name} got a critical hit!!")
         else:
-            print(f"{follower_instance.name} Attacks with {follower_instance.attack_name} and inflicts {follower_instance.attack_power} damage")
+            Display.actor_attack_message(follower_instance)
             enemy_instance.damage(follower_instance.attack_power)
-        print(f"{enemy_instance.name} has {enemy_instance.health} health remaining", end='\n\n')
+        Display.actor_health_message(enemy_instance)
 
     @staticmethod
     def _check_for_critical(combatant_instance):
