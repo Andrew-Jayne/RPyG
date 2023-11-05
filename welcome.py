@@ -1,4 +1,5 @@
 from interaction import Interaction
+from display import Display
 
 def welcome():
     print("Welcome to RPyG, a text based RPG in Python", end="\n\n")
