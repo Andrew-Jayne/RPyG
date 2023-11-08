@@ -48,12 +48,10 @@ class Combat:
             ## End combat if player dies
             if player_instance.health == 0:
                 break
-            Display.clear_display()
 
         ## Display Victory Message if player does not die
         player_post_action = ""
         if player_instance.health != 0 and enemy_instance.health == 0:
-            Display.clear_display()
             Display.defeated_message(enemy_instance)
             while player_post_action != "TRAVEL":
                 player_post_action = Interaction.post_battle(player_instance)

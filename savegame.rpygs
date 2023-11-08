@@ -1,0 +1,15 @@
+{
+    "name": "the player",
+    "health": 39,
+    "strength": 10,
+    "intellect": 6,
+    "luck": 8,
+    "base_health": 42,
+    "gold": 0,
+    "potions": 9,
+    "attack_name": "Greatsword Thrust",
+    "attack_power": 10,
+    "has_follower": false,
+    "follower_instance": null,
+    "progress": 31
+}
