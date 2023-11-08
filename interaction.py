@@ -140,7 +140,7 @@ TRAVEL
 
     @staticmethod
     def _auto_enemy_encounter():
-        encounter_action = random.choice("FLEE","ATTACK")
+        encounter_action = random.choice(["FLEE","ATTACK"])
         return encounter_action
 
     @staticmethod
