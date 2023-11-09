@@ -4,11 +4,11 @@ import random
 import json
 
 class Combat:
-    def __init__(self, player_instance, enemy_instance):
-        self.player_instance = player_instance
-        self.enemy_instance = enemy_instance
-    
+
+    @staticmethod
     def battle(player_instance, enemy_instance):
+        Display.clear_display()
+        Display.battle_start_message()
         while enemy_instance.health != 0:
             Display.battle_hud_message(player_instance=player_instance,enemy_instance=enemy_instance)
             player_action = Interaction.in_battle(player_instance)
@@ -65,6 +65,7 @@ class Combat:
                         json.dump(player_instance.__dict__,file, indent=4)
                         exit()
                         # The file is automatically closed when you exit the 'with' block.
+            Display.clear_display()
 
                     
 

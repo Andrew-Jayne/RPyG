@@ -72,6 +72,12 @@ You have traveled {player_instance.progress * 10} Miles Total.
         if player_instance.has_follower == True:
             print(f"{player_instance.follower_instance.name}: {player_instance.follower_instance.health}")
         print(f"{enemy_instance.name}: {enemy_instance.health}")
+    
+    @staticmethod
+    def battle_start_message():
+        print("""
+The Battle Begins!
+              """, end="\n\n")
 
 
 ##  Encounter Messages
