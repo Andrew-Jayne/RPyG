@@ -99,10 +99,10 @@ class Interaction:
 
     @staticmethod
     def _manual_enemy_encounter():
-        encounter_options = ["ATTACK", "FLEE"]
+        encounter_options = ["BATTLE", "FLEE"]
         enounter_message = f"""
 Choose an Action:
-ATTACK
+BATTLE
 FLEE
 
 """
