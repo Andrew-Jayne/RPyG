@@ -86,7 +86,7 @@ class EnemyEncounters():
         Display.encounter_message(enemy_instance.name)
         player_action = Interaction.encounter_enemy()
         match player_action:
-            case "ATTACK":
+            case "BATTLE":
                     Combat.battle(player_instance, enemy_instance)
             case "FLEE":
                 if player_instance.luck >= random.randint(4,15):
