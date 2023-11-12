@@ -14,8 +14,8 @@ class PlayableActor(Actor, Inventory):
 
 
     def use_potion(self):
-        print("You drink a potion")
         if self.potions != 0:
+            print("You drink a potion")
             self.potions -= 1
             self.heal(10 + random.randint(-2,2))
             print(f"You have {self.potions} remaining")

@@ -6,11 +6,17 @@ def welcome():
 
     mode_choices = ["AUTO", "MANUAL"]
     mode_message = """
+             This game looks best with a width of at least 80.
+            If the next line is split please widen your terminal.
+----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----
+
+
 Please Select your Game mode:
 Options are : Manual & Auto
 
 
 Note: All Prompts in this game are case insensitive
+
 
 """
     game_mode = Interaction.validate_input(mode_choices, mode_message)
@@ -21,17 +27,17 @@ Note: All Prompts in this game are case insensitive
 def player_start():
     player_name = ""
     player_name_message = """
-Now before your Journey Can Begin Please enter the name of your Character
+Now before your journey can begin please enter the name of your Character
 
 
-Note: Case is respected but names longer than 32 Characters will be truncated
+Note: Case is respected but names longer than 32 characters will be truncated
 
 """
     if Interaction.global_game_mode == "MANUAL":
             player_name = Interaction._sanitize(str(input(f"{player_name_message}"))[:32])
+            Display.clear_display()
     else:
             player_name = "The Protagonist"
-    Display.clear_display()
     return player_name
 
 
