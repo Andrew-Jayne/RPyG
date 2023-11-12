@@ -2,6 +2,7 @@ from interaction import Interaction
 from display import Display
 import random
 import json
+import time
 
 class Combat:
 
@@ -14,8 +15,12 @@ class Combat:
             player_action = Interaction.in_battle(player_instance)
             match player_action:
                 case "ATTACK":
+                      if Interaction.global_game_mode != "AUTO":
+                        Display.clear_display()
                       __class__._player_attack(player_instance, enemy_instance)
                 case "HEAL":
+                    if Interaction.global_game_mode != "AUTO":
+                        Display.clear_display()
                     player_instance.use_potion()
             ## End Battle If Enemy dies
             if enemy_instance.health == 0:
@@ -39,7 +44,6 @@ class Combat:
                     target = player_instance.follower_instance
             else:
                 target = player_instance
-            
             __class__._enemy_attack(target, enemy_instance)
             ## Remove Follower if they die
             if player_instance.has_follower == True:
