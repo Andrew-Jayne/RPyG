@@ -1,0 +1,55 @@
+{
+    "small_enemies": [
+        {
+            "name": "Feral Imp",
+            "health": 8,
+            "strength": 1,
+            "intellect": 3,
+            "luck": 4,
+            "attack_name": "fireball"
+        },
+        {
+            "name": "Goblin Scout",
+            "health": 6,
+            "strength": 5,
+            "intellect": 2,
+            "luck": 2,
+            "attack_name": "Club Bash"
+        }
+    ],
+    "medium_enemies": [
+        {
+            "name": "Dire Wolf",
+            "health": 15,
+            "strength": 5,
+            "intellect": 3,
+            "luck": 6,
+            "attack_name": "Wolf Bite"
+        },
+        {
+            "name": "Lesser Demon",
+            "health": 10,
+            "strength": 4,
+            "intellect": 7,
+            "luck": 2,
+            "attack_name": "Soul Decay Wave"
+        }],
+
+        "large_enemies": [
+                    {
+        "name": "Cave Troll",
+        "health": 30,
+        "strength": 10,
+        "intellect": 1,
+        "luck": 2,
+        "attack_name": "Club Smash"
+    },
+    {
+        "name": "Stunted Ice Drake",
+        "health": 25,
+        "strength": 9,
+        "intellect": 7,
+        "luck": 8,
+        "attack_name": "Blizzard Breath"
+    } ]
+}
