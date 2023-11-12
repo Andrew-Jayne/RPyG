@@ -10,7 +10,7 @@ class EnemyEncounters():
     @staticmethod
     def enemy_encounter(player_instance):
         enemy_chance = random.randint(0,4)
-        with open('encounters/enemies.json', 'r') as enemies_file:
+        with open('encounters/enemies_common.json', 'r') as enemies_file:
             enemies_lists = json.load(enemies_file)
         if enemy_chance == 6:
             print("WTF, You're not supposed to see this, some kind of Cosmic bit flip happened")

@@ -28,7 +28,7 @@
         },
         {
             "name": "Lesser Demon",
-            "health": 10,
+            "health": 13,
             "strength": 4,
             "intellect": 7,
             "luck": 2,
