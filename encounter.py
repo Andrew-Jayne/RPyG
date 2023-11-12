@@ -1,8 +1,8 @@
 import random
-from encounter_rest import RestEncounters
-from encounter_enemy import EnemyEncounters
-from encounter_special import SpecialEncounters
-from encounter_mystery import MysteryEncounters
+from encounters.encounter_rest import RestEncounters
+from encounters.encounter_enemy import EnemyEncounters
+from encounters.encounter_special import SpecialEncounters
+from encounters.encounter_mystery import MysteryEncounters
 
 def check_for_encounter(player_instance):
 
