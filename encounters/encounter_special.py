@@ -1,7 +1,7 @@
 import random
-from actor_enemy import Enemy
+from actors.actor_enemy import Enemy
 from combat import Combat
-from actor_follower import Follower
+from actors.actor_follower import Follower
 
 class SpecialEncounters():
 

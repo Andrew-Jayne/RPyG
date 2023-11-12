@@ -1,5 +1,5 @@
 import random
-from actor_enemy import Enemy
+from actors.actor_enemy import Enemy
 from combat import Combat
 from display import Display
 from interaction import Interaction

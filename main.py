@@ -1,14 +1,21 @@
-from actor_player import Player
+import json
+from actors.actor_player import Player
 from display import Display
-from encounters import check_for_encounter
+from encounter import check_for_encounter
 from welcome import welcome, player_start
+load_game = None
 
-player_instance = []
-welcome()
+if load_game == True:
+    with open('savegame.rpygs', 'r') as file:
+        # Write some text to the file.
+        player_instance = json.load(file) #might move to pickle later (maybe some way to make that safer or add a checksum or hash could be fun)
+else:
+    player_instance = []
+    welcome()
 
-player_name = player_start()
+    player_name = player_start()
 
-player_instance = Player(name=player_name)
+    player_instance = Player(name=player_name)
 
 
 while player_instance.progress < 100:
