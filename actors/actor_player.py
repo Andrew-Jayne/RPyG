@@ -1,4 +1,4 @@
-from actor_playable import PlayableActor
+from actors.actor_playable import PlayableActor
 import random
 
 class Player(PlayableActor):
