@@ -57,4 +57,7 @@ if player_instance.has_follower == True:
 ### Remove direct prints from rest and mystery encounters
 
 ### Template and Json-ize rest and mystery encounters
+### Move display functions into smaller sub classes (like encounters)
+### Move interaction functions into smaller sub classes
 
+### IDEA Centralize json stores in story directory?
