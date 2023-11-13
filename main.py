@@ -50,3 +50,11 @@ if player_instance.has_follower == True:
 ### TODO expand enemy system
     ### TODO Multi Enemy Encouters
 
+### TODO add Defend & Dodge Options to combat
+
+### Add interaction to rest encounters
+
+### Remove direct prints from rest and mystery encounters
+
+### Template and Json-ize rest and mystery encounters
+
