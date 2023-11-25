@@ -2,8 +2,8 @@ import random
 import json
 from actors.actor_enemy import Enemy
 from combat import Combat
-from display import Display
-from interaction import Interaction
+from display.display import Display
+from interaction.interaction import Interaction
 
 class EnemyEncounters():
 

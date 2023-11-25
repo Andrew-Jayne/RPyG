@@ -1,5 +1,5 @@
-from interaction import Interaction
-from display import Display
+from interaction.interaction import Interaction
+from display.display import Display
 import random
 import pickle
 

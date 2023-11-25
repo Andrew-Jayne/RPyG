@@ -1,6 +1,6 @@
 import os
 import time
-from interaction import Interaction
+from interaction.interaction import Interaction
 
 
 class Display:

@@ -1,5 +1,5 @@
 import random
-from interaction import Interaction
+from interaction.interaction import Interaction
 
 
 class RestEncounters():

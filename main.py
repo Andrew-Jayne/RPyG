@@ -1,6 +1,6 @@
 import json
 from actors.actor_player import Player
-from display import Display
+from display.display import Display
 from encounter import check_for_encounter
 from welcome import welcome, player_start
 load_game = None
