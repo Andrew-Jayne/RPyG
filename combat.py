@@ -1,8 +1,7 @@
 from interaction import Interaction
 from display import Display
 import random
-import json
-import time
+import pickle
 
 class Combat:
 
@@ -64,9 +63,9 @@ class Combat:
                 if player_post_action == "SAVE":
                     # Open the file in write mode. If the file doesn't exist, it will be created.
                     # If it does exist, it will be overwritten.
-                    with open('savegame.rpygs', 'w') as file:
+                    with open('savegame.rpygs', 'wb') as save_file:
                         # Write some text to the file.
-                        json.dump(player_instance.__dict__,file, indent=4)
+                        pickle.dump(player_instance, save_file)
                         exit()
                         # The file is automatically closed when you exit the 'with' block.
             Display.clear_display()
