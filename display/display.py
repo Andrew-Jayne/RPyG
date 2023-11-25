@@ -1,98 +1,64 @@
-import os
-import time
-from interaction.interaction import Interaction
-
+from display.display_utilities import clear_display
+from display.messages_actor import defeated_message, encounter_message, actor_attack_message, actor_health_message, actor_critical_attack_message
+from display.messages_encouter import flee_failure_message, flee_success_message
+from display.messages_battle import battle_hud_message, battle_start_message
+from display.messages_player import player_progress_message, player_attack_message, player_critical_attack_message
 
 class Display:
 
+    # Utilities
     @staticmethod
     def clear_display():
-        ## Screen is not cleared in Auto mode since It's better for testing and Auto mode is kinda turning into a debug mode (I might make that an option at some point)
-        if Interaction.global_game_mode != "AUTO":
-            # For Windows
-            if os.name == 'nt':
-                os.system('cls')
-            # For macOS and Linux
-            else:
-                os.system('clear')
+        clear_display()
 
-## Player Messages
+    # Actor Messages
     @staticmethod
-    def player_progress_message(player_instance):
-        print(f"""
-You Progress 10 Miles further.
-You have traveled {player_instance.progress * 10} Miles Total.
-""")
-        ## Don't pause for effect when in full auto mode
-        if Interaction.global_game_mode != "AUTO":
-            time.sleep(2)
-        ## Clear the Display after 10 Steps
-        if player_instance.progress % 10 == 0:
-            __class__.clear_display()
-        
-    @staticmethod
-    def player_attack_message(player_instance):
-        print(f"You Attack with {player_instance.attack_name} and inflict {player_instance.attack_power} damage", end="\n\n")
-
-
-
-    @staticmethod
-    def player_critical_attack_message(player_instance):
-        print(f"You Attack with {player_instance.attack_name} and inflict {player_instance.attack_power * 2} damage")
-        print(f"{player_instance.name} got a critical hit!!", end="\n\n")
-
-
-## Generic Actor Messages
-
+    def defeated_message(actor_name):
+        defeated_message(actor_name)
+    
     @staticmethod
     def encounter_message(actor_name):
-        print(f"You encounter a {actor_name}!", end="\n\n")
-
-    @staticmethod
-    def defeated_message(actor_instance):
-        print(f"{actor_instance.name} has been defeated" , end='\n\n')
-
+        encounter_message(actor_name)
+    
     @staticmethod
     def actor_attack_message(actor_instance):
-        if Interaction.global_game_mode != "AUTO":
-            time.sleep(2)
-        print(f"{actor_instance.name} attacks with {actor_instance.attack_name} inflicting {actor_instance.attack_power} damage", end="\n\n")
+        actor_attack_message(actor_instance)
+    
+    @staticmethod
+    def actor_health_message(actor_instance):
+        actor_health_message(actor_instance)
 
     @staticmethod
     def actor_critical_attack_message(actor_instance):
-        if Interaction.global_game_mode != "AUTO":
-            time.sleep(2)
-        print(f"{actor_instance.name} attacks with {actor_instance.attack_name} inflicting {actor_instance.attack_power * 2} damage")
-        print(f"{actor_instance.name} got a critical hit!!", end="\n\n")
+        actor_critical_attack_message(actor_instance)
 
-
-    @staticmethod
-    def actor_health_message(actor_instance):
-        print(f"{actor_instance.name} has {actor_instance.health} Health remaining", end="\n\n")
-
-
-
-## Battle Special Messages:
+    # Battle Messages
     @staticmethod
     def battle_hud_message(player_instance, enemy_instance):
-        print(f"{player_instance.name}: {player_instance.health}")
-        if player_instance.has_follower == True:
-            print(f"{player_instance.follower_instance.name}: {player_instance.follower_instance.health}")
-        print(f"{enemy_instance.name}: {enemy_instance.health}")
+        battle_hud_message(player_instance, enemy_instance)
     
     @staticmethod
     def battle_start_message():
-        print("The Battle Begins!", end="\n\n\n")
+        battle_start_message()
 
-
-##  Encounter Messages
-
-    @staticmethod
-    def flee_success_message(enemy_name):
-        print(f"You Successfuly Escape the {enemy_name}!")
-
+    # Encouter Messages
     @staticmethod
     def flee_failure_message(enemy_name):
-        print(f"You Fail to Escape the {enemy_name}!")
-        if Interaction.global_game_mode != "AUTO":
-            time.sleep(2)
+        flee_failure_message(enemy_name)
+    
+    @staticmethod
+    def flee_success_message(enemy_name):
+        flee_success_message(enemy_name)
+
+    # Player Messages
+    @staticmethod
+    def player_progress_message(player_instance):
+        player_progress_message(player_instance)
+
+    @staticmethod
+    def player_attack_message(player_instance):
+        player_attack_message(player_instance)
+
+    @staticmethod
+    def player_critical_attack_message(player_instance):
+        player_critical_attack_message(player_instance)

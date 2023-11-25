@@ -1,5 +1,5 @@
 ## Manual Interactions
-from interaction_utilities import validate_input
+from interaction.interaction_utilities import validate_input
 
 def manual_enemy_encounter():
     encounter_options = ["BATTLE", "FLEE"]
