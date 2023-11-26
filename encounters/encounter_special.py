@@ -3,6 +3,7 @@ import json
 from actors.actor_enemy import Enemy
 from combat.combat import Combat
 from actors.actor_follower import Follower
+from message.message import Message
 
 class SpecialEncounters():
 
@@ -58,6 +59,8 @@ class SpecialEncounters():
         enemy_instance = __class__._get_special_enemy('ultimate_boss')
         print(f"You battle must now battle {enemy_instance.name}!")
         Combat.battle(player_instance, enemy_instance)
+        Message.end_game_message(player_instance)
+        
 
 
     ## Hidden Methods
