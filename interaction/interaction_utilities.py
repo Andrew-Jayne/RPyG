@@ -1,3 +1,4 @@
+
 def sanitize(input_string:str):
     #exit if string is longer that 128 Chars
     if len(input_string) > 128:
@@ -15,18 +16,15 @@ def sanitize(input_string:str):
 
     return cleaned_string
 
+
 def validate_input(choice_list:list, prompt_message:str):
         chosen_action = ""
         dumb_check = 0
-        print(f"Inital Chosen Action is: {chosen_action}")
         while chosen_action not in choice_list:
             chosen_action = sanitize(input(prompt_message).upper())
-            print(f"Current Chosen Action is: {chosen_action}")
             if chosen_action not in choice_list:
                 dumb_check += 1
-                print("Invalid Choice Try Again")
                 if dumb_check == 10:
                     print("Look it's not hard, just enter a valid choice....", end="\n\n")
                     exit()
-        print(f"Final Chosen Action is: {chosen_action}")
         return chosen_action
