@@ -1,0 +1,31 @@
+{"minor_rest": [
+    {
+        "message": "You find a Small Refuge and rest for a moment",
+        "recovery_amount": 3
+    },
+    {
+        "message": "You Find a Tavern and Rest for a short time",
+        "recovery_amount": 5
+    }
+],
+"medium_rest": [
+    {
+        "message": "You Find an Inn and Rest for the evening",
+        "recovery_amount": 7
+    },
+    {
+        "message": "You find a village and rest for a day",
+        "recovery_amount": 9
+    }
+],
+"large_rest": [
+    {
+        "message": "You Find A Vassal's Keep! \nYou take a day to rest, and replenish your supplies.",
+        "recovery_amount": 12
+    },
+    {
+        "message": "You arrive at a grand palace and are welcomed All",
+        "recovery_amount": 15
+    }
+]
+}
