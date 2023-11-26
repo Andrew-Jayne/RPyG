@@ -83,3 +83,20 @@ You have traveled {player_instance.progress * 10} Miles Total.
         ## Clear the Display after 10 Steps
         if player_instance.progress % 10 == 0:
             Display.clear_display()
+
+    @staticmethod
+    def post_game_recap(player_instance):
+        # Post Game Report
+        print(f"Player Name: {player_instance.name}")
+        print(f"Player Base Health: {player_instance.base_health}")
+        print(f"Player Int: {player_instance.intellect}")
+        print(f"Player Str: {player_instance.strength}")
+        print(f"Player Lck: {player_instance.luck}")
+        print(f"Player Gold: {player_instance.gold}")
+        print(f"Player Potions: {player_instance.potions}")
+        print(f"Player Attack: {player_instance.attack_name}")
+        print(f"Player Skill: {player_instance._get_skill()}")
+
+        print(f"Player Has Follower?: {player_instance.has_follower}")
+        if player_instance.has_follower == True:
+            print(f"Player Follower is {player_instance.follower_instance.__dict__}")
