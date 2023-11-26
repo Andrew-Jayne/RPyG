@@ -59,7 +59,8 @@ class SpecialEncounters():
         enemy_instance = __class__._get_special_enemy('ultimate_boss')
         print(f"You battle must now battle {enemy_instance.name}!")
         Combat.battle(player_instance, enemy_instance)
-        Message.end_game_message(player_instance)
+        if player_instance.health > 0:
+            Message.end_game_message(player_instance)
         
 
 
