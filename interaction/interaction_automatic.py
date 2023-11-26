@@ -2,8 +2,7 @@
 import random
 
 def auto_enemy_encounter():
-    encounter_action = random.choice(["FLEE","ATTACK"])
-    return encounter_action
+    return random.choice(["FLEE","ATTACK"])
 
 def auto_in_battle(player_instance):
     if player_instance.health <= 4 and player_instance.potions != 0:
