@@ -8,7 +8,7 @@ class Interaction:
     
     @staticmethod
     def validate_input(choice_list:list, prompt_message:str):
-        validate_input(choice_list, prompt_message)
+        return validate_input(choice_list, prompt_message)
 
     @staticmethod
     def encounter_enemy():
@@ -27,7 +27,7 @@ class Interaction:
     def post_battle(player_instance):
         match __class__.global_game_mode:
             case "AUTO":
-                player_action =auto_post_battle(player_instance)
+                player_action = auto_post_battle(player_instance)
                 return player_action
             case "MANUAL":
                   player_action = manual_post_battle()
