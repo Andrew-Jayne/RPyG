@@ -7,9 +7,6 @@ def get_start_type():
 Would you like to Start a new game or Load an existing save?
 Options are : NEW & LOAD
 
-
-Note: All Prompts in this game are case insensitive
-
 """
     type_choices = ["NEW", "LOAD"]
     player_action = Interaction.validate_input(type_choices, type_message)
@@ -28,9 +25,7 @@ def welcome():
 Please Select your Game mode:
 Options are : Manual & Auto
 
-
 Note: All Prompts in this game are case insensitive
-
 
 """
     mode_choices = ["AUTO", "MANUAL"]
@@ -42,7 +37,6 @@ def player_start():
 
     player_name_message = """
 Now before your journey can begin please enter the name of your Character
-
 
 Note: Case is respected but names longer than 32 characters will be truncated
 
