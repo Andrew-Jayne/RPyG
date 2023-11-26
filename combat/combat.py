@@ -1,9 +1,10 @@
+import random
+import pickle
 from interaction.interaction import Interaction
 from display.display import Display
 from message.message import Message
 from combat.combat_attacks import attack
-import random
-import pickle
+
 
 class Combat:
 
