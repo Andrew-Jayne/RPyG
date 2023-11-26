@@ -1,7 +1,7 @@
 import random
 import json
 from actors.actor_enemy import Enemy
-from combat import Combat
+from combat.combat import Combat
 from actors.actor_follower import Follower
 
 class SpecialEncounters():
