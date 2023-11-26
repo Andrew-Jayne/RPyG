@@ -1,8 +1,8 @@
 import random
-from encounters.encounter_rest import RestEncounters
+from encounters.encounter_rest import rest_encounter
 from encounters.encounter_enemy import enemy_encounter
 from encounters.encounter_special import SpecialEncounters
-from encounters.encounter_mystery import MysteryEncounters
+from encounters.encounter_mystery import mystery_encounter
 
 def check_for_encounter(player_instance):
 
@@ -13,10 +13,10 @@ def check_for_encounter(player_instance):
             enemy_encounter(player_instance)
             
         elif 0.125 <= encounter_check < 0.25:  # Second 12.5% range
-            RestEncounters.rest_encounter(player_instance)
+            rest_encounter(player_instance)
             
         elif 0.25 <= encounter_check < 0.30:  # 5% Chance
-            MysteryEncounters.mystery_encounter(player_instance)
+            mystery_encounter(player_instance)
     else:              
         match player_instance.progress:
             case 25:

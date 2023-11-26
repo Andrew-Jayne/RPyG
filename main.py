@@ -2,7 +2,7 @@ import pickle
 from actors.actor_player import Player
 from message.message import Message
 from interaction.interaction import Interaction
-from encounter import check_for_encounter
+from encounters.encounter import check_for_encounter
 from welcome import welcome, player_start, get_start_type
 
 welcome()

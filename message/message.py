@@ -1,4 +1,5 @@
 import time
+import pickle
 from actors.actor_player import Player
 from interaction.interaction import Interaction
 from actors.actor_follower import Follower
@@ -100,3 +101,14 @@ You have traveled {player_instance.progress * 10} Miles Total.
         print(f"Player Has Follower?: {player_instance.has_follower}")
         if player_instance.has_follower == True:
             print(f"Player Follower is {player_instance.follower_instance.__dict__}")
+
+    @staticmethod
+    def end_game_message(player_instance):
+        print(f"Fortranus the Ancient One has been Vanquished at the hands of {player_instance.name}")
+        print("Your adventure has been completed, you may start a new adventure if you so choose")
+        if Interaction.global_game_mode == "MANUAL":
+            with open('savegame.rpygs', 'wb') as save_file:
+                # Write some text to the file.
+                pickle.dump(player_instance, save_file)
+                exit()
+                # The file is automatically closed when you exit the 'with' block.
