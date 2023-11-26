@@ -1,10 +1,24 @@
 from interaction.interaction import Interaction
 from display.display import Display
 
+def get_start_type():
+
+    type_message = """
+Would you like to Start a new game or Load an existing save?
+Options are : NEW & LOAD
+
+
+Note: All Prompts in this game are case insensitive
+
+"""
+    type_choices = ["NEW", "LOAD"]
+    player_action = Interaction.validate_input(type_choices, type_message)
+    Display.clear_display()
+    return player_action
+
 def welcome():
     print("Welcome to RPyG, a text based RPG in Python", end="\n\n")
 
-    mode_choices = ["AUTO", "MANUAL"]
     mode_message = """
              This game looks best with a width of at least 80.
             If the next line is split please widen your terminal.
@@ -19,13 +33,13 @@ Note: All Prompts in this game are case insensitive
 
 
 """
-    game_mode = Interaction.validate_input(mode_choices, mode_message)
-    Interaction.global_game_mode = game_mode
+    mode_choices = ["AUTO", "MANUAL"]
+    Interaction.global_game_mode = Interaction.validate_input(mode_choices, mode_message)
     Display.clear_display()
 
     
 def player_start():
-    player_name = ""
+
     player_name_message = """
 Now before your journey can begin please enter the name of your Character
 
@@ -33,12 +47,11 @@ Now before your journey can begin please enter the name of your Character
 Note: Case is respected but names longer than 32 characters will be truncated
 
 """
-    if Interaction.global_game_mode == "MANUAL":
-            player_name = Interaction._sanitize(str(input(f"{player_name_message}"))[:32])
-            Display.clear_display()
-    else:
-            player_name = "The Protagonist"
+    player_name = Interaction.sanitize(str(input(f"{player_name_message}"))[:32])
+    Display.clear_display()
     return player_name
+
+
 
 
 

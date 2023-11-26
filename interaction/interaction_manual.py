@@ -32,6 +32,7 @@ def manual_post_battle():
 Choose an Action:
 HEAL
 TRAVEL
+SAVE
 
 """     
     post_battle_choice = validate_input(post_battle_options, post_battle_message)
