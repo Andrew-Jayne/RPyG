@@ -1,3 +1,5 @@
+from interaction.interaction import Interaction
+
 def sanitize(input_string:str):
     #exit if string is longer that 128 Chars
     if len(input_string) > 128:
@@ -16,17 +18,44 @@ def sanitize(input_string:str):
     return cleaned_string
 
 def validate_input(choice_list:list, prompt_message:str):
-        chosen_action = ""
+        chosen_action = None
         dumb_check = 0
-        print(f"Inital Chosen Action is: {chosen_action}")
         while chosen_action not in choice_list:
             chosen_action = sanitize(input(prompt_message).upper())
-            print(f"Current Chosen Action is: {chosen_action}")
             if chosen_action not in choice_list:
                 dumb_check += 1
                 print("Invalid Choice Try Again")
                 if dumb_check == 10:
                     print("Look it's not hard, just enter a valid choice....", end="\n\n")
                     exit()
-        print(f"Final Chosen Action is: {chosen_action}")
+            
         return chosen_action
+
+
+
+def welcome():
+    print("Welcome to RPyG, a text based RPG in Python", end="\n\n")
+
+    mode_choices = ["AUTO", "MANUAL"]
+    mode_message = """
+             This game looks best with a width of at least 80.
+            If the next line is split please widen your terminal.
+----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----
+
+
+Please Select your Game mode:
+Options are : Manual & Auto
+
+
+Note: All Prompts in this game are case insensitive
+
+
+"""
+    game_mode = Interaction.validate_input(mode_choices, mode_message)
+    print(f"returned game mode is {game_mode}")
+    Interaction.global_game_mode = game_mode
+    print(f"Global Game Mode is: {Interaction.global_game_mode}")
+    
+
+
+welcome()
