@@ -8,51 +8,56 @@ from combat.combat_attacks import attack
 
 class Combat:
 
-    @staticmethod
     def battle(player_instance, enemy_instance):
         Display.clear_display()
         Message.battle_start_message()
-        while enemy_instance.health != 0:
+        battle_complete = False
+        while battle_complete == False:
             Message.battle_hud_message(player_instance=player_instance, enemy_instance=enemy_instance)
-            match Interaction.in_battle(player_instance):
-                case "ATTACK":
-                      if Interaction.global_game_mode == "MANUAL":
-                        Display.clear_display()
-                      attack(attacker_instance=player_instance, target_instance=enemy_instance)
-                case "HEAL":
-                    if Interaction.global_game_mode == "MANUAL":
-                        Display.clear_display()
-                    player_instance.use_potion()
-            ## End Battle If Enemy dies
-            if enemy_instance.health == 0:
-                break
+            if battle_complete == False:
+                match Interaction.in_battle(player_instance):
+                    case "ATTACK":
+                        if Interaction.global_game_mode == "MANUAL":
+                            Display.clear_display()
+                        attack(attacker_instance=player_instance, target_instance=enemy_instance)
+                    case "HEAL":
+                        if Interaction.global_game_mode == "MANUAL":
+                            Display.clear_display()
+                        player_instance.use_potion()
+                ## End Battle If Enemy dies
+                if enemy_instance.health == 0:
+                    battle_complete = True
             
             ## Follower Actions
-            if player_instance.has_follower == True:
+            if player_instance.has_follower == True and battle_complete == False:
                 follower_action = Interaction.in_battle(player_instance.follower_instance)
                 match follower_action:
                     case "ATTACK":
                         attack(attacker_instance=player_instance.follower_instance, target_instance=enemy_instance)
                     case "HEAL":
                         player_instance.follower_instance.use_potion()
+                ## End Battle If Enemy dies
+                if enemy_instance.health == 0:
+                    battle_complete = True
             
             ## Enemy Attacks
-            if player_instance.has_follower == True:
-                set_target = random.randint(0,1)
-                if set_target == 0:
+            if battle_complete == False:
+                if player_instance.has_follower == True:
+                    set_target = random.randint(0,1)
+                    if set_target == 0:
+                        target = player_instance
+                    elif set_target == 1:
+                        target = player_instance.follower_instance
+                else:
                     target = player_instance
-                elif set_target == 1:
-                    target = player_instance.follower_instance
-            else:
-                target = player_instance
-            attack(attacker_instance=enemy_instance, target_instance=target)
-            ## Remove Follower if they die
-            if player_instance.has_follower == True:
-                if player_instance.follower_instance.health == 0:
-                    player_instance.lose_follower(player_instance.follower_instance)
-            ## End combat if player dies
-            if player_instance.health == 0:
-                break
+                attack(attacker_instance=enemy_instance, target_instance=target)
+                ## Remove Follower if they die
+                if player_instance.has_follower == True:
+                    if player_instance.follower_instance.health == 0:
+                        player_instance.lose_follower(player_instance.follower_instance)
+                ## End combat if player dies
+                if player_instance.health == 0:
+                    battle_complete = True
 
         ## Display Victory Message if player does not die
         player_post_action = ""
