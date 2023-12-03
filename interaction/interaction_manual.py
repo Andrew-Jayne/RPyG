@@ -14,11 +14,12 @@ FLEE
 
 
 def manual_in_battle(player_name):
-    battle_options = ["ATTACK", "HEAL"]
+    battle_options = ["ATTACK", "EVADE", "HEAL"]
     battle_message = f"""
 {player_name}
 Choose an Action:
 ATTACK
+EVADE
 HEAL
 
 """
