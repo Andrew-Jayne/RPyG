@@ -9,6 +9,7 @@ class Inventory:
 class PlayableActor(Actor, Inventory):
     def __init__(self, 
                  name: str, 
+                 specialization: str,
                  health: int, 
                  strength: int, 
                  intellect: int, 
