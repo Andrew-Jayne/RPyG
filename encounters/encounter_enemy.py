@@ -27,9 +27,9 @@ def enemy_encounter(player_instance):
         health=enemy_attributes['health'],
         strength=enemy_attributes['strength'],
         intellect=enemy_attributes['intellect'],
+        agility=enemy_attributes['agility'],
         luck=enemy_attributes['luck'],
-        attack_name=enemy_attributes['attack_name']
-        )
+        attack_name=enemy_attributes['attack_name'])
     
     Message.encounter_message(enemy_instance.name)
     player_action = Interaction.encounter_enemy()

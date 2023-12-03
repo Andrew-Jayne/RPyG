@@ -5,6 +5,7 @@
             "health": 8,
             "strength": 1,
             "intellect": 3,
+            "agility": 6, 
             "luck": 4,
             "attack_name": "fireball"
         },
@@ -13,6 +14,7 @@
             "health": 6,
             "strength": 5,
             "intellect": 2,
+            "agility": 5,
             "luck": 2,
             "attack_name": "Club Bash"
         }
@@ -23,6 +25,7 @@
             "health": 15,
             "strength": 5,
             "intellect": 3,
+            "agility": 8,
             "luck": 6,
             "attack_name": "Wolf Bite"
         },
@@ -31,6 +34,7 @@
             "health": 13,
             "strength": 4,
             "intellect": 7,
+            "agility": 3,
             "luck": 2,
             "attack_name": "Soul Decay Wave"
         }],
@@ -41,6 +45,7 @@
         "health": 30,
         "strength": 10,
         "intellect": 1,
+        "agility": 1,
         "luck": 2,
         "attack_name": "Club Smash"
     },
@@ -49,6 +54,7 @@
         "health": 25,
         "strength": 9,
         "intellect": 7,
+        "agility": 6,
         "luck": 8,
         "attack_name": "Blizzard Breath"
     } ]

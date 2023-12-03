@@ -5,6 +5,7 @@
             "strength": 4,
             "intellect": 8,
             "luck": 6,
+            "agility": 4,
             "attack_name": "Arcane Firestorm"
         },
     "keep_minion": {
@@ -12,6 +13,7 @@
             "health": 8,
             "strength": 3,
             "intellect": 7,
+            "agility": 4,
             "luck": 6,
             "attack_name": "Arcane Bolt"
         },
@@ -20,6 +22,7 @@
         "health": 20,
         "strength": 4,
         "intellect": 10,
+        "agility": 4,
         "luck": 6,
         "attack_name": "Arcane Lightning"
     },
@@ -28,6 +31,7 @@
         "health": 25,
         "strength": 5,
         "intellect": 12,
+        "agility": 5,
         "luck": 6,
         "attack_name": "Cosmic Collision"
     },
@@ -36,6 +40,7 @@
         "health": 40,
         "strength": 14,
         "intellect": 10,
+        "agility": 7,
         "luck": 6,
         "attack_name": "Dragon Fire"
     }
