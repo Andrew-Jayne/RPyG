@@ -74,9 +74,10 @@ class SpecialEncounters():
             health=enemy_attributes['health'],
             strength=enemy_attributes['strength'],
             intellect=enemy_attributes['intellect'],
+            agility=enemy_attributes['agility'],
             luck=enemy_attributes['luck'],
-            attack_name=enemy_attributes['attack_name']
-            )
+            attack_name=enemy_attributes['attack_name'])
+        
         return special_enemy_instance
 
     def _follower_joins(player_instance):
@@ -103,9 +104,11 @@ class SpecialEncounters():
             follower_strength = 5 + random.randint(1,4)
             print(f"Impressed by your strength, a young warrior joins you on your quest")
         
+        follower_agility = 3 + random.randint(1,6)
+        
         ### setup Follower instance
 
-        player_follower = Follower(name=follower_name_type[name_choice], strength=follower_strength, intellect=follower_intellect)
+        player_follower = Follower(name=follower_name_type[name_choice], strength=follower_strength, intellect=follower_intellect, agility=follower_agility)
 
 
         ## Add Follower to Player Instance

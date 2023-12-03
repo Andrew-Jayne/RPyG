@@ -7,10 +7,28 @@ class Inventory:
         self.potions = potions
 
 class PlayableActor(Actor, Inventory):
-    def __init__(self, name: str, health: int, strength: int, intellect: int, luck: int, gold:int, potions:int):
+    def __init__(self, 
+                 name: str, 
+                 health: int, 
+                 strength: int, 
+                 intellect: int, 
+                 agility:int, 
+                 luck: int, 
+                 gold:int, 
+                 potions:int):
+
     ## Init Inherited Classes
-        Actor.__init__(self, name=name, health=health, strength=strength, intellect=intellect, luck=luck)
-        Inventory.__init__(self, gold=gold, potions=potions)
+        Actor.__init__(self, 
+                       name=name, 
+                       health=health, 
+                       strength=strength, 
+                       intellect=intellect, 
+                       agility=agility, 
+                       luck=luck)
+
+        Inventory.__init__(self, 
+                           gold=gold, 
+                           potions=potions)
 
 
     def use_potion(self):

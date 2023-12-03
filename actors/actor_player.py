@@ -7,6 +7,7 @@ class Player(PlayableActor):
         ## Setup Player Stats
         strength = random.randint(1,10)
         intellect = random.randint(1,10)
+        agility = random.randint(1,10)
         luck = random.randint(1,10)
         health = 10 + int((strength + intellect) * 2)
         gold = strength * 25
@@ -14,7 +15,15 @@ class Player(PlayableActor):
         progress = 0
 
         ## Init Inherited Classes
-        PlayableActor.__init__(self, name=name, health=health, strength=strength, intellect=intellect, luck=luck, gold=gold, potions=potions)
+        PlayableActor.__init__(self, 
+                               name=name, 
+                               health=health, 
+                               strength=strength, 
+                               intellect=intellect, 
+                               agility=agility, 
+                               luck=luck, 
+                               gold=gold, 
+                               potions=potions)
 
         ## Copy values to instance
         self.name = name
@@ -37,4 +46,12 @@ class Player(PlayableActor):
         self.has_follower = False
         self.follower_instance = None
     
+    def damage(self, damage_amount:int):
+        self.health -= damage_amount
+        if self.health == 0:
+            self.health = 1
+            print("You Have Narrowly Evaded Death!")
+        elif self.health < 0:
+            self.health = 0
+        print(f"You Have {self.health} Health Remaining", end="\n\n")
 

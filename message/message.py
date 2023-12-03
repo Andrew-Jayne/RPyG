@@ -46,10 +46,8 @@ class Message():
 
     # Battle Messages
     @staticmethod
-    def battle_hud_message(player_instance, enemy_instance):
-        print(f"{player_instance.name}: {player_instance.health}")
-        if player_instance.has_follower == True:
-            print(f"{player_instance.follower_instance.name}: {player_instance.follower_instance.health}")
+    def battle_hud_message(playable_instance, enemy_instance):
+        print(f"{playable_instance.name}: {playable_instance.health}")
         print(f"{enemy_instance.name}: {enemy_instance.health}")
     
     @staticmethod
@@ -68,6 +66,18 @@ class Message():
     @staticmethod
     def flee_success_message(enemy_name):
         print(f"You Successfuly Escape the {enemy_name}!")
+
+    @staticmethod
+    def evade_prep_message():
+        print("You prepare to evade the next attack", end="\n\n")
+
+    @staticmethod
+    def evade_failure_message():
+        print("You fail to evade the attack!", end="\n\n")
+
+    @staticmethod
+    def evade_sucess_message():
+        print("You deftly evade the enemy's attack!")
 
 
     # Player Messages
@@ -92,6 +102,7 @@ You have traveled {player_instance.progress * 10} Miles Total.
         print(f"Player Base Health: {player_instance.base_health}")
         print(f"Player Int: {player_instance.intellect}")
         print(f"Player Str: {player_instance.strength}")
+        print(f"Player Agl: {player_instance.agility}")
         print(f"Player Lck: {player_instance.luck}")
         print(f"Player Gold: {player_instance.gold}")
         print(f"Player Potions: {player_instance.potions}")

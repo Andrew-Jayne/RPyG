@@ -3,7 +3,7 @@ from message.message import Message
 
 def check_for_critical(combatant_instance):
     crit_check = random.randint(1,100)
-    if crit_check <= combatant_instance.luck:
+    if crit_check <= (combatant_instance.luck + combatant_instance.agility):
         return True
     else:
         return False
@@ -16,3 +16,7 @@ def attack(attacker_instance, target_instance):
     else:
         Message.actor_attack_message(attacker_instance)
         target_instance.damage(attacker_instance.attack_power)
+
+def evade(combatant_instance):
+    evade_check = random.randint(1,30)
+    return evade_check <= (combatant_instance.luck + combatant_instance.agility)
