@@ -82,8 +82,8 @@ Note: Case is respected but names longer than 32 characters will be truncated
         party_member_specialization = Interaction.validate_input(specialization_choices,specialization_messages)
         party_member = PartyMember(party_member_name, party_member_specialization)
         party_members.append(party_member)
-    
-    return party_members
+    party_name = Interaction.validate_input(party_size_choices, party_size_message)
+    return party_members, party_name
 
 
 
