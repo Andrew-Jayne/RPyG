@@ -1,4 +1,5 @@
 from actors.actor import Actor
+from actors.actor_combatant import Combatant
 import random
 
 class Inventory:
@@ -6,7 +7,7 @@ class Inventory:
         self.gold = gold
         self.potions = potions
 
-class PlayableActor(Actor, Inventory):
+class PlayableActor(Actor, Inventory, Combatant):
     def __init__(self, 
                  name: str, 
                  specialization: str,
@@ -20,8 +21,7 @@ class PlayableActor(Actor, Inventory):
 
     ## Init Inherited Classes
         Actor.__init__(self, 
-                       name=name, 
-                       health=health, 
+                       name=name,
                        strength=strength, 
                        intellect=intellect, 
                        agility=agility, 
@@ -30,6 +30,9 @@ class PlayableActor(Actor, Inventory):
         Inventory.__init__(self, 
                            gold=gold, 
                            potions=potions)
+        
+        Combatant.__init__(self, 
+                           health=health)
 
 
     def use_potion(self):

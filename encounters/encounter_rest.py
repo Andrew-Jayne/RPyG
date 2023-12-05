@@ -2,7 +2,7 @@ import random
 import json
 from interaction.interaction import Interaction
 
-def rest_encounter(player_instance):
+def rest_encounter(party_instance):
     rest_chance = random.randint(0,3)
     with open('encounters/rest_common.json', 'r') as encounters_file:
         encounters_lists = json.load(encounters_file)
@@ -15,7 +15,9 @@ def rest_encounter(player_instance):
 
     encounter_sub_choice = random.randint(0, len(encounters_lists[encounter_class]) - 1)
     print(f"{encounters_lists[encounter_class][encounter_sub_choice]['message']}", end="\n\n")
-    player_instance.heal(encounters_lists['minor_rest'][encounter_sub_choice]['recovery_amount'])
+    for member_instance in party_instance.members:
+        member_instance.heal(encounters_lists['minor_rest'][encounter_sub_choice]['recovery_amount'])
 
     if encounter_class == 'large_rest':
-        Interaction.at_merchant(player_instance)
+        for member_instance in party_instance.members:
+            Interaction.at_merchant(member_instance)

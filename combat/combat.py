@@ -1,9 +1,9 @@
 import random
-import pickle
+
 from interaction.interaction import Interaction
 from display.display import Display
 from message.message import Message
-from combat.combat_actions import attack, evade
+from combat.combat_actions import attack, evade, post_battle
 
 #Battle Flow:
     #Player  Attacks Enemy
@@ -12,70 +12,58 @@ from combat.combat_actions import attack, evade
 
 
 class Combat:
-
-    def battle(player_instance, enemy_instance):
+    def battle(player_party_instance, enemy_party_instance):
         Message.battle_start_message()
         battle_complete = False
-        playable_charcters_list = [player_instance]
-        if player_instance.has_follower == True:
-            playable_charcters_list.append(player_instance.follower_instance)
-        for playable_instance in playable_charcters_list:
-            print(f"{playable_instance.name}: {playable_instance.health}")
-        print(f"{enemy_instance.name}: {enemy_instance.health}", end="\n\n\n")
-
         while battle_complete == False:
-
-            attempt_evade = False ## need to make this an option per playable instance, and store it somewhere (maybe make each turn of combat an instance of class?)
-
-            ## Player & Follower Attack
-            for playable_instance in playable_charcters_list:
-                if battle_complete == False:
-                    match Interaction.in_battle(player_instance):
-                        case "ATTACK":
-                            attack(attacker_instance=playable_instance, 
-                                   target_instance=enemy_instance)
-                        case "EVADE":
-                            Message.evade_prep_message()
-                            attempt_evade = True
-                        case "HEAL":
-                            playable_instance.use_potion()
-                    ## End Battle If Enemy dies
-                    if enemy_instance.health == 0:
-                        battle_complete = True
-            
-            ## Enemy Attacks
             if battle_complete == False:
-                target = playable_charcters_list[random.randint(0,(len(playable_charcters_list) -1))]
-                if attempt_evade == True and evade(target) == True:
-                    Message.evade_sucess_message()
-                elif attempt_evade == True and evade(target) == False:
-                    Message.evade_failure_message()
-                    attack(attacker_instance=enemy_instance, target_instance=target)
-                else:
-                    attack(attacker_instance=enemy_instance, target_instance=target)
+                for player_instance in player_party_instance.members:
+                    if len(enemy_party_instance.members) != 0:
+                        match Interaction.in_battle(player_instance):
+                            case "ATTACK": #select target
+                                target_index = int(Interaction.choose_combat_target(enemy_party_instance))
+                                try:
+                                    enemy_instance = enemy_party_instance.members[target_index]
+                                except:
+                                    import pdb; pdb.set_trace()
 
-            ## Remove Follower if they die
-            if player_instance.has_follower == True:
-                if player_instance.follower_instance.health == 0:
-                    player_instance.lose_follower(player_instance.follower_instance)
-            ## End combat if player dies
-            if player_instance.health == 0:
+                                attack(attacker_instance=player_instance, target_instance=enemy_instance)
+                                if enemy_instance.health == 0:
+                                    enemy_party_instance.lose_member(enemy_instance)
+                            case "EVADE":
+                                Message.evade_prep_message() # this is going to be so broken I need to write the attepmt evade flag to the instance 
+                                player_instance.will_evade = True
+                            case "HEAL":
+                                player_instance.use_potion()
+                    else:
+                        battle_complete = True
+                    ## End Battle if all enemies are defeated
+            else:
                 battle_complete = True
 
+                if  battle_complete == False:
+                    if len(player_party_instance.members) != 0:
+                        for enemy_instance in enemy_party_instance.members:
+                                target_max_index = len(player_party_instance.members) - 1 
+                                target_index = int(random.randint(0,target_max_index))
+                                target_player = player_party_instance.members[target_index]
+                                if target_player.will_evade == True:
+                                    if evade(target_player) == False:
+                                        Message.evade_failure_message()
+                                        attack(attacker_instance=enemy_instance, target_instance=target_player)
+                                    else:
+                                        Message.evade_sucess_message()
+                                else:
+                                    attack(attacker_instance=enemy_instance, target_instance=target_player)
+                                if target_player.health == 0:
+                                    player_party_instance.lose_member(target_player)
+                    else:
+                        battle_complete = True
+                    ## End Battle if Everyone dies
+                else:
+                    battle_complete = True
+
         ## Display Victory Message if player does not die
-        player_post_action = ""
-        if player_instance.health != 0 and enemy_instance.health == 0:
-            Message.defeated_message(enemy_instance.name)
-            while player_post_action != "TRAVEL":
-                player_post_action = Interaction.post_battle(player_instance)
-                if player_post_action == "HEAL":
-                    player_instance.use_potion()
-                if player_post_action == "SAVE":
-                    # Open the file in write mode. If the file doesn't exist, it will be created.
-                    # If it does exist, it will be overwritten.
-                    with open('savegame.rpygs', 'wb') as save_file:
-                        # Write some text to the file.
-                        pickle.dump(player_instance, save_file)
-                        print(f"Successfully Saved Game for: {player_instance.name}")
-                        exit()
-                        # The file is automatically closed when you exit the 'with' block.
+        if len(player_party_instance.members) != 0 and len(enemy_party_instance.members) == 0 and battle_complete == True:
+            Message.defeated_message("Andrew put a name on the enemy groups to fix this :)") #hack while I make better groups
+            post_battle(player_party_instance)

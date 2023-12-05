@@ -9,8 +9,7 @@ BATTLE
 FLEE
 
 """
-    encounter_choice = validate_input(encounter_options, enounter_message)
-    return encounter_choice
+    return validate_input(encounter_options, enounter_message)
 
 
 def manual_in_battle(player_name):
@@ -36,5 +35,19 @@ TRAVEL
 SAVE
 
 """     
-    post_battle_choice = validate_input(post_battle_options, post_battle_message)
-    return post_battle_choice
+    return validate_input(post_battle_options, post_battle_message)
+
+
+def manual_choose_combat_target(enemy_party_instance):
+    target_options = []
+    for i in range(0,len(enemy_party_instance.members)):
+        target_options.append(str(i))
+
+    base_target_message = ["Which enemy will you attack?", ""]
+    for i,member in enemy_party_instance.members:
+        base_target_message.append(f"{i} {member.name}:{member.health}")
+
+    target_message = "\n".join(base_target_message)
+
+    return validate_input(target_options, target_message)
+    
