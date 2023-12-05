@@ -1,6 +1,8 @@
 import random
 import json
+import copy
 from actors.actor_enemy import Enemy
+from actors.actor_party import EnemyParty
 from combat.combat import Combat
 from actors.actor_follower import Follower
 from message.message import Message
@@ -8,22 +10,25 @@ from message.message import Message
 class SpecialEncounters():
 
     @staticmethod
-    def friendly_keep_visit(player_instance):
+    def friendly_keep_visit(party_instance):
         print("You are welcomed to the Keep of Stallman")
         print("You are fully rested and have a full stock of potions", end="\n\n")
-        player_instance.heal(30)
-        player_instance.potions = 9
+        for member_instance in party_instance.members:
+            member_instance.heal(30)
+            member_instance.potions = 9
 
     @staticmethod
-    def midway_boss(player_instance):
+    def midway_boss(party_instance):
         enemy_instance = __class__._get_special_enemy('midway_boss')
         print(f"You encounter {enemy_instance.name}!")
-        Combat.battle(player_instance, enemy_instance)
-        if player_instance.strength >= 7 or player_instance.intellect >= 7:
-            __class__._follower_joins(player_instance)
+        enemy_party = EnemyParty([enemy_instance])
+        Combat.battle(party_instance, enemy_party)
+        #if player_instance.strength >= 7 or player_instance.intellect >= 7:
+            #__class__._follower_joins(player_instance)
+            # disabled for now, may just append them to the part (seems the least jank but whatever)
 
     @staticmethod
-    def enemy_keep_visit(player_instance):
+    def enemy_keep_visit(party_instance):
         print("You must traverse Algolon's Keep!")
         sub_step = 0
         while sub_step < 10:
@@ -33,34 +38,46 @@ class SpecialEncounters():
             match dungeon_chance:
                 case 0:
                     print("You find a Store Room with some food & potions")
-                    player_instance.potions += 2
-                    player_instance.heal(2)
+                    for member_instance in party_instance.members:
+                        member_instance.potions += 2
+                        member_instance.heal(2)
                 case 1:
                     sub_step += 2
                     print("You find a Secret Passage!")
                 case 4:
                     enemy_instance = __class__._get_special_enemy('keep_minion')
-                    print(f"You encounter an {enemy_instance.name}!")
-                    Combat.battle(player_instance, enemy_instance)
-            if player_instance.health == 0:
+                    print(f"You encounter a group of {enemy_instance.name}s!")
+                    enemy_count = int(len(party_instance.members) + random.randint(-2,2))
+                    if enemy_count == 0:
+                        enemy_count = 1
+
+                    enemy_party_instances = []
+                    for _ in range(0,enemy_count):
+                        enemy_party_instances.append(copy.deepcopy(enemy_instance))
+                    enemy_party = EnemyParty(enemy_party_instances)
+                    Combat.battle(party_instance, enemy_party)
+            if len(party_instance.members) == 0:
                 break
         print("At the end of the Keep you encounter Algolon's Arch Mage!")
         enemy_instance = __class__._get_special_enemy('keep_master')
-        Combat.battle(player_instance, enemy_instance)
+        enemy_party = EnemyParty([enemy_instance])
+        Combat.battle(party_instance, enemy_party)
 
     @staticmethod
-    def penultimate_boss(player_instance):
+    def penultimate_boss(party_instance):
         enemy_instance = __class__._get_special_enemy('penultimate_boss')
         print(f"You Battle {enemy_instance.name}!")
-        Combat.battle(player_instance, enemy_instance)
+        enemy_party = EnemyParty([enemy_instance])
+        Combat.battle(party_instance, enemy_party)
 
     @staticmethod
-    def final_boss(player_instance):
+    def final_boss(party_instance):
         enemy_instance = __class__._get_special_enemy('ultimate_boss')
         print(f"You battle must now battle {enemy_instance.name}!")
-        Combat.battle(player_instance, enemy_instance)
-        if player_instance.health > 0:
-            Message.end_game_message(player_instance)
+        enemy_party = EnemyParty([enemy_instance])
+        Combat.battle(party_instance, enemy_party)
+        if len(party_instance.members) != 0:
+            Message.end_game_message(party_instance)
         
 
 

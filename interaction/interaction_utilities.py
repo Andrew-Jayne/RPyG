@@ -28,3 +28,9 @@ def validate_input(choice_list:list, prompt_message:str):
                     print("Look it's not hard, just enter a valid choice....", end="\n\n")
                     exit()
         return chosen_action
+
+def custom_text_entry(input_message:str, max_length:int):
+    return sanitize(input(input_message)[:max_length])
+
+
+    
