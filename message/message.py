@@ -58,14 +58,14 @@ class Message():
 
     # Encouter Messages
     @staticmethod
-    def flee_failure_message(enemy_name):
-        print(f"You Fail to Escape the {enemy_name}!")
+    def flee_failure_message(player_name, enemy_name):
+        print(f"{player_name} has Failed to Escape the {enemy_name}!")
         if Interaction.global_game_mode == "MANUAL":
             time.sleep(2)
     
     @staticmethod
-    def flee_success_message(enemy_name):
-        print(f"You Successfuly Escape the {enemy_name}!")
+    def flee_success_message(player_name, enemy_name):
+        print(f"{player_name} has Successfuly Escaped the {enemy_name}!")
 
     @staticmethod
     def evade_prep_message():
@@ -83,35 +83,36 @@ class Message():
     # Player Messages
     
     @staticmethod
-    def player_progress_message(player_instance):
+    def party_progress_message(party_instance):
         print(f"""
 You Progress 10 Miles further.
-You have traveled {player_instance.progress * 10} Miles Total.
+You have traveled {party_instance.progress * 10} Miles Total.
 """)
         ## Pause for effect when in MANUAL mode
         if Interaction.global_game_mode == "MANUAL":
             time.sleep(2)
         ## Clear the Display after 10 Steps
-        if player_instance.progress % 10 == 0:
+        if party_instance.progress % 10 == 0:
             Display.clear_display()
 
     @staticmethod
-    def post_game_recap(player_instance):
+    def post_game_recap(player_party_instance):
+        for player_instance in player_party_instance.members:
         # Post Game Report
-        print(f"Player Name: {player_instance.name}")
-        print(f"Player Base Health: {player_instance.base_health}")
-        print(f"Player Int: {player_instance.intellect}")
-        print(f"Player Str: {player_instance.strength}")
-        print(f"Player Agl: {player_instance.agility}")
-        print(f"Player Lck: {player_instance.luck}")
-        print(f"Player Gold: {player_instance.gold}")
-        print(f"Player Potions: {player_instance.potions}")
-        print(f"Player Attack: {player_instance.attack_name}")
-        print(f"Player Skill: {player_instance._get_skill()}")
+            print(f"Player Name: {player_instance.name}")
+            print(f"Player Base Health: {player_instance.base_health}")
+            print(f"Player Int: {player_instance.intellect}")
+            print(f"Player Str: {player_instance.strength}")
+            print(f"Player Agl: {player_instance.agility}")
+            print(f"Player Lck: {player_instance.luck}")
+            print(f"Player Gold: {player_instance.gold}")
+            print(f"Player Potions: {player_instance.potions}")
+            print(f"Player Attack: {player_instance.attack_name}")
+            print(f"Player Skill: {player_instance._get_skill()}")
 
-        print(f"Player Has Follower?: {player_instance.has_follower}")
-        if player_instance.has_follower == True:
-            print(f"Player Follower is {player_instance.follower_instance.__dict__}")
+            print(f"Player Has Follower?: {player_instance.has_follower}")
+            if player_instance.has_follower == True:
+                print(f"Player Follower is {player_instance.follower_instance.__dict__}")
 
     @staticmethod
     def end_game_message(player_instance):

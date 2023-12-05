@@ -1,6 +1,7 @@
 from actors.actor import Actor
+from actors.actor_combatant import Combatant
 
-class Enemy(Actor):
+class Enemy(Actor, Combatant):
     def __init__(self, 
                  name:str, 
                  health:int, 
@@ -13,11 +14,12 @@ class Enemy(Actor):
         ## Init Inherited Classes     
         Actor.__init__(self, 
                        name=name, 
-                       health=health, 
                        strength=strength, 
                        intellect=intellect,
                        agility=agility,
                        luck=luck)
+        Combatant.__init__(self,
+                           health=health)
 
         self.name = name
         self.health = health
