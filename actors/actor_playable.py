@@ -32,7 +32,10 @@ class PlayableActor(Actor, Inventory, Combatant):
                            potions=potions)
         
         Combatant.__init__(self, 
-                           health=health)
+                           health=health,
+                           attack_name=__class__._set_attack_name(self),
+                           attack_power=__class__._set_attack_power(self)
+                           )
 
 
     def use_potion(self):
@@ -45,10 +48,6 @@ class PlayableActor(Actor, Inventory, Combatant):
         else:
             print("You have no remaining potions!")
 
-
-
-
-    ## Hidden Methods
     def _set_attack_power(self):
         if self.strength > self.intellect:
             self.attack_power = self.strength
@@ -57,7 +56,7 @@ class PlayableActor(Actor, Inventory, Combatant):
         else:
             self.attack_power = self.intellect
 
-        return self.attack_power
+        return self.attack_power * 10
 
     def _get_skill(self):
         strength_skill = ""

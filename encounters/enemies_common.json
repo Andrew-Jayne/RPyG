@@ -2,7 +2,7 @@
     "small_enemies": [
         {
             "name": "Feral Imp",
-            "health": 8,
+            "health": 80,
             "strength": 1,
             "intellect": 3,
             "agility": 6, 
@@ -11,7 +11,7 @@
         },
         {
             "name": "Goblin Scout",
-            "health": 6,
+            "health": 60,
             "strength": 5,
             "intellect": 2,
             "agility": 5,
@@ -22,7 +22,7 @@
     "medium_enemies": [
         {
             "name": "Dire Wolf",
-            "health": 15,
+            "health": 150,
             "strength": 5,
             "intellect": 3,
             "agility": 8,
@@ -31,7 +31,7 @@
         },
         {
             "name": "Lesser Demon",
-            "health": 13,
+            "health": 130,
             "strength": 4,
             "intellect": 7,
             "agility": 3,
@@ -42,7 +42,7 @@
         "large_enemies": [
                     {
         "name": "Cave Troll",
-        "health": 30,
+        "health": 300,
         "strength": 10,
         "intellect": 1,
         "agility": 1,
@@ -51,7 +51,7 @@
     },
     {
         "name": "Stunted Ice Drake",
-        "health": 25,
+        "health": 250,
         "strength": 9,
         "intellect": 7,
         "agility": 6,

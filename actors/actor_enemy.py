@@ -10,6 +10,7 @@ class Enemy(Actor, Combatant):
                  agility:int, 
                  luck:int, 
                  attack_name:str):
+        attack_power = __class__._set_enemy_attack_power(strength,intellect)
 
         ## Init Inherited Classes     
         Actor.__init__(self, 
@@ -19,20 +20,17 @@ class Enemy(Actor, Combatant):
                        agility=agility,
                        luck=luck)
         Combatant.__init__(self,
-                           health=health)
+                           health=health,
+                           attack_name=attack_name,
+                           attack_power=attack_power
+                           )
 
-        self.name = name
-        self.health = health
-        self.strength = strength
-        self.intellect = intellect
-        self.agility = agility
-        self.luck = luck
-        self.attack_name = attack_name
-        self.attack_power = __class__._set_enemy_attack_power(self)
-
-    def _set_enemy_attack_power(self):
-        if self.strength > self.intellect:
-            self.attack_power = self.strength
-        else:
-            self.attack_power = self.intellect
-        return self.attack_power
+    def _set_enemy_attack_power(strength,intellect):
+        try:
+            if strength > intellect:
+                attack_power = strength
+            else:
+                attack_power = intellect
+            return attack_power * 10
+        except:
+            import pdb; pdb.set_trace()

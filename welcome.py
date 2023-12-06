@@ -1,6 +1,8 @@
 from interaction.interaction import Interaction
 from display.display import Display
-from actors.actor_player import Player
+from actors.actor_party import PartyMember
+from actors.player_functions import generate_player_instance
+
 
 def welcome():
     print("Welcome to RPyG, a text based RPG in Python", end="\n\n")
@@ -33,10 +35,7 @@ Options are : NEW & LOAD
     Display.clear_display()
     return player_action
 
-class PartyMember():
-    def __init__(self, name:str, specialization:str):
-        self.name = name
-        self.specialization = specialization
+
         
 
 def party_start():
@@ -71,7 +70,7 @@ Note: Case is respected but names longer than 64 characters will be truncated
 
 """
 
-    party_size = int(Interaction.validate_input(party_size_choices, party_size_message)) #kinda Yikes but casting str to int is not horendously unsafe
+    party_size = int(Interaction.validate_input(party_size_choices, party_size_message)) #kinda Yikes but casting str to int is not horrendously unsafe
     party_members = []
     for _ in range(0,party_size):
         member_name =  Interaction.custom_text_entry(member_name_message, 32)
@@ -90,6 +89,5 @@ def default_party():
     default_specialization = ["WARRIOR", "MAGE", "ROGUE"]
     for i in range(0,3):
         member = PartyMember(default_names[i], default_specialization[i])
-        player_member = Player(name=member.name, specialization=member.specialization)
-        party_members.append(player_member)
+        party_members.append(generate_player_instance(member))
     return party_members

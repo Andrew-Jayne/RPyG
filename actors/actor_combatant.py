@@ -1,6 +1,8 @@
 class Combatant():
-    def __init__(self, health:int, ):
+    def __init__(self, health:int, attack_name:str, attack_power:int):
         self.health = health
+        self.attack_name = attack_name
+        self.attack_power = attack_power
         self.base_health = health
         self.will_evade = False
         self.will_defend = False
@@ -20,3 +22,5 @@ class Combatant():
         if self.health > self.base_health:
             self.health = self.base_health
             print(f"{self.name} has Fully Healed!")
+
+        ## Hidden Methods
