@@ -4,7 +4,8 @@ import copy
 from actors.actor_enemy import Enemy
 from actors.actor_party import EnemyParty
 from combat.combat import Combat
-from actors.actor_follower import Follower
+from actors.actor_party import PartyMember
+from actors.player_functions import generate_player_instance
 from message.message import Message
 
 class SpecialEncounters():
@@ -23,9 +24,9 @@ class SpecialEncounters():
         print(f"You encounter {enemy_instance.name}!")
         enemy_party = EnemyParty([enemy_instance])
         Combat.battle(party_instance, enemy_party)
-        #if player_instance.strength >= 7 or player_instance.intellect >= 7:
-            #__class__._follower_joins(player_instance)
-            # disabled for now, may just append them to the part (seems the least jank but whatever)
+        for member_instance in party_instance.members:
+            if member_instance.strength >= 7 or member_instance.intellect >= 7:
+                party_instance.gain_member(__class__._follower_joins(member_instance))
 
     @staticmethod
     def enemy_keep_visit(party_instance):
@@ -100,33 +101,26 @@ class SpecialEncounters():
     def _follower_joins(player_instance):
         
         mage_names = ["Grace","Torvalds","Knuth"]
-        warrior_name = ["Moore","Neumann","Kilby"]
+        warrior_names = ["Moore","Neumann","Kilby"]
         name_choice = random.randint(0,2)
 
         ## Determine Follower Type
         if player_instance.intellect >= 7 and player_instance.intellect > player_instance.strength:
             follower_name_type = mage_names
         elif player_instance.strength >= 7 and player_instance.strength > player_instance.intellect:
-            follower_name_type = warrior_name
+            follower_name_type = warrior_names
         elif player_instance.strength == player_instance.intellect:
-            follower_name_type = random.choice([mage_names,warrior_name])
+            follower_name_type = random.choice([mage_names,warrior_names])
 
         ## Set Follower Attributes (luck is handled in the class and is random, Follower also has gold and Potions using the same logic as player)
         if follower_name_type == mage_names:
-            follower_intellect = 5 + random.randint(1,4)
-            follower_strength = 5
             print(f"Impressed by your intellect, a young mage joins you on your quest")
-        elif follower_name_type == warrior_name:
-            follower_intellect = 5
-            follower_strength = 5 + random.randint(1,4)
+            follower_class = "MAGE"
+        elif follower_name_type == warrior_names:
+            follower_class = "WARRIOR"
             print(f"Impressed by your strength, a young warrior joins you on your quest")
         
-        follower_agility = 3 + random.randint(1,6)
-        
         ### setup Follower instance
+        new_member = generate_player_instance(PartyMember(follower_name_type[name_choice],follower_class))
 
-        player_follower = Follower(name=follower_name_type[name_choice], strength=follower_strength, intellect=follower_intellect, agility=follower_agility)
-
-
-        ## Add Follower to Player Instance
-        player_instance.gain_follower(player_follower)
+        return new_member

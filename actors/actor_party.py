@@ -5,6 +5,9 @@ class Party():
 
     def lose_member(self, member):
         self.members.remove(member)
+    
+    def gain_member(self, member):
+        self.members.append(member)
 
 class PlayerParty(Party):
     """
@@ -24,3 +27,8 @@ class EnemyParty(Party):
 
         Party.__init__(self, members=members)
         self.members = members
+
+class PartyMember():
+    def __init__(self, name:str, specialization:str):
+        self.name = name
+        self.specialization = specialization
