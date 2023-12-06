@@ -52,7 +52,7 @@ class Combat:
                                         Message.evade_failure_message()
                                         attack(attacker_instance=enemy_instance, target_instance=target_player)
                                     else:
-                                        Message.evade_sucess_message()
+                                        Message.evade_success_message()
                                 else:
                                     attack(attacker_instance=enemy_instance, target_instance=target_player)
                                 if target_player.health == 0:
