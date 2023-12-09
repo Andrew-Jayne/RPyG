@@ -41,27 +41,27 @@ class Combat:
             else:
                 battle_complete = True
 
-                if  battle_complete == False:
-                    if len(player_party_instance.members) != 0:
-                        for enemy_instance in enemy_party_instance.members:
-                                target_max_index = len(player_party_instance.members) - 1 
-                                target_index = int(random.randint(0,target_max_index))
-                                target_player = player_party_instance.members[target_index]
-                                if target_player.will_evade == True:
-                                    if evade(target_player) == False:
-                                        Message.evade_failure_message()
-                                        attack(attacker_instance=enemy_instance, target_instance=target_player)
-                                    else:
-                                        Message.evade_success_message()
-                                else:
+            if  battle_complete == False:
+                if len(player_party_instance.members) != 0:
+                    for enemy_instance in enemy_party_instance.members:
+                            target_max_index = len(player_party_instance.members) - 1 
+                            target_index = int(random.randint(0,target_max_index))
+                            target_player = player_party_instance.members[target_index]
+                            if target_player.will_evade == True:
+                                if evade(target_player) == False:
+                                    Message.evade_failure_message()
                                     attack(attacker_instance=enemy_instance, target_instance=target_player)
-                                if target_player.health == 0:
-                                    player_party_instance.lose_member(target_player)
-                    else:
-                        battle_complete = True
-                    ## End Battle if Everyone dies
+                                else:
+                                    Message.evade_success_message()
+                            else:
+                                attack(attacker_instance=enemy_instance, target_instance=target_player)
+                            if target_player.health == 0:
+                                player_party_instance.lose_member(target_player)
                 else:
                     battle_complete = True
+                ## End Battle if Everyone dies
+            else:
+                battle_complete = True
 
         ## Display Victory Message if player does not die
         if len(player_party_instance.members) != 0 and len(enemy_party_instance.members) == 0 and battle_complete == True:
