@@ -1,7 +1,7 @@
 {
     "midway_boss": {
             "name": "Cobolus The Wizard",
-            "health": 150,
+            "health": 200,
             "strength": 4,
             "intellect": 8,
             "luck": 6,
@@ -19,7 +19,7 @@
         },
     "keep_master": {
         "name": "Algolon's Arch Mage",
-        "health": 200,
+        "health": 250,
         "strength": 4,
         "intellect": 10,
         "agility": 4,
@@ -28,7 +28,7 @@
     },
     "penultimate_boss": {
         "name": "The Great Wizard Algolon",
-        "health": 250,
+        "health": 400,
         "strength": 5,
         "intellect": 12,
         "agility": 5,
@@ -37,7 +37,7 @@
     },
     "ultimate_boss": {
         "name": "Fortranus the Ancient One",
-        "health": 400,
+        "health": 1000,
         "strength": 14,
         "intellect": 10,
         "agility": 7,

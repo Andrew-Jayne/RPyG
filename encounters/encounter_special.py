@@ -21,7 +21,7 @@ class SpecialEncounters():
     def midway_boss(party_instance):
         enemy_instance = __class__._get_special_enemy('midway_boss')
         print(f"You encounter {enemy_instance.name}!")
-        enemy_party = EnemyParty([enemy_instance])
+        enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
         Combat.battle(party_instance, enemy_party)
         for member_instance in party_instance.members:
             if member_instance.strength >= 7 or member_instance.intellect >= 7:
@@ -54,27 +54,27 @@ class SpecialEncounters():
                     enemy_party_instances = []
                     for _ in range(0,enemy_count):
                         enemy_party_instances.append(copy.deepcopy(enemy_instance))
-                    enemy_party = EnemyParty(enemy_party_instances)
+                    enemy_party = EnemyParty(f"group of {enemy_count} {enemy_instance.name}" ,enemy_party_instances)
                     Combat.battle(party_instance, enemy_party)
             if len(party_instance.members) == 0:
                 break
         print("At the end of the Keep you encounter Algolon's Arch Mage!")
         enemy_instance = __class__._get_special_enemy('keep_master')
-        enemy_party = EnemyParty([enemy_instance])
+        enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
         Combat.battle(party_instance, enemy_party)
 
     @staticmethod
     def penultimate_boss(party_instance):
         enemy_instance = __class__._get_special_enemy('penultimate_boss')
         print(f"You Battle {enemy_instance.name}!")
-        enemy_party = EnemyParty([enemy_instance])
+        enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
         Combat.battle(party_instance, enemy_party)
 
     @staticmethod
     def final_boss(party_instance):
         enemy_instance = __class__._get_special_enemy('ultimate_boss')
         print(f"You battle must now battle {enemy_instance.name}!")
-        enemy_party = EnemyParty([enemy_instance])
+        enemy_party = EnemyParty(enemy_instance.name,[enemy_instance])
         Combat.battle(party_instance, enemy_party)
         if len(party_instance.members) != 0:
             Message.end_game_message(party_instance)
@@ -86,16 +86,8 @@ class SpecialEncounters():
         with open('encounters/enemies_special.json', 'r') as file:
             enemies_list = json.load(file)
         enemy_attributes = enemies_list[enemy_indentiier]
-        special_enemy_instance = Enemy(
-            name=enemy_attributes['name'],
-            health=enemy_attributes['health'],
-            strength=enemy_attributes['strength'],
-            intellect=enemy_attributes['intellect'],
-            agility=enemy_attributes['agility'],
-            luck=enemy_attributes['luck'],
-            attack_name=enemy_attributes['attack_name'])
         
-        return special_enemy_instance
+        return Enemy(enemy_attributes)
 
     def _follower_joins(player_instance):
         
