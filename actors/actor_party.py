@@ -27,8 +27,3 @@ class EnemyParty(Party):
 
         Party.__init__(self, members=members)
         self.members = members
-
-class PartyMember():
-    def __init__(self, name:str, specialization:str):
-        self.name = name
-        self.specialization = specialization

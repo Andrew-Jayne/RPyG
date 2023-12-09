@@ -19,7 +19,7 @@ if Interaction.global_game_mode == "MANUAL":
             my_party, my_party_name = party_start()
             my_party_instances = []
             for member in my_party:
-                my_party_instances.append(generate_player_instance(member))
+                my_party_instances.append(PlayableActor(member[0], member[1]))
             
             player_party_instance = PlayerParty(my_party_instances, my_party_name)
 else:

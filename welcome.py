@@ -1,7 +1,6 @@
 from interaction.interaction import Interaction
 from display.display import Display
-from actors.actor_party import PartyMember
-from actors.player_functions import generate_player_instance
+from actors.actor_playable import PlayableActor
 
 
 def welcome():
@@ -75,7 +74,7 @@ Note: Case is respected but names longer than 64 characters will be truncated
     for _ in range(0,party_size):
         member_name =  Interaction.custom_text_entry(member_name_message, 32)
         member_specialization = Interaction.validate_input(specialization_choices,specialization_messages)
-        member = PartyMember(member_name, member_specialization)
+        member = [member_name, member_specialization]
         party_members.append(member)
     party_name = Interaction.custom_text_entry(party_name_message, 64)
     return party_members, party_name
@@ -85,9 +84,9 @@ Note: Case is respected but names longer than 64 characters will be truncated
 
 def default_party():
     party_members = []
-    default_names = ["Conan","Merlin","Robin"]
-    default_specialization = ["WARRIOR", "MAGE", "ROGUE"]
+    default_names = ("Conan","Merlin","Robin")
+    default_specialization = ("WARRIOR", "MAGE", "ROGUE")
     for i in range(0,3):
-        member = PartyMember(default_names[i], default_specialization[i])
-        party_members.append(generate_player_instance(member))
+        member = (default_names[i], default_specialization[i])
+        party_members.append(PlayableActor(member[0], member[1]))
     return party_members

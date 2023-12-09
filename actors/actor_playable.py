@@ -8,16 +8,31 @@ class Inventory:
         self.potions = potions
 
 class PlayableActor(Actor, Inventory, Combatant):
-    def __init__(self, 
-                 name: str, 
-                 specialization: str,
-                 health: int, 
-                 strength: int, 
-                 intellect: int, 
-                 agility:int, 
-                 luck: int, 
-                 gold:int, 
-                 potions:int):
+    def __init__(self, name: str, specialization: str):
+
+        self.name = name
+        self.specialization = specialization
+                 
+
+        match specialization:
+            case "WARRIOR":
+                strength = random.randint(5,10)
+                intellect = random.randint(1,5)
+                agility = random.randint(4,8)
+                luck = random.randint(1,10)
+            case "MAGE":
+                strength = random.randint(1,5)
+                intellect = random.randint(5,10)
+                agility = random.randint(4,8)
+                luck = random.randint(1,10)
+            case "ROGUE":
+                strength = random.randint(4,8)
+                intellect = random.randint(4,8)
+                agility = random.randint(5,10)
+                luck = random.randint(1,10)
+            case _:
+                print(f"Error Invalid Specialization {specialization}")
+                exit()
 
     ## Init Inherited Classes
         Actor.__init__(self, 
@@ -28,11 +43,12 @@ class PlayableActor(Actor, Inventory, Combatant):
                        luck=luck)
 
         Inventory.__init__(self, 
-                           gold=gold, 
-                           potions=potions)
+                           gold=strength * 25, 
+                           potions=int(intellect / 2) 
+                           )
         
         Combatant.__init__(self, 
-                           health=health,
+                           health=100 + int((strength + intellect) * 10),
                            attack_name=__class__._set_attack_name(self),
                            attack_power=__class__._set_attack_power(self)
                            )
