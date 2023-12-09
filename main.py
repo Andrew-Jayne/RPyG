@@ -32,6 +32,7 @@ while player_party_instance.progress < 100:
     check_for_encounter(player_party_instance)
     if len(player_party_instance.members) == 0:
         print(f"{player_party_instance.name} has failed in their quest after {player_party_instance.progress * 10} miles" , end='\n\n')
+        Message.post_game_recap(player_party_instance)
         break
 
 

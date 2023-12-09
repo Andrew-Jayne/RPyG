@@ -1,61 +1,207 @@
 {
     "small_enemies": [
         {
-            "name": "Feral Imp",
-            "health": 80,
-            "strength": 1,
-            "intellect": 3,
-            "agility": 6, 
-            "luck": 4,
-            "attack_name": "fireball"
+            "pural_name": "Feral Imps",
+            "group_name": "Mischief",
+            "variant_lists": {
+                "lesser_variants": [{
+                    "name": "Young Feral Imp",
+                    "health": 60,
+                    "strength": 1,
+                    "intellect": 3,
+                    "agility": 4, 
+                    "luck": 6,
+                    "attack_name": "weak fireball"
+                }],
+                "common_variants": [{
+                    "name": "Feral Imp",
+                    "health": 80,
+                    "strength": 3,
+                    "intellect": 5,
+                    "agility": 5, 
+                    "luck": 3,
+                    "attack_name": "fireball"
+                }],
+                "greater_variants": [{                    
+                    "name": "Painted Feral Imp",
+                    "health": 120,
+                    "strength": 5,
+                    "intellect": 6,
+                    "agility": 4, 
+                    "luck": 4,
+                    "attack_name": "empowered fireball"
+                    }]
+            }
         },
         {
-            "name": "Goblin Scout",
-            "health": 60,
-            "strength": 5,
-            "intellect": 2,
-            "agility": 5,
-            "luck": 2,
-            "attack_name": "Club Bash"
+            "pural_name": "Goblins",
+            "group_name": "Patrol",
+            "variant_lists": {
+                "lesser_variants": [{
+                    "name": "Goblin Cadet",
+                    "health": 45,
+                    "strength": 3,
+                    "intellect": 2,
+                    "agility": 3,
+                    "luck": 1,
+                    "attack_name": "Club Bash"
+                }],
+                "common_variants": [{
+                    "name": "Goblin Scout",
+                    "health": 60,
+                    "strength": 5,
+                    "intellect": 2,
+                    "agility": 5,
+                    "luck": 2,
+                    "attack_name": "Club Bash"
+                }],
+                "greater_variants": [{
+                    "name": "Goblin Captin",
+                    "health": 100,
+                    "strength": 7,
+                    "intellect": 2,
+                    "agility": 3,
+                    "luck": 1,
+                    "attack_name": "Club Bash"
+                }]
+            }
         }
     ],
     "medium_enemies": [
         {
-            "name": "Dire Wolf",
-            "health": 150,
-            "strength": 5,
-            "intellect": 3,
-            "agility": 8,
-            "luck": 6,
-            "attack_name": "Wolf Bite"
+            "pural_name": "Dire Wolves",
+            "group_name": "Pack",
+            "variant_lists": {
+                "lesser_variants": [{            
+                    "name": "Young Dire Wolf",
+                    "health": 150,
+                    "strength": 5,
+                    "intellect": 3,
+                    "agility": 8,
+                    "luck": 6,
+                    "attack_name": "Wolf Bite"
+            }],
+                "common_variants": [{            
+                    "name": "Dire Wolf",
+                    "health": 150,
+                    "strength": 5,
+                    "intellect": 3,
+                    "agility": 8,
+                    "luck": 6,
+                    "attack_name": "Wolf Bite"
+            }],
+                "greater_variants": [{            
+                    "name": "Alpha Dire Wolf",
+                    "health": 150,
+                    "strength": 5,
+                    "intellect": 3,
+                    "agility": 8,
+                    "luck": 6,
+                    "attack_name": "Wolf Bite"
+            }]
+            }
         },
         {
-            "name": "Lesser Demon",
-            "health": 130,
-            "strength": 4,
-            "intellect": 7,
-            "agility": 3,
-            "luck": 2,
-            "attack_name": "Soul Decay Wave"
+            "pural_name": "Demons",
+            "group_name": "Band",
+            "variant_lists": {
+                "lesser_variants": [{            
+                    "name": "Demon Fiendling",
+                    "health": 90,
+                    "strength": 3,
+                    "intellect": 5,
+                    "agility": 6,
+                    "luck": 1,
+                    "attack_name": "Soul Decay Burst"
+            }],
+                "common_variants": [{
+                    "name": "Abyssal Demon",
+                    "health": 130,
+                    "strength": 4,
+                    "intellect": 7,
+                    "agility": 3,
+                    "luck": 2,
+                    "attack_name": "Soul Decay Orb"
+                }],
+                "greater_variants": [{
+                    "name": "Demon Archfiend",
+                    "health": 180,
+                    "strength": 5,
+                    "intellect": 9,
+                    "agility": 4,
+                    "luck": 1,
+                    "attack_name": "Soul Decay Wave"
+                }]
+            }
         }],
 
         "large_enemies": [
                     {
-        "name": "Cave Troll",
-        "health": 300,
-        "strength": 10,
-        "intellect": 1,
-        "agility": 1,
-        "luck": 2,
-        "attack_name": "Club Smash"
+        "pural_name": "Cave Trolls",
+        "group_name": "Gang",
+        "variant_lists": {
+            "lesser_variants": [{ 
+                "name": "Stunted Cave Troll",       
+                "health": 300,
+                "strength": 10,
+                "intellect": 1,
+                "agility": 1,
+                "luck": 2,
+                "attack_name": "Club Smash"
+            }],
+            "common_variants": [{
+                "name": "Cave Troll",
+                "health": 300,
+                "strength": 10,
+                "intellect": 1,
+                "agility": 1,
+                "luck": 2,
+                "attack_name": "Club Smash"
+            }],
+            "greater_variants": [{
+                "name": "Cave Troll Cheif",
+                "health": 300,
+                "strength": 10,
+                "intellect": 1,
+                "agility": 1,
+                "luck": 2,
+                "attack_name": "Club Smash"
+            }]
+        }
     },
     {
-        "name": "Stunted Ice Drake",
-        "health": 250,
-        "strength": 9,
-        "intellect": 7,
-        "agility": 6,
-        "luck": 8,
-        "attack_name": "Blizzard Breath"
+        "pural_name": "Ice Drakes",
+        "group_name": "Clan",
+        "variant_lists": {
+            "lesser_variants": [{
+                "name": "Junvenille Ice Drake",
+                "health": 250,
+                "strength": 9,
+                "intellect": 7,
+                "agility": 6,
+                "luck": 8,
+                "attack_name": "Blizzard Breath"
+            }],
+            "common_variants": [{
+                "name": "Ice Drake",
+                "health": 250,
+                "strength": 9,
+                "intellect": 7,
+                "agility": 6,
+                "luck": 8,
+                "attack_name": "Blizzard Breath"
+            }],
+            "greater_variants": [{
+                "name": "Ice Drake Matriarch",
+                "health": 250,
+                "strength": 9,
+                "intellect": 7,
+                "agility": 6,
+                "luck": 8,
+                "attack_name": "Blizzard Breath"
+            }]
+        }
     } ]
 }
+
+
