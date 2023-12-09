@@ -49,8 +49,8 @@ class PlayableActor(Actor, Inventory, Combatant):
         
         Combatant.__init__(self, 
                            health=100 + int((strength + intellect) * 10),
-                           attack_name=__class__._set_attack_name(self),
-                           attack_power=__class__._set_attack_power(self)
+                           attack_name=__class__.__set_attack_name(self),
+                           attack_power=__class__.__set_attack_power(self)
                            )
 
 
@@ -59,12 +59,12 @@ class PlayableActor(Actor, Inventory, Combatant):
             print("You drink a potion")
             self.potions -= 1
             self.heal(10 + random.randint(-2,2))
-            print(f"You have {self.potions} remaining")
-            print(f"Your health is now {self.health}", end="\n\n")
+            print(f"{self.name} has {self.potions} remaining")
+            print(f"{self.name}'s health is now {self.health}", end="\n\n")
         else:
-            print("You have no remaining potions!")
+            print(f"{self.name} has no remaining potions!")
 
-    def _set_attack_power(self):
+    def __set_attack_power(self):
         if self.strength > self.intellect:
             self.attack_power = self.strength
         elif self.strength >= 7 and self.intellect >= 7:
@@ -74,7 +74,7 @@ class PlayableActor(Actor, Inventory, Combatant):
 
         return self.attack_power * 10
 
-    def _get_skill(self):
+    def __get_skill(self):
         strength_skill = ""
         intellect_skill = ""
         player_skill = ""
@@ -101,8 +101,8 @@ class PlayableActor(Actor, Inventory, Combatant):
 
         return player_skill
     
-    def _set_attack_name(self):
-        player_skill = __class__._get_skill(self)
+    def __set_attack_name(self):
+        player_skill = __class__.__get_skill(self)
 
         match player_skill:
             case "weak:dull":
