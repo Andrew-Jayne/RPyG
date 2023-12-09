@@ -1,6 +1,5 @@
 import pickle
 from actors.actor_playable import PlayableActor
-from actors.player_functions import generate_player_instance
 from actors.actor_party import PlayerParty
 from message.message import Message
 from interaction.interaction import Interaction
