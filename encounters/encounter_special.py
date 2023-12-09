@@ -4,8 +4,7 @@ import copy
 from actors.actor_enemy import Enemy
 from actors.actor_party import EnemyParty
 from combat.combat import Combat
-from actors.actor_party import PartyMember
-from actors.player_functions import generate_player_instance
+from actors.actor_playable import PlayableActor
 from message.message import Message
 
 class SpecialEncounters():
@@ -115,12 +114,12 @@ class SpecialEncounters():
         ## Set Follower Attributes (luck is handled in the class and is random, Follower also has gold and Potions using the same logic as player)
         if follower_name_type == mage_names:
             print(f"Impressed by your intellect, a young mage joins you on your quest")
-            follower_class = "MAGE"
+            follower_specialization = "MAGE"
         elif follower_name_type == warrior_names:
-            follower_class = "WARRIOR"
+            follower_specialization = "WARRIOR"
             print(f"Impressed by your strength, a young warrior joins you on your quest")
         
         ### setup Follower instance
-        new_member = generate_player_instance(PartyMember(follower_name_type[name_choice],follower_class))
+        new_member = PlayableActor(follower_name_type[name_choice],follower_specialization)
 
         return new_member
