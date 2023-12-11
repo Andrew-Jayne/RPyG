@@ -12,12 +12,15 @@ def check_for_critical(combatant_instance):
 
 
 def attack(attacker_instance, target_instance):
+    damage_variation = int(attacker_instance.attack_power * 0.1)
+    final_damage = attacker_instance.attack_power + random.randint(-damage_variation,damage_variation)
+
     if check_for_critical(attacker_instance) == True:
-        Message.actor_attack_message(attacker_instance)
-        target_instance.damage(attacker_instance.attack_power * 2)
+        Message.actor_attack_message(attacker_instance,final_damage)
+        target_instance.damage(final_damage * 2)
     else:
-        Message.actor_attack_message(attacker_instance)
-        target_instance.damage(attacker_instance.attack_power)
+        Message.actor_attack_message(attacker_instance, final_damage)
+        target_instance.damage(final_damage)
 
 def evade(combatant_instance):
     evade_check = random.randint(1,30)

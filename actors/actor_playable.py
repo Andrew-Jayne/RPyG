@@ -12,7 +12,7 @@ class Inventory:
     
     def lose_gold(self, amount:int):
         if self.gold < amount:
-            print("You have no gold remaining")
+            print(f"{self.name} has no gold remaining")
             return False
         else:
             self.gold -= amount
@@ -73,7 +73,7 @@ class PlayableActor(Actor, Inventory, Combatant):
 
     def use_potion(self):
         if self.potions != 0:
-            print("You drink a potion")
+            print(f"{self.name} drinks a potion")
             self.lose_potion(1)
             self.heal(10 + random.randint(-2,2))
             print(f"{self.name} has {self.potions} remaining")
