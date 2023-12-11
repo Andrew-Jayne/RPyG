@@ -7,6 +7,23 @@ class Inventory:
         self.gold = gold
         self.potions = potions
 
+    def gain_gold(self, amount:int):
+        self.gold += amount
+    
+    def lose_gold(self, amount:int):
+        if self.gold < amount:
+            print("You have no gold remaining")
+            return False
+        else:
+            self.gold -= amount
+            return True
+
+    def gain_potion(self, amount:int):
+        self.potions += amount
+    
+    def lose_potion(self, amount:int):
+        self.potions -= amount
+
 class PlayableActor(Actor, Inventory, Combatant):
     def __init__(self, name: str, specialization: str):
 
@@ -57,7 +74,7 @@ class PlayableActor(Actor, Inventory, Combatant):
     def use_potion(self):
         if self.potions != 0:
             print("You drink a potion")
-            self.potions -= 1
+            self.lose_potion(1)
             self.heal(10 + random.randint(-2,2))
             print(f"{self.name} has {self.potions} remaining")
             print(f"{self.name}'s health is now {self.health}", end="\n\n")
