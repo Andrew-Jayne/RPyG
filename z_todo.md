@@ -10,6 +10,7 @@
 [] expand merchant system
 [] Specalization based Attack Names (3 grades)
 [] Sweep for junk funcitons &| bloat
+[] Add enemy AIs
 
 
 
