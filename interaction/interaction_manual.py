@@ -51,3 +51,15 @@ def manual_choose_combat_target(enemy_party_instance):
 
     return validate_input(target_options, target_message)
     
+def manual_at_merchant(player_party_instance):
+    merchant_options = ["BUY", "LEAVE"]
+
+    for player_instance in player_party_instance.members:
+        while player_instance.potions < 100 and player_instance.gold != 0:
+            if player_instance.gold != 0:
+                player_instance.lose_gold(25)
+                player_instance.gain_potion(1)
+                print(f"{player_instance.name} purchases a potion. They now have {player_instance.potions}")
+            else:
+                print(f"{player_instance.name} does not have enough Gold to purchase more potions")
+                break

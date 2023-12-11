@@ -1,6 +1,6 @@
 from interaction.interaction_utilities import validate_input, sanitize, custom_text_entry
-from interaction.interaction_manual import manual_enemy_encounter, manual_in_battle, manual_post_battle, manual_choose_combat_target
-from interaction.interaction_automatic import auto_enemy_encounter, auto_in_battle, auto_post_battle, auto_choose_combat_target
+from interaction.interaction_manual import *
+from interaction.interaction_automatic import *
 
 class Interaction:
     global_game_mode = "AUTO" ## this is a default value that should be can be updated to "MANUAL" during the welcome function
@@ -55,15 +55,15 @@ class Interaction:
 
     @staticmethod
     def at_merchant(player_party_instance):
-        for player_instance in player_party_instance.members:
-            while player_instance.potions < 100 and player_instance.gold != 0:
-                if player_instance.gold != 0:
-                    player_instance.lose_gold(25)
-                    player_instance.gain_potion(1)
-                    print(f"{player_instance.name} purchases a potion. They now have {player_instance.potions}")
-                else:
-                    print(f"{player_instance.name} does not have enough Gold to purchase more potions")
-                    break
+        match __class__.global_game_mode:
+            case "AUTO":
+                auto_at_merchant(player_party_instance)
+            case "MANUAL":
+                manual_in_battle(player_party_instance)
+            case _:
+                print("Ummm How did you do that?, whatever.... Just.... Leave")
+
+
             
     @staticmethod
     def validate_input(choice_list:list, prompt_message:str):
