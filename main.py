@@ -38,5 +38,6 @@ def main():
     Message.post_game_recap(player_party_instance)
 
 
-if __name__ == main:
+
+if __name__ == "__main__":
     main()

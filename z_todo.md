@@ -1,6 +1,6 @@
 ## V2 Goals
-[] RPC for Mystery Encounters
-[] Merge Rest & Mystery Encounters
+[*] RPC for Mystery Encounters
+[*] Merge Rest & Mystery Encounters
 [] Finish Merchant Interaction
 [] Polish Special Encounters
 [] Remove all remaining "You" Messages
@@ -18,3 +18,4 @@
 [] add leveling system based on battle actions
 [] add 2nd attack type for each class with new names
 [] add damage type (Magic, Melee) + Resistances based on Specalization
+[] add multi action encounters (you rest for the night but are robbed in your sleep and lose all of your gold!)

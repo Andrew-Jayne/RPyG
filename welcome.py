@@ -35,8 +35,6 @@ Options are : NEW & LOAD
     return player_action
 
 
-        
-
 def party_start():
     party_size_choices = ["1","2","3"]
     specialization_choices = ["WARRIOR", "MAGE", "ROGUE"]
@@ -78,8 +76,6 @@ Note: Case is respected but names longer than 64 characters will be truncated
         party_members.append(member)
     party_name = Interaction.custom_text_entry(party_name_message, 64)
     return party_members, party_name
-
-
 
 
 def default_party():
