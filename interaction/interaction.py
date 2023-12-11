@@ -54,15 +54,16 @@ class Interaction:
              
 
     @staticmethod
-    def at_merchant(player_instance):
-        while player_instance.potions < 100 and player_instance.gold != 0:
-            if player_instance.gold != 0:
-                player_instance.gold -= 25
-                player_instance.potions += 1
-                print(f"You purchase a potion. You now have {player_instance.potions}")
-            else:
-                 print("You do not have enough Gold to purchase more potions")
-                 break
+    def at_merchant(player_party_instance):
+        for player_instance in player_party_instance.members:
+            while player_instance.potions < 100 and player_instance.gold != 0:
+                if player_instance.gold != 0:
+                    player_instance.lose_gold(25)
+                    player_instance.gain_potion(1)
+                    print(f"{player_instance.name} purchases a potion. They now have {player_instance.potions}")
+                else:
+                    print(f"{player_instance.name} does not have enough Gold to purchase more potions")
+                    break
             
     @staticmethod
     def validate_input(choice_list:list, prompt_message:str):

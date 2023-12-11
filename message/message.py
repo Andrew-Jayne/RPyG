@@ -50,6 +50,7 @@ class Message():
 
 
 
+
     # Encounter Messages
     @staticmethod
     def flee_failure_message(player_name, enemy_name):
@@ -111,7 +112,5 @@ You have traveled {party_instance.progress * 10} Miles Total.
         print("Your adventure has been completed, you may start a new adventure if you so choose")
         if Interaction.global_game_mode == "MANUAL":
             with open('savegame.rpygs', 'wb') as save_file:
-                # Write some text to the file.
                 pickle.dump(player_instance, save_file)
                 exit()
-                # The file is automatically closed when you exit the 'with' block.

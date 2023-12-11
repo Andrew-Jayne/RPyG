@@ -1,0 +1,100 @@
+{
+    "events": [
+      {
+        "id": "rest_small_refuge",
+        "encounter_type": "REST",
+        "message": "Your Party finds a Small Refuge and rests for a moment",
+        "actor_action": "heal",
+        "special_action": null ,
+        "targets": "all",
+        "magnitude": 30
+      },
+      {
+        "name": "rest_tavern",
+        "encounter_type": "REST",
+        "message": "Your Party finds a Tavern and Rests for a short time",
+        "actor_action": "heal",
+        "special_action": null ,
+        "targets": "all",
+        "magnitude": 50
+      },
+      {
+        "name": "rest_inn",
+        "encounter_type": "REST",
+        "message": "Your Party finds an Inn and Rests for the evening",
+        "actor_action": "heal",
+        "special_action": null ,
+        "targets": "all",
+        "magnitude": 90
+      },
+      {
+        "name": "rest_village",
+        "encounter_type": "REST",
+        "message": "Your Party finds a village and rest for a day",
+        "actor_action": "heal",
+        "special_action": null ,
+        "targets": "all",
+        "magnitude": 90
+      },
+      {
+        "name": "rest_vassal_keep",
+        "encounter_type": "REST",
+        "message": "You Find A Vassal's Keep! \nYou take a day to rest, and replenish your supplies.",
+        "actor_action": "heal",
+        "special_action": null ,
+        "targets": "all",
+        "magnitude": 120
+      },
+      {
+        "name": "rest_palace",
+        "encounter_type": "REST",
+        "message": "You arrive at a grand palace and are welcomed All",
+        "actor_action": "heal",
+        "special_action": "at_merchant",
+        "targets": "all",
+        "magnitude": 150
+      },
+      {
+        "name": "suprise_attack",
+        "encounter_type": "ATTACK",
+        "message": "Your party Encountera A Strange Figure!\nThe Figure blasts your party with an Arcane Bolt and vanishes into a Flash of Light!\n\n",
+        "actor_action": "damage",
+        "special_action": null,
+        "targets": "all",
+        "magnitude": 30
+      },
+      {
+        "name": "suprise_heal",
+        "encounter_type": "HEAL",
+        "message": "Your party Encounters A Strange Figure!\nThe Figure heals your party and vanishes into the darkness!\n\n",
+        "actor_action": "heal",
+        "special_action": null,
+        "targets": "all",
+        "magnitude": 30
+      },
+      {
+        "name": "suprise_chest",
+        "encounter_type": "gold",
+        "message": "Your party find a small treasure chest, upon opening it you find 100 gold ",
+        "actor_action": "gain_gold",
+        "special_action": null,
+        "targets": "random",
+        "magnitude": 100
+      }
+    ],
+    "allowed_actor_actions": [
+        "damage",
+        "heal",
+        "gain_gold",
+        "lose_gold",
+        "gain_potion",
+        "lose_potion",
+        "use_potion"
+    ],
+    "allowed_special_actions":
+    [
+        "at_merchant"
+    ]
+  }
+  
+
