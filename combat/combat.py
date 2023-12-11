@@ -6,9 +6,8 @@ from message.message import Message
 from combat.combat_actions import attack, evade, post_battle
 
 #Battle Flow:
-    #Player  Attacks Enemy
-    #Follower  Attacks Enemy
-    #Enemy Attacks Player or Follower
+    #Player Party Attacks Enemy
+    #Enemy Party Attacks  Player Party
 
 
 class Combat:

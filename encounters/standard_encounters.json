@@ -39,7 +39,7 @@
       {
         "name": "rest_vassal_keep",
         "encounter_type": "REST",
-        "message": "You Find A Vassal's Keep! \nYou take a day to rest, and replenish your supplies.",
+        "message": "Your Party Finds A Vassal's Keep! \nThey take a day to rest, and replenish their supplies.",
         "actor_action": "heal",
         "special_action": null ,
         "targets": "all",
@@ -48,7 +48,7 @@
       {
         "name": "rest_palace",
         "encounter_type": "REST",
-        "message": "You arrive at a grand palace and are welcomed All",
+        "message": "Your Party arrives at a grand palace and are welcomed All",
         "actor_action": "heal",
         "special_action": "at_merchant",
         "targets": "all",
@@ -75,7 +75,7 @@
       {
         "name": "suprise_chest",
         "encounter_type": "gold",
-        "message": "Your party find a small treasure chest, upon opening it you find 100 gold ",
+        "message": "Your party find a small treasure chest, upon opening it reveals 100 gold ",
         "actor_action": "gain_gold",
         "special_action": null,
         "targets": "random",
