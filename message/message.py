@@ -12,23 +12,23 @@ class Message():
     
     @staticmethod
     def encounter_message(group_name):
-        print(f"You encounter a {group_name}!", end="\n\n")
+        print(f"Your Party encounters a {group_name}!", end="\n\n")
     
     @staticmethod
     def actor_health_message(actor_instance):
         print(f"{actor_instance.name} has {actor_instance.health} Health remaining", end="\n\n")
     
     @staticmethod
-    def actor_attack_message(attacker_instance):
+    def actor_attack_message(attacker_instance, damage_value):
         if Interaction.global_game_mode == "MANUAL" and isinstance(attacker_instance, PlayableActor) == False:
             time.sleep(2)
-        print(f"{attacker_instance.name} attacks with {attacker_instance.attack_name} inflicting {attacker_instance.attack_power} damage", end="\n\n")
+        print(f"{attacker_instance.name} attacks with {attacker_instance.attack_name} inflicting {damage_value} damage", end="\n\n")
 
     @staticmethod
-    def actor_critical_attack_message(attacker_instance):
+    def actor_critical_attack_message(attacker_instance, damage_value):
         if Interaction.global_game_mode == "MANUAL" and isinstance(attacker_instance, PlayableActor) == False:
             time.sleep(2)
-        print(f"{attacker_instance.name} attacks with {attacker_instance.attack_name} inflicting {attacker_instance.attack_power * 2} damage")
+        print(f"{attacker_instance.name} attacks with {attacker_instance.attack_name} inflicting {damage_value * 2} damage")
         print(f"{attacker_instance.name} got a critical hit!!", end="\n\n")
 
 
@@ -80,8 +80,8 @@ class Message():
     @staticmethod
     def party_progress_message(party_instance):
         print(f"""
-You Progress 10 Miles further.
-You have traveled {party_instance.progress * 10} Miles Total.
+Your Party Progresses 10 Miles further.
+They have traveled {party_instance.progress * 10} Miles Total.
 """)
         ## Pause for effect when in MANUAL mode
         if Interaction.global_game_mode == "MANUAL":
