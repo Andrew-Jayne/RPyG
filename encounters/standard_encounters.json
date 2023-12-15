@@ -6,80 +6,109 @@
         "message": "Your Party finds a Small Refuge and rests for a moment",
         "actor_action": "heal",
         "special_action": null ,
+        "additional_events": null,
         "targets": "all",
         "magnitude": 30
       },
       {
-        "name": "rest_tavern",
+        "id": "rest_tavern",
         "encounter_type": "REST",
         "message": "Your Party finds a Tavern and Rests for a short time",
         "actor_action": "heal",
-        "special_action": null ,
+        "special_action": null,
+        "additional_events": null,
         "targets": "all",
         "magnitude": 50
       },
       {
-        "name": "rest_inn",
+        "id": "rest_inn",
         "encounter_type": "REST",
         "message": "Your Party finds an Inn and Rests for the evening",
         "actor_action": "heal",
         "special_action": null ,
+        "additional_events": null,
         "targets": "all",
         "magnitude": 90
       },
       {
-        "name": "rest_village",
+        "id": "rest_village",
         "encounter_type": "REST",
         "message": "Your Party finds a village and rest for a day",
         "actor_action": "heal",
         "special_action": null ,
+        "additional_events": null,
         "targets": "all",
         "magnitude": 90
       },
       {
-        "name": "rest_vassal_keep",
+        "id": "rest_vassal_keep",
         "encounter_type": "REST",
         "message": "Your Party Finds A Vassal's Keep! \nThey take a day to rest, and replenish their supplies.",
         "actor_action": "heal",
-        "special_action": null ,
+        "special_action": null,
+        "additional_events": null,
         "targets": "all",
         "magnitude": 120
       },
       {
-        "name": "rest_palace",
+        "id": "rest_palace",
         "encounter_type": "REST",
         "message": "Your Party arrives at a grand palace and are welcomed All",
         "actor_action": "heal",
         "special_action": "at_merchant",
+        "additional_events": null,
         "targets": "all",
         "magnitude": 150
       },
       {
-        "name": "suprise_attack",
+        "id": "suprise_attack",
         "encounter_type": "ATTACK",
         "message": "Your party Encountera A Strange Figure!\nThe Figure blasts your party with an Arcane Bolt and vanishes into a Flash of Light!\n\n",
         "actor_action": "damage",
         "special_action": null,
+        "additional_events": null,
         "targets": "all",
         "magnitude": 30
       },
       {
-        "name": "suprise_heal",
+        "id": "suprise_heal",
         "encounter_type": "HEAL",
         "message": "Your party Encounters A Strange Figure!\nThe Figure heals your party and vanishes into the darkness!\n\n",
         "actor_action": "heal",
         "special_action": null,
+        "additional_events": null,
         "targets": "all",
         "magnitude": 30
       },
       {
-        "name": "suprise_chest",
-        "encounter_type": "gold",
+        "id": "suprise_chest",
+        "encounter_type": "GOLD",
         "message": "Your party find a small treasure chest, upon opening it reveals 100 gold ",
         "actor_action": "gain_gold",
         "special_action": null,
-        "targets": "random",
+        "additional_events": null,
+        "targets": "all",
         "magnitude": 100
+      },
+      {
+        "id": "night_time_robbery_0",
+        "encounter_type": "REST",
+        "message": "Your Party finds a Small Refuge and makes camp for the night",
+        "actor_action": "gain_gold",
+        "special_action": null,
+        "additional_events": ["night_time_robbery_1","night_time_robbery_0"],
+        "targets": "all",
+        "magnitude": 300
+      },
+      {
+        "id": "night_time_robbery_1",
+        "encounter_type": "GOLD",
+        "message": "You awaken to discover that Gold has been stolen from your Party!",
+        "actor_action": "lose_gold",
+        "special_action": null,
+        "additional_events": null,
+        "targets": "all",
+        "magnitude": 500
       }
     ]
   }
