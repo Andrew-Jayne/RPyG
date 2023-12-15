@@ -3,6 +3,9 @@ import random
 from interaction.interaction import Interaction
 
 def standard_encounter(player_party_instance):
+    allowed_actor_actions = [  "damage","heal","gain_gold","lose_gold","gain_potion","lose_potion","use_potion"]
+    allowed_special_actions = ["at_merchant",]
+
     with open('encounters/standard_encounters.json', 'r') as encounters_file:
         encounters_objects_list = json.load(encounters_file)
         active_encounter = random.choice(encounters_objects_list['events'])
@@ -18,7 +21,7 @@ def standard_encounter(player_party_instance):
             exit()
 
     # validate actor_action
-    if active_encounter['actor_action'] in encounters_objects_list['allowed_actor_actions']:
+    if active_encounter['actor_action'] in allowed_actor_actions:
         # Run Actions for Encounter
         print(active_encounter['message'])
 
@@ -36,7 +39,7 @@ def standard_encounter(player_party_instance):
     
     # Validate Speccial action
     if active_encounter['special_action'] != None:
-        if active_encounter['special_action'] in encounters_objects_list['allowed_special_actions']:
+        if active_encounter['special_action'] in allowed_special_actions:
             # Run Actions for Encounter
             special_method_name = active_encounter['special_action']
             special_method_call = getattr(Interaction, special_method_name, None)
