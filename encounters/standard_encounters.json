@@ -81,19 +81,6 @@
         "targets": "random",
         "magnitude": 100
       }
-    ],
-    "allowed_actor_actions": [
-        "damage",
-        "heal",
-        "gain_gold",
-        "lose_gold",
-        "gain_potion",
-        "lose_potion",
-        "use_potion"
-    ],
-    "allowed_special_actions":
-    [
-        "at_merchant"
     ]
   }
   
