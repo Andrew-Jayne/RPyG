@@ -13,7 +13,7 @@
 [] Specalization based Attack Names (3 grades)
 [] Sweep for junk funcitons &| bloat
 [] Add enemy AIs
-[] add multi action encounters (you rest for the night but are robbed in your sleep and lose all of your gold!)
+[*] add multi action encounters (you rest for the night but are robbed in your sleep and lose all of your gold!)
 
 
 
@@ -22,10 +22,3 @@
 [] add leveling system based on battle actions
 [] add 2nd attack type for each class with new names
 [] add damage type (Magic, Melee) + Resistances based on Specalization
-
-
-
-```python
-if active_event_attributes[addional_events] != None:
-    run_event(event_attributes)
-```
