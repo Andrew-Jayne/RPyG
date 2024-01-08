@@ -21,10 +21,9 @@ def main():
                 for member in my_party:
                     my_party_instances.append(PlayableActor(member[0], member[1]))
                 
-                player_party_instance = PlayerParty(my_party_instances, my_party_name)
+                player_party_instance = PlayerParty(my_party_name, my_party_instances)
     else:
         player_party_instance = PlayerParty(name="The Default Party", members=default_party())
-
 
     # The Key Loop
     while player_party_instance.progress < 100:
