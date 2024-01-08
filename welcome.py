@@ -75,6 +75,7 @@ Note: Case is respected but names longer than 64 characters will be truncated
         member = [member_name, member_specialization]
         party_members.append(member)
     party_name = Interaction.custom_text_entry(party_name_message, 64)
+    Display.clear_display()
     return party_members, party_name
 
 

@@ -13,21 +13,22 @@ def find_encounter_by_id(full_item_list:list, target_item_id:str):
              exit()
 
 def execute_actor_action(event_object:object, target_instance_list:list):
+    magnitude = int(event_object['magnitude'] / len(target_instance_list))
+    actor_method_name = event_object['actor_action'].lower()
     print(event_object['message'])
+    
     for target in target_instance_list:
-        magnitude = int(event_object['magnitude'] / len(target_instance_list))
-        actor_method_name = event_object['actor_action']
-        actor_method_to_call = getattr(target, actor_method_name, None)
+        actor_method_to_call = getattr(target, actor_method_name)
         if callable(actor_method_to_call) == True:
             actor_method_to_call(magnitude)
         else:
-            print(f"Error Invalid Method Call: {actor_method_name}")
+            print(f"Error Invalid Method Call: {actor_method_name}, {actor_method_to_call}")
             exit()
 
 def execute_special_action(event_object:object, target_instance_list:list):
             # Run Actions for Encounter
-            special_method_name = event_object['special_action']
-            special_method_call = getattr(Interaction, special_method_name, None)
+            special_method_name = event_object['special_action'].lower()
+            special_method_call = getattr(Interaction, special_method_name)
             if callable(special_method_call) == True:
                 special_method_call(target_instance_list)
             else:
@@ -41,8 +42,6 @@ def standard_encounter(player_party_instance):
     with open('encounters/standard_encounters.json', 'r') as encounters_file:
         encounters_objects_list = json.load(encounters_file)
         current_event = random.choice(encounters_objects_list['events'])
-
-    #Setup target for encounter action
 
 
     # validate actor_action
