@@ -16,7 +16,7 @@ def attack(attacker_instance, target_instance):
     final_damage = attacker_instance.attack_power + random.randint(-damage_variation,damage_variation)
 
     if check_for_critical(attacker_instance) == True:
-        Message.actor_attack_message(attacker_instance,final_damage)
+        Message.actor_critical_attack_message(attacker_instance,final_damage)
         target_instance.damage(final_damage * 2)
     else:
         Message.actor_attack_message(attacker_instance, final_damage)

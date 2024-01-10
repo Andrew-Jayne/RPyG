@@ -12,10 +12,10 @@ class Interaction:
             case "AUTO":
                 return auto_choose_combat_target(enemy_party_instance)
             case "MANUAL":
-                    return manual_choose_combat_target(enemy_party_instance)
+                return manual_choose_combat_target(enemy_party_instance)
             case _:
-                    print("Ummm How did you do that?, whatever just hit the thing")
-                    return "ATTACK" 
+                print("Ummm How did you do that?, whatever just hit the thing")
+                return "ATTACK" 
 
     
     @staticmethod
@@ -24,10 +24,10 @@ class Interaction:
             case "AUTO":
                 return auto_enemy_encounter()
             case "MANUAL":
-                    return manual_enemy_encounter()
+                return manual_enemy_encounter()
             case _:
-                    print("Ummm How did you do that?, whatever just hit the thing")
-                    return "ATTACK" 
+                print("Ummm How did you do that?, whatever just hit the thing")
+                return "ATTACK" 
     
     @staticmethod
     def post_battle(player_party_instance):
@@ -35,10 +35,10 @@ class Interaction:
             case "AUTO":
                 return auto_post_battle(player_party_instance)
             case "MANUAL":
-                  return manual_post_battle()
+                return manual_post_battle()
             case _:
-                  print("Ummm How did you do that?, whatever.... Just.... Leave")
-                  return "TRAVEL"
+                print("Ummm How did you do that?, whatever.... Just.... Leave")
+                return "TRAVEL"
 
 
     @staticmethod
@@ -47,10 +47,10 @@ class Interaction:
             case "AUTO":
                 return auto_in_battle(player_instance)
             case "MANUAL":
-                  return manual_in_battle(player_instance.name)
+                return manual_in_battle(player_instance.name)
             case _:
-                  print("Ummm How did you do that?, whatever just hit the thing")
-                  return "ATTACK"
+                print("Ummm How did you do that?, whatever just hit the thing")
+                return "ATTACK"
              
 
     @staticmethod
@@ -59,7 +59,7 @@ class Interaction:
             case "AUTO":
                 auto_at_merchant(player_party_instance)
             case "MANUAL":
-                manual_in_battle(player_party_instance)
+                manual_at_merchant(player_party_instance)
             case _:
                 print("Ummm How did you do that?, whatever.... Just.... Leave")
 

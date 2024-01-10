@@ -43,7 +43,7 @@ def enemy_encounter(player_party):
     
         
     if enemy_count == 1:
-        enemy_party_name = f"A Lone {enemy_party_instances[0].name}"
+        enemy_party_name = f"Lone {enemy_party_instances[0].name}"
     else:
         enemy_party_name  = f"{enemy_party_attributes['group_name']} of {enemy_count} {enemy_party_attributes['pural_name']}"
     
