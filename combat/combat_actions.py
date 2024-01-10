@@ -42,3 +42,6 @@ def post_battle(player_party_instance):
                 print(f"Successfully Saved Game for: {player_party_instance.name}")
                 exit()
                 # The file is automatically closed when you exit the 'with' block.
+
+def select_target(target_party_instance):
+    pass
