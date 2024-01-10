@@ -160,3 +160,16 @@ class PlayableActor(Actor, Inventory, Combatant):
                 self.attack_name = "Cosmic Greatsword Cleave"
 
         return self.attack_name
+    
+    def __get_attack_name(self):
+
+        match self.specialization:
+            case "WARRIOR":
+                pass
+            case "MAGE":
+                pass
+            case "ROGUE":
+                pass
+            case _:
+                print(f"Error Invalid Specialization {self.specialization}")
+                exit()
