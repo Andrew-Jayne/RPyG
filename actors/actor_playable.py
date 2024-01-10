@@ -76,7 +76,7 @@ class PlayableActor(Actor, Inventory, Combatant):
         if self.potions != 0:
             print(f"{self.name} drinks a potion")
             self.lose_potion(1)
-            self.heal(10 + random.randint(-2,2))
+            self.heal(100 + random.randint(-20,20))
             print(f"{self.name} has {self.potions} remaining")
             print(f"{self.name}'s health is now {self.health}", end="\n\n")
         else:

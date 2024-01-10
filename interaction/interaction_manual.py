@@ -43,8 +43,9 @@ def manual_choose_combat_target(enemy_party_instance):
         target_options.append(str(i))
 
     base_target_message = ["Which enemy will you attack?", ""]
-    for i,member in enemy_party_instance.members:
+    for i,member in enumerate(enemy_party_instance.members):
         base_target_message.append(f"{i} {member.name}:{member.health}")
+    base_target_message.append("\n\n")
 
     target_message = "\n".join(base_target_message)
 
