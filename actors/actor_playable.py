@@ -26,6 +26,10 @@ class Inventory:
 
 class PlayableActor(Actor, Inventory, Combatant):
     def __init__(self, name: str, specialization: str):
+        if not isinstance(name, str):
+            ValueError("The 'name' parameter must be of type str. Received type: {}".format(type(name).__name__))
+        if not isinstance(specialization, str):
+            ValueError("The 'specialization' parameter must be of type str. Received type: {}".format(type(specialization).__name__))
 
         self.name = name
         self.specialization = specialization
