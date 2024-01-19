@@ -12,7 +12,7 @@
 [] Move special encounter to line up with new json fommating
 [] Specalization based Attack Names (3 grades)
 [] Sweep for junk funcitons &| bloat
-[] Add enemy AIs
+[*] Add enemy AIs
 [*] add multi action encounters (you rest for the night but are robbed in your sleep and lose all of your gold!)
 
 
