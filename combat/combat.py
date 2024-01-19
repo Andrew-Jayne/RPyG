@@ -3,7 +3,7 @@ import random
 from interaction.interaction import Interaction
 from display.display import Display
 from message.message import Message
-from combat.combat_actions import attack, evade, post_battle
+from combat.combat_actions import attack, evade, post_battle, select_target
 
 #Battle Flow:
     #Player Party Attacks Enemy
@@ -44,8 +44,7 @@ class Combat:
                 if len(player_party_instance.members) != 0:
                     for enemy_instance in enemy_party_instance.members:
                             if len(player_party_instance.members) != 0:
-                                target_max_index = len(player_party_instance.members) - 1 
-                                target_index = int(random.randint(0,target_max_index))
+                                target_index = select_target(player_party_instance.members)
                                 target_player = player_party_instance.members[target_index]
                                 if target_player.will_evade == True:
                                     if evade(target_player) == False:
