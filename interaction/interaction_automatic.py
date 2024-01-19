@@ -1,5 +1,7 @@
 ## Automatic Interactions
 import random
+from logging.logging import write_log
+
 
 def auto_enemy_encounter():
     return random.choice(["FLEE","ATTACK"])
@@ -20,14 +22,32 @@ def auto_post_battle(player_party_instance):
     return "TRAVEL"
     
 def auto_choose_combat_target(enemy_party_instance):
-    enemy_max_index = len(enemy_party_instance.members) - 1
-    if enemy_max_index >= 0:
-        enemy_max_index = 0 ## Hack, debugging stuff will fix later 
-    try: 
-        return str(random.randint(0,enemy_max_index))
-    except:
-         import pdb; pdb.set_trace()
-    #plan, 3 options: Random, Highest Atk power, lowest health (choose 1 at random on each turn, plan to use this for enemies as well)
+    #
+    target_party_members = enemy_party_instance.members
+    method_id = random.choice(["MAX_ATK","MIN_HP","RANDOM"])
+    match method_id:
+        case "MAX_ATK":
+            target_attributes_list = []
+            for index,member in enumerate(target_party_members):
+                target_attributes = (index,member.attack_power)
+                target_attributes_list.append(target_attributes)
+            sorted_target_attributes_list = sorted(target_attributes_list, key=lambda x: x[1], reverse=True)
+            return sorted_target_attributes_list[0][0]
+        
+        case "MIN_HP":
+            target_attributes_list = []
+            for index,member in enumerate(target_party_members):
+                target_attributes = (index,member.health)
+                target_attributes_list.append(target_attributes)
+            sorted_target_attributes_list = sorted(target_attributes_list, key=lambda x: x[1])
+            return sorted_target_attributes_list[0][0]
+        
+        case "RANDOM":
+            return random.randint(0,(len(target_party_members) - 1))
+        case _:
+            print("Big Problem in Select_Target, Go buy a lotto ticket")
+            exit()
+
 
 def auto_at_merchant(player_party_instance):
     for player_instance in player_party_instance.members:
