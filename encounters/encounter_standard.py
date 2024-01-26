@@ -2,7 +2,7 @@ import json
 import random
 from interaction.interaction import Interaction
 
-def find_encounter_by_id(full_item_list:list, target_item_id:str):
+def find_encounter_by_id(full_item_list:list, target_item_id:str) -> object:
         found_item = None
         for active_item in full_item_list:
               if active_item['id'] == target_item_id:
@@ -12,7 +12,7 @@ def find_encounter_by_id(full_item_list:list, target_item_id:str):
              print(f"Error Unable to Find an Event with the ID {target_item_id}")
              exit()
 
-def execute_actor_action(event_object:object, target_instance_list:list):
+def execute_actor_action(event_object:object, target_instance_list:list) -> None:
     magnitude = int(event_object['magnitude'] / len(target_instance_list))
     actor_method_name = event_object['actor_action'].lower()
     print(event_object['message'])
@@ -25,7 +25,7 @@ def execute_actor_action(event_object:object, target_instance_list:list):
             print(f"Error Invalid Method Call: {actor_method_name}, {actor_method_to_call}")
             exit()
 
-def execute_special_action(event_object:object, target_instance_list:list):
+def execute_special_action(event_object:object, target_instance_list:list) -> None:
             # Run Actions for Encounter
             special_method_name = event_object['special_action'].lower()
             special_method_call = getattr(Interaction, special_method_name)
@@ -34,7 +34,7 @@ def execute_special_action(event_object:object, target_instance_list:list):
             else:
                 print(f"error invalid special_action: {event_object['special_action']}")
 
-def standard_encounter(player_party_instance):
+def standard_encounter(player_party_instance:object) -> None:
 
     allowed_actor_actions = [  "damage","heal","gain_gold","lose_gold","gain_potion","lose_potion","use_potion"]
     allowed_special_actions = ["at_merchant",]

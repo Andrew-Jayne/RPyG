@@ -1,7 +1,7 @@
 ## Manual Interactions
 from interaction.interaction_utilities import validate_input
 
-def manual_enemy_encounter():
+def manual_enemy_encounter() -> str:
     encounter_options = ["BATTLE", "FLEE"]
     enounter_message = f"""
 Choose an Action:
@@ -12,7 +12,7 @@ FLEE
     return validate_input(encounter_options, enounter_message)
 
 
-def manual_in_battle(player_name):
+def manual_in_battle(player_name) -> str:
     battle_options = ["ATTACK", "EVADE", "HEAL"]
     battle_message = f"""
 {player_name}
@@ -26,7 +26,7 @@ HEAL
     return battle_choice
     
 
-def manual_post_battle():
+def manual_post_battle() -> str:
     post_battle_options = ["HEAL", "TRAVEL", "SAVE"]
     post_battle_message = """
 Choose an Action:
@@ -37,7 +37,7 @@ SAVE
 """     
     return validate_input(post_battle_options, post_battle_message)
 
-def manual_choose_combat_target(enemy_party_instance):
+def manual_choose_combat_target(enemy_party_instance:object) -> str:
     target_options = []
     for i in range(0,len(enemy_party_instance.members)):
         target_options.append(str(i))
@@ -53,7 +53,7 @@ def manual_choose_combat_target(enemy_party_instance):
 
 
    
-def manual_at_merchant(player_party_instance):
+def manual_at_merchant(player_party_instance:object) -> None:
     player_choice = None
     merchant_options = ["BUY", "LEAVE"]
     merchant_message = """

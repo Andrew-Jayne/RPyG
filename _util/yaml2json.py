@@ -7,7 +7,7 @@ def main():
 
     input_file = sys.argv[1]
 
-    def change_file_extension(file_name, new_extension):
+    def change_file_extension(file_name, new_extension) ->str:
         # Split the file name by '.' and replace the last part with the new extension
         base = os.path.splitext(file_name)[0]
         return base + new_extension

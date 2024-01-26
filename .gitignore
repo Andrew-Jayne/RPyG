@@ -4,6 +4,7 @@
 
 # Save Game Files
 *.rpygs
+z.md
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
