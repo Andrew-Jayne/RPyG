@@ -22,3 +22,14 @@
 [] add leveling system based on battle actions
 [] add 2nd attack type for each class with new names
 [] add damage type (Magic, Melee) + Resistances based on Specalization
+
+Updated combat Idea:
+
+Main Attack 
+Special attack (AOE For Mages, Dismember for warriors, Poision Blade for Rogue)
+
+AOE: Attack all targets with 3/4 attack power, deals 1/8 of damage to self
+
+Dismember: Deal 1/4 damage but reduce enemy attack by 25% (once per enemy)
+
+Poison Blade: Deal 1/2 damage but Emeny takes 1/4 damage per turn for the rest of the battle

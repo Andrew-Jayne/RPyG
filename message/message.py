@@ -31,6 +31,9 @@ class Message():
         print(f"{attacker_instance.name} attacks with {attacker_instance.attack_name} inflicting {damage_value * 2} damage")
         print(f"{attacker_instance.name} got a critical hit!!", end="\n\n")
 
+    def poison_damage_message(actor_instance:object) -> None:
+        print(f"{actor_instance.name} takes {actor_instance.poison_damage} from being poisoned")
+
     # Battle Messages
     @staticmethod
     def battle_hud_message(player_party_instance:object, enemy_party_instance:object) -> None:
