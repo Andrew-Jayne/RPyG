@@ -2,7 +2,7 @@ from actors.actor import Actor
 from actors.actor_combatant import Combatant
 
 class Enemy(Actor, Combatant):
-    def __init__(self, enemy_attributes:dict):
+    def __init__(self, enemy_attributes:dict) -> None:
         
         name=enemy_attributes['name']
         health=enemy_attributes['health']

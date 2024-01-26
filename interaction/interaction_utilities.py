@@ -1,5 +1,5 @@
 
-def sanitize(input_string:str):
+def sanitize(input_string:str) -> str:
     #exit if string is longer that 128 Chars
     if len(input_string) > 128:
             print("Input Length Exceeds Expected Parameters: Exiting!")
@@ -17,7 +17,7 @@ def sanitize(input_string:str):
     return cleaned_string
 
 
-def validate_input(choice_list:list, prompt_message:str):
+def validate_input(choice_list:list, prompt_message:str) -> str:
         chosen_action = ""
         dumb_check = 0
         while chosen_action not in choice_list:
@@ -29,7 +29,7 @@ def validate_input(choice_list:list, prompt_message:str):
                     exit()
         return chosen_action
 
-def custom_text_entry(input_message:str, max_length:int):
+def custom_text_entry(input_message:str, max_length:int) -> str:
     return sanitize(input(input_message)[:max_length])
 
 

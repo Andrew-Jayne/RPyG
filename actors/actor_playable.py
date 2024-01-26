@@ -3,14 +3,14 @@ from actors.actor_combatant import Combatant
 import random
 
 class Inventory:
-    def __init__(self, gold:int, potions:int):
+    def __init__(self, gold:int, potions:int) -> None:
         self.gold = gold
         self.potions = potions
 
-    def gain_gold(self, amount:int):
+    def gain_gold(self, amount:int) -> None:
         self.gold += amount
     
-    def lose_gold(self, amount:int):
+    def lose_gold(self, amount:int) -> None:
         if self.gold < amount:
             print(f"{self.name} has no gold remaining")
             return False
@@ -18,14 +18,14 @@ class Inventory:
             self.gold -= amount
             return True
 
-    def gain_potion(self, amount:int):
+    def gain_potion(self, amount:int) -> None:
         self.potions += amount
     
-    def lose_potion(self, amount:int):
+    def lose_potion(self, amount:int) -> None:
         self.potions -= amount
 
 class PlayableActor(Actor, Inventory, Combatant):
-    def __init__(self, name: str, specialization: str):
+    def __init__(self, name: str, specialization: str) -> None:
         if not isinstance(name, str):
             ValueError("The 'name' parameter must be of type str. Received type: {}".format(type(name).__name__))
         if not isinstance(specialization, str):
@@ -76,7 +76,7 @@ class PlayableActor(Actor, Inventory, Combatant):
                            )
 
 
-    def use_potion(self):
+    def use_potion(self) -> None:
         if self.potions != 0:
             print(f"{self.name} drinks a potion")
             self.lose_potion(1)

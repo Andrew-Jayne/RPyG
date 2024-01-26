@@ -4,7 +4,7 @@ from logic.logic import select_combat_target
 from message.message import Message
 from interaction.interaction import Interaction
 
-def check_for_critical(combatant_instance):
+def check_for_critical(combatant_instance:object) -> bool:
     crit_check = random.randint(1,100)
     if crit_check <= (combatant_instance.luck + combatant_instance.agility):
         return True
@@ -12,7 +12,7 @@ def check_for_critical(combatant_instance):
         return False
 
 
-def attack(attacker_instance, target_instance):
+def attack(attacker_instance:object, target_instance:object) -> None:
     damage_variation = int(attacker_instance.attack_power * 0.1)
     final_damage = attacker_instance.attack_power + random.randint(-damage_variation,damage_variation)
 
@@ -23,11 +23,10 @@ def attack(attacker_instance, target_instance):
         Message.actor_attack_message(attacker_instance, final_damage)
         target_instance.damage(final_damage)
 
-def evade(combatant_instance):
-    evade_check = random.randint(1,30)
-    return evade_check <= (combatant_instance.luck + combatant_instance.agility)
+def evade(combatant_instance:object) -> bool:
+    return random.randint(1,30) <= (combatant_instance.luck + combatant_instance.agility)
 
-def post_battle(player_party_instance):
+def post_battle(player_party_instance) -> None:
     player_post_action = ""
     while player_post_action != "TRAVEL":
         player_post_action = Interaction.post_battle(player_party_instance)
@@ -43,7 +42,3 @@ def post_battle(player_party_instance):
                 print(f"Successfully Saved Game for: {player_party_instance.name}")
                 exit()
                 # The file is automatically closed when you exit the 'with' block.
-
-def select_target(target_party_instance) -> int:
-    return select_combat_target(target_party_instance)
-

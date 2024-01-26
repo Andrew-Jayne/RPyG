@@ -1,12 +1,11 @@
 class Party:
-    def __init__(self, members):
+    def __init__(self, members) -> None:
         self.members = members
 
-    def lose_member(self, member):
+    def lose_member(self, member) -> None:
         self.members.remove(member)
     
-    def gain_member(self, member):
-
+    def gain_member(self, member) -> None:
         self.members.append(member)
 
 class PlayerParty(Party):
@@ -14,7 +13,7 @@ class PlayerParty(Party):
     Stores the progress of the party, and a list/array of member instances 
     """
 
-    def __init__(self, name:str, members:list):
+    def __init__(self, name:str, members:list) -> None:
         if not isinstance(name, str):
             ValueError("The 'name' parameter must be of type str. Received type: {}".format(type(name).__name__))
         if not isinstance(members, list):
@@ -27,7 +26,7 @@ class PlayerParty(Party):
 
 
 class EnemyParty(Party):
-    def __init__(self, name:str, members:list):
+    def __init__(self, name:str, members:list) -> None:
         if not isinstance(name, str):
             ValueError("The 'name' parameter must be of type str. Received type: {}".format(type(name).__name__))
         if not isinstance(members, list):
