@@ -1,5 +1,6 @@
 import random
 import pickle
+from logic.logic import select_combat_target
 from message.message import Message
 from interaction.interaction import Interaction
 
@@ -43,28 +44,6 @@ def post_battle(player_party_instance):
                 exit()
                 # The file is automatically closed when you exit the 'with' block.
 
-def select_target(target_party_members:list):
-    method_id = random.choice(["MAX_ATK","MIN_HP","RANDOM"])
-    match method_id:
-        case "MAX_ATK":
-            target_attributes_list = []
-            for index,member in enumerate(target_party_members):
-                target_attributes = (index,member.attack_power)
-                target_attributes_list.append(target_attributes)
-            sorted_target_attributes_list = sorted(target_attributes_list, key=lambda x: x[1], reverse=True)
-            return sorted_target_attributes_list[0][0]
-        
-        case "MIN_HP":
-            target_attributes_list = []
-            for index,member in enumerate(target_party_members):
-                target_attributes = (index,member.health)
-                target_attributes_list.append(target_attributes)
-            sorted_target_attributes_list = sorted(target_attributes_list, key=lambda x: x[1])
-            return sorted_target_attributes_list[0][0]
-        
-        case "RANDOM":
-            return random.randint(0,(len(target_party_members) - 1))
-        case _:
-            print("Big Problem in Select_Target, Go buy a lotto ticket")
-            exit()
+def select_target(target_party_instance):
+    return select_combat_target(target_party_instance)
 

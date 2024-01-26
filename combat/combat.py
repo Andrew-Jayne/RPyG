@@ -44,7 +44,7 @@ class Combat:
                 if len(player_party_instance.members) != 0:
                     for enemy_instance in enemy_party_instance.members:
                             if len(player_party_instance.members) != 0:
-                                target_index = select_target(player_party_instance.members)
+                                target_index = select_target(player_party_instance)
                                 target_player = player_party_instance.members[target_index]
                                 if target_player.will_evade == True:
                                     if evade(target_player) == False:
