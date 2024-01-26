@@ -86,7 +86,7 @@ class PlayableActor(Actor, Inventory, Combatant):
         else:
             print(f"{self.name} has no remaining potions!")
 
-    def __set_attack_power(self):
+    def __set_attack_power(self) -> int:
         if self.strength > self.intellect:
             self.attack_power = self.strength
         elif self.strength >= 7 and self.intellect >= 7:
@@ -96,7 +96,7 @@ class PlayableActor(Actor, Inventory, Combatant):
 
         return self.attack_power * 10
 
-    def __get_skill(self):
+    def __get_skill(self) -> str:
         strength_skill = ""
         intellect_skill = ""
         player_skill = ""
@@ -123,7 +123,7 @@ class PlayableActor(Actor, Inventory, Combatant):
 
         return player_skill
     
-    def __set_attack_name(self):
+    def __set_attack_name(self) -> str:
         player_skill = __class__.__get_skill(self)
 
         match player_skill:
@@ -165,7 +165,7 @@ class PlayableActor(Actor, Inventory, Combatant):
 
         return self.attack_name
     
-    def __get_attack_name(self):
+    def __get_attack_name(self) -> str:
 
         match self.specialization:
             case "WARRIOR":
