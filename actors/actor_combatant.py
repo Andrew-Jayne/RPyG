@@ -24,5 +24,3 @@ class Combatant():
         if self.health > self.base_health:
             self.health = self.base_health
             print(f"{self.name} has Fully Healed!")
-
-        ## Hidden Methods

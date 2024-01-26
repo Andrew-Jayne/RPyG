@@ -26,7 +26,7 @@ class Enemy(Actor, Combatant):
                            attack_power=attack_power
                            )
 
-    def __set_enemy_attack_power(strength,intellect):
+    def __set_enemy_attack_power(strength,intellect) -> int:
             if strength >= 6 and intellect >= 6:
                 attack_power = strength + intellect
             elif strength > intellect:
