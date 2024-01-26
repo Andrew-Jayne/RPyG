@@ -17,6 +17,10 @@ class Combat:
             # Players Attack
             if battle_complete == False:
                 for player_instance in player_party_instance.members:
+                    if player_instance.is_poisioned == True:
+                        Message.poison_damage_message(player_instance)
+                        player_instance.damage(player_instance.poison_damage)
+
                     if len(enemy_party_instance.members) != 0:
                         match Interaction.in_battle(player_instance):
                             case "ATTACK": #select target
@@ -41,6 +45,9 @@ class Combat:
             if  battle_complete == False:
                 if len(player_party_instance.members) != 0:
                     for enemy_instance in enemy_party_instance.members:
+                        if enemy_instance.is_poisioned == True:
+                            Message.poison_damage_message(enemy_instance)
+                            enemy_instance.damage(enemy_instance.poison_damage)
                             if len(player_party_instance.members) != 0:
                                 target_index = select_combat_target(player_party_instance)
                                 target_player = player_party_instance.members[target_index]
