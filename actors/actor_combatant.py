@@ -3,10 +3,13 @@ class Combatant():
         self.health = health
         self.attack_name = attack_name
         self.attack_power = attack_power
+        self.special_attack = None
         self.base_health = health
         self.will_evade = False
         self.will_defend = False
-        self.aoe_attack = False
+        self.is_poisioned = False
+        self.poison_damage = 0
+        self.is_dismembered = False
 
     def damage(self, damage_amount:int) -> None:
         self.health -= damage_amount
@@ -22,3 +25,7 @@ class Combatant():
         if self.health > self.base_health:
             self.health = self.base_health
             print(f"{self.name} has Fully Healed!")
+
+    def dismember(self) -> None:
+        self.is_dismembered = True
+        self.attack_power = int(self.attack_power * 0.75)

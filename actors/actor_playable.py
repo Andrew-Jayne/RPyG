@@ -169,11 +169,45 @@ class PlayableActor(Actor, Inventory, Combatant):
 
         match self.specialization:
             case "WARRIOR":
-                pass
+                if self.intellect >= 7:
+                    attack = "Arcane Greatsword Cleave"
+                else:
+                    attack = "Greatsword Cleave"
+                
+                #min str: 5
+                #max str: 10
+
+                #min int: 1
+                #max int: 5 
+
+                #min agl: 4
+                #max agl: 8
             case "MAGE":
-                pass
+                if self.strength >= 7:
+                    attack = "Arcane Shockwave"
+                else:
+                    attack = "Arcane Bolt"
+                #min str: 1
+                #max str: 5
+
+                #min int: 5
+                #max int: 10 
+                
+                #min agl: 4
+                #max agl: 8
             case "ROGUE":
-                pass
+                if self.intellect >= 7 and self.strength >= 7:
+                    attack = "Cool Attack"
+                else:
+                    attack = "Precision Dagger Strike"
+                #min str: 4
+                #max str: 8
+
+                #min int: 4
+                #max int: 8 
+                
+                #min agl: 5
+                #max agl: 10
             case _:
                 print(f"Error Invalid Specialization {self.specialization}")
                 exit()
