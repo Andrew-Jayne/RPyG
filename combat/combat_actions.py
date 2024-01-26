@@ -44,6 +44,6 @@ def post_battle(player_party_instance):
                 exit()
                 # The file is automatically closed when you exit the 'with' block.
 
-def select_target(target_party_instance):
+def select_target(target_party_instance) -> int:
     return select_combat_target(target_party_instance)
 
