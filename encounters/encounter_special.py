@@ -4,13 +4,12 @@ import copy
 from actors.actor_enemy import Enemy
 from actors.actor_party import EnemyParty
 from combat.combat import Combat
-from actors.actor_playable import PlayableActor
 from message.message import Message
 
 class SpecialEncounters():
 
     @staticmethod
-    def friendly_keep_visit(party_instance):
+    def friendly_keep_visit(party_instance:object) -> None:
         print("Your Party is welcomed to the Keep of Stallman")
         print("Your Party is are fully rested and have a full stock of potions", end="\n\n")
         for member_instance in party_instance.members:
@@ -18,14 +17,14 @@ class SpecialEncounters():
             member_instance.potions = 9
 
     @staticmethod
-    def midway_boss(party_instance):
+    def midway_boss(party_instance:object) -> None:
         enemy_instance = __class__._get_special_enemy('midway_boss')
         print(f"Your Party encounters {enemy_instance.name}!")
         enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
         Combat.battle(party_instance, enemy_party)
 
     @staticmethod
-    def enemy_keep_visit(party_instance):
+    def enemy_keep_visit(party_instance:object) -> None:
         print("Your Party must traverse Algolon's Keep!")
         sub_step = 0
         while sub_step < 10:
@@ -61,14 +60,14 @@ class SpecialEncounters():
         Combat.battle(party_instance, enemy_party)
 
     @staticmethod
-    def penultimate_boss(party_instance):
+    def penultimate_boss(party_instance:object) -> None:
         enemy_instance = __class__._get_special_enemy('penultimate_boss')
         print(f"Your Party Battles {enemy_instance.name}!")
         enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
         Combat.battle(party_instance, enemy_party)
 
     @staticmethod
-    def final_boss(party_instance):
+    def final_boss(party_instance:object) -> None:
         enemy_instance = __class__._get_special_enemy('ultimate_boss')
         print(f"Your Party must now battle {enemy_instance.name}!")
         enemy_party = EnemyParty(enemy_instance.name,[enemy_instance])
@@ -79,9 +78,9 @@ class SpecialEncounters():
 
 
     ## Hidden Methods
-    def _get_special_enemy(enemy_indentiier):
+    def _get_special_enemy(enemy_identifier) -> object:
         with open('encounters/enemies_special.json', 'r') as file:
             enemies_list = json.load(file)
-        enemy_attributes = enemies_list[enemy_indentiier]
+        enemy_attributes = enemies_list[enemy_identifier]
         
         return Enemy(enemy_attributes)

@@ -7,7 +7,7 @@ from message.message import Message
 from interaction.interaction import Interaction
 
 
-def enemy_encounter(player_party):
+def enemy_encounter(player_party:object) -> None:
     enemy_chance = random.randint(0,4)
     with open('encounters/enemies_common.json', 'r') as enemies_file:
         enemies_lists = json.load(enemies_file)
@@ -50,10 +50,8 @@ def enemy_encounter(player_party):
     enemy_party = EnemyParty(enemy_party_name, enemy_party_instances)
 
 
-    
     Message.encounter_message(enemy_party_name)
-    player_action = Interaction.encounter_enemy()
-    match player_action:
+    match Interaction.encounter_enemy():
         case "BATTLE":
                 Combat.battle(player_party, enemy_party)
         case "FLEE":
@@ -63,10 +61,4 @@ def enemy_encounter(player_party):
                 else:
                     Message.flee_failure_message(player_instance.name, enemy_party_name)
                     Combat.battle(player_party, enemy_party)
-                    break  
-                
-
-
-## Add party name to enemies, pack of X, group of Y, lone Z
-
-
+                    break
