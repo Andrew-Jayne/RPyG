@@ -3,7 +3,7 @@ from display.display import Display
 from actors.actor_playable import PlayableActor
 
 
-def welcome():
+def welcome() -> None:
     print("Welcome to RPyG, a text based RPG in Python", end="\n\n")
 
     mode_message = """
@@ -22,7 +22,7 @@ Note: All Prompts in this game are case insensitive
     Interaction.global_game_mode = Interaction.validate_input(mode_choices, mode_message)
     Display.clear_display()
 
-def get_start_type():
+def get_start_type() -> str:
 
     type_message = """
 Would you like to Start a new game or Load an existing save?
@@ -35,7 +35,7 @@ Options are : NEW & LOAD
     return player_action
 
 
-def party_start():
+def party_start() -> tuple:
     party_size_choices = ["1","2","3"]
     specialization_choices = ["WARRIOR", "MAGE", "ROGUE"]
     party_size_message = """
@@ -79,7 +79,7 @@ Note: Case is respected but names longer than 64 characters will be truncated
     return party_members, party_name
 
 
-def default_party():
+def default_party() -> list:
     party_members = []
     default_names = ("Conan","Merlin","Robin")
     default_specialization = ("WARRIOR", "MAGE", "ROGUE")
