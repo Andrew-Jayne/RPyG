@@ -1,5 +1,3 @@
-import random
-
 class Combatant():
     def __init__(self, health:int, attack_name:str, attack_power:int) -> None:
         self.health = health

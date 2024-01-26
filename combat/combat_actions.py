@@ -1,6 +1,5 @@
 import random
 import pickle
-from logic.logic import select_combat_target
 from message.message import Message
 from interaction.interaction import Interaction
 
