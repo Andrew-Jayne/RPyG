@@ -1,9 +1,14 @@
+# Because MacOS
+.DS_Store
+*/.DS_Store
+
+# Save Game Files
+*.rpygs
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-.DS_Store
-*.rpygs
 # C extensions
 *.so
 
