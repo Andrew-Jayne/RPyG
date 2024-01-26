@@ -25,7 +25,7 @@
         "agility": 4,
         "luck": 6,
         "attack_name": "Arcane Lightning"
-    },
+        },
     "penultimate_boss": {
         "name": "The Great Wizard Algolon",
         "health": 400,
@@ -34,7 +34,7 @@
         "agility": 5,
         "luck": 6,
         "attack_name": "Cosmic Collision"
-    },
+        },
     "ultimate_boss": {
         "name": "Fortranus the Ancient One",
         "health": 1000,
@@ -43,5 +43,5 @@
         "agility": 7,
         "luck": 6,
         "attack_name": "Dragon Fire"
-    }
+        }
 }

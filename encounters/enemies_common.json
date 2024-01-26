@@ -135,73 +135,71 @@
             }
         }],
 
-        "large_enemies": [
+    "large_enemies": [
                     {
-        "pural_name": "Cave Trolls",
-        "group_name": "Gang",
-        "variant_lists": {
-            "lesser_variants": [{ 
-                "name": "Stunted Cave Troll",       
-                "health": 300,
-                "strength": 10,
-                "intellect": 1,
-                "agility": 1,
-                "luck": 2,
-                "attack_name": "Club Smash"
-            }],
-            "common_variants": [{
-                "name": "Cave Troll",
-                "health": 300,
-                "strength": 10,
-                "intellect": 1,
-                "agility": 1,
-                "luck": 2,
-                "attack_name": "Club Smash"
-            }],
-            "greater_variants": [{
-                "name": "Cave Troll Cheif",
-                "health": 300,
-                "strength": 10,
-                "intellect": 1,
-                "agility": 1,
-                "luck": 2,
-                "attack_name": "Club Smash"
-            }]
-        }
-    },
-    {
-        "pural_name": "Ice Drakes",
-        "group_name": "Clan",
-        "variant_lists": {
-            "lesser_variants": [{
-                "name": "Junvenille Ice Drake",
-                "health": 250,
-                "strength": 9,
-                "intellect": 7,
-                "agility": 6,
-                "luck": 8,
-                "attack_name": "Blizzard Breath"
-            }],
-            "common_variants": [{
-                "name": "Ice Drake",
-                "health": 250,
-                "strength": 9,
-                "intellect": 7,
-                "agility": 6,
-                "luck": 8,
-                "attack_name": "Blizzard Breath"
-            }],
-            "greater_variants": [{
-                "name": "Ice Drake Matriarch",
-                "health": 250,
-                "strength": 9,
-                "intellect": 7,
-                "agility": 6,
-                "luck": 8,
-                "attack_name": "Blizzard Breath"
-            }]
-        }
+            "pural_name": "Cave Trolls",
+            "group_name": "Gang",
+            "variant_lists": {
+                "lesser_variants": [{ 
+                    "name": "Stunted Cave Troll",       
+                    "health": 300,
+                    "strength": 10,
+                    "intellect": 1,
+                    "agility": 1,
+                    "luck": 2,
+                    "attack_name": "Club Smash"
+                }],
+                "common_variants": [{
+                    "name": "Cave Troll",
+                    "health": 300,
+                    "strength": 10,
+                    "intellect": 1,
+                    "agility": 1,
+                    "luck": 2,
+                    "attack_name": "Club Smash"
+                }],
+                "greater_variants": [{
+                    "name": "Cave Troll Cheif",
+                    "health": 300,
+                    "strength": 10,
+                    "intellect": 1,
+                    "agility": 1,
+                    "luck": 2,
+                    "attack_name": "Club Smash"
+                }]
+            }
+        },
+        {
+            "pural_name": "Ice Drakes",
+            "group_name": "Clan",
+            "variant_lists": {
+                "lesser_variants": [{
+                    "name": "Junvenille Ice Drake",
+                    "health": 250,
+                    "strength": 9,
+                    "intellect": 7,
+                    "agility": 6,
+                    "luck": 8,
+                    "attack_name": "Blizzard Breath"
+                }],
+                "common_variants": [{
+                    "name": "Ice Drake",
+                    "health": 250,
+                    "strength": 9,
+                    "intellect": 7,
+                    "agility": 6,
+                    "luck": 8,
+                    "attack_name": "Blizzard Breath"
+                }],
+                "greater_variants": [{
+                    "name": "Ice Drake Matriarch",
+                    "health": 250,
+                    "strength": 9,
+                    "intellect": 7,
+                    "agility": 6,
+                    "luck": 8,
+                    "attack_name": "Blizzard Breath"
+                }]
+            }
     } ]
 }
-
-
