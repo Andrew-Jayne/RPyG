@@ -2,7 +2,7 @@
 [*] RPC for Mystery Encounters
 [*] Merge Rest & Mystery Encounters
 [] Add Defend, Evade, Elude for secondary combat action
-[] Finish Merchant Interaction
+[*] Finish Merchant Interaction
 [] Polish Special Encounters 
 [*] Remove all remaining "You" Messages
 [*] Remove Follower
