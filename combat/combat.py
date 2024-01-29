@@ -9,7 +9,7 @@ from combat.combat_actions import attack, evade, post_battle
 
 
 class Combat:
-    def battle(player_party_instance, enemy_party_instance):
+    def battle(player_party_instance:object, enemy_party_instance:object) -> None:
         Message.battle_start_message()
         battle_complete = False
         while battle_complete == False:
