@@ -11,6 +11,7 @@
 [] Sweep for junk funcitons &| bloat
 [*] Add enemy AIs
 [*] add multi action encounters (you rest for the night but are robbed in your sleep and lose all of your gold!)
+[] Find out how auto player can buy infinite potions at the shop?
 
 
 # RoadMap
