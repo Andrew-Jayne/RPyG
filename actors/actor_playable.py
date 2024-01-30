@@ -1,4 +1,5 @@
 import random
+from logging.logging import write_log
 from actors.actor import Actor
 from actors.actor_combatant import Combatant
 
@@ -12,12 +13,16 @@ class Inventory:
         self.gold += amount
     
     def lose_gold(self, amount:int) -> None:
+        write_log(f"Player had {self.gold} and lost {amount} gold")
         if self.gold < amount:
             print(f"{self.name} has no gold remaining")
+            write_log(f"Player now has {self.gold} gold")
             return False
         else:
             self.gold -= amount
+            write_log(f"Player now has {self.gold} gold")
             return True
+        
 
     def gain_potion(self, amount:int) -> None:
         self.potions += amount
@@ -55,7 +60,7 @@ class PlayableActor(Actor, Inventory, Combatant):
             case _:
                 print(f"Error Invalid Specialization {specialization}")
                 exit()
-
+        
     ## Init Inherited Classes
         Actor.__init__(self, 
                        name=name,
@@ -73,9 +78,9 @@ class PlayableActor(Actor, Inventory, Combatant):
                            health=100 + int((strength + intellect) * 10),
                            attack_name=__class__.__set_attack_name(self),
                            attack_power=__class__.__set_attack_power(self)
-                           
                            )
-
+        write_log(f"Player: {self.name} was created with {self.gold} gold and {self.potions} potions")
+    
 
     def use_potion(self) -> None:
         if self.potions != 0:
