@@ -1,5 +1,5 @@
 def main():
-    import pickle
+    from file.file import load_game
     from actors.actor_playable import PlayableActor
     from actors.actor_party import PlayerParty
     from message.message import Message
@@ -11,10 +11,7 @@ def main():
     if Interaction.global_game_mode == "MANUAL":
         match get_start_type():
             case "LOAD":
-                with open('savegame.rpygs', 'rb') as save_file:
-                    # Write some text to the file.
-                    player_party_instance = pickle.load(save_file) # (maybe some way to make that safer or add a checksum or hash)
-                    print(f"Successfully Loaded Save Game for: {player_party_instance.name}")
+                player_party_instance = load_game()
             case "NEW":
                 my_party, my_party_name = party_start()
                 my_party_instances = []

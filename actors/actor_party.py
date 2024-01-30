@@ -15,7 +15,7 @@ class PlayerParty(Party):
 
     def __init__(self, name:str, members:list) -> None:
         if not isinstance(name, str):
-            ValueError("The 'name' parameter must be of type str. Received type: {}".format(type(name).__name__))
+            raise ValueError("The 'name' parameter must be of type str. Received type: {}".format(type(name).__name__))
         if not isinstance(members, list):
             raise ValueError("The 'members' parameter must be of type list. Received type: {}".format(type(members).__name__))
 
@@ -28,7 +28,7 @@ class PlayerParty(Party):
 class EnemyParty(Party):
     def __init__(self, name:str, members:list) -> None:
         if not isinstance(name, str):
-            ValueError("The 'name' parameter must be of type str. Received type: {}".format(type(name).__name__))
+            raise ValueError("The 'name' parameter must be of type str. Received type: {}".format(type(name).__name__))
         if not isinstance(members, list):
             raise ValueError("The 'members' parameter must be of type list. Received type: {}".format(type(members).__name__))
         
