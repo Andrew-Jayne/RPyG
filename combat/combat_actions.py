@@ -10,7 +10,6 @@ def check_for_critical(combatant_instance:object) -> bool:
     else:
         return False
 
-
 def attack(attacker_instance:object, target_instance:object) -> None:
     damage_variation = int(attacker_instance.attack_power * 0.1)
     final_damage = attacker_instance.attack_power + random.randint(-damage_variation,damage_variation)
@@ -23,9 +22,10 @@ def attack(attacker_instance:object, target_instance:object) -> None:
         target_instance.damage(final_damage)
 
 def evade(combatant_instance:object) -> bool:
-    return random.randint(1,30) <= (combatant_instance.luck + combatant_instance.agility)
+    evade_result = random.randint(1,30) <= (combatant_instance.luck + combatant_instance.agility)
+    return evade_result
 
-def post_battle(player_party_instance) -> None:
+def post_battle(player_party_instance:object) -> None:
     player_post_action = ""
     while player_post_action != "TRAVEL":
         player_post_action = Interaction.post_battle(player_party_instance)

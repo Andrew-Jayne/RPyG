@@ -6,6 +6,7 @@ from combat.combat import Combat
 from message.message import Message
 from interaction.interaction import Interaction
 
+# This could be better, this function is very large
 
 def enemy_encounter(player_party:object) -> None:
     enemy_chance = random.randint(0,4)

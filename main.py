@@ -1,4 +1,8 @@
-def main():
+import argparse
+from logging.logging import clear_log
+
+def main(mode=None):
+    
     from file.file import load_game
     from actors.actor_playable import PlayableActor
     from actors.actor_party import PlayerParty
@@ -36,4 +40,11 @@ def main():
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='RPyG, a text based RPG in Python')
+    parser.add_argument('--keep-log', action='store_true', 
+                        help='Keep log from previous session.')
+    parser.add_argument('--automatic', action="AUTO") # Waiting for full implementaion
+    args = parser.parse_args()
+    if args.keep_log != True:
+        clear_log()
     main()
