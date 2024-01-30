@@ -9,6 +9,8 @@ from combat.combat_actions import attack, evade, post_battle
 # this function makes Linus Torvalds sad, make it better
 
 
+# I Broke enemy attacks again Sadge...
+
 class Combat:
     def battle(player_party_instance:object, enemy_party_instance:object) -> None:
         Message.battle_start_message()
