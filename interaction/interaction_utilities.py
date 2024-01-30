@@ -4,10 +4,10 @@ def sanitize(input_string:str, max_length = 32) -> str:
     This function Sanitizes strings passed into it and returns up to the max length chars (Default is 32)
     With most escape sequences and control chars removed
 
-    Will Exit if a string Exceeding 128 chars is passed
+    Will Exit if a string Exceeding 512 chars is passed
     """
     #exit if string is longer that 128 Chars
-    if len(input_string) > 128:
+    if len(input_string) > 512:
             print("Input Length Exceeds Expected Parameters: Exiting!")
             exit()
     #Set unwanted chars
