@@ -1,5 +1,5 @@
 import time
-import pickle
+from file.file import save_game
 from actors.actor_playable import PlayableActor
 from interaction.interaction import Interaction
 from display.display import Display
@@ -103,10 +103,8 @@ They have traveled {party_instance.progress * 10} Miles Total.
             print("")
 
     @staticmethod
-    def end_game_message(player_instance:object) -> None:
-        print(f"Fortranus the Ancient One has been Vanquished at the hands of {player_instance.name}")
+    def end_game_message(player_party_instance:object) -> None:
+        print(f"Fortranus the Ancient One has been Vanquished at the hands of {player_party_instance.name}")
         print("Your adventure has been completed, you may start a new adventure if you so choose")
         if Interaction.global_game_mode == "MANUAL":
-            with open('savegame.rpygs', 'wb') as save_file:
-                pickle.dump(player_instance, save_file)
-                exit()
+            save_game(player_party_instance)
