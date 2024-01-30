@@ -13,8 +13,8 @@ class SpecialEncounters():
         print("Your Party is welcomed to the Keep of Stallman")
         print("Your Party is are fully rested and have a full stock of potions", end="\n\n")
         for member_instance in party_instance.members:
-            member_instance.heal(30)
-            member_instance.potions = 9
+            member_instance.heal(300)
+            member_instance.gain_potion(9)
 
     @staticmethod
     def midway_boss(party_instance:object) -> None:
@@ -35,8 +35,8 @@ class SpecialEncounters():
                 case 0:
                     print("Your Party finds a Store Room with some food & potions")
                     for member_instance in party_instance.members:
-                        member_instance.potions += 2
-                        member_instance.heal(2)
+                        member_instance.gain_potion(2)
+                        member_instance.heal(20)
                 case 1:
                     sub_step += 2
                     print("Your Party finds a Secret Passage!")
