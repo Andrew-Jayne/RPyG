@@ -2,7 +2,7 @@ import pickle
 
 def save_game(player_party_instance:object) -> None:
     """
-    Call this to Save the current state of the player party object to a pickle file. 
+    Call this to Save the current state of the player party object to a pickle file then exits the program 
     This serves to save all progress of the party
     """
     with open('savegame.rpygs', 'wb') as save_file:
@@ -12,7 +12,7 @@ def save_game(player_party_instance:object) -> None:
 
 def load_game() -> object:
     """
-    Call this to load the pickle stored in the file called 'savegame.rpygs'.
+    Call this to load the game stored in the pickle file called 'savegame.rpygs'.
     Any other .rpygs files will be ignored, the loaded file is not checked so hack with care as you may break your game :MonkaS
     """
 
