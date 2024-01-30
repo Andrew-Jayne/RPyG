@@ -2,6 +2,7 @@ import json
 import random
 from interaction.interaction import Interaction
 
+# Update Encounter Declaration to be a key of ID with a value of Encounter data, current model will not scale well with large encounter lists
 def find_encounter_by_id(full_item_list:list, target_item_id:str) -> object:
         found_item = None
         for active_item in full_item_list:
@@ -11,6 +12,8 @@ def find_encounter_by_id(full_item_list:list, target_item_id:str) -> object:
         if found_item == None:
              print(f"Error Unable to Find an Event with the ID {target_item_id}")
              exit()
+
+## Everything from here down scares me, really need to make this more clear what is doing what
 
 def execute_actor_action(event_object:object, target_instance_list:list) -> None:
     magnitude = int(event_object['magnitude'] / len(target_instance_list))
