@@ -1,5 +1,5 @@
 import random
-import pickle
+from file.file import save_game
 from message.message import Message
 from interaction.interaction import Interaction
 
@@ -33,11 +33,4 @@ def post_battle(player_party_instance) -> None:
             for member_instance in player_party_instance.members:
                 member_instance.use_potion()
         if player_post_action == "SAVE":
-            # Open the file in write mode. If the file doesn't exist, it will be created.
-            # If it does exist, it will be overwritten.
-            with open('savegame.rpygs', 'wb') as save_file:
-                # Write some text to the file.
-                pickle.dump(player_party_instance, save_file)
-                print(f"Successfully Saved Game for: {player_party_instance.name}")
-                exit()
-                # The file is automatically closed when you exit the 'with' block.
+            save_game(player_party_instance)
