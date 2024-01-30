@@ -11,17 +11,22 @@ class Inventory:
 
     def gain_gold(self, amount:int) -> None:
         self.gold += amount
-    
-    def lose_gold(self, amount:int) -> None:
-        write_log(f"Player had {self.gold} and lost {amount} gold")
-        if self.gold < amount:
-            print(f"{self.name} has no gold remaining")
-            write_log(f"Player now has {self.gold} gold")
+
+    def spend_gold(self, amount:int) -> bool:
+        if self.gold <= amount:
+            print(f"{self.name} has insufficient gold")
             return False
         else:
-            self.gold -= amount
-            write_log(f"Player now has {self.gold} gold")
+            __class__.lose_gold(self, amount)
             return True
+    
+    def lose_gold(self, amount:int) -> None:
+            self.gold -= amount
+            if self.gold < 0:
+                self.gold = 0
+                print(f"{self.name} has no gold remaining")
+            write_log(f"Player now has {self.gold} gold")
+                
         
 
     def gain_potion(self, amount:int) -> None:

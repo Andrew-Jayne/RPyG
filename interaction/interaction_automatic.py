@@ -38,7 +38,7 @@ def auto_choose_combat_target(enemy_party_instance:object) -> int:
 
 
 def auto_at_merchant(player_party_instance:object) -> None:
-    #Null Counts
+    #init Counts
     player_count = 0
     gold_spent = 0
     potions_sold = 0
@@ -46,11 +46,12 @@ def auto_at_merchant(player_party_instance:object) -> None:
     for player_instance in player_party_instance.members:
         player_count += 1
         while player_instance.potions < 100 and player_instance.gold != 0:
-            if player_instance.gold != 0:
-                player_instance.lose_gold(25)
+            if player_instance.spend_gold(25) == True:
                 gold_spent += 25
+
                 player_instance.gain_potion(1)
                 potions_sold += 1
+
                 print(f"{player_instance.name} purchases a potion. They now have {player_instance.potions}")
             else:
                 print(f"{player_instance.name} does not have enough Gold to purchase more potions")

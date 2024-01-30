@@ -67,8 +67,7 @@ LEAVE
             player_choice = validate_input(merchant_options, merchant_message)
             print(f"{player_instance.name} has {player_instance.potions} potions & {player_instance.gold} gold")
             if player_choice == "BUY":
-                if player_instance.gold >= 25:
-                    player_instance.lose_gold(25)
+                if player_instance.spend_gold(25) == True:
                     player_instance.gain_potion(1)
                     print(f"{player_instance.name} purchases a potion. They now have {player_instance.potions} & {player_instance.gold} gold")
                 else:
