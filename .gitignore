@@ -2,8 +2,9 @@
 .DS_Store
 */.DS_Store
 
-# Save Game Files
+# Game Files
 *.rpygs
+log.txt
 z.md
 
 # Byte-compiled / optimized / DLL files
