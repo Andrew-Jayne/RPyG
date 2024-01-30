@@ -1,15 +1,15 @@
 import argparse
 from logging.logging import clear_log
 
-def main(mode=None):
+def main():
     
-    from file.file import load_game
+    from gameState.file import load_game
     from actors.actor_playable import PlayableActor
     from actors.actor_party import PlayerParty
     from message.message import Message
     from interaction.interaction import Interaction
     from encounters.encounter import check_for_encounter
-    from welcome import welcome, get_start_type, party_start, default_party
+    from gameState.welcome import welcome, get_start_type, party_start, default_party
 
     welcome()
     if Interaction.global_game_mode == "MANUAL":
