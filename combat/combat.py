@@ -6,6 +6,7 @@ from combat.combat_actions import attack, evade, post_battle
 #Battle Flow:
     #Player Party Attacks Enemy
     #Enemy Party Attacks  Player Party
+# this function makes Linus Torvalds sad, make it better
 
 
 class Combat:
