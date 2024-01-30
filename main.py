@@ -41,9 +41,8 @@ def main(mode=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='RPyG, a text based RPG in Python')
-    parser.add_argument('--keep-log', action='store_true', 
-                        help='Keep log from previous session.')
-    parser.add_argument('--automatic', action="AUTO") # Waiting for full implementaion
+    parser.add_argument('--keep-log', action='store_true', help='Keep log from previous session.')
+    #parser.add_argument('--automatic', action='auto_true', help='this does not work right now :)') # Waiting for full implementaion
     args = parser.parse_args()
     if args.keep_log != True:
         clear_log()

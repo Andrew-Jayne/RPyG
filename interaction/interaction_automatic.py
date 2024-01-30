@@ -55,4 +55,4 @@ def auto_at_merchant(player_party_instance:object) -> None:
             else:
                 print(f"{player_instance.name} does not have enough Gold to purchase more potions")
                 break
-    write_log(f"Function: auto_at_merchant sold {potions_sold} to {player_count} for a total of ")
+    write_log(f"Function: auto_at_merchant sold {potions_sold} potions to {player_count} players for a total of {gold_spent} gold ")
