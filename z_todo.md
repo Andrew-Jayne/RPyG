@@ -11,7 +11,7 @@
 [] Sweep for junk funcitons &| bloat
 [*] Add enemy AIs
 [*] add multi action encounters (you rest for the night but are robbed in your sleep and lose all of your gold!)
-[] Find out how auto player can buy infinite potions at the shop?
+[*] Find out how auto player can buy infinite potions at the shop?
 
 
 # RoadMap
@@ -55,9 +55,10 @@ Move all json files to a story dir with support for multiple files in enemies_co
 
 ## Arch & Spec
 take the current 3 specaliazations and make them archetypes, then within those options for 3 archetypes
-palidin, barbarian, knight
-Wizard, Battle Mage, Sorcerer
-Assasin, Theif, ?
+
+- palidin, barbarian, knight
+- Wizard, Battle Mage, Sorcerer
+- Assasin, Theif, ?
 
 ## Leveling & Purchasing
 Players become stronger as they progress and can gain temp and perm buffs from items, either found or bought
