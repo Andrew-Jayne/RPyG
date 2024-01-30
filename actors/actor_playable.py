@@ -1,6 +1,7 @@
+import random
 from actors.actor import Actor
 from actors.actor_combatant import Combatant
-import random
+
 
 class Inventory:
     def __init__(self, gold:int, potions:int) -> None:
@@ -27,9 +28,9 @@ class Inventory:
 class PlayableActor(Actor, Inventory, Combatant):
     def __init__(self, name: str, specialization: str) -> None:
         if not isinstance(name, str):
-            ValueError("The 'name' parameter must be of type str. Received type: {}".format(type(name).__name__))
+            raise ValueError("The 'name' parameter must be of type str. Received type: {}".format(type(name).__name__))
         if not isinstance(specialization, str):
-            ValueError("The 'specialization' parameter must be of type str. Received type: {}".format(type(specialization).__name__))
+            raise ValueError("The 'specialization' parameter must be of type str. Received type: {}".format(type(specialization).__name__))
 
         self.name = name
         self.specialization = specialization
