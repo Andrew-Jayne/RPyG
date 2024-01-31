@@ -1,5 +1,5 @@
 class Party:
-    def __init__(self, members) -> None:
+    def __init__(self, members:list) -> None:
         self.members = members
 
     def lose_member(self, member) -> None:

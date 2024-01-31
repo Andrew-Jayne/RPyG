@@ -8,7 +8,7 @@ from interaction.interaction import Interaction
 
 # This could be better, this function is very large
 
-def enemy_encounter(player_party:object) -> None:
+def enemy_encounter(player_party_instance:object) -> None:
     enemy_chance = random.randint(0,4)
     with open('encounters/enemies_common.json', 'r') as enemies_file:
         enemies_lists = json.load(enemies_file)
@@ -26,7 +26,7 @@ def enemy_encounter(player_party:object) -> None:
         enemy_party_attributes = random.choice(enemies_lists['large_enemies'])
 
     #Set Enemy Count
-    enemy_count = int(len(player_party.members) + random.randint(-2,2))
+    enemy_count = int(len(player_party_instance.members) + random.randint(-2,2))
     if enemy_count >= 0:
         enemy_count = 1
 
@@ -54,12 +54,12 @@ def enemy_encounter(player_party:object) -> None:
     Message.encounter_message(enemy_party_name)
     match Interaction.encounter_enemy():
         case "BATTLE":
-                Combat.battle(player_party, enemy_party)
+                Combat.battle(player_party_instance, enemy_party)
         case "FLEE":
-            for player_instance in player_party.members:
+            for player_instance in player_party_instance.members:
                 if player_instance.luck >= random.randint(4,15):
                     Message.flee_success_message(player_instance.name, enemy_party_name)
                 else:
                     Message.flee_failure_message(player_instance.name, enemy_party_name)
-                    Combat.battle(player_party, enemy_party)
+                    Combat.battle(player_party_instance, enemy_party)
                     break
