@@ -2,7 +2,6 @@ import argparse
 from logging.logging import clear_log
 
 def main():
-    
     from gameState.file import load_game
     from actors.actor_playable import PlayableActor
     from actors.actor_party import PlayerParty
