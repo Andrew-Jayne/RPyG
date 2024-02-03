@@ -29,7 +29,7 @@ def save_game(player_party_instance: PlayerParty) -> None:
 def load_game() -> PlayerParty:
     """
     Call this to load the game stored in the pickle file called 'savegame.rpygs'.
-    Any other .rpygs files will be ignored, the loaded file is not checked so hack with care as you may break your game :MonkaS
+    Any other .rpygs files will be ignored
     """
     save_file_path = 'savegame.rpygs'
     
