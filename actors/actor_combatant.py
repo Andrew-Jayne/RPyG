@@ -1,10 +1,20 @@
 class Combatant():
     def __init__(self, health:int, attack_name:str, attack_power:int) -> None:
+
+        if not isinstance(health, int):
+            raise ValueError("The 'health' parameter must be of type int. Received type: {}".format(type(health).__name__))
+        if not isinstance(attack_name, str):
+            raise ValueError("The 'attack_name' parameter must be of type str. Received type: {}".format(type(attack_name).__name__))
+        if not isinstance(attack_power, int):
+            raise ValueError("The 'name' parameter must be of type int. Received type: {}".format(type(attack_power).__name__))
+
         self.health = health
+        self.base_health = health
+
         self.attack_name = attack_name
         self.attack_power = attack_power
+        
         self.special_attack = None
-        self.base_health = health
         self.will_evade = False
         self.will_defend = False
         self.is_poisioned = False

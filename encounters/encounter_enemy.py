@@ -1,14 +1,17 @@
 import random
 import json
 from actors.actor_enemy import Enemy
-from actors.actor_party import EnemyParty
+from actors.actor_party import EnemyParty, PlayerParty # <- Only for Type Checking
 from combat.combat import Combat
 from message.message import Message
 from interaction.interaction import Interaction
 
-# This could be better, this function is very large
 
-def enemy_encounter(player_party_instance:object) -> None:
+def enemy_encounter(player_party_instance:PlayerParty) -> None:
+    if not isinstance(player_party_instance, PlayerParty):
+        raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
+
+
     enemy_chance = random.randint(0,4)
     with open('encounters/enemies_common.json', 'r') as enemies_file:
         enemies_lists = json.load(enemies_file)

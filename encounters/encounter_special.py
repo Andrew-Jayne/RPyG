@@ -6,25 +6,38 @@ from actors.actor_party import EnemyParty
 from combat.combat import Combat
 from message.message import Message
 
+# Just for Type Checking
+from actors.actor_party import PlayerParty
+
+
 class SpecialEncounters():
 
     @staticmethod
-    def friendly_keep_visit(party_instance:object) -> None:
+    def friendly_keep_visit(player_party_instance:PlayerParty) -> None:
+        if not isinstance(player_party_instance, PlayerParty):
+            raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
+
         print("Your Party is welcomed to the Keep of Stallman")
         print("Your Party is are fully rested and have a full stock of potions", end="\n\n")
-        for member_instance in party_instance.members:
+        for member_instance in player_party_instance.members:
             member_instance.heal(300)
             member_instance.gain_potion(9)
 
     @staticmethod
-    def midway_boss(party_instance:object) -> None:
+    def midway_boss(player_party_instance:PlayerParty) -> None:
+        if not isinstance(player_party_instance, PlayerParty):
+            raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
+
         enemy_instance = __class__._get_special_enemy('midway_boss')
         print(f"Your Party encounters {enemy_instance.name}!")
         enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
-        Combat.battle(party_instance, enemy_party)
+        Combat.battle(player_party_instance, enemy_party)
 
     @staticmethod
-    def enemy_keep_visit(party_instance:object) -> None:
+    def enemy_keep_visit(player_party_instance:PlayerParty) -> None:
+        if not isinstance(player_party_instance, PlayerParty):
+            raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
+
         print("Your Party must traverse Algolon's Keep!")
         sub_step = 0
         while sub_step < 10:
@@ -34,7 +47,7 @@ class SpecialEncounters():
             match dungeon_chance:
                 case 0:
                     print("Your Party finds a Store Room with some food & potions")
-                    for member_instance in party_instance.members:
+                    for member_instance in player_party_instance.members:
                         member_instance.gain_potion(2)
                         member_instance.heal(20)
                 case 1:
@@ -43,7 +56,7 @@ class SpecialEncounters():
                 case 4:
                     enemy_instance = __class__._get_special_enemy('keep_minion') ## Need to move this to a Party
                     print(f"Your Party encounter a group of {enemy_instance.name}s!")
-                    enemy_count = int(len(party_instance.members) + random.randint(-2,2))
+                    enemy_count = int(len(player_party_instance.members) + random.randint(-2,2))
                     if enemy_count == 0:
                         enemy_count = 1
 
@@ -51,29 +64,35 @@ class SpecialEncounters():
                     for _ in range(0,enemy_count):
                         enemy_party_instances.append(copy.deepcopy(enemy_instance))
                     enemy_party = EnemyParty(f"group of {enemy_count} {enemy_instance.name}" ,enemy_party_instances)
-                    Combat.battle(party_instance, enemy_party)
-            if len(party_instance.members) == 0:
+                    Combat.battle(player_party_instance, enemy_party)
+            if len(player_party_instance.members) == 0:
                 break
         print("At the end of the Keep Your Party encounters Algolon's Arch Mage!")
         enemy_instance = __class__._get_special_enemy('keep_master')
         enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
-        Combat.battle(party_instance, enemy_party)
+        Combat.battle(player_party_instance, enemy_party)
 
     @staticmethod
-    def penultimate_boss(party_instance:object) -> None:
+    def penultimate_boss(player_party_instance:PlayerParty) -> None:
+        if not isinstance(player_party_instance, PlayerParty):
+            raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
+
         enemy_instance = __class__._get_special_enemy('penultimate_boss')
         print(f"Your Party Battles {enemy_instance.name}!")
         enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
-        Combat.battle(party_instance, enemy_party)
+        Combat.battle(player_party_instance, enemy_party)
 
     @staticmethod
-    def final_boss(party_instance:object) -> None:
+    def final_boss(player_party_instance:PlayerParty) -> None:
+        if not isinstance(player_party_instance, PlayerParty):
+            raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
+
         enemy_instance = __class__._get_special_enemy('ultimate_boss')
         print(f"Your Party must now battle {enemy_instance.name}!")
         enemy_party = EnemyParty(enemy_instance.name,[enemy_instance])
-        Combat.battle(party_instance, enemy_party)
-        if len(party_instance.members) != 0:
-            Message.end_game_message(party_instance)
+        Combat.battle(player_party_instance, enemy_party)
+        if len(player_party_instance.members) != 0:
+            Message.end_game_message(player_party_instance)
         
 
 
