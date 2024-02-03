@@ -6,7 +6,7 @@ import os
 # Only used for Type Checking
 from actors.actor_party import PlayerParty
 
-# Secret key for HMAC, keep this safe!
+# """Secret""" key for HMAC, if you break your file that's on you
 secret_key = b"I_WILL_HACK_MY_SAVE_FILE_AND_PROBLEMS_WILL_BE_MY_FAULT"
 
 def save_game(player_party_instance: PlayerParty) -> None:
@@ -25,7 +25,6 @@ def save_game(player_party_instance: PlayerParty) -> None:
         save_file.write(signature + serialized_data)
     print(f"Successfully Saved Game for: {player_party_instance.name}")
     exit()
-
 
 def load_game() -> PlayerParty:
     """
