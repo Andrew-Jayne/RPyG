@@ -2,13 +2,13 @@
 [*] RPC for Mystery Encounters
 [*] Merge Rest & Mystery Encounters
 [*] Finish Merchant Interaction
-[] Polish Special Encounters 
+[*] Polish Special Encounters 
 [*] Remove all remaining "You" Messages
 [*] Remove Follower
 [*] Add Randomness to Damage
 [*] Remove direct prints from rest and mystery encounters~
 [*] Move special encounter to line up with new json fommating
-[] Sweep for junk funcitons &| bloat
+[*] Sweep for junk funcitons &| bloat
 [*] Add enemy AIs
 [*] add multi action encounters (you rest for the night but are robbed in your sleep and lose all of your gold!)
 [*] Find out how auto player can buy infinite potions at the shop?
