@@ -2,12 +2,19 @@ from interaction.interaction_utilities import validate_input, sanitize, custom_t
 from interaction.interaction_manual import *
 from interaction.interaction_automatic import *
 
+# Only Used For Type Hinting/Checking
+from actors.actor_party import PlayerParty, EnemyParty
+from actors.actor_playable import PlayableActor
+
 class Interaction:
     global_game_mode = "AUTO" ## this is a default value that should be can be updated to "MANUAL" during the welcome function
     global_player_count = "1" ## this is default value that can be updated to a new value in the welcome function
 
     @staticmethod
-    def choose_combat_target(enemy_party_instance):
+    def choose_combat_target(enemy_party_instance:EnemyParty):
+        if not isinstance(enemy_party_instance, EnemyParty):
+            raise ValueError("The 'player_party_instance' parameter must be of type EnemyParty. Received type: {}".format(type(enemy_party_instance).__name__))
+    
         match __class__.global_game_mode:
             case "AUTO":
                 return auto_choose_combat_target(enemy_party_instance)
@@ -30,7 +37,10 @@ class Interaction:
                 return "ATTACK" 
     
     @staticmethod
-    def post_battle(player_party_instance):
+    def post_battle(player_party_instance:PlayerParty):
+        if not isinstance(player_party_instance, PlayerParty):
+            raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
+
         match __class__.global_game_mode:
             case "AUTO":
                 return auto_post_battle(player_party_instance)
@@ -42,7 +52,10 @@ class Interaction:
 
 
     @staticmethod
-    def in_battle(player_instance):
+    def in_battle(player_instance:PlayableActor):
+        if not isinstance(player_instance, PlayableActor):
+            raise ValueError("The 'player_instance' parameter must be of type PlayableActor. Received type: {}".format(type(player_instance).__name__))
+
         match __class__.global_game_mode:
             case "AUTO":
                 return auto_in_battle(player_instance)
@@ -54,7 +67,11 @@ class Interaction:
              
 
     @staticmethod
-    def at_merchant(player_party_instance):
+    def at_merchant(player_party_instance:PlayerParty):
+        if not isinstance(player_party_instance, PlayerParty):
+            raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
+        
+
         match __class__.global_game_mode:
             case "AUTO":
                 auto_at_merchant(player_party_instance)
@@ -66,7 +83,7 @@ class Interaction:
 
             
     @staticmethod
-    def validate_input(choice_list:list, prompt_message:str):
+    def validate_input(choice_list:list[str], prompt_message:str):
         return validate_input(choice_list, prompt_message)
     
     @staticmethod

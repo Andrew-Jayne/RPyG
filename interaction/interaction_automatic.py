@@ -3,13 +3,20 @@ import random
 from logic.logic import select_combat_target
 from logging.logging import write_log
 
+# Only Used for type Checking
+from actors.actor_party import EnemyParty, PlayerParty
+from actors.actor_playable import PlayableActor
+
 
 def auto_enemy_encounter() -> str:
     chosen_action = random.choice(["FLEE","ATTACK"])
     write_log(f"Function: auto_enemy_encounter returned value {chosen_action}")
     return chosen_action
 
-def auto_in_battle(player_instance:object) -> str:
+def auto_in_battle(player_instance:PlayableActor) -> str:
+    if not isinstance(player_instance, PlayableActor):
+        raise ValueError("The 'player_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_instance).__name__))
+
     if player_instance.health <= 40 and player_instance.potions != 0:
         chosen_action = "HEAL" 
     elif player_instance.potions == 0:
@@ -21,7 +28,10 @@ def auto_in_battle(player_instance:object) -> str:
     write_log(f"Function: auto_in_battle returned value {chosen_action}")
     return chosen_action
 
-def auto_post_battle(player_party_instance:object) -> str:
+def auto_post_battle(player_party_instance:PlayerParty) -> str:
+    if not isinstance(player_party_instance, PlayerParty):
+        raise ValueError("The 'player_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
+
     for player_instance in player_party_instance.members:
         if player_instance.health < 20 and player_instance.potions != 0:
             chosen_action = "HEAL"
@@ -30,14 +40,20 @@ def auto_post_battle(player_party_instance:object) -> str:
     write_log(f"Function: auto_post_battle returned value {chosen_action}")
     return chosen_action
     
-def auto_choose_combat_target(enemy_party_instance:object) -> int:
+def auto_choose_combat_target(enemy_party_instance:EnemyParty) -> int:
+    if not isinstance(enemy_party_instance, EnemyParty):
+        raise ValueError("The 'enemy_party_instance' parameter must be of type EnemyParty. Received type: {}".format(type(enemy_party_instance).__name__))
+
     chosen_target = select_combat_target(enemy_party_instance)
 
     write_log(f"Function: auto_choose_combat_target returned value {chosen_target}")
     return chosen_target
 
 
-def auto_at_merchant(player_party_instance:object) -> None:
+def auto_at_merchant(player_party_instance:PlayerParty) -> None:
+    if not isinstance(player_party_instance, PlayerParty):
+        raise ValueError("The 'enemy_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
+
     #init Counts
     player_count = 0
     gold_spent = 0

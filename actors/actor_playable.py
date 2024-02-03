@@ -6,6 +6,11 @@ from actors.actor_combatant import Combatant
 
 class Inventory:
     def __init__(self, gold:int, potions:int) -> None:
+        if not isinstance(gold, int):
+            raise ValueError("The 'gold' parameter must be of type int. Received type: {}".format(type(gold).__name__))
+        if not isinstance(potions, int):
+            raise ValueError("The 'potions' parameter must be of type int. Received type: {}".format(type(potions).__name__))
+        
         self.gold = gold
         self.potions = potions
 

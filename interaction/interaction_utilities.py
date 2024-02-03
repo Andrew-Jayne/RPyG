@@ -23,7 +23,7 @@ def sanitize(input_string:str, max_length = 32) -> str:
     return cleaned_string
 
 
-def validate_input(choice_list:list, prompt_message:str) -> str:
+def validate_input(choice_list:list[str], prompt_message:str) -> str:
         """
         Checks that the string input by the user is in the allowed list of responses
         Sanizites the input then returns up to the max length specified

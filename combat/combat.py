@@ -3,6 +3,9 @@ from message.message import Message
 from logic.logic import select_combat_target
 from combat.combat_actions import attack, evade, post_battle
 
+# Only for Type Checking
+from actors.actor_party import PlayerParty, EnemyParty
+
 #Battle Flow:
     #Player Party Attacks Enemy
     #Enemy Party Attacks  Player Party
@@ -11,7 +14,13 @@ from combat.combat_actions import attack, evade, post_battle
 
 
 class Combat:
-    def battle(player_party_instance:object, enemy_party_instance:object) -> None:
+    def battle(player_party_instance:PlayerParty, enemy_party_instance:EnemyParty) -> None:
+        if not isinstance(player_party_instance, PlayerParty):
+            raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
+        if not isinstance(enemy_party_instance, EnemyParty):
+            raise ValueError("The 'enemy_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(enemy_party_instance).__name__))
+        
+
         Message.battle_start_message()
         battle_complete = False
         while battle_complete == False:

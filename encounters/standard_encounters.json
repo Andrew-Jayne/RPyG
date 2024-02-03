@@ -63,7 +63,7 @@
       {
         "id": "suprise_attack",
         "encounter_type": "ATTACK",
-        "message": "Your party Encountera A Strange Figure!\nThe Figure blasts your party with an Arcane Bolt and vanishes into a Flash of Light!\n\n",
+        "message": "Your party Encounters A Strange Figure!\nThe Figure blasts your party with an Arcane Bolt and vanishes into a Flash of Light!\n\n",
         "actor_action": "damage",
         "special_action": null,
         "additional_events": null,

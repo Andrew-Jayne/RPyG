@@ -6,21 +6,12 @@ from actors.actor_playable import PlayableActor
 def welcome() -> None:
     print("Welcome to RPyG, a text based RPG in Python", end="\n\n")
 
-    mode_message = """
+    welcome_message = """
              This game looks best with a width of at least 80.
             If the next line is split please widen your terminal.
 ----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----
-
-
-Please Select your Game mode:
-Options are : Manual & Auto
-
-Note: All Prompts in this game are case insensitive
-
 """
-    mode_choices = ["AUTO", "MANUAL"]
-    Interaction.global_game_mode = Interaction.validate_input(mode_choices, mode_message)
-    Display.clear_display()
+    print(welcome_message)
 
 def get_start_type() -> str:
 
