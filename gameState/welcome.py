@@ -19,6 +19,9 @@ def get_start_type() -> str:
 Would you like to Start a new game or Load an existing save?
 Options are : NEW & LOAD
 
+
+NOTE: All Prompts in this game are case insensitive
+
 """
     type_choices = ["NEW", "LOAD"]
     player_action = Interaction.validate_input(type_choices, type_message)
@@ -37,7 +40,7 @@ How many members are in your party?
 
 """
     specialization_messages = """
-What Specalization will this member use?
+What Specialization will this member use?
 WARRIOR
 MAGE
 ROGUE
