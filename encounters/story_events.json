@@ -1,61 +1,60 @@
 {
-    "progress_events": [
-        {
-            "0": {
-                "messages": [
-                    "the {party} gathers around the fire at a local tavern when a rider delivers a notice to the bar keep",
-                    "the notice reads:",
-                    "His Highness King Stalman has requested all who favor themselves brave warriors present themselves at the Open Hall \n as the king has a task which requires great courage for them to undertake"
-                ]
-            }
-        },
-        {
-            "25": {
-                "messages": [
-                    "Upon arivial the King tells you of the dark rumours which have recently been confimed to him",
-                    "The dark wizard Algolon is working to resurrect an ancient evilfrom the dead.",
-                    "the exact location of this is unknown",
-                    "but rumors say that outside the town of Debina on the wizard Cobolus, a known colaborator of Algolon has been sighted.",
-                    "The king asks this great task of the {party}, go forth and find Cobolus, \n attempt to assertain the whearabouts of Aloglon and where he plans to carry out this ritual."
-                ]
-            }
-        },
-        {
-            "50": {
-                "messages": [
-                    "On the outskirts of Debina, you find the lair of Cobolus and engage him in combat",
-                    "Defeated, Cobolus lays near death, but just as you aproach to begin interogating him a flash of purple light blinds, and a massive explosion knocks you backwards. when the dust and smoke clear, you see the charred remains of the once mighty wizard, smoking as the smell of ash and burning flesh fills the air.",
-                    "Despite you best efforts of examing the his lair you find no conclusive path to Algolon, however you do find a half ruinned map with markings on indicating the location of a fortress deep in the mountains that may offer some clues."
-                ]
-            }
-        },
-        {
-            "75": {
-                "messages": [
-                    "Deep in the mountains you arrive at the Fortress, the air is still and the world silent, no sign of a living thing can be heard or seen, save for the faint trails of smoke escaping from the depths of fortress",
-                    "str2"
-                ]
-            }
-        },
-        {
-            "99": {
-                "messages": [
-                    "You arrive at the summit of Godsblood Peak, and find Algolon engulfed in a typhoon of magical energy, could it be? has begun the ritual alone? you begin combat at once",
-                    "str2"
-                ]
-            }
-        },
-        {
-            "100": {
-                "messages": [
-                    "100 algolon lays defeated, but the typhoon of magical energy does not subside, rather it grows in power and from the eye of this storm emerges a great black figure.",
-                    "It is him, Fortranus the Ancient One. His form grows giant and black the massive beast bellows and releases waves of fire from its great gaping maw, its buring orange eyes lock on to your party. From the deep within its massive chest you here it bellow.",
-                    "Mortals, embrace the end of this world and submit to me, and I shall make your end swift and painless.",
-                    "You Begin battle with the beast",
-                    "the {party} lays defeated, their smoldering corpses lay montionless on the swirl of ash & snow, as the great wings of the anchent dragon carry into the skys.",
-                    "The great beast colapsass onto the ground, brought to near death by the {party}, as it lays, ragged breaths spewing forth small wisps of smoke, you postion yourselves to make the killing blow, a crack of blinding light engulfs your party and the body of the great dragon evaporates into not more than a great stone skeleton as cold as the as the snow that begins to fall upon it."
-                ]
-            }
-        }
-    ]
-}
+    "progress_events": {
+      "0": {
+        "messages": [
+            "{party_name} gathers around the fire at a local tavern when a rider delivers a notice to the bar keep",
+            "the notice reads:",
+            "His Highness King Stallman has requested all who favor themselves brave warriors present themselves at the Open Hall as the king has a task which requires great courage for them to undertake"
+        ],
+        "success_messages": ["str1", "str2"],
+        "failure_messages": ["str1", "str2"]
+      },
+      "25": {
+        "messages": [
+            "Upon arrival the King tells you of the dark rumours which have recently been confirmed to him",
+            "",
+            "The dark wizard Algolon is working to resurrect an ancient evil from the dead.",
+            "the exact location of this is unknown",
+            "but rumors say that outside the town of Debina on the wizard Cobolus, a known collaborator of Algolon has been sighted.",
+            "The king asks this great task of {party_name}, go forth and find Cobolus, attempt to ascertain the whereabouts of Algolon and where he plans to carry out this ritual."
+        ],
+        "success_messages": ["str1", "str2"],
+        "failure_messages": ["str1", "str2"]
+      },
+      "50": {
+        "messages": [
+            "On the outskirts of Debina, you find the lair of Cobolus and engage him in combat"
+    
+        ],
+        "success_messages": ["Defeated, Cobolus lays near death, but just as you approach to begin interrogating him a flash of purple light blinds you, and a massive explosion knocks you backwards. when the dust and smoke clear, you see the charred remains of the once mighty wizard, smoking as the smell of ash and burning flesh fills the air.",
+                             "Despite you best efforts to examine the his lair you find no conclusive path to Algolon, however you do find a half ruined map with markings on indicating the location of a fortress deep in the mountains that may offer some clues."],
+        "failure_messages": ["str1", "str2"]
+      },
+      "75": {
+        "messages": [
+            "Deep in the mountains you arrive at the Fortress, the air is still and the world silent, no sign of a living thing can be heard or seen, save for the faint trails of smoke escaping from the depths of fortress",
+            "str2"
+        ],
+        "success_messages": ["str1", "str2"],
+        "failure_messages": ["str1", "str2"]
+      },
+      "99": {
+        "messages": [
+            "You arrive at the summit of Godsblood Peak, and find Algolon engulfed in a typhoon of magical energy, could it be? has begun the ritual alone? you begin combat at once",
+            "str2"
+        ],
+        "success_messages": ["str1", "str2"],
+        "failure_messages": ["str1", "str2"]
+      },
+      "100": {
+        "messages": [
+            "Algolon lays defeated, but the typhoon of magical energy does not subside, rather it grows in power and from the eye of this storm emerges a great black figure.",
+            "It is him, Fortranus the Ancient One. His form grows giant and black the massive beast bellows and releases waves of fire from its great gaping maw, its burning orange eyes lock on to your party. From the deep within its massive chest you here it bellow.",
+            "Mortals, embrace the end of this world and submit to me, and I shall make your end swift and painless.",
+            "You Begin battle with the beast"
+        ],
+        "success_messages": ["The great beast collapses onto the ground, brought to near death by {party_name}, as it lays, ragged breaths spewing forth small wisps of smoke, you position yourselves to make the killing blow, a crack of blinding light engulfs your party and the body of the great dragon evaporates into not more than a great stone skeleton as cold as the as the snow that begins to fall upon it."],
+        "failure_messages": ["{party_name} lays defeated, their smoldering corpses lay motionless on the swirl of ash & snow, as the great wings of the ancient dragon carry into the skys.", "str2"]
+      }
+    }
+  }
