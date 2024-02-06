@@ -1,7 +1,9 @@
 import argparse
 from logging.logging import clear_log
 
+
 def main(mode:str):
+    import logic.logic
     from gameState.file import load_game
     from gameState.welcome import welcome, get_start_type, party_start, default_party
     from actors.actor_playable import PlayableActor
@@ -9,6 +11,7 @@ def main(mode:str):
     from message.message import Message
     from interaction.interaction import Interaction
     from encounters.encounter import check_for_encounter
+    
 
     welcome()
 
@@ -32,15 +35,19 @@ def main(mode:str):
             print("Error No Valid Game Mode was selected")
             exit()
     
-
+    rounds_without_encounter = 0
     # The Key Loop
     while player_party_instance.progress < 100:
-        check_for_encounter(player_party_instance)
+        if check_for_encounter(player_party_instance, rounds_without_encounter) == False:
+            rounds_without_encounter += 1
+            print(f"{'.' * (rounds_without_encounter - 1 )}")
+        else:
+            rounds_without_encounter = 1
         if len(player_party_instance.members) == 0:
             print(f"{player_party_instance.name} has failed in their quest after {player_party_instance.progress * 10} miles" , end='\n\n')
             break
         player_party_instance.progress += 1
-        Message.party_progress_message(player_party_instance)
+
 
 
     Message.post_game_recap(player_party_instance)

@@ -67,7 +67,9 @@ def manual_at_merchant(player_party_instance:PlayerParty) -> None:
     merchant_options = ["BUY", "LEAVE"]
 
     for player_instance in player_party_instance.members:
-        merchant_message = f"""
+        
+        while player_choice != "LEAVE":
+            merchant_message = f"""
 {player_instance.name}
 Gold: {player_instance.gold}
 Potions: {player_instance.potions}
@@ -76,7 +78,6 @@ Choose an Action:
 BUY
 LEAVE
 """
-        while player_choice != "LEAVE":
             player_choice = validate_input(merchant_options, merchant_message)
             print(f"{player_instance.name} has {player_instance.potions} potions & {player_instance.gold} gold")
             if player_choice == "BUY":
