@@ -29,7 +29,7 @@
         ],
         "success_messages": ["Defeated, Cobolus lays near death, but just as you approach to begin interrogating him a flash of purple light blinds you, and a massive explosion knocks you backwards. when the dust and smoke clear, you see the charred remains of the once mighty wizard, smoking as the smell of ash and burning flesh fills the air.",
                              "Despite you best efforts to examine the his lair you find no conclusive path to Algolon, however you do find a half ruined map with markings on indicating the location of a fortress deep in the mountains that may offer some clues."],
-        "failure_messages": ["As the the corpses of {party_name}, lay limp on the cold ground the Cobolus begins an ancient and evil incantation", "As their bodies begin to stir from the sleep of death, Cobolus's face turns to an evil grin as he with is new band of undead minions venture deep into his lair....."]
+        "failure_messages": ["As the the corpses of {party_name}, lay limp on the cold ground the Cobolus begins an ancient and evil incantation", "As their bodies begin to stir from the sleep of death, Cobolus's face turns to an evil grin as he with his new band of undead minions venture deep into his lair....."]
       },
       "75": {
         "messages": [
