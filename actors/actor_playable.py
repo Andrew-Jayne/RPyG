@@ -155,7 +155,7 @@ class PlayableActor(Actor, Inventory, Combatant):
             case "weak:ordinary":
                 self.attack_name = "Dagger Slash"
             case "fair:ordinary":
-                self.attack_name = "Shorsword Slash"
+                self.attack_name = "Shortsword Slash"
             case "strong:ordinary":
                 self.attack_name = "Longsword Thrust"
             case "mighty:ordinary":
