@@ -1,3 +1,11 @@
+## Message Project:
+[] All print statments in all functions are shipped to the message class and handled there, even if it's just a dumb print the input str funciton, prep for curses down the road
+
+
+
+
+
+
 ## V2 Goals (The Party Update)
 [*] RPC for Mystery Encounters
 [*] Merge Rest & Mystery Encounters
