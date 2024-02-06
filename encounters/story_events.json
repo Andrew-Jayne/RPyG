@@ -8,7 +8,7 @@
             "After seeing the kings missive the path ahead is clear"
         ],
         "success_messages": ["And thus {party_name} began their quest", "If only the knew the trials and triumphs that lay ahead..."],
-        "failure_messages": ["And they drank untill they passed out", "str2"]
+        "failure_messages": ["And they drank until they passed out"]
       },
       "25": {
         "messages": [
@@ -29,33 +29,32 @@
         ],
         "success_messages": ["Defeated, Cobolus lays near death, but just as you approach to begin interrogating him a flash of purple light blinds you, and a massive explosion knocks you backwards. when the dust and smoke clear, you see the charred remains of the once mighty wizard, smoking as the smell of ash and burning flesh fills the air.",
                              "Despite you best efforts to examine the his lair you find no conclusive path to Algolon, however you do find a half ruined map with markings on indicating the location of a fortress deep in the mountains that may offer some clues."],
-        "failure_messages": ["str1", "str2"]
+        "failure_messages": ["As the the corpses of {party_name}, lay limp on the cold ground the Cobolus begins an ancient and evil incantation", "As their bodies begin to stir from the sleep of death, Cobolus's face turns to an evil grin as he with is new band of undead minions venture deep into his lair....."]
       },
       "75": {
         "messages": [
             "Deep in the mountains you arrive at the Fortress, the air is still and the world silent, no sign of a living thing can be heard or seen, save for the faint trails of smoke escaping from the depths of fortress",
             "str2"
         ],
-        "success_messages": ["str1", "str2"],
-        "failure_messages": ["str1", "str2"]
+        "success_messages": ["With his dying breath, Algolon's arch mage sputters out 'It is to late, far to late, my master will complete his work with or without me, the is nothing you can do'", "The wizard's body goes limp, and his flesh turns to ash leaving a blacked skelton draped in blood-soaked robes....."],
+        "failure_messages": ["As the last member of {party_name} falls, Algolon's arch mage cackles a sinister laugh, as his minions gather the corpses and haul them away for their dark experiments ", "Algolon's arch mage turns and begins his accent to the summit of Godsblood peak where his master, and the great evil he is summoning, await"]
       },
       "99": {
         "messages": [
-            "You arrive at the summit of Godsblood Peak, and find Algolon engulfed in a typhoon of magical energy, could it be? has begun the ritual alone? you begin combat at once",
-            "str2"
+            "You arrive at the summit of Godsblood Peak, and find Algolon engulfed in a typhoon of magical energy! ",
+            "Could it be? has begun the ritual alone!? you begin combat at once"
         ],
-        "success_messages": ["str1", "str2"],
-        "failure_messages": ["str1", "str2"]
+        "success_messages": ["Algolon lays defeated, but the typhoon of magical energy does not subside.", "Rather it grows in power and from the eye of this storm emerges a great black figure."],
+        "failure_messages": ["Finally succumbing to the black magic of Algolon, A gaping maw is torn in the world betwixt {party_name} and Algolon", "Their limb bodies fall into the cold abyss, tumbling through the cold infinite nothingness of this rift between world", "As the rift snaps shut a burning red firestorm engulfs the world beyond...."]
       },
       "100": {
         "messages": [
-            "Algolon lays defeated, but the typhoon of magical energy does not subside, rather it grows in power and from the eye of this storm emerges a great black figure.",
             "It is him, Fortranus the Ancient One. His form grows giant and black the massive beast bellows and releases waves of fire from its great gaping maw, its burning orange eyes lock on to your party. From the deep within its massive chest you here it bellow.",
             "Mortals, embrace the end of this world and submit to me, and I shall make your end swift and painless.",
             "You Begin battle with the beast"
         ],
-        "success_messages": ["The great beast collapses onto the ground, brought to near death by {party_name}, as it lays, ragged breaths spewing forth small wisps of smoke, you position yourselves to make the killing blow, a crack of blinding light engulfs your party and the body of the great dragon evaporates into not more than a great stone skeleton as cold as the as the snow that begins to fall upon it."],
-        "failure_messages": ["{party_name} lays defeated, their smoldering corpses lay motionless on the swirl of ash & snow, as the great wings of the ancient dragon carry into the skys.", "str2"]
+        "success_messages": ["The great beast collapses onto the ground, brought to near death by {party_name}, as it lays, ragged breaths spewing forth small wisps of smoke, you position yourselves to make the killing blow", "A crack of blinding light engulfs your party and the body of the great dragon evaporates into not more than a great stone skeleton as cold as the as the snow that begins to fall upon it."],
+        "failure_messages": ["{party_name} lays defeated, their smoldering corpses lay motionless on the swirl of ash & snow, as the great wings of the ancient dragon carry into the skys.", "A dark cloud follows in his wake, little do the inhabitants of this world know they have seen their last sunrise..."]
       }
     }
   }
