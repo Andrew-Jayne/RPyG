@@ -17,7 +17,7 @@
         "encounter_type": "REST",
         "message": "",
         "pre_message": "Your Party finds a Tavern",
-        "post_message": "They rest for a for a evening time",
+        "post_message": "They rest for an evening",
         "actor_action": "heal",
         "special_action": null,
         "additional_events": null,
