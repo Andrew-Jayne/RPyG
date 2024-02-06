@@ -80,6 +80,44 @@ class Interaction:
             case _:
                 print("Ummm How did you do that?, whatever.... Just.... Leave")
 
+    @staticmethod
+    def confirm_rest() -> bool:
+        match __class__.global_game_mode:
+            case "AUTO":
+                return auto_confirm_rest()
+            case "MANUAL":
+                return manual_confirm_rest()
+            case _:
+                print("Ummm How did you do that?, whatever.... Just.... Leave")
+
+    @staticmethod
+    def mystery_action() -> bool:
+        match __class__.global_game_mode:
+            case "AUTO":
+                return auto_mystery_action()
+            case "MANUAL":
+                return manual_mystery_action()
+            case _:
+                print("Ummm How did you do that?, whatever.... Just.... Leave")
+    
+    def loot_action() -> bool:
+        match __class__.global_game_mode:
+            case "AUTO":
+                return auto_loot_action()
+            case "MANUAL":
+                return manual_loot_action()
+            case _:
+                print("Ummm How did you do that?, whatever.... Just.... Leave")
+
+    def embark() -> bool:
+        match __class__.global_game_mode:
+            case "AUTO":
+                return True
+            case "MANUAL":
+                return manual_embark()
+            case _:
+                print("Ummm How did you do that?, whatever.... Just.... Leave")
+
 
             
     @staticmethod

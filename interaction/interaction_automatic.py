@@ -73,3 +73,12 @@ def auto_at_merchant(player_party_instance:PlayerParty) -> None:
                 print(f"{player_instance.name} does not have enough Gold to purchase more potions")
                 break
     write_log(f"Function: auto_at_merchant sold {potions_sold} potions to {player_count} players for a total of {gold_spent} gold ")
+
+def auto_confirm_rest() -> bool:
+    return random.choice([True,True,False])
+
+def auto_mystery_action() -> bool:
+    return random.choice(["GREET","GREET","ATTACK"])
+
+def auto_loot_action() -> bool:
+    return random.choice(["OPEN","OPEN","LEAVE"])
