@@ -18,7 +18,7 @@ class Inventory:
         self.gold += amount
 
     def spend_gold(self, amount:int) -> bool:
-        if self.gold <= amount:
+        if self.gold < amount:
             print(f"{self.name} has insufficient gold")
             return False
         else:
