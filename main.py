@@ -35,12 +35,13 @@ def main(mode:str):
 
     # The Key Loop
     while player_party_instance.progress < 100:
+        check_for_encounter(player_party_instance)
         player_party_instance.progress += 1
         Message.party_progress_message(player_party_instance)
-        check_for_encounter(player_party_instance)
         if len(player_party_instance.members) == 0:
             print(f"{player_party_instance.name} has failed in their quest after {player_party_instance.progress * 10} miles" , end='\n\n')
             break
+
 
     Message.post_game_recap(player_party_instance)
 
