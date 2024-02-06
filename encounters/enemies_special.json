@@ -1,7 +1,7 @@
 {
     "midway_boss": {
             "name": "Cobolus The Wizard",
-            "health": 200,
+            "health": 350,
             "strength": 4,
             "intellect": 8,
             "luck": 6,
@@ -10,7 +10,7 @@
         },
     "keep_minion": {
             "name": "Acolyte of Algolon",
-            "health": 80,
+            "health": 140,
             "strength": 3,
             "intellect": 7,
             "agility": 4,
@@ -19,7 +19,7 @@
         },
     "keep_master": {
         "name": "Algolon's Arch Mage",
-        "health": 250,
+        "health": 450,
         "strength": 4,
         "intellect": 10,
         "agility": 4,
@@ -28,7 +28,7 @@
         },
     "penultimate_boss": {
         "name": "The Great Wizard Algolon",
-        "health": 400,
+        "health": 600,
         "strength": 5,
         "intellect": 12,
         "agility": 5,
