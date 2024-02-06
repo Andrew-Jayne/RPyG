@@ -1,4 +1,6 @@
 import time
+import textwrap
+import json
 from gameState.file import save_game
 from actors.actor_playable import PlayableActor
 from interaction.interaction import Interaction
@@ -80,7 +82,7 @@ class Message():
     
     @staticmethod
     def flee_success_message(player_name:str, enemy_name:str) -> None:
-        print(f"{player_name} has Successfuly Escaped the {enemy_name}!")
+        print(f"{player_name} has Successfully Escaped the {enemy_name}!")
 
     @staticmethod
     def evade_prep_message(name:str) -> None:
@@ -93,6 +95,23 @@ class Message():
     @staticmethod
     def evade_success_message(name:str) -> None:
         print(f"{name} deftly evades the enemy's attack!")
+
+    def special_encounter_message(progress_value:int, party_name:str,message_type:str)-> None:
+        if message_type not in ["messages","success_messages","failure_messages"]:
+            raise ValueError('Message type must be one of ["messages","success_messages","failure_messages"]')
+        with open('encounters/story_events.json') as file:
+            story_events_list = json.load(file)
+
+
+        all_events = story_events_list['progress_events']
+
+        current_event = all_events[str(progress_value)]
+        for message in current_event[message_type]:
+            formatted_message = message.format(party_name=party_name)
+
+            print(textwrap.fill(formatted_message, width=80), end="\n\n")
+            if Interaction.global_game_mode == "MANUAL":
+                time.sleep(2)
 
 
     # Player Messages

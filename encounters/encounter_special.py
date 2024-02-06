@@ -4,6 +4,7 @@ import copy
 import time
 import textwrap
 from interaction.interaction import Interaction
+from message.message import Message
 from actors.actor_enemy import Enemy
 from actors.actor_party import EnemyParty
 from combat.combat import Combat
@@ -18,7 +19,7 @@ class SpecialEncounters():
     def tavern_notice(player_party_instance:PlayerParty)-> None:
         if not isinstance(player_party_instance, PlayerParty):
             raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
-        __class__._display_special_encounter_message(player_party_instance.progress, player_party_instance.name,"messages")
+        Message.special_encounter_message(player_party_instance.progress, player_party_instance.name,"messages")
 
     @staticmethod
     def friendly_keep_visit(player_party_instance:PlayerParty) -> None:
@@ -26,7 +27,7 @@ class SpecialEncounters():
             raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
 
         print(f"{player_party_instance.name} is welcomed at the Open Hall by King Stallman")
-        __class__._display_special_encounter_message(player_party_instance.progress, player_party_instance.name,"messages")
+        Message.special_encounter_message(player_party_instance.progress, player_party_instance.name,"messages")
         for member_instance in player_party_instance.members:
             member_instance.heal(300)
             member_instance.gain_potion(9)
@@ -38,13 +39,13 @@ class SpecialEncounters():
             raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
 
         enemy_instance = __class__._get_special_enemy('midway_boss')
-        __class__._display_special_encounter_message(player_party_instance.progress, player_party_instance.name,"messages")
+        Message.special_encounter_message(player_party_instance.progress, player_party_instance.name,"messages")
         enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
         Combat.battle(player_party_instance, enemy_party)
         if len(player_party_instance.members) != 0:
-            __class__._display_special_encounter_message(player_party_instance.progress, player_party_instance.name,"success_messages")
+            Message.special_encounter_message(player_party_instance.progress, player_party_instance.name,"success_messages")
         else:
-            __class__._display_special_encounter_message(player_party_instance.progress, player_party_instance.name,"failure_messages")
+            Message.special_encounter_message(player_party_instance.progress, player_party_instance.name,"failure_messages")
 
     @staticmethod
     def enemy_keep_visit(player_party_instance:PlayerParty) -> None:
@@ -84,9 +85,9 @@ class SpecialEncounters():
             enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
             Combat.battle(player_party_instance, enemy_party)
             if len(player_party_instance.members) != 0:
-                __class__._display_special_encounter_message(player_party_instance.progress, player_party_instance.name,"success_messages")
+                Message.special_encounter_message(player_party_instance.progress, player_party_instance.name,"success_messages")
             else:
-                __class__._display_special_encounter_message(player_party_instance.progress, player_party_instance.name,"failure_messages")
+                Message.special_encounter_message(player_party_instance.progress, player_party_instance.name,"failure_messages")
 
     @staticmethod
     def penultimate_boss(player_party_instance:PlayerParty) -> None:
@@ -98,9 +99,9 @@ class SpecialEncounters():
         enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
         Combat.battle(player_party_instance, enemy_party)
         if len(player_party_instance.members) != 0:
-            __class__._display_special_encounter_message(player_party_instance.progress, player_party_instance.name,"success_messages")
+            Message.special_encounter_message(player_party_instance.progress, player_party_instance.name,"success_messages")
         else:
-            __class__._display_special_encounter_message(player_party_instance.progress, player_party_instance.name,"failure_messages")
+            Message.special_encounter_message(player_party_instance.progress, player_party_instance.name,"failure_messages")
 
     @staticmethod
     def final_boss(player_party_instance:PlayerParty) -> None:
@@ -112,14 +113,12 @@ class SpecialEncounters():
         enemy_party = EnemyParty(enemy_instance.name,[enemy_instance])
         Combat.battle(player_party_instance, enemy_party)
         if len(player_party_instance.members) != 0:
-            __class__._display_special_encounter_message(player_party_instance.progress, player_party_instance.name,"success_messages")
+            Message.special_encounter_message(player_party_instance.progress, player_party_instance.name,"success_messages")
             Message.end_game_message(player_party_instance)
         else:
-            __class__._display_special_encounter_message(player_party_instance.progress, player_party_instance.name,"failure_messages")
+            Message.special_encounter_message(player_party_instance.progress, player_party_instance.name,"failure_messages")
             
         
-
-
     ## Hidden Methods
     def _get_special_enemy(enemy_identifier) -> object:
         with open('encounters/enemies_special.json', 'r') as file:
@@ -127,20 +126,3 @@ class SpecialEncounters():
         enemy_attributes = enemies_list[enemy_identifier]
         
         return Enemy(enemy_attributes)
-    
-    def _display_special_encounter_message(progress_value:int, party_name:str,message_type:str)-> None:
-            if message_type not in ["messages","success_messages","failure_messages"]:
-                raise ValueError('Message type must be one of ["messages","success_messages","failure_messages"]')
-            with open('encounters/story_events.json') as file:
-                story_events_list = json.load(file)
-
-
-            all_events = story_events_list['progress_events']
-
-            current_event = all_events[str(progress_value)]
-            for message in current_event[message_type]:
-                formatted_message = message.format(party_name=party_name)
-
-                print(textwrap.fill(formatted_message, width=80), end="\n\n")
-                if Interaction.global_game_mode == "MANUAL":
-                    time.sleep(2)
