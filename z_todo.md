@@ -64,3 +64,9 @@ take the current 3 specaliazations and make them archetypes, then within those o
 Players become stronger as they progress and can gain temp and perm buffs from items, either found or bought
 [] expand merchant system
 [] add leveling system based on battle actions
+
+
+## Encouter updates
+
+It might make sense to integrate enemy encounters into the standard encounter system and make that more robust, add "ENEMY ENCOUTNER" to the encounter JSON system?
+IDK may end up being too complex

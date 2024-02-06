@@ -82,3 +82,84 @@ LEAVE
                 else:
                     print(f"{player_instance.name} does not have enough Gold to purchase more potions")
                     break
+
+def manual_confirm_rest() -> bool:
+    player_choice = None
+    rest_options = ["YES", "NO"]
+    rest_message = """
+Will you Rest here?:
+YES
+NO
+
+"""
+    player_choice = validate_input(rest_options, rest_message)
+
+    match player_choice:
+        case "YES":
+            return True
+        case "NO":
+            return False
+        case _:
+            return True
+        
+def manual_mystery_action() -> bool:
+    player_choice = None
+    rest_options = ["ATTACK", "GREET"]
+    rest_message = """
+What do you do?:
+ATTACK
+GREET
+
+"""
+    player_choice = validate_input(rest_options, rest_message)
+
+    match player_choice:
+        case "ATTACK":
+            return True
+        case "GREET":
+            return False
+        case _:
+            return True
+        
+
+def manual_loot_action() -> bool:
+    player_choice = None
+    rest_options = ["OPEN", "LEAVE"]
+    rest_message = """
+What do you do?:
+OPEN
+LEAVE
+
+"""
+    player_choice = validate_input(rest_options, rest_message)
+
+    match player_choice:
+        case "OPEN":
+            return True
+        case "LEAVE":
+            return False
+        case _:
+            return True
+        
+def manual_embark() -> bool: ## i can make this funnier
+    player_choice = None
+    rest_options = ["EMBARK", "DRINK"]
+    rest_message = """
+What shall the party do?
+
+EMBARK
+DRINK
+
+"""
+    
+    player_choice = validate_input(rest_options, rest_message)
+
+    match player_choice:
+        case "EMBARK":
+            return True
+        case "DRINK":
+            print("After many drinks, the kings missive sticks in your mind.")
+            if manual_embark() == True:
+                return True
+        case _:
+            return True

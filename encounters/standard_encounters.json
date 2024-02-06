@@ -3,27 +3,33 @@
       {
         "id": "rest_small_refuge",
         "encounter_type": "REST",
-        "message": "Your Party finds a Small Refuge and rests for a moment",
+        "message": "",
+        "pre_message": "Your Party finds a Small Refuge",
+        "post_message": "They Make camp for the night",
         "actor_action": "heal",
         "special_action": null ,
         "additional_events": null,
         "targets": "all",
-        "magnitude": 30
+        "magnitude": 40
       },
       {
         "id": "rest_tavern",
         "encounter_type": "REST",
-        "message": "Your Party finds a Tavern and Rests for a short time",
+        "message": "",
+        "pre_message": "Your Party finds a Tavern",
+        "post_message": "They rest for a for a evening time",
         "actor_action": "heal",
         "special_action": null,
         "additional_events": null,
         "targets": "all",
-        "magnitude": 50
+        "magnitude": 60
       },
       {
         "id": "rest_inn",
         "encounter_type": "REST",
-        "message": "Your Party finds an Inn and Rests for the evening",
+        "message": "",
+        "pre_message": "Your Party finds a Inn",
+        "post_message": "They rest til morning",
         "actor_action": "heal",
         "special_action": null ,
         "additional_events": null,
@@ -33,7 +39,9 @@
       {
         "id": "rest_village",
         "encounter_type": "REST",
-        "message": "Your Party finds a village and rest for a day",
+        "message": "",
+        "pre_message": "Your Party finds a Village",
+        "post_message": "They rest for a day",
         "actor_action": "heal",
         "special_action": null ,
         "additional_events": null,
@@ -43,9 +51,11 @@
       {
         "id": "rest_vassal_keep",
         "encounter_type": "REST",
-        "message": "Your Party Finds A Vassal's Keep! \nThey take a day to rest, and replenish their supplies.",
+        "message": "They take a day to rest, and replenish their supplies",
+        "pre_message": "Your Party Finds A Vassal's Keep!",
+        "post_message": "Well rested and well supplied, they travel onwards",
         "actor_action": "heal",
-        "special_action": null,
+        "special_action": "at_merchant",
         "additional_events": null,
         "targets": "all",
         "magnitude": 120
@@ -53,7 +63,9 @@
       {
         "id": "rest_palace",
         "encounter_type": "REST",
-        "message": "Your Party arrives at a grand palace and are welcomed All",
+        "message": "They take a day to rest, and replenish their supplies",
+        "pre_message": "Your Party Finds A Great City!",
+        "post_message": "Well rested and well supplied, they travel onwards",
         "actor_action": "heal",
         "special_action": "at_merchant",
         "additional_events": null,
@@ -61,9 +73,11 @@
         "magnitude": 150
       },
       {
-        "id": "suprise_attack",
-        "encounter_type": "ATTACK",
-        "message": "Your party Encounters A Strange Figure!\nThe Figure blasts your party with an Arcane Bolt and vanishes into a Flash of Light!\n\n",
+        "id": "surprise_attack",
+        "encounter_type": "MYSTERY",
+        "message": "",
+        "pre_message": "Your party Encounters A Strange Figure!",
+        "post_message": "The Figure blasts your party with an Arcane Bolt and vanishes into a Flash of Light!",
         "actor_action": "damage",
         "special_action": null,
         "additional_events": null,
@@ -71,9 +85,11 @@
         "magnitude": 30
       },
       {
-        "id": "suprise_heal",
-        "encounter_type": "HEAL",
-        "message": "Your party Encounters A Strange Figure!\nThe Figure heals your party and vanishes into the darkness!\n\n",
+        "id": "surprise_heal",
+        "encounter_type": "MYSTERY",
+        "message": "",
+        "pre_message": "Your party Encounters A Strange Figure!",
+        "post_message": "The Figure heals your party and vanishes into the darkness!",
         "actor_action": "heal",
         "special_action": null,
         "additional_events": null,
@@ -81,9 +97,11 @@
         "magnitude": 30
       },
       {
-        "id": "suprise_chest",
-        "encounter_type": "GOLD",
-        "message": "Your party find a small treasure chest, upon opening it reveals 100 gold ",
+        "id": "surprise_chest",
+        "encounter_type": "LOOT",
+        "message": ",  ",
+        "pre_message": "Your party find a small treasure chest",
+        "post_message": "Upon opening it reveals 100 gold",
         "actor_action": "gain_gold",
         "special_action": null,
         "additional_events": null,
@@ -91,12 +109,26 @@
         "magnitude": 100
       },
       {
+        "id": "surprise_bomb",
+        "encounter_type": "LOOT",
+        "message": ",  ",
+        "pre_message": "Your party find a small treasure chest",
+        "post_message": "Upon opening an explosion is triggered and every is thrown backwards",
+        "actor_action": "damage",
+        "special_action": null,
+        "additional_events": null,
+        "targets": "all",
+        "magnitude": 150
+      },
+      {
         "id": "night_time_robbery_0",
         "encounter_type": "REST",
-        "message": "Your Party finds a Small Refuge and makes camp for the night",
-        "actor_action": "gain_gold",
+        "message": "",
+        "pre_message": "Your Party finds a Small Refuge",
+        "post_message": "They Make camp for the night",
+        "actor_action": "heal",
         "special_action": null,
-        "additional_events": ["night_time_robbery_1","night_time_robbery_0"],
+        "additional_events": ["night_time_robbery_1"],
         "targets": "all",
         "magnitude": 300
       },

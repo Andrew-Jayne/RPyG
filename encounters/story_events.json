@@ -4,10 +4,11 @@
         "messages": [
             "{party_name} gathers around the fire at a local tavern when a rider delivers a notice to the bar keep",
             "the notice reads:",
-            "His Highness King Stallman has requested all who favor themselves brave warriors present themselves at the Open Hall as the king has a task which requires great courage for them to undertake"
+            "His Highness King Stallman has requested all who favor themselves brave warriors present themselves at the Open Hall as the king has a task which requires great courage for them to undertake",
+            "After seeing the kings missive the path ahead is clear"
         ],
-        "success_messages": ["str1", "str2"],
-        "failure_messages": ["str1", "str2"]
+        "success_messages": ["And thus {party_name} began their quest", "If only the knew the trials and triumphs that lay ahead..."],
+        "failure_messages": ["And they drank untill they passed out", "str2"]
       },
       "25": {
         "messages": [

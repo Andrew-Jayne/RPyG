@@ -20,6 +20,7 @@ class SpecialEncounters():
         if not isinstance(player_party_instance, PlayerParty):
             raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
         Message.special_encounter_message(player_party_instance.progress, player_party_instance.name,"messages")
+        Interaction.embark()
 
     @staticmethod
     def friendly_keep_visit(player_party_instance:PlayerParty) -> None:
