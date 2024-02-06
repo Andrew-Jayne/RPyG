@@ -104,7 +104,9 @@ def standard_encounter(player_party_instance:PlayerParty) -> None:
                             static_event = find_encounter_by_id(encounters_objects_list['events'],'surprise_attack')
                             execute_actor_action(static_event,targets) ## if you attack you get attacked
                             run_extra_actions(current_event,player_party_instance,encounters_objects_list)
-                            print(static_event['post_message']) 
+                            print(static_event['post_message'])
+                        case _:
+                              print("Null Action Set MonkaS")
             case "LOOT":
                     print(current_event['pre_message'])
                     match Interaction.loot_action():
@@ -113,7 +115,11 @@ def standard_encounter(player_party_instance:PlayerParty) -> None:
                             run_extra_actions(current_event,player_party_instance,encounters_objects_list)
                             print(current_event['post_message'])
                         case "LEAVE":
-                              pass
+                              print("You leave the chest undisturbed")
+                        case _:
+                              print("Null Action Set MonkaS")
+            case "NONE":
+                  pass
             case _:
                     print(f"Error Invalid encounter Type Call: {current_event['encounter_type']}")
     else:
