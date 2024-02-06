@@ -163,7 +163,7 @@ They have traveled {player_party_instance.progress * 10} Miles Total.
         if not isinstance(player_party_instance, PlayerParty):
             raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
 
-        print(f"Fortranus the Ancient One has been Vanquished at the hands of {player_party_instance.name}")
-        print("Your adventure has been completed, you may start a new adventure if you so choose")
+        print(f"Fortranus the Ancient One has been Vanquished at the hands of {player_party_instance.name}",end="\n\n")
+        print("Your adventure has been completed, you may start a new adventure if you so choose",end="\n\n")
         if Interaction.global_game_mode == "MANUAL":
             save_game(player_party_instance)
