@@ -19,7 +19,6 @@ def find_encounter_by_id(full_item_list:list, target_item_id:str) -> object:
              print(f"Error Unable to Find an Event with the ID {target_item_id}")
              exit()
 
-## Everything from here down scares me, really need to make this more clear what is doing what
 
 def execute_actor_action(event_object:object, target_instance_list:list[PlayableActor]) -> None:
     magnitude = int(event_object['magnitude'] / len(target_instance_list))
@@ -43,10 +42,33 @@ def execute_special_action(event_object:object, target_instance_list:list[Playab
             else:
                 print(f"error invalid special_action: {event_object['special_action']}")
 
+def run_extra_actions(event_object:object, player_party_instance:PlayerParty,encounters_objects_list:list) -> None:
+    allowed_special_actions = ["at_merchant",]
+    # Run extra Actions if they exist
+    if event_object['additional_events'] != None:
+        for event_id in event_object['additional_events']:
+            new_event = find_encounter_by_id(encounters_objects_list['events'],event_id)
+            match new_event['targets']:
+                case 'all':
+                    targets = player_party_instance.members
+                case 'random':
+                    targets = [random.choice(player_party_instance.members)]
+                case _:
+                    print(f"invalid target: {event_object['targets']}")
+                    exit()
+            execute_actor_action(new_event, targets)
+    
+    # Validate Special action
+    if event_object['special_action'] != None:
+        if event_object['special_action'] in allowed_special_actions:
+            execute_special_action(event_object,player_party_instance)
+        else:
+            print(f"error invalid special_action: {event_object['special_action']}")
+
 def standard_encounter(player_party_instance:PlayerParty) -> None:
 
     allowed_actor_actions = [  "damage","heal","gain_gold","lose_gold","gain_potion","lose_potion","use_potion"]
-    allowed_special_actions = ["at_merchant",]
+    
 
     with open('encounters/standard_encounters.json', 'r') as encounters_file:
         encounters_objects_list = json.load(encounters_file)
@@ -67,6 +89,7 @@ def standard_encounter(player_party_instance:PlayerParty) -> None:
                     print(current_event['pre_message'])
                     if Interaction.confirm_rest() == True:
                         execute_actor_action(current_event, targets)
+                        run_extra_actions(current_event,player_party_instance,encounters_objects_list)
                         print(current_event['post_message'])
                     else:
                          print("They Travel onwards")
@@ -75,16 +98,19 @@ def standard_encounter(player_party_instance:PlayerParty) -> None:
                     match Interaction.mystery_action():
                         case "GREET":
                             execute_actor_action(current_event, targets)
+                            run_extra_actions(current_event,player_party_instance,encounters_objects_list)
                             print(current_event['post_message'])
                         case "ATTACK":
                             static_event = find_encounter_by_id(encounters_objects_list['events'],'surprise_attack')
                             execute_actor_action(static_event,targets) ## if you attack you get attacked
+                            run_extra_actions(current_event,player_party_instance,encounters_objects_list)
                             print(static_event['post_message']) 
             case "LOOT":
                     print(current_event['pre_message'])
                     match Interaction.loot_action():
                         case "OPEN":
                             execute_actor_action(current_event, targets)
+                            run_extra_actions(current_event,player_party_instance,encounters_objects_list)
                             print(current_event['post_message'])
                         case "LEAVE":
                               pass
@@ -93,28 +119,6 @@ def standard_encounter(player_party_instance:PlayerParty) -> None:
     else:
         print(f"Error Invalid Method Call: {current_event['actor_action']}")
         
-    # Run extra Actions if they exist
-    if current_event['additional_events'] != None:
-        for event_id in current_event['additional_events']:
-            new_event = find_encounter_by_id(encounters_objects_list['events'],event_id)
-            match new_event['targets']:
-                case 'all':
-                    targets = player_party_instance.members
-                case 'random':
-                    targets = [random.choice(player_party_instance.members)]
-                case _:
-                    print(f"invalid target: {current_event['targets']}")
-                    exit()
-            execute_actor_action(new_event, targets)
-    
-    # Validate Special action
-    if current_event['special_action'] != None:
-        if current_event['special_action'] in allowed_special_actions:
-            execute_special_action(current_event,player_party_instance)
-        else:
-            print(f"error invalid special_action: {current_event['special_action']}")
-
-
 
 
 

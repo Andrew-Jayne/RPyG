@@ -30,7 +30,7 @@ def enemy_encounter(player_party_instance:PlayerParty) -> None:
 
     #Set Enemy Count
     enemy_count = int(len(player_party_instance.members) + random.randint(-2,2))
-    if enemy_count >= 0:
+    if enemy_count <= 0:
         enemy_count = 1
 
     # Create Instances & Add to Instance List
