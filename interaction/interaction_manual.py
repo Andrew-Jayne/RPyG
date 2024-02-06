@@ -102,7 +102,7 @@ NO
         case _:
             return True
         
-def manual_mystery_action() -> bool:
+def manual_mystery_action() -> str:
     player_choice = None
     rest_options = ["ATTACK", "GREET"]
     rest_message = """
@@ -113,13 +113,8 @@ GREET
 """
     player_choice = validate_input(rest_options, rest_message)
 
-    match player_choice:
-        case "ATTACK":
-            return True
-        case "GREET":
-            return False
-        case _:
-            return True
+    return player_choice
+    
         
 
 def manual_loot_action() -> bool:
@@ -133,13 +128,8 @@ LEAVE
 """
     player_choice = validate_input(rest_options, rest_message)
 
-    match player_choice:
-        case "OPEN":
-            return True
-        case "LEAVE":
-            return False
-        case _:
-            return True
+    return player_choice
+
         
 def manual_embark() -> bool: ## i can make this funnier
     player_choice = None
@@ -159,6 +149,30 @@ DRINK
             return True
         case "DRINK":
             print("After many drinks, the kings missive sticks in your mind.")
+            if manual_embark() == True:
+                return True
+        case _:
+            return True
+        
+
+def manual_accept_quest() -> bool:
+    player_choice = None
+    rest_options = ["ACCEPT", "DECLINE"]
+    rest_message = """
+Will you accept this quest from the King?
+
+ACCEPT
+DECLINE
+
+"""
+    
+    player_choice = validate_input(rest_options, rest_message)
+
+    match player_choice:
+        case "ACCEPT":
+            return True
+        case "DECLINE":
+            print("The King insists, and asks again")
             if manual_embark() == True:
                 return True
         case _:
