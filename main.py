@@ -37,7 +37,11 @@ def main(mode:str):
     
     rounds_without_encounter = 0
     # The Key Loop
+<<<<<<< HEAD
     while player_party_instance.progress != 101:
+=======
+    while player_party_instance.progress < 100:
+>>>>>>> 693f037 (added new distance handler, reduced display clutter)
         if check_for_encounter(player_party_instance, rounds_without_encounter) == False:
             rounds_without_encounter += 1
             print(f"{'.' * (rounds_without_encounter - 1 )}")
