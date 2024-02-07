@@ -93,14 +93,16 @@ class PlayableActor(Actor, Inventory, Combatant):
     
 
     def use_potion(self) -> None:
-        if self.potions != 0:
+        if self.potions != 0 and not self.is_fully_healed():
             print(f"{self.name} drinks a potion")
             self.lose_potion(1)
             self.heal(100 + random.randint(-20,20))
             print(f"{self.name} has {self.potions} remaining")
             print(f"{self.name}'s health is now {self.health}", end="\n\n")
-        else:
+        elif self.potions == 0:
             print(f"{self.name} has no remaining potions!")
+        else:
+            print(f"{self.name} is already fully healed!")
 
     def __set_attack_power(self) -> int:
         if self.strength > self.intellect:
