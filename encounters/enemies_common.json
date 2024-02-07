@@ -11,7 +11,7 @@
                     "intellect": 3,
                     "agility": 4, 
                     "luck": 6,
-                    "attack_name": "weak fireball"
+                    "attack_name": "Weak Fireball"
                 }],
                 "common_variants": [{
                     "name": "Feral Imp",
@@ -20,7 +20,7 @@
                     "intellect": 5,
                     "agility": 5, 
                     "luck": 3,
-                    "attack_name": "fireball"
+                    "attack_name": "Fireball"
                 }],
                 "greater_variants": [{                    
                     "name": "Painted Feral Imp",
@@ -29,7 +29,7 @@
                     "intellect": 6,
                     "agility": 4, 
                     "luck": 4,
-                    "attack_name": "empowered fireball"
+                    "attack_name": "Empowered Fireball"
                     }]
             }
         },
@@ -56,7 +56,7 @@
                     "attack_name": "Club Bash"
                 }],
                 "greater_variants": [{
-                    "name": "Goblin Captin",
+                    "name": "Goblin Captain",
                     "health": 100,
                     "strength": 7,
                     "intellect": 2,
@@ -159,7 +159,7 @@
                     "attack_name": "Club Smash"
                 }],
                 "greater_variants": [{
-                    "name": "Cave Troll Cheif",
+                    "name": "Cave Troll Chief",
                     "health": 375,
                     "strength": 10,
                     "intellect": 1,
