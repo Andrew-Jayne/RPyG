@@ -2,6 +2,7 @@ import pickle
 import hmac
 import hashlib
 import os
+from interaction.interaction_utilities import validate_input
 
 # Only used for Type Checking
 from actors.actor_party import PlayerParty
@@ -24,8 +25,21 @@ def save_game(player_party_instance: PlayerParty) -> None:
     with open('savegame.rpygs', 'wb') as save_file:
         save_file.write(signature + serialized_data)
     print(f"Successfully Saved Game for: {player_party_instance.name}")
-    exit()
+    save_prompt = """
+Would you like to keep playing?
+YES
+NO
 
+
+"""
+    save_options = ["YES","NO"]
+    match validate_input(save_options,save_prompt):
+        case "YES":
+            pass
+        case "NO":
+            exit()
+        case _:
+            pass
 def load_game() -> PlayerParty:
     """
     Call this to load the game stored in the pickle file called 'savegame.rpygs'.
