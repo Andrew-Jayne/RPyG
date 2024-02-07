@@ -39,3 +39,6 @@ class Combatant():
     def dismember(self) -> None:
         self.is_dismembered = True
         self.attack_power = int(self.attack_power * 0.75)
+
+    def is_fully_healed(self) -> bool:
+        return self.health >= self.base_health
