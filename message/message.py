@@ -5,6 +5,7 @@ from gameState.file import save_game
 from actors.actor_playable import PlayableActor
 from interaction.interaction import Interaction
 from display.display import Display
+import logic.logic
 
 
 # Only used for Type checking/Hinting
@@ -65,6 +66,7 @@ class Message():
 
         for playable_instance in player_party_instance.members:
             print(f"{playable_instance.name}: {playable_instance.health}")
+        print("")
         for enemy_instance in enemy_party_instance.members:
             print(f"{enemy_instance.name}: {enemy_instance.health}")
         print("\n\n")
@@ -74,6 +76,10 @@ class Message():
         print("The Battle Begins!", end="\n\n\n")
 
     # Encounter Messages
+    @staticmethod
+    def distance_since_last(no_encounters_since:int) -> None:
+        print(f"After {no_encounters_since * 10} miles of travel")   
+
     @staticmethod
     def flee_failure_message(player_name:str, enemy_name:str) -> None:
         print(f"{player_name} has Failed to Escape the {enemy_name}!")
@@ -157,7 +163,7 @@ They have traveled {player_party_instance.progress * 10} Miles Total.
         if not isinstance(player_party_instance, PlayerParty):
             raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
 
-        print(f"Fortranus the Ancient One has been Vanquished at the hands of {player_party_instance.name}")
-        print("Your adventure has been completed, you may start a new adventure if you so choose")
+        print(f"Fortranus the Ancient One has been Vanquished at the hands of {player_party_instance.name}",end="\n\n")
+        print("Your adventure has been completed, you may start a new adventure if you so choose",end="\n\n")
         if Interaction.global_game_mode == "MANUAL":
             save_game(player_party_instance)

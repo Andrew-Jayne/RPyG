@@ -92,7 +92,7 @@ class Interaction:
                 print("Ummm How did you do that?, whatever.... Just.... Leave")
 
     @staticmethod
-    def mystery_action() -> bool:
+    def mystery_action() -> str:
         match __class__.global_game_mode:
             case "AUTO":
                 return auto_mystery_action()
@@ -118,6 +118,15 @@ class Interaction:
                 return manual_embark()
             case _:
                 print("Ummm How did you do that?, whatever.... Just.... Leave")
+
+    def accept_quest() -> bool:
+            match __class__.global_game_mode:
+                case "AUTO":
+                    return True
+                case "MANUAL":
+                    return manual_accept_quest()
+                case _:
+                    print("Ummm How did you do that?, whatever.... Just.... Leave")
 
 
             

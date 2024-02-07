@@ -99,7 +99,7 @@
       {
         "id": "surprise_chest",
         "encounter_type": "LOOT",
-        "message": ",  ",
+        "message": "",
         "pre_message": "Your party find a small treasure chest",
         "post_message": "Upon opening it reveals 100 gold",
         "actor_action": "gain_gold",
@@ -111,7 +111,7 @@
       {
         "id": "surprise_bomb",
         "encounter_type": "LOOT",
-        "message": ",  ",
+        "message": "",
         "pre_message": "Your party find a small treasure chest",
         "post_message": "Upon opening an explosion is triggered and every is thrown backwards",
         "actor_action": "damage",
@@ -134,7 +134,7 @@
       },
       {
         "id": "night_time_robbery_1",
-        "encounter_type": "GOLD",
+        "encounter_type": "NONE",
         "message": "You awaken to discover that Gold has been stolen from your Party!",
         "actor_action": "lose_gold",
         "special_action": null,

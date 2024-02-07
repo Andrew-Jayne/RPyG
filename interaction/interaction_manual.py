@@ -65,14 +65,19 @@ def manual_at_merchant(player_party_instance:PlayerParty) -> None:
 
     player_choice = None
     merchant_options = ["BUY", "LEAVE"]
-    merchant_message = """
+
+    for player_instance in player_party_instance.members:
+        
+        while player_choice != "LEAVE":
+            merchant_message = f"""
+{player_instance.name}
+Gold: {player_instance.gold}
+Potions: {player_instance.potions}
+
 Choose an Action:
 BUY
 LEAVE
 """
-
-    for player_instance in player_party_instance.members:
-        while player_choice != "LEAVE":
             player_choice = validate_input(merchant_options, merchant_message)
             print(f"{player_instance.name} has {player_instance.potions} potions & {player_instance.gold} gold")
             if player_choice == "BUY":
@@ -102,7 +107,7 @@ NO
         case _:
             return True
         
-def manual_mystery_action() -> bool:
+def manual_mystery_action() -> str:
     player_choice = None
     rest_options = ["ATTACK", "GREET"]
     rest_message = """
@@ -113,13 +118,8 @@ GREET
 """
     player_choice = validate_input(rest_options, rest_message)
 
-    match player_choice:
-        case "ATTACK":
-            return True
-        case "GREET":
-            return False
-        case _:
-            return True
+    return player_choice
+    
         
 
 def manual_loot_action() -> bool:
@@ -133,13 +133,8 @@ LEAVE
 """
     player_choice = validate_input(rest_options, rest_message)
 
-    match player_choice:
-        case "OPEN":
-            return True
-        case "LEAVE":
-            return False
-        case _:
-            return True
+    return player_choice
+
         
 def manual_embark() -> bool: ## i can make this funnier
     player_choice = None
@@ -160,6 +155,30 @@ DRINK
         case "DRINK":
             print("After many drinks, the kings missive sticks in your mind.")
             if manual_embark() == True:
+                return True
+        case _:
+            return True
+        
+
+def manual_accept_quest() -> bool:
+    player_choice = None
+    rest_options = ["ACCEPT", "DECLINE"]
+    rest_message = """
+Will you accept this quest from the King?
+
+ACCEPT
+DECLINE
+
+"""
+    
+    player_choice = validate_input(rest_options, rest_message)
+
+    match player_choice:
+        case "ACCEPT":
+            return True
+        case "DECLINE":
+            print("The King insists, and asks again")
+            if manual_accept_quest() == True:
                 return True
         case _:
             return True

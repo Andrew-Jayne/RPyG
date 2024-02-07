@@ -29,6 +29,7 @@ class SpecialEncounters():
 
         print(f"{player_party_instance.name} is welcomed at the Open Hall by King Stallman")
         Message.special_encounter_message(player_party_instance.progress, player_party_instance.name,"messages")
+        Interaction.accept_quest()
         for member_instance in player_party_instance.members:
             member_instance.heal(300)
             member_instance.gain_potion(9)

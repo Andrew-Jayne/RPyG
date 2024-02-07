@@ -74,8 +74,8 @@
             "variant_lists": {
                 "lesser_variants": [{            
                     "name": "Young Dire Wolf",
-                    "health": 150,
-                    "strength": 5,
+                    "health": 75,
+                    "strength": 4,
                     "intellect": 3,
                     "agility": 8,
                     "luck": 6,
@@ -83,7 +83,7 @@
             }],
                 "common_variants": [{            
                     "name": "Dire Wolf",
-                    "health": 150,
+                    "health": 100,
                     "strength": 5,
                     "intellect": 3,
                     "agility": 8,
@@ -93,8 +93,8 @@
                 "greater_variants": [{            
                     "name": "Alpha Dire Wolf",
                     "health": 150,
-                    "strength": 5,
-                    "intellect": 3,
+                    "strength": 6,
+                    "intellect": 4,
                     "agility": 8,
                     "luck": 6,
                     "attack_name": "Wolf Bite"
@@ -142,7 +142,7 @@
             "variant_lists": {
                 "lesser_variants": [{ 
                     "name": "Stunted Cave Troll",       
-                    "health": 300,
+                    "health": 200,
                     "strength": 10,
                     "intellect": 1,
                     "agility": 1,
@@ -151,7 +151,7 @@
                 }],
                 "common_variants": [{
                     "name": "Cave Troll",
-                    "health": 300,
+                    "health": 275,
                     "strength": 10,
                     "intellect": 1,
                     "agility": 1,
@@ -160,7 +160,7 @@
                 }],
                 "greater_variants": [{
                     "name": "Cave Troll Chief",
-                    "health": 300,
+                    "health": 375,
                     "strength": 10,
                     "intellect": 1,
                     "agility": 1,
@@ -175,9 +175,9 @@
             "variant_lists": {
                 "lesser_variants": [{
                     "name": "Junvenille Ice Drake",
-                    "health": 250,
-                    "strength": 9,
-                    "intellect": 7,
+                    "health": 175,
+                    "strength": 7,
+                    "intellect": 5,
                     "agility": 6,
                     "luck": 8,
                     "attack_name": "Blizzard Breath"
@@ -185,15 +185,15 @@
                 "common_variants": [{
                     "name": "Ice Drake",
                     "health": 250,
-                    "strength": 9,
-                    "intellect": 7,
+                    "strength": 8,
+                    "intellect": 6,
                     "agility": 6,
                     "luck": 8,
                     "attack_name": "Blizzard Breath"
                 }],
                 "greater_variants": [{
                     "name": "Ice Drake Matriarch",
-                    "health": 250,
+                    "health": 325,
                     "strength": 9,
                     "intellect": 7,
                     "agility": 6,
