@@ -1,3 +1,4 @@
+import os
 from interaction.interaction import Interaction
 from display.display import Display
 from actors.actor_playable import PlayableActor
@@ -15,16 +16,33 @@ def welcome() -> None:
 
 def get_start_type() -> str:
 
-    type_message = """
+    if os.path.exists('savegame.rpygs'):
+        new_and_load_message = """
 Would you like to Start a new game or Load an existing save?
 Options are : NEW & LOAD
 
 
 NOTE: All Prompts in this game are case insensitive
 
+"""  
+        new_and_load_choices = ["NEW", "LOAD"]
+        player_action = Interaction.validate_input(new_and_load_choices, new_and_load_message)      
+
+    else:
+        new_game_message = """"
+Type "NEW" to start a new game
+You will be able to save your game later and load it here
+
+Options are : NEW
+
+
+NOTE: All Prompts in this game are case insensitive
 """
-    type_choices = ["NEW", "LOAD"]
-    player_action = Interaction.validate_input(type_choices, type_message)
+    new_game_choices = ["NEW", "LOAD"]
+    player_action = Interaction.validate_input(new_game_choices, new_game_message)
+
+
+
     Display.clear_display()
     return player_action
 
