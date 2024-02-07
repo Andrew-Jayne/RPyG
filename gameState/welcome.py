@@ -29,7 +29,7 @@ NOTE: All Prompts in this game are case insensitive
         player_action = Interaction.validate_input(new_and_load_choices, new_and_load_message)      
 
     else:
-        new_game_message = """"
+        new_game_message = """
 Type "NEW" to start a new game
 You will be able to save your game later and load it here
 
@@ -38,12 +38,9 @@ Options are : NEW
 
 NOTE: All Prompts in this game are case insensitive
 """
-    new_game_choices = ["NEW", "LOAD"]
-    player_action = Interaction.validate_input(new_game_choices, new_game_message)
-
-
-
-    Display.clear_display()
+        new_game_choices = ["NEW", "LOAD"]
+        player_action = Interaction.validate_input(new_game_choices, new_game_message)
+        Display.clear_display()
     return player_action
 
 
