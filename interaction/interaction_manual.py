@@ -3,22 +3,23 @@ from interaction.interaction_utilities import validate_input
 
 #Only Used for type checking
 from actors.actor_party import PlayerParty, EnemyParty
+from actors.actor_playable import PlayableActor
 
 def manual_enemy_encounter() -> str:
     encounter_options = ["BATTLE", "FLEE"]
-    enounter_message = f"""
+    encounter_message = f"""
 Choose an Action:
 BATTLE
 FLEE
 
 """
-    return validate_input(encounter_options, enounter_message)
+    return validate_input(encounter_options, encounter_message)
 
 
-def manual_in_battle(player_name:str) -> str:
+def manual_in_battle(player_instance:PlayableActor) -> str:
     battle_options = ["ATTACK", "EVADE", "HEAL"]
     battle_message = f"""
-{player_name}
+{player_instance.name}
 Choose an Action:
 ATTACK
 EVADE
@@ -26,6 +27,15 @@ HEAL
 
 """
     battle_choice = validate_input(battle_options, battle_message)
+    dumb_check = 0
+    while battle_choice == "HEAL" and player_instance.is_fully_healed() == True:
+        dumb_check += 1
+        print(f"{player_instance.name} is fully healed, it would be unwise to use a potion")
+        battle_choice = validate_input(battle_options, battle_message)
+        if dumb_check > 10:
+            print("Stubborn aren't you, fine waste the damn potion")
+            battle_choice = "HEAL"
+            break
     return battle_choice
     
 
