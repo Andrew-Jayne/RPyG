@@ -60,7 +60,7 @@ class Interaction:
             case "AUTO":
                 return auto_in_battle(player_instance)
             case "MANUAL":
-                return manual_in_battle(player_instance.name)
+                return manual_in_battle(player_instance)
             case _:
                 print("Ummm How did you do that?, whatever just hit the thing")
                 return "ATTACK"
