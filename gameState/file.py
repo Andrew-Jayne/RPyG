@@ -49,7 +49,7 @@ def load_game() -> PlayerParty:
     
     # Check if the save file exists
     if not os.path.exists(save_file_path):
-        raise FileNotFoundError("Save file not found. Please check the file path and try again.")
+        raise FileNotFoundError("Save file not found. Please check the file path and try again, or start a new game when prompted")
     
 
     with open(save_file_path, 'rb') as save_file:
