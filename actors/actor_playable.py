@@ -86,8 +86,8 @@ class PlayableActor(Actor, Inventory, Combatant):
         
         Combatant.__init__(self, 
                            health=100 + int((strength + intellect) * 10),
-                           attack_name=__class__.__set_attack_name(self),
-                           attack_power=__class__.__set_attack_power(self)
+                           attack_name=__class__.__get_attack_name(self),
+                           attack_power=__class__.___get_attack_power(self)
                            )
         write_log(f"Player: {self.name} was created with {self.gold} gold and {self.potions} potions")
     
@@ -113,6 +113,19 @@ class PlayableActor(Actor, Inventory, Combatant):
             self.attack_power = self.intellect
 
         return self.attack_power * 10
+
+    def ___get_attack_power(self) -> int:
+        match self.specialization:
+            case "WARRIOR": # Str + 1/4 agility
+                attack_power = self.strength + int(self.agility * .25)
+                return attack_power * 10
+            case "MAGE": # Int + 1/4 Str
+                attack_power = self.intellect + int(self.strength * .25)
+                return attack_power * 10
+            case "ROGUE": # Agl + 1/4 average of str & int
+                attack_power = self.agility + int(((self.strength + self.intellect) * 0.5) * 0.25)
+                return attack_power * 10
+
 
     def __get_skill(self) -> str:
         strength_skill = ""
@@ -187,10 +200,11 @@ class PlayableActor(Actor, Inventory, Combatant):
 
         match self.specialization:
             case "WARRIOR":
-                if self.intellect >= 7:
-                    attack = "Arcane Greatsword Cleave"
-                else:
-                    attack = "Greatsword Cleave"
+                return "Greatsword Cleave"
+                #if self.intellect >= 7:
+                #    attack = "Arcane Greatsword Cleave"
+                #else:
+                #    attack = "Greatsword Cleave"
                 
                 #min str: 5
                 #max str: 10
@@ -201,10 +215,11 @@ class PlayableActor(Actor, Inventory, Combatant):
                 #min agl: 4
                 #max agl: 8
             case "MAGE":
-                if self.strength >= 7:
-                    attack = "Arcane Shockwave"
-                else:
-                    attack = "Arcane Bolt"
+                return "Arcane Lightning"
+                #if self.strength >= 7:
+                #    attack = "Arcane Shockwave"
+                #else:
+                #    attack = "Arcane Bolt"
                 #min str: 1
                 #max str: 5
 
@@ -214,10 +229,11 @@ class PlayableActor(Actor, Inventory, Combatant):
                 #min agl: 4
                 #max agl: 8
             case "ROGUE":
-                if self.intellect >= 7 and self.strength >= 7:
-                    attack = "Cool Attack"
-                else:
-                    attack = "Precision Dagger Strike"
+                return "Precision Strike"
+                #if self.intellect >= 7 and self.strength >= 7:
+                #    attack = "Cool Attack"
+                #else:
+                #    attack = "Precision Dagger Strike"
                 #min str: 4
                 #max str: 8
 
