@@ -3,7 +3,7 @@ from logging.logging import clear_log
 
 
 def main(mode:str):
-    import logic.logic
+    import copy
     from gameState.file import load_game
     from gameState.welcome import welcome, get_start_type, party_start, default_party
     from actors.actor_playable import PlayableActor
@@ -36,6 +36,7 @@ def main(mode:str):
             exit()
     
     rounds_without_encounter = 0
+    copy_instance = copy.deepcopy(player_party_instance)
     # The Key Loop
     while player_party_instance.progress != 101:
         if check_for_encounter(player_party_instance, rounds_without_encounter) == False:
@@ -44,13 +45,17 @@ def main(mode:str):
         else:
             rounds_without_encounter = 1
         if len(player_party_instance.members) == 0:
-            print(f"{player_party_instance.name} has failed in their quest after {player_party_instance.progress * 10} miles" , end='\n\n')
             break
         player_party_instance.progress += 1
 
 
-
-    Message.post_game_recap(player_party_instance)
+    # see the stats for all the player even if their dead (this can be improved)
+    if len(player_party_instance.members) == 0:
+        Message.post_game_recap(copy_instance)
+        print(f"{player_party_instance.name} has failed in their quest after {player_party_instance.progress * 10} miles" , end='\n\n')
+        
+    else:
+        Message.post_game_recap(player_party_instance)
 
 
 
