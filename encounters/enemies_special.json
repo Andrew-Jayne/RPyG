@@ -6,7 +6,8 @@
             "intellect": 8,
             "luck": 6,
             "agility": 4,
-            "attack_name": "Arcane Firestorm"
+            "attack_name": "Arcane Firestorm",
+            "is_special": true
         },
     "keep_minion": {
             "name": "Acolyte of Algolon",
@@ -15,7 +16,8 @@
             "intellect": 7,
             "agility": 4,
             "luck": 6,
-            "attack_name": "Arcane Bolt"
+            "attack_name": "Arcane Bolt",
+            "is_special": false
         },
     "keep_master": {
         "name": "Algolon's Arch Mage",
@@ -24,7 +26,8 @@
         "intellect": 10,
         "agility": 4,
         "luck": 6,
-        "attack_name": "Arcane Lightning"
+        "attack_name": "Arcane Lightning",
+        "is_special": true
         },
     "penultimate_boss": {
         "name": "The Great Wizard Algolon",
@@ -33,7 +36,8 @@
         "intellect": 12,
         "agility": 5,
         "luck": 6,
-        "attack_name": "Cosmic Collision"
+        "attack_name": "Cosmic Collision",
+        "is_special": true
         },
     "ultimate_boss": {
         "name": "Fortranus the Ancient One",
@@ -42,6 +46,7 @@
         "intellect": 10,
         "agility": 7,
         "luck": 6,
-        "attack_name": "Dragon Fire"
+        "attack_name": "Dragon Fire",
+        "is_special": true
         }
 }
