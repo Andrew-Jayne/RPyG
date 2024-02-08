@@ -17,8 +17,6 @@ class Combatant():
         self.special_attack = None
         self.will_evade = False
         self.will_defend = False
-        self.is_poisioned = False
-        self.poison_damage = 0
         self.is_dismembered = False
 
     def damage(self, damage_amount:int) -> None:
