@@ -71,9 +71,9 @@ Players become stronger as they progress and can gain temp and perm buffs from i
 Party can find or buy relics which boost stats of the whole party, but can also be stolen 
 
 
-## Encouter updates
+## Encounter updates
 
-It might make sense to integrate enemy encounters into the standard encounter system and make that more robust, add "ENEMY ENCOUTNER" to the encounter JSON system?
+It might make sense to integrate enemy encounters into the standard encounter system and make that more robust, add "ENEMY ENCOUNTER" to the encounter JSON system?
 IDK may end up being too complex
 
 New encounter type (TRAVEL)
@@ -83,13 +83,13 @@ you see a steep mountain pass that would save you 30 miles of travel do you thin
 S: you traverse the pass saving 30 miles of travel
 F: you become lost in the mountains and must back track wasting 20 miles of travel
 
-(rough concept but the idea is there) (Also needs check to make sure you don't skip a story envent)
+(rough concept but the idea is there) (Also needs check to make sure you don't skip a story event)
 
 
  ### Encounter Zones
 
 Based on being in the 0-25, 26-50, 51-75 & 76-99 progress zones
 
-there are differing pools of encounters (you should not find a big city a step 98 right before the final boss), can also change enemy pools (frost drakes in the mtns, dire wolves in the pains, cave trolls in the canyons)
+there are differing pools of encounters (you should not find a big city a step 98 right before the final boss), can also change enemy pools (frost drakes in the mtns, dire wolves in the plains, cave trolls in the canyons)
 
-would keep there from being major imerssion violations due to RNG
+would keep there from being major immersion violations due to RNG
