@@ -83,4 +83,13 @@ you see a steep mountain pass that would save you 30 miles of travel do you thin
 S: you traverse the pass saving 30 miles of travel
 F: you become lost in the mountains and must back track wasting 20 miles of travel
 
-(rough concept but the idea is there)
+(rough concept but the idea is there) (Also needs check to make sure you don't skip a story envent)
+
+
+ ### Encounter Zones
+
+Based on being in the 0-25, 26-50, 51-75 & 76-99 progress zones
+
+there are differing pools of encounters (you should not find a big city a step 98 right before the final boss), can also change enemy pools (frost drakes in the mtns, dire wolves in the pains, cave trolls in the canyons)
+
+would keep there from being major imerssion violations due to RNG
