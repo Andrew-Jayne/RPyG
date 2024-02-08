@@ -155,7 +155,8 @@ They have traveled {player_party_instance.progress * 10} Miles Total.
             print(f"Player Lck: {player_instance.luck}")
             print(f"Player Gold: {player_instance.gold}")
             print(f"Player Potions: {player_instance.potions}")
-            print(f"Player Attack: {player_instance.attack_name}")
+            print(f"Player Attack Name: {player_instance.attack_name}")
+            print(f"Player Attack Power: {player_instance.attack_power}")
             print("")
 
     @staticmethod
