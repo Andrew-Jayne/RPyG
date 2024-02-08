@@ -26,7 +26,7 @@ class Enemy(Actor, Combatant):
         agility=enemy_attributes['agility']
         luck=enemy_attributes['luck']
         attack_name=enemy_attributes['attack_name']
-        is_special=enemy_attributes[is_special]
+        is_special=enemy_attributes['is_special']
         attack_power = __class__.__set_enemy_attack_power(strength,intellect)
 
         ## Init Inherited Classes     
