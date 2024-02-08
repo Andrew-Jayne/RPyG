@@ -36,17 +36,19 @@ add persistent effects, allowing for lingering damage, healing spells, defense b
 
 Updated combat Ideas:
 
-Main Attack 
+Main Attack (stock, uses standard attack calc for each specalizaion, needs updated names to keep rouge from using fireball and mage from using dagger slash)
 Special attack (AOE For Mages, Dismember for warriors, Poision Blade for Rogue)
 
-AOE: Attack all targets with 3/4 attack power, deals 1/8 of damage to self
+AOE: Attack all targets with 3/4 attack power, deals 1/8 of damage to self based on int check (int/15)
 
-Dismember: Deal 1/4 damage but reduce enemy attack by 25% (once per enemy)
+Dismember: Deal 1/4 damage but reduce enemy attack by 25% (once per enemy) (5% chance to decapitate enemies that are not 'special' for instant kill)
 
-Poison Blade: Deal 1/2 damage but Emeny takes 1/4 damage per turn for the rest of the battle
+Double Strike: Can attack twice in a single turn, 2nd attack deals 50% less damage (can hit the same enemy or 2 of them)
 
 
-## Mini Dungeons as Objects & encounter Expansions
+## Mini Dungeons as Objects & encounter Expansions 
+Use this for cobolus' lair and algolon's fortress (midway_dungeon, enemy_fortress)
+
 build mini dungeons as objects with custom actors, rewards, and routes
 ```json
 mini_dungeon:{
@@ -61,20 +63,24 @@ add shortcuts, with dynamic chances for enemy and rest encounters
 optional mini dungeons
 Move all json files to a story dir with support for multiple files in enemies_common, encounters_special etc, to make it easy to import or export custom event packs
 
-## Arch & Spec
-take the current 3 specaliazations and make them archetypes, then within those options for 3 archetypes
-
-- palidin, barbarian, knight
-- Wizard, Battle Mage, Sorcerer
-- Assasin, Theif, ?
-
 ## Leveling & Purchasing
 Players become stronger as they progress and can gain temp and perm buffs from items, either found or bought
 [] expand merchant system
-[] add leveling system based on battle actions
+[] add leveling system based on battle actions 
+
+Party can find or buy relics which boost stats of the whole party, but can also be stolen 
 
 
 ## Encouter updates
 
 It might make sense to integrate enemy encounters into the standard encounter system and make that more robust, add "ENEMY ENCOUTNER" to the encounter JSON system?
 IDK may end up being too complex
+
+New encounter type (TRAVEL)
+given a prompt has a chance based on total STR, INT or AGL of the party to clear an obstacle and gain +3 progress or lose -2
+
+you see a steep mountain pass that would save you 30 miles of travel do you think you are agile enough to traverse it? (if party total AGL is over 18 success)
+S: you traverse the pass saving 30 miles of travel
+F: you become lost in the mountains and must back track wasting 20 miles of travel
+
+(rough concept but the idea is there)

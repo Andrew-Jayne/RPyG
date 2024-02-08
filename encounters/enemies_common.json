@@ -11,7 +11,9 @@
                     "intellect": 3,
                     "agility": 4, 
                     "luck": 6,
-                    "attack_name": "Weak Fireball"
+                    "attack_name": "Weak Fireball",
+                    "is_special": false
+
                 }],
                 "common_variants": [{
                     "name": "Feral Imp",
@@ -20,7 +22,8 @@
                     "intellect": 5,
                     "agility": 5, 
                     "luck": 3,
-                    "attack_name": "Fireball"
+                    "attack_name": "Fireball",
+                    "is_special": false
                 }],
                 "greater_variants": [{                    
                     "name": "Painted Feral Imp",
@@ -29,7 +32,8 @@
                     "intellect": 6,
                     "agility": 4, 
                     "luck": 4,
-                    "attack_name": "Empowered Fireball"
+                    "attack_name": "Empowered Fireball",
+                    "is_special": false
                     }]
             }
         },
@@ -44,7 +48,8 @@
                     "intellect": 2,
                     "agility": 3,
                     "luck": 1,
-                    "attack_name": "Club Bash"
+                    "attack_name": "Club Bash",
+                    "is_special": false
                 }],
                 "common_variants": [{
                     "name": "Goblin Scout",
@@ -53,7 +58,8 @@
                     "intellect": 2,
                     "agility": 5,
                     "luck": 2,
-                    "attack_name": "Club Bash"
+                    "attack_name": "Club Bash",
+                    "is_special": false
                 }],
                 "greater_variants": [{
                     "name": "Goblin Captain",
@@ -62,7 +68,8 @@
                     "intellect": 2,
                     "agility": 3,
                     "luck": 1,
-                    "attack_name": "Club Bash"
+                    "attack_name": "Club Bash",
+                    "is_special": false
                 }]
             }
         }
@@ -79,7 +86,8 @@
                     "intellect": 3,
                     "agility": 8,
                     "luck": 6,
-                    "attack_name": "Wolf Bite"
+                    "attack_name": "Wolf Bite",
+                    "is_special": false
             }],
                 "common_variants": [{            
                     "name": "Dire Wolf",
@@ -88,7 +96,8 @@
                     "intellect": 3,
                     "agility": 8,
                     "luck": 6,
-                    "attack_name": "Wolf Bite"
+                    "attack_name": "Wolf Bite",
+                    "is_special": false
             }],
                 "greater_variants": [{            
                     "name": "Alpha Dire Wolf",
@@ -97,7 +106,8 @@
                     "intellect": 4,
                     "agility": 8,
                     "luck": 6,
-                    "attack_name": "Wolf Bite"
+                    "attack_name": "Wolf Bite",
+                    "is_special": false
             }]
             }
         },
@@ -112,7 +122,8 @@
                     "intellect": 5,
                     "agility": 6,
                     "luck": 1,
-                    "attack_name": "Soul Decay Burst"
+                    "attack_name": "Soul Decay Burst",
+                    "is_special": false
             }],
                 "common_variants": [{
                     "name": "Abyssal Demon",
@@ -121,7 +132,8 @@
                     "intellect": 7,
                     "agility": 3,
                     "luck": 2,
-                    "attack_name": "Soul Decay Orb"
+                    "attack_name": "Soul Decay Orb",
+                    "is_special": false
                 }],
                 "greater_variants": [{
                     "name": "Demon Archfiend",
@@ -130,7 +142,8 @@
                     "intellect": 9,
                     "agility": 4,
                     "luck": 1,
-                    "attack_name": "Soul Decay Wave"
+                    "attack_name": "Soul Decay Wave",
+                    "is_special": false
                 }]
             }
         }],
@@ -147,7 +160,8 @@
                     "intellect": 1,
                     "agility": 1,
                     "luck": 2,
-                    "attack_name": "Club Smash"
+                    "attack_name": "Club Smash",
+                    "is_special": false
                 }],
                 "common_variants": [{
                     "name": "Cave Troll",
@@ -156,7 +170,8 @@
                     "intellect": 1,
                     "agility": 1,
                     "luck": 2,
-                    "attack_name": "Club Smash"
+                    "attack_name": "Club Smash",
+                    "is_special": false
                 }],
                 "greater_variants": [{
                     "name": "Cave Troll Chief",
@@ -165,7 +180,8 @@
                     "intellect": 1,
                     "agility": 1,
                     "luck": 2,
-                    "attack_name": "Club Smash"
+                    "attack_name": "Club Smash",
+                    "is_special": false
                 }]
             }
         },
@@ -174,13 +190,14 @@
             "group_name": "Clan",
             "variant_lists": {
                 "lesser_variants": [{
-                    "name": "Junvenille Ice Drake",
+                    "name": "Juvenile Ice Drake",
                     "health": 175,
                     "strength": 7,
                     "intellect": 5,
                     "agility": 6,
                     "luck": 8,
-                    "attack_name": "Blizzard Breath"
+                    "attack_name": "Blizzard Breath",
+                    "is_special": false
                 }],
                 "common_variants": [{
                     "name": "Ice Drake",
@@ -189,7 +206,8 @@
                     "intellect": 6,
                     "agility": 6,
                     "luck": 8,
-                    "attack_name": "Blizzard Breath"
+                    "attack_name": "Blizzard Breath",
+                    "is_special": false
                 }],
                 "greater_variants": [{
                     "name": "Ice Drake Matriarch",
@@ -198,7 +216,8 @@
                     "intellect": 7,
                     "agility": 6,
                     "luck": 8,
-                    "attack_name": "Blizzard Breath"
+                    "attack_name": "Blizzard Breath",
+                    "is_special": false
                 }]
             }
     } ]
