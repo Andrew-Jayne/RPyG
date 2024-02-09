@@ -7,6 +7,7 @@ from interaction.interaction import Interaction
 # Only for Type Checking
 from actors.actor_party import PlayerParty
 from actors.actor_combatant import Combatant
+from actors.actor_playable import PlayableActor
 
 def check_for_critical(combatant_instance:Combatant) -> bool:
     if not isinstance(combatant_instance, Combatant):
@@ -37,7 +38,16 @@ def attack(attacker_instance:Combatant, target_instance:Combatant) -> None:
 def react(combatant_instance:Combatant) -> bool:
     if not isinstance(combatant_instance, Combatant):
         raise ValueError("The 'combatant_instance' parameter must be of type Combatant. Received type: {}".format(type(combatant_instance).__name__))
-    react_result = random.randint(1,30) <= (combatant_instance.luck + combatant_instance.agility)
+    if isinstance(combatant_instance, PlayableActor):
+        match combatant_instance.specialization:
+            case 'WARRIOR':
+                react_result = random.randint(1,30) <= (combatant_instance.luck + combatant_instance.strength)
+            case 'MAGE':
+                react_result = random.randint(1,30) <= (combatant_instance.luck + combatant_instance.intellect)
+            case 'ROGUE':
+                react_result = random.randint(1,30) <= (combatant_instance.luck + combatant_instance.agility)
+    else:
+        react_result = random.randint(1,30) <= (combatant_instance.luck + combatant_instance.agility)
     return react_result
 
 def post_battle(player_party_instance:PlayerParty) -> None:
