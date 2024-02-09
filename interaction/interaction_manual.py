@@ -17,12 +17,13 @@ FLEE
 
 
 def manual_in_battle(player_instance:PlayableActor) -> str:
-    battle_options = ["ATTACK", f"{player_instance.react_action}", "HEAL"]
+    battle_options = ["ATTACK", f"{player_instance.special_attack_name}", f"{player_instance.react_action}", "HEAL"]
     battle_message = f"""
 {player_instance.name}
 Choose an Action:
 ATTACK
-"{player_instance.react_action}"
+{player_instance.special_attack_name}
+{player_instance.react_action}
 HEAL
 
 """
