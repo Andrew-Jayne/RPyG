@@ -90,7 +90,6 @@ class PlayableActor(Actor, Inventory, Combatant):
                            health=100 + int((strength + intellect) * 10),
                            attack_name=__class__.__get_attack_name(self),
                            attack_power=__class__.___get_attack_power(self),
-                           react_attribute=__class__.__get_react_attribute(self)
                            )
         write_log(f"Player: {self.name} was created with {self.gold} gold and {self.potions} potions")
     
@@ -253,19 +252,20 @@ class PlayableActor(Actor, Inventory, Combatant):
     def __get_react_action(self) -> tuple[str,dict]:
         match self.specialization:
             case "WARRIOR":
-                return ("DEFLECT",{"prep_message": f"{self.name} prepares to deflect against next attack"},
-                                 {"success_message": f"{self.name} successfully deflected the enemy's attack!"},
-                                 {"failure_message" : f"{self.name} failed to deflect the attack!"})
+                return ("DEFLECT",{"prep_message": f"{self.name} prepares to deflect against next attack",
+                                 "success_message": f"{self.name} successfully deflected the enemy's attack!",
+                                 "failure_message" : f"{self.name} failed to deflect the attack!"})
             case "MAGE":
-                return ("ELUDE",{"prep_message": f"{self.name} prepares to elude the next attack"},
-                                {"success_message": f"{self.name} fools the enemy with an illusion!"},
-                                {"failure_message" : f"{self.name} failed to fool the enemy illusion!"})
+                return ("ELUDE",{"prep_message": f"{self.name} prepares to elude the next attack",
+                                "success_message": f"{self.name} fools the enemy with an illusion!",
+                                "failure_message" : f"{self.name} failed to fool the enemy illusion!"})
             case "ROGUE":
-                return ("EVADE",{"prep_message": f"{self.name} prepares to evade the next attack"},
-                                {"success_message": f"{self.name} deftly evades the enemy's attack!"},
-                                {"failure_message" : f"{self.name} fails to evade the attack!"})
+                return ("EVADE",{"prep_message": f"{self.name} prepares to evade the next attack",
+                                "success_message": f"{self.name} deftly evades the enemy's attack!",
+                                "failure_message" : f"{self.name} fails to evade the attack!"})
             
-    def __get_react_attribute(self) -> str:
+
+    def __get_special_attack(self):
         match self.specialization:
             case "WARRIOR":
                 return 'strength'
