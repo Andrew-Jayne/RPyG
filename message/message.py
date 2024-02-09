@@ -59,11 +59,6 @@ This does basic processing for optimal display and will allow for better output 
         print(f"{attacker_instance.name} attacks with {attacker_instance.attack_name} inflicting {damage_value * 2} damage")
         print(f"{attacker_instance.name} got a critical hit!!", end="\n\n")
 
-    def poison_damage_message(actor_instance:Combatant) -> None:
-        if not isinstance(actor_instance, Combatant):
-            raise ValueError("The 'actor_instance' parameter must be of type Combatant. Received type: {}".format(type(actor_instance).__name__))
-
-        print(f"{actor_instance.name} takes {actor_instance.poison_damage} from being poisoned")
 
     # Battle Messages
     @staticmethod
@@ -99,18 +94,6 @@ This does basic processing for optimal display and will allow for better output 
     @staticmethod
     def flee_success_message(player_name:str, enemy_name:str) -> None:
         print(f"{player_name} has Successfully Escaped the {enemy_name}!")
-
-    @staticmethod
-    def evade_prep_message(name:str) -> None:
-        print(f"{name} prepares to evade the next attack", end="\n\n")
-
-    @staticmethod
-    def evade_failure_message(name:str) -> None:
-        print(f"{name} fails to evade the attack!", end="\n\n")
-
-    @staticmethod
-    def evade_success_message(name:str) -> None:
-        print(f"{name} deftly evades the enemy's attack!")
 
     def special_encounter_message(progress_value:int, party_name:str,message_type:str)-> None:
         if message_type not in ["messages","success_messages","failure_messages"]:

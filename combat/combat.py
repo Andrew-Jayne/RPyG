@@ -1,7 +1,7 @@
 from interaction.interaction import Interaction
 from message.message import Message
 from logic.logic import select_combat_target
-from combat.combat_actions import attack, evade, post_battle
+from combat.combat_actions import attack, react, post_battle
 
 # Only for Type Checking
 from actors.actor_party import PlayerParty, EnemyParty, Party
@@ -46,9 +46,9 @@ class Combat:
                         if enemy_instance.health == 0:
                             Message.defeated_message(enemy_instance.name)
                             enemy_party_instance.lose_member(enemy_instance)
-                    case "EVADE":
-                        Message.evade_prep_message(player_instance.name)
-                        player_instance.will_evade = True
+                    case player_instance.react_action:
+                        Message.display_message(player_instance.react_messages['prep_message'],new_line_count=2)
+                        player_instance.will_react = True
                     case "HEAL":
                         player_instance.use_potion()
             else:
@@ -61,14 +61,14 @@ class Combat:
                 target_index = select_combat_target(player_party_instance)
                 target_player = player_party_instance.members[target_index]
 
-                if target_player.will_evade == True:
-                    if evade(target_player) == True:
-                        Message.evade_success_message(target_player.name)
-                        target_player.will_evade = False
+                if target_player.will_react == True:
+                    if react(target_player) == True:
+                        Message.display_message(target_player.react_messages['success_message'],new_line_count=2)
+                        target_player.will_react = False
                     else:
-                        Message.evade_failure_message(target_player.name)
+                        Message.display_message(target_player.react_messages['failure_message'],new_line_count=2)
                         attack(attacker_instance=enemy_instance, target_instance=target_player)
-                        target_player.will_evade = False   
+                        target_player.will_react = False   
                 else:
                     attack(attacker_instance=enemy_instance, target_instance=target_player)
 
