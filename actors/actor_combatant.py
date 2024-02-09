@@ -15,8 +15,8 @@ class Combatant():
         self.attack_power = attack_power
         
         self.special_attack = None
-        self.will_evade = False
-        self.will_defend = False
+        self.will_react = False
+        self.react_attribute = None
         self.is_dismembered = False
 
     def damage(self, damage_amount:int) -> None:
