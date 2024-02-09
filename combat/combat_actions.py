@@ -34,11 +34,11 @@ def attack(attacker_instance:Combatant, target_instance:Combatant) -> None:
         Message.actor_attack_message(attacker_instance, final_damage)
         target_instance.damage(final_damage)
 
-def evade(combatant_instance:Combatant) -> bool:
+def react(combatant_instance:Combatant) -> bool:
     if not isinstance(combatant_instance, Combatant):
         raise ValueError("The 'combatant_instance' parameter must be of type Combatant. Received type: {}".format(type(combatant_instance).__name__))
-    evade_result = random.randint(1,30) <= (combatant_instance.luck + combatant_instance.agility)
-    return evade_result
+    react_result = random.randint(1,30) <= (combatant_instance.luck + combatant_instance.agility)
+    return react_result
 
 def post_battle(player_party_instance:PlayerParty) -> None:
     if not isinstance(player_party_instance, PlayerParty):

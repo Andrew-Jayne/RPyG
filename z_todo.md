@@ -29,7 +29,6 @@ Flesh out combat system with blocking, damage types (melee, magic, frost, fire),
 add persistent effects, allowing for lingering damage, healing spells, defense buffs
 [] add AOE attack that can hit all enemy or player instances
 [] Add Defend, Evade, Elude for secondary combat action
-[] Specalization based Attack Names (3 grades)
 
 [] add 2nd attack type for each class with new names
 [] add damage type (Magic, Melee) + Resistances based on Specalization
