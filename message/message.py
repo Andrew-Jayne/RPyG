@@ -14,6 +14,16 @@ from actors.actor_combatant import Combatant
 
 
 class Message():
+    @staticmethod
+    def display_message(message:str,new_line_count:int) -> None:
+        """
+Use this function rather than local 'print() in functions/
+This does basic processing for optimal display and will allow for better output handling when the UI is redone
+        """
+        ending = ("\n" * new_line_count)
+
+        print(textwrap.fill(message, width=80),end=ending)
+
     # Actor Messages
     @staticmethod
     def defeated_message(name:str) -> None:
