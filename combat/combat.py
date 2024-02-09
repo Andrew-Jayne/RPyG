@@ -1,7 +1,7 @@
 from interaction.interaction import Interaction
 from message.message import Message
 from logic.logic import select_combat_target
-from combat.combat_actions import attack, react, post_battle
+from combat.combat_actions import attack, react, special_attack, post_battle
 
 # Only for Type Checking
 from actors.actor_party import PlayerParty, EnemyParty, Party
@@ -41,14 +41,18 @@ class Combat:
                     case "ATTACK": #select target
                         target_index = int(Interaction.choose_combat_target(enemy_party_instance))
                         enemy_instance = enemy_party_instance.members[target_index]
-
                         attack(attacker_instance=player_instance, target_instance=enemy_instance)
                         if enemy_instance.health == 0:
                             Message.defeated_message(enemy_instance.name)
                             enemy_party_instance.lose_member(enemy_instance)
+
+                    case player_instance.special_attack_name:
+                        special_attack(player_instance, enemy_party_instance)
+
                     case player_instance.react_action:
                         Message.display_message(player_instance.react_messages['prep_message'],new_line_count=2)
                         player_instance.will_react = True
+
                     case "HEAL":
                         player_instance.use_potion()
             else:

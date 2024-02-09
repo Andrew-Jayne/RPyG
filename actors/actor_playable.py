@@ -90,6 +90,7 @@ class PlayableActor(Actor, Inventory, Combatant):
                            health=100 + int((strength + intellect) * 10),
                            attack_name=__class__.__get_attack_name(self),
                            attack_power=__class__.___get_attack_power(self),
+                           special_attack_name=__class__.__get_special_attack(self)
                            )
         write_log(f"Player: {self.name} was created with {self.gold} gold and {self.potions} potions")
     
@@ -268,11 +269,12 @@ class PlayableActor(Actor, Inventory, Combatant):
     def __get_special_attack(self):
         match self.specialization:
             case "WARRIOR":
-                return 'strength'
+                special_attack = 'DISMEMBER'
             case "MAGE":
-                return 'intellect'
+                special_attack = 'THUNDERBALL'
             case "ROGUE":
-                return 'agility'
+                special_attack = 'DOUBLE STRIKE'
+        return special_attack
 
 
             
