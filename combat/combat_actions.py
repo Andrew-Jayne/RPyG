@@ -61,17 +61,17 @@ def dismember_attack(attacker_instance:Combatant, target_instance:Combatant) -> 
     
     if random.randint(0,99) in [0,1,2]:
         if isinstance(target_instance, Enemy) and target_instance.is_special == False:
+            print(f"{attacker_instance.name} decapitates  {target_instance.name} killing them instantly")
             target_instance.health = 0
-            # Message target was decapitated
-    
-    #set damage
+
     damage_variation = int(attacker_instance.attack_power * 0.1)
     final_damage = attacker_instance.attack_power + random.randint(-damage_variation,damage_variation)
     attack_damage = int(final_damage * 0.25)
 
-    target_instance.damage(attack_damage)
+    print(f"{attacker_instance.name} dismembers {target_instance.name} inflicting {attack_damage} damage")
+    print(f"{target_instance.name}'s attack power has been reduced by 25% ")
     target_instance.dismember()
-    #message Target was Dismembered
+    target_instance.damage(attack_damage)
 
 def aoe_attack(attacker_instance:Combatant, target_party_instance:Party) -> None:
     if not isinstance(attacker_instance, Combatant):
@@ -83,14 +83,15 @@ def aoe_attack(attacker_instance:Combatant, target_party_instance:Party) -> None
     damage_variation = int(attacker_instance.attack_power * 0.1)
     final_damage = attacker_instance.attack_power + random.randint(-damage_variation,damage_variation)
     attack_damage = int(final_damage / len(target_party_instance.members))
-    ## Message All Targets damaged X amount
+
+    print(f"{attacker_instance.name} attacks with {attacker_instance.special_attack_name} dealing {attack_damage} damage to all enemies")
     for target_instance in target_party_instance.members:
         target_instance.damage(attack_damage)
     
     if attacker_instance.intellect <= random.randint(0,12):
         self_damage_amount = int(attack_damage * 0.125)
         attacker_instance.damage(self_damage_amount)
-        ## Message you are overwhelmed by the power of the thunderball and take damage from it
+        print(f"{attacker_instance.name} is overwhelmed by the power of {attacker_instance.special_attack_name} and takes {self_damage_amount} damage")
 
 def double_attack(attacker_instance:Combatant, target_party_instance:Party) -> None:
     if not isinstance(attacker_instance, Combatant):
@@ -112,11 +113,13 @@ def double_attack(attacker_instance:Combatant, target_party_instance:Party) -> N
 
     # exec damage
     primary_instance.damage(final_damage)
+    Message.actor_attack_message(attacker_instance, final_damage)
     if primary_instance.health == 0:
         Message.defeated_message(primary_instance.name)
         target_party_instance.lose_member(primary_instance)
 
     secondary_instance.damage(int(final_damage * 0.5))
+    Message.actor_attack_message(attacker_instance, int(final_damage * 0.5))
     if secondary_instance.health == 0:
         Message.defeated_message(secondary_instance.name)
         target_party_instance.lose_member(secondary_instance)
@@ -124,6 +127,7 @@ def double_attack(attacker_instance:Combatant, target_party_instance:Party) -> N
     # luck + agl in 25 to get caught and take 50% target damage from target 2
     if (attacker_instance.luck + attacker_instance.agility) < random.randint(0,25):
         attacker_instance.damage(int(secondary_instance.attack_power * 0.5))
+        print(f"{attacker_instance.name} fails fails do evade an attack from {secondary_instance.name} and takes {int(secondary_instance.attack_power * 0.5)} damage")
 
 
 def special_attack(attacker_instance:Combatant, target_party_instance:Party) -> None:
