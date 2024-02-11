@@ -4,6 +4,7 @@ from logging.logging import clear_log
 
 def main(mode:str):
     import copy
+    import time
     from gameState.file import load_game
     from gameState.welcome import welcome, get_start_type, party_start, default_party
     from actors.actor_playable import PlayableActor
@@ -41,6 +42,7 @@ def main(mode:str):
     while player_party_instance.progress != 101:
         if check_for_encounter(player_party_instance, rounds_without_encounter) == False:
             rounds_without_encounter += 1
+            time.sleep(2)
             print(f"{'.' * (rounds_without_encounter - 1 )}")
         else:
             rounds_without_encounter = 1
