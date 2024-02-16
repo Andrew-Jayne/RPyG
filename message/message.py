@@ -5,7 +5,6 @@ from gameState.file import save_game
 from actors.actor_playable import PlayableActor
 from interaction.interaction import Interaction
 from display.display import Display
-import logic.logic
 
 
 # Only used for Type checking/Hinting
@@ -161,3 +160,9 @@ They have traveled {player_party_instance.progress * 10} Miles Total.
         print("Your adventure has been completed, you may start a new adventure if you so choose",end="\n\n")
         if Interaction.global_game_mode == "MANUAL":
             save_game(player_party_instance)
+
+    @staticmethod
+    def empty_travel_message(empty_distance:int) -> None:
+        if Interaction.global_game_mode == "MANUAL":
+            time.sleep(2)
+        print(f"{'.' * (empty_distance - 1 )}")
