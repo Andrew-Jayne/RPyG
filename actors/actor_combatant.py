@@ -40,3 +40,9 @@ class Combatant():
 
     def is_fully_healed(self) -> bool:
         return self.health >= self.base_health
+    
+    def is_alive(self) -> bool:
+        if self.health == 0:
+            return False
+        else:
+            return True
