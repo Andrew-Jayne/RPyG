@@ -14,14 +14,23 @@ from actors.actor_combatant import Combatant
 
 class Message():
     @staticmethod
-    def display_message(message:str,new_line_count:int) -> None:
+    def display_message(message: str, new_line_count: int) -> None:
         """
-Use this function rather than local 'print() in functions/
-This does basic processing for optimal display and will allow for better output handling when the UI is redone
+        Use this function rather than local 'print()' in functions.
+        This does basic processing for optimal display and will allow for better output handling when the UI is redone.
         """
-        ending = ("\n" * new_line_count)
+        ending = "\n" * new_line_count
+        wrapped_message = ""
 
-        print(textwrap.fill(message, width=80),end=ending)
+        # Split the message into lines to handle them individually
+        lines = message.split('\n')
+        for line in lines:
+            # Apply text wrapping to each line individually
+            wrapped_line = textwrap.fill(line, width=80)
+            wrapped_message += wrapped_line + "\n"
+
+        # Print the final wrapped message, removing the last added newline and adding the custom ending
+        print(wrapped_message.rstrip('\n'), end=ending)
 
     # Actor Messages
     @staticmethod
@@ -153,7 +162,7 @@ This does basic processing for optimal display and will allow for better output 
         for player_instance in player_party_instance.members:
             player_report = f"""
 Player Name: {player_instance.name}
-Player Base Health: {player_instance.base_health}
+Player Base Health: {player_instance.base_health}                             
 Player Final Health: {player_instance.health}
 Player Int: {player_instance.intellect}
 Player Str: {player_instance.strength}
