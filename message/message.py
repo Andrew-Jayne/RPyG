@@ -26,18 +26,25 @@ This does basic processing for optimal display and will allow for better output 
     # Actor Messages
     @staticmethod
     def defeated_message(name:str) -> None:
-        print(f"{name} has been defeated" , end='\n\n')
+        defeated_message = f"{name} has been defeated"
+
+        __class__.display_message(defeated_message, 2)
     
     @staticmethod
     def encounter_message(group_name:str) -> None:
-        print(f"Your Party encounters a {group_name}!", end="\n\n")
+        encounter_message = f"Your Party encounters a {group_name}!"
+
+        __class__.display_message(encounter_message, 2)
     
     @staticmethod
     def actor_health_message(actor_instance:Combatant) -> None:
         if not isinstance(actor_instance, Combatant):
             raise ValueError("The 'actor_instance' parameter must be of type Combatant. Received type: {}".format(type(actor_instance).__name__))
         
-        print(f"{actor_instance.name} has {actor_instance.health} Health remaining", end="\n\n")
+        actor_health_message = f"{actor_instance.name} has {actor_instance.health} Health remaining"
+
+        __class__.display_message(actor_health_message, 2)
+        
     
     @staticmethod
     def actor_attack_message(attacker_instance:Combatant, damage_value:int) -> None:
@@ -46,7 +53,10 @@ This does basic processing for optimal display and will allow for better output 
 
         if Interaction.global_game_mode == "MANUAL" and isinstance(attacker_instance, PlayableActor) == False:
             time.sleep(2)
-        print(f"{attacker_instance.name} attacks with {attacker_instance.attack_name} inflicting {damage_value} damage", end="\n\n")
+
+        actor_attack_message = f"{attacker_instance.name} attacks with {attacker_instance.attack_name} inflicting {damage_value} damage"
+        
+        __class__.display_message(actor_attack_message, 2)
 
     @staticmethod
     def actor_critical_attack_message(attacker_instance:Combatant, damage_value:int) -> None:
@@ -55,8 +65,13 @@ This does basic processing for optimal display and will allow for better output 
 
         if Interaction.global_game_mode == "MANUAL" and isinstance(attacker_instance, PlayableActor) == False:
             time.sleep(2)
-        print(f"{attacker_instance.name} attacks with {attacker_instance.attack_name} inflicting {damage_value * 2} damage")
-        print(f"{attacker_instance.name} got a critical hit!!", end="\n\n")
+
+        actor_critical_attack_message = f"""
+{attacker_instance.name} attacks with {attacker_instance.attack_name} inflicting {damage_value * 2} damage
+{attacker_instance.name} got a critical hit!!
+"""
+        __class__.display_message(actor_critical_attack_message, 2)
+
 
 
     # Battle Messages
@@ -67,32 +82,47 @@ This does basic processing for optimal display and will allow for better output 
         if not isinstance(enemy_party_instance, EnemyParty):
             raise ValueError("The 'enemy_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(enemy_party_instance).__name__))
 
+        battle_hud_message = ""
 
         for playable_instance in player_party_instance.members:
-            print(f"{playable_instance.name}: {playable_instance.health}")
-        print("")
+            battle_hud_message += f"{playable_instance.name}: {playable_instance.health}"
+            battle_hud_message += "\n"
+        battle_hud_message += "\n"
+
         for enemy_instance in enemy_party_instance.members:
-            print(f"{enemy_instance.name}: {enemy_instance.health}")
-        print("\n\n")
+            battle_hud_message += f"{enemy_instance.name}: {enemy_instance.health}\n"
+            battle_hud_message += "\n"
+  
+        __class__.display_message(battle_hud_message, 2)
     
     @staticmethod
     def battle_start_message() -> None:
-        print("The Battle Begins!", end="\n\n\n")
+        battle_start_message = "The Battle Begins!"
+
+        __class__.display_message(battle_start_message, 3)
 
     # Encounter Messages
     @staticmethod
     def distance_since_last(no_encounters_since:int) -> None:
-        print(f"After {no_encounters_since * 10} miles of travel")   
+        distance_since_last_message = f"After {no_encounters_since * 10} miles of travel"
+
+        __class__.display_message(distance_since_last_message, 1)
+
 
     @staticmethod
     def flee_failure_message(player_name:str, enemy_name:str) -> None:
-        print(f"{player_name} has Failed to Escape the {enemy_name}!")
+        flee_failure_message = f"{player_name} has Failed to Escape the {enemy_name}!"
+
         if Interaction.global_game_mode == "MANUAL":
             time.sleep(2)
+
+        __class__.display_message(flee_failure_message, 1)
     
     @staticmethod
     def flee_success_message(player_name:str, enemy_name:str) -> None:
-        print(f"{player_name} has Successfully Escaped the {enemy_name}!")
+        flee_success_message = f"{player_name} has Successfully Escaped the {enemy_name}!"
+
+        __class__.display_message(flee_success_message, 1)
 
     def special_encounter_message(progress_value:int, party_name:str,message_type:str)-> None:
         if message_type not in ["messages","success_messages","failure_messages"]:
@@ -106,8 +136,8 @@ This does basic processing for optimal display and will allow for better output 
         current_event = all_events[str(progress_value)]
         for message in current_event[message_type]:
             formatted_message = message.format(party_name=party_name)
-
-            print(textwrap.fill(formatted_message, width=80), end="\n\n")
+        
+            __class__.display_message(formatted_message, 2)
             if Interaction.global_game_mode == "MANUAL":
                 time.sleep(2)
 
@@ -115,49 +145,44 @@ This does basic processing for optimal display and will allow for better output 
     # Player Messages
     
     @staticmethod
-    def party_progress_message(player_party_instance:PlayerParty) -> None:
-        if not isinstance(player_party_instance, PlayerParty):
-            raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
-
-        print(f"""
-Your Party Progresses 10 Miles further.
-They have traveled {player_party_instance.progress * 10} Miles Total.
-""")
-        ## Pause for effect when in MANUAL mode
-        if Interaction.global_game_mode == "MANUAL":
-            time.sleep(2)
-        ## Clear the Display after 10 Steps
-        if player_party_instance.progress % 10 == 0:
-            Display.clear_display()
-
-    @staticmethod
     def post_game_recap(player_party_instance:PlayerParty) -> None:
         if not isinstance(player_party_instance, PlayerParty):
             raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
 
 
         for player_instance in player_party_instance.members:
-        # Post Game Report
-            print(f"Player Name: {player_instance.name}")
-            print(f"Player Base Health: {player_instance.base_health}")
-            print(f"Player Final Health: {player_instance.health}")
-            print(f"Player Int: {player_instance.intellect}")
-            print(f"Player Str: {player_instance.strength}")
-            print(f"Player Agl: {player_instance.agility}")
-            print(f"Player Lck: {player_instance.luck}")
-            print(f"Player Gold: {player_instance.gold}")
-            print(f"Player Potions: {player_instance.potions}")
-            print(f"Player Attack Name: {player_instance.attack_name}")
-            print(f"Player Attack Power: {player_instance.attack_power}")
-            print("")
+            player_report = f"""
+Player Name: {player_instance.name}
+Player Base Health: {player_instance.base_health}
+Player Final Health: {player_instance.health}
+Player Int: {player_instance.intellect}
+Player Str: {player_instance.strength}
+Player Agl: {player_instance.agility}
+Player Lck: {player_instance.luck}
+Player Gold: {player_instance.gold}
+Player Potions: {player_instance.potions}
+Player Attack Name: {player_instance.attack_name}
+Player Attack Power: {player_instance.attack_power}
+"""
+
+            __class__.display_message(player_report, 2)
+
+
 
     @staticmethod
     def end_game_message(player_party_instance:PlayerParty) -> None:
         if not isinstance(player_party_instance, PlayerParty):
             raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
+        
+        end_game_message = f"""
+Fortranus the Ancient One has been Vanquished at the hands of {player_party_instance.name}
 
-        print(f"Fortranus the Ancient One has been Vanquished at the hands of {player_party_instance.name}",end="\n\n")
-        print("Your adventure has been completed, you may start a new adventure if you so choose",end="\n\n")
+
+Your adventure has been completed, you may start a new adventure if you so choose
+"""
+
+        __class__.display_message(end_game_message, 2)
+
         if Interaction.global_game_mode == "MANUAL":
             save_game(player_party_instance)
 
@@ -165,4 +190,6 @@ They have traveled {player_party_instance.progress * 10} Miles Total.
     def empty_travel_message(empty_distance:int) -> None:
         if Interaction.global_game_mode == "MANUAL":
             time.sleep(2)
-        print(f"{'.' * (empty_distance - 1 )}")
+        empty_travel_message = f"{'.' * (empty_distance - 1 )}"
+
+        __class__.display_message(empty_travel_message, 1)
