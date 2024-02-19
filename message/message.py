@@ -152,7 +152,14 @@ class Message():
 
 
     # Player Messages
-    
+                
+    @staticmethod
+    def game_over_message(player_party_instance:PlayerParty)-> None:
+        game_over_message = f"{player_party_instance.name} has failed in their quest after {player_party_instance.progress * 10} miles"
+
+        __class__.display_message(game_over_message, 2)
+
+
     @staticmethod
     def post_game_recap(player_party_instance:PlayerParty) -> None:
         if not isinstance(player_party_instance, PlayerParty):

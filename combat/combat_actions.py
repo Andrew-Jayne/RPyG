@@ -61,7 +61,8 @@ def dismember_attack(attacker_instance:Combatant, target_instance:Combatant) -> 
     
     if random.randint(0,99) in [0,1,2]:
         if isinstance(target_instance, Enemy) and target_instance.is_special == False:
-            print(f"{attacker_instance.name} decapitates  {target_instance.name} killing them instantly")
+            decapitate_message = f"{attacker_instance.name} decapitates  {target_instance.name} killing them instantly"
+            Message.display_message(decapitate_message, 1)
             target_instance.health = 0
 
     damage_variation = int(attacker_instance.attack_power * 0.1)
@@ -84,14 +85,16 @@ def aoe_attack(attacker_instance:Combatant, target_party_instance:Party) -> None
     final_damage = attacker_instance.attack_power + random.randint(-damage_variation,damage_variation)
     attack_damage = int(final_damage / len(target_party_instance.members))
 
-    print(f"{attacker_instance.name} attacks with {attacker_instance.special_attack_name} dealing {attack_damage} damage to all enemies")
+    aoe_attack_message = f"{attacker_instance.name} attacks with {attacker_instance.special_attack_name} dealing {attack_damage} damage to all enemies"
+    Message.display_message(aoe_attack_message, 1)
     for target_instance in target_party_instance.members:
         target_instance.damage(attack_damage)
     
     if attacker_instance.intellect <= random.randint(0,12):
         self_damage_amount = int(attack_damage * 0.125)
         attacker_instance.damage(self_damage_amount)
-        print(f"{attacker_instance.name} is overwhelmed by the power of {attacker_instance.special_attack_name} and takes {self_damage_amount} damage")
+        overwhelm_message = f"{attacker_instance.name} is overwhelmed by the power of {attacker_instance.special_attack_name} and takes {self_damage_amount} damage"
+        Message.display_message(overwhelm_message, 1)
 
 def double_attack(attacker_instance:Combatant, target_party_instance:Party) -> None:
     if not isinstance(attacker_instance, Combatant):
