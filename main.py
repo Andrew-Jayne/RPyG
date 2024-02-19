@@ -32,7 +32,7 @@ def main(mode:str):
                     
                     player_party_instance = PlayerParty(my_party_name, my_party_instances)
         case _ :
-            print("Error No Valid Game Mode was selected")
+            raise ValueError("Error No Valid Game Mode was selected")
             exit()
     
     rounds_without_encounter = 0
@@ -52,7 +52,7 @@ def main(mode:str):
     # see the stats for all the player even if their dead (this can be improved)
     if len(player_party_instance.members) == 0:
         Message.post_game_recap(copy_instance)
-        print(f"{player_party_instance.name} has failed in their quest after {player_party_instance.progress * 10} miles" , end='\n\n')
+        Message.game_over_message(copy_instance)
         
     else:
         Message.post_game_recap(player_party_instance)

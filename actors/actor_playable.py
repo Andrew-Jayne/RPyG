@@ -1,4 +1,5 @@
 import random
+from message.message import Message
 from logging.logging import write_log
 from actors.actor import Actor
 from actors.actor_combatant import Combatant
@@ -19,7 +20,8 @@ class Inventory:
 
     def spend_gold(self, amount:int) -> bool:
         if self.gold < amount:
-            print(f"{self.name} has insufficient gold")
+            insufficient_gold_message = f"{self.name} has insufficient gold"
+            Message.display_message(insufficient_gold_message, 1)
             return False
         else:
             __class__.lose_gold(self, amount)
@@ -29,7 +31,8 @@ class Inventory:
             self.gold -= amount
             if self.gold < 0:
                 self.gold = 0
-                print(f"{self.name} has no gold remaining")
+                no_gold_message = f"{self.name} has no gold remaining"
+                Message.display_message(no_gold_message, 1)
             write_log(f"Player now has {self.gold} gold")
                 
         
@@ -70,8 +73,7 @@ class PlayableActor(Actor, Inventory, Combatant):
                 agility = random.randint(5,10)
                 luck = random.randint(1,10)
             case _:
-                print(f"Error Invalid Specialization {specialization}")
-                exit()
+                raise ValueError(f"Error Invalid Specialization {specialization}")
         
     ## Init Inherited Classes
         Actor.__init__(self, 
@@ -97,15 +99,22 @@ class PlayableActor(Actor, Inventory, Combatant):
 
     def use_potion(self) -> None:
         if self.potions != 0 and not self.is_fully_healed():
-            print(f"{self.name} drinks a potion")
+            drink_potion_message = f"{self.name} drinks a potion"
+            Message.display_message(drink_potion_message, 1)
             self.lose_potion(1)
             self.heal(100 + random.randint(-20,20))
-            print(f"{self.name} has {self.potions} remaining")
-            print(f"{self.name}'s health is now {self.health}", end="\n\n")
+            drank_potion_message = f"""
+{self.name} has {self.potions} remaining
+{self.name}'s health is now {self.health}
+"""
+            Message.display_message(drank_potion_message, 2)
+            
         elif self.potions == 0:
-            print(f"{self.name} has no remaining potions!")
+            no_potions_message = f"{self.name} has no remaining potions!"
+            Message.display_message(no_potions_message, 1)
         else:
-            print(f"{self.name} is already fully healed!")
+            fully_healed_message = f"{self.name} is already fully healed!"
+            Message.display_message(fully_healed_message, 1)
 
     def __set_attack_power(self) -> int:
         if self.strength > self.intellect:
@@ -247,8 +256,7 @@ class PlayableActor(Actor, Inventory, Combatant):
                 #min agl: 5
                 #max agl: 10
             case _:
-                print(f"Error Invalid Specialization {self.specialization}")
-                exit()
+                raise ValueError(f"Error Invalid Specialization {self.specialization}")
 
     def __get_react_action(self) -> tuple[str,dict]:
         match self.specialization:
