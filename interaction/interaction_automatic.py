@@ -1,6 +1,5 @@
 ## Automatic Interactions
 import random
-from message.message import Message
 from logic.logic import select_combat_target
 
 
@@ -14,6 +13,7 @@ def auto_enemy_encounter() -> str:
     return chosen_action
 
 def auto_in_battle(player_instance:PlayableActor) -> str:
+    from message.message import Message
     if not isinstance(player_instance, PlayableActor):
         raise ValueError("The 'player_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_instance).__name__))
 
@@ -48,6 +48,7 @@ def auto_choose_combat_target(enemy_party_instance:EnemyParty) -> int:
 
 
 def auto_at_merchant(player_party_instance:PlayerParty) -> None:
+    from message.message import Message
     if not isinstance(player_party_instance, PlayerParty):
         raise ValueError("The 'enemy_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
 

@@ -1,6 +1,4 @@
 import random
-from message.message import Message
-from logging.logging import write_log
 from actors.actor import Actor
 from actors.actor_combatant import Combatant
 
@@ -19,6 +17,7 @@ class Inventory:
         self.gold += amount
 
     def spend_gold(self, amount:int) -> bool:
+        from message.message import Message
         if self.gold < amount:
             insufficient_gold_message = f"{self.name} has insufficient gold"
             Message.display_message(insufficient_gold_message, 1)
@@ -28,12 +27,12 @@ class Inventory:
             return True
     
     def lose_gold(self, amount:int) -> None:
+            from message.message import Message
             self.gold -= amount
             if self.gold < 0:
                 self.gold = 0
                 no_gold_message = f"{self.name} has no gold remaining"
                 Message.display_message(no_gold_message, 1)
-            write_log(f"Player now has {self.gold} gold")
                 
         
 
@@ -94,10 +93,10 @@ class PlayableActor(Actor, Inventory, Combatant):
                            attack_power=__class__.___get_attack_power(self),
                            special_attack_name=__class__.__get_special_attack(self)
                            )
-        write_log(f"Player: {self.name} was created with {self.gold} gold and {self.potions} potions")
     
 
     def use_potion(self) -> None:
+        from message.message import Message
         if self.potions != 0 and not self.is_fully_healed():
             drink_potion_message = f"{self.name} drinks a potion"
             Message.display_message(drink_potion_message, 1)

@@ -1,10 +1,8 @@
 import time
 import textwrap
 import json
-from gameState.file import save_game
 from actors.actor_playable import PlayableActor
 from interaction.interaction import Interaction
-
 
 
 # Only used for Type checking/Hinting
@@ -189,18 +187,6 @@ Player Attack Power: {player_instance.attack_power}
     def end_game_message(player_party_instance:PlayerParty) -> None:
         if not isinstance(player_party_instance, PlayerParty):
             raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
-        
-        end_game_message = f"""
-Fortranus the Ancient One has been Vanquished at the hands of {player_party_instance.name}
-
-
-Your adventure has been completed, you may start a new adventure if you so choose
-"""
-
-        __class__.display_message(end_game_message, 2)
-
-        if Interaction.global_game_mode == "MANUAL":
-            save_game(player_party_instance)
 
     @staticmethod
     def empty_travel_message(empty_distance:int) -> None:
