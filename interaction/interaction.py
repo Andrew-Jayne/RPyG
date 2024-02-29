@@ -21,7 +21,6 @@ class Interaction:
             case "MANUAL":
                 return manual_choose_combat_target(enemy_party_instance)
             case _:
-                print("Ummm How did you do that?, whatever just hit the thing")
                 return "ATTACK" 
 
     
@@ -33,7 +32,6 @@ class Interaction:
             case "MANUAL":
                 return manual_enemy_encounter()
             case _:
-                print("Ummm How did you do that?, whatever just hit the thing")
                 return "ATTACK" 
     
     @staticmethod
@@ -47,7 +45,6 @@ class Interaction:
             case "MANUAL":
                 return manual_post_battle()
             case _:
-                print("Ummm How did you do that?, whatever.... Just.... Leave")
                 return "TRAVEL"
 
 
@@ -62,7 +59,6 @@ class Interaction:
             case "MANUAL":
                 return manual_in_battle(player_instance)
             case _:
-                print("Ummm How did you do that?, whatever just hit the thing")
                 return "ATTACK"
              
 
@@ -72,14 +68,14 @@ class Interaction:
             raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
         
 
-        print("You arrive at a merchant")
+        Message.display_message("You arrive at a merchant", 1)
         match __class__.global_game_mode:
             case "AUTO":
                 auto_at_merchant(player_party_instance)
             case "MANUAL":
                 manual_at_merchant(player_party_instance)
             case _:
-                print("Ummm How did you do that?, whatever.... Just.... Leave")
+                raise ValueError("invalid game mode")
 
     @staticmethod
     def confirm_rest() -> bool:
@@ -89,7 +85,7 @@ class Interaction:
             case "MANUAL":
                 return manual_confirm_rest()
             case _:
-                print("Ummm How did you do that?, whatever.... Just.... Leave")
+                raise ValueError("invalid game mode")
 
     @staticmethod
     def mystery_action() -> str:
@@ -99,8 +95,8 @@ class Interaction:
             case "MANUAL":
                 return manual_mystery_action()
             case _:
-                print("Ummm How did you do that?, whatever.... Just.... Leave")
-    
+                raise ValueError("invalid game mode")
+    @staticmethod
     def loot_action() -> bool:
         match __class__.global_game_mode:
             case "AUTO":
@@ -108,8 +104,8 @@ class Interaction:
             case "MANUAL":
                 return manual_loot_action()
             case _:
-                print("Ummm How did you do that?, whatever.... Just.... Leave")
-
+                raise ValueError("invalid game mode")
+    @staticmethod
     def embark() -> bool:
         match __class__.global_game_mode:
             case "AUTO":
@@ -117,8 +113,8 @@ class Interaction:
             case "MANUAL":
                 return manual_embark()
             case _:
-                print("Ummm How did you do that?, whatever.... Just.... Leave")
-
+                raise ValueError("invalid game mode")
+    @staticmethod
     def accept_quest() -> bool:
             match __class__.global_game_mode:
                 case "AUTO":
@@ -126,7 +122,7 @@ class Interaction:
                 case "MANUAL":
                     return manual_accept_quest()
                 case _:
-                    print("Ummm How did you do that?, whatever.... Just.... Leave")
+                    raise ValueError("invalid game mode")
 
 
             
