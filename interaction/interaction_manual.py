@@ -1,5 +1,4 @@
 ## Manual Interactions
-from message.message import Message
 from interaction.interaction_utilities import validate_input
 
 #Only Used for type checking
@@ -18,6 +17,7 @@ FLEE
 
 
 def manual_in_battle(player_instance:PlayableActor) -> str:
+    from message.message import Message
     battle_options = ["ATTACK", f"{player_instance.special_attack_name}", f"{player_instance.react_action}", "HEAL"]
     battle_message = f"""
 {player_instance.name}
@@ -72,6 +72,7 @@ def manual_choose_combat_target(enemy_party_instance:EnemyParty) -> str:
 
    
 def manual_at_merchant(player_party_instance:PlayerParty) -> None:
+    from message.message import Message
     if not isinstance(player_party_instance, PlayerParty):
         raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
 
@@ -149,6 +150,7 @@ LEAVE
 
         
 def manual_embark() -> bool: ## i can make this funnier
+    from message.message import Message
     player_choice = None
     rest_options = ["EMBARK", "DRINK"]
     rest_message = """
@@ -173,6 +175,7 @@ DRINK
         
 
 def manual_accept_quest() -> bool:
+    from message.message import Message
     player_choice = None
     rest_options = ["ACCEPT", "DECLINE"]
     rest_message = """

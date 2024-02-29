@@ -64,6 +64,7 @@ class Interaction:
 
     @staticmethod
     def at_merchant(player_party_instance:PlayerParty):
+        from message.message import Message
         if not isinstance(player_party_instance, PlayerParty):
             raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
         
