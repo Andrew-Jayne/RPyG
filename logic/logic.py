@@ -34,5 +34,4 @@ def select_combat_target(target_party_instance:Party) -> int:
         case "RANDOM":
             return random.randint(0,(len(target_party_members) - 1))
         case _:
-            print("Big Problem in Select_Target, Go buy a lotto ticket")
-            exit()
+            raise ValueError("Big Problem in Select_Target, Go buy a lotto ticket")

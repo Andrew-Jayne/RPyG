@@ -1,4 +1,5 @@
 ## Manual Interactions
+from message.message import Message
 from interaction.interaction_utilities import validate_input
 
 #Only Used for type checking
@@ -31,10 +32,10 @@ HEAL
     dumb_check = 0
     while battle_choice == "HEAL" and player_instance.is_fully_healed() == True:
         dumb_check += 1
-        print(f"{player_instance.name} is fully healed, it would be unwise to use a potion")
+        Message.display_message(f"{player_instance.name} is fully healed, it would be unwise to use a potion", 1)
         battle_choice = validate_input(battle_options, battle_message)
         if dumb_check > 10:
-            print("Stubborn aren't you, fine waste the damn potion")
+            Message.display_message("Stubborn aren't you, fine waste the damn potion", 1)
             battle_choice = "HEAL"
             break
     return battle_choice
@@ -90,13 +91,13 @@ BUY
 LEAVE
 """
             player_choice = validate_input(merchant_options, merchant_message)
-            print(f"{player_instance.name} has {player_instance.potions} potions & {player_instance.gold} gold")
+            Message.display_message(f"{player_instance.name} has {player_instance.potions} potions & {player_instance.gold} gold", 1)
             if player_choice == "BUY":
                 if player_instance.spend_gold(25) == True:
                     player_instance.gain_potion(1)
-                    print(f"{player_instance.name} purchases a potion. They now have {player_instance.potions} & {player_instance.gold} gold")
+                    Message.display_message(f"{player_instance.name} purchases a potion. They now have {player_instance.potions} & {player_instance.gold} gold", 1)
                 else:
-                    print(f"{player_instance.name} does not have enough Gold to purchase more potions")
+                    Message.display_message(f"{player_instance.name} does not have enough Gold to purchase more potions", 1)
                     break
 
 def manual_confirm_rest() -> bool:
@@ -164,7 +165,7 @@ DRINK
         case "EMBARK":
             return True
         case "DRINK":
-            print("After many drinks, the kings missive sticks in your mind.")
+            Message.display_message("After many drinks, the kings missive sticks in your mind.", 1)
             if manual_embark() == True:
                 return True
         case _:
@@ -188,7 +189,7 @@ DECLINE
         case "ACCEPT":
             return True
         case "DECLINE":
-            print("The King insists, and asks again")
+            Message.display_message("The King insists, and asks again", 1)
             if manual_accept_quest() == True:
                 return True
         case _:

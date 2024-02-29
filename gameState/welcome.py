@@ -1,18 +1,19 @@
 import os
 from interaction.interaction import Interaction
+from message.message import Message
 from display.display import Display
 from actors.actor_playable import PlayableActor
 
 
 def welcome() -> None:
-    print("Welcome to RPyG, a text based RPG in Python", end="\n\n")
+    Message.display_message("Welcome to RPyG, a text based RPG in Python", 2)
 
     welcome_message = """
              This game looks best with a width of at least 80.
             If the next line is split please widen your terminal.
 ----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----
 """
-    print(welcome_message)
+    Message.display_message(welcome_message, 1)
 
 def get_start_type() -> str:
 

@@ -50,7 +50,7 @@ def check_for_encounter(player_party_instance:PlayerParty, empty_distance:int) -
                 SpecialEncounters.final_boss(player_party_instance)
                 return True
             case _:
-                print("""
+                raise ValueError("""
                         The world goes black and You awaken in a cart, with your hands bound. 
                         
                         A man calls to you and says:

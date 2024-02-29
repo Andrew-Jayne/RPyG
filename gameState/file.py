@@ -2,6 +2,7 @@ import pickle
 import hmac
 import hashlib
 import os
+from message.message import Message
 from interaction.interaction_utilities import validate_input
 
 # Only used for Type Checking
@@ -24,7 +25,7 @@ def save_game(player_party_instance: PlayerParty) -> None:
 
     with open('savegame.rpygs', 'wb') as save_file:
         save_file.write(signature + serialized_data)
-    print(f"Successfully Saved Game for: {player_party_instance.name}")
+    Message.display_message(f"Successfully Saved Game for: {player_party_instance.name}")
     save_prompt = """
 Would you like to keep playing?
 YES
@@ -64,5 +65,5 @@ def load_game() -> PlayerParty:
     if not isinstance(player_party_instance, PlayerParty):
         raise ValueError("The 'player_party_instance' must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
 
-    print(f"Successfully Loaded Save Game for: {player_party_instance.name}")
+    Message.display_message(f"Successfully Loaded Save Game for: {player_party_instance.name}", 1)
     return player_party_instance

@@ -68,9 +68,11 @@ def dismember_attack(attacker_instance:Combatant, target_instance:Combatant) -> 
     damage_variation = int(attacker_instance.attack_power * 0.1)
     final_damage = attacker_instance.attack_power + random.randint(-damage_variation,damage_variation)
     attack_damage = int(final_damage * 0.25)
-
-    print(f"{attacker_instance.name} dismembers {target_instance.name} inflicting {attack_damage} damage")
-    print(f"{target_instance.name}'s attack power has been reduced by 25% ")
+    dismember_message = f"""
+{attacker_instance.name} dismembers {target_instance.name} inflicting {attack_damage} damage
+{target_instance.name}'s attack power has been reduced by 25%
+"""
+    Message.display_message(dismember_message, 2)
     target_instance.dismember()
     target_instance.damage(attack_damage)
 
@@ -130,7 +132,8 @@ def double_attack(attacker_instance:Combatant, target_party_instance:Party) -> N
     # luck + agl in 25 to get caught and take 50% target damage from target 2
     if (attacker_instance.luck + attacker_instance.agility) < random.randint(0,25):
         attacker_instance.damage(int(secondary_instance.attack_power * 0.5))
-        print(f"{attacker_instance.name} fails fails do evade an attack from {secondary_instance.name} and takes {int(secondary_instance.attack_power * 0.5)} damage")
+        caught_attack_message = f"{attacker_instance.name} fails fails do evade an attack from {secondary_instance.name} and takes {int(secondary_instance.attack_power * 0.5)} damage"
+        Message.display_message(caught_attack_message, 2)
 
 
 def special_attack(attacker_instance:Combatant, target_party_instance:Party) -> None:

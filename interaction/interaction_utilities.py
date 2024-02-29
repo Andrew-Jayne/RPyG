@@ -8,7 +8,7 @@ def sanitize(input_string:str, max_length = 32) -> str:
     """
     #exit if string is longer that 128 Chars
     if len(input_string) > 512:
-            print("Input Length Exceeds Expected Parameters: Exiting!")
+            raise ValueError("Input Length Exceeds Expected Parameters: Exiting!")
             exit()
     #Set unwanted chars
     chars_to_remove = '!#*.[]{}\\|":;/<>\\\()\''
@@ -36,8 +36,7 @@ def validate_input(choice_list:list[str], prompt_message:str) -> str:
             if chosen_action not in choice_list:
                 dumb_check += 1
                 if dumb_check == 10:
-                    print("Look it's not hard, just enter a valid choice....", end="\n\n")
-                    exit()
+                    raise FileNotFoundError("Look it's not hard, just enter a valid choice...., Brain not Found")
         return chosen_action
 
 def custom_text_entry(input_message:str, max_length:int) -> str:
