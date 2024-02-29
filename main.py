@@ -32,12 +32,12 @@ def main(mode:str):
                     player_party_instance = PlayerParty(my_party_name, my_party_instances)
         case _ :
             raise ValueError("Error No Valid Game Mode was selected")
-            exit()
     
     rounds_without_encounter = 0
     copy_instance = copy.deepcopy(player_party_instance)
     # The Key Loop
     while player_party_instance.progress != 100:
+        player_party_instance.progress += 1
         if check_for_encounter(player_party_instance, rounds_without_encounter) == False:
             rounds_without_encounter += 1
             Message.empty_travel_message(rounds_without_encounter)
@@ -45,13 +45,13 @@ def main(mode:str):
             rounds_without_encounter = 1
         if len(player_party_instance.members) == 0:
             break
-        player_party_instance.progress += 1
+        
 
 
     # see the stats for all the player even if their dead (this can be improved)
     if len(player_party_instance.members) == 0:
         Message.post_game_recap(copy_instance)
-        Message.game_over_message(copy_instance)
+        Message.game_over_message(player_party_instance)
         
     else:
         Message.post_game_recap(player_party_instance)

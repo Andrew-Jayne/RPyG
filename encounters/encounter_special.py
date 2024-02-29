@@ -60,7 +60,7 @@ class SpecialEncounters():
         sub_step = 0
         while sub_step < 10:
             sub_step += 1
-            Message.display_message(sub_step, 1)
+            Message.display_message(f"{sub_step}", 1)
             dungeon_chance = random.randint(0,5)
             match dungeon_chance:
                 case 0:
