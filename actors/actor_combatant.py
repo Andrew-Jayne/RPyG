@@ -1,5 +1,3 @@
-from message.message import Message
-
 class Combatant():
     def __init__(self, health:int, attack_name:str, attack_power:int, special_attack_name:str) -> None:
 
@@ -22,6 +20,7 @@ class Combatant():
         self.is_dismembered = False
 
     def damage(self, damage_amount:int) -> None:
+        from message.message import Message
         self.health -= damage_amount
         if self.health == 0:
             self.health = 1
@@ -33,6 +32,7 @@ class Combatant():
         Message.display_message(health_remaining_message, 2)
     
     def heal(self, heal_amount:int) -> None:
+        from message.message import Message
         self.health += heal_amount
         if self.health > self.base_health:
             self.health = self.base_health

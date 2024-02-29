@@ -1,6 +1,7 @@
 import random
 import json
 import copy
+from gameState.file import save_game
 from interaction.interaction import Interaction
 from message.message import Message
 from actors.actor_enemy import Enemy
@@ -119,9 +120,19 @@ class SpecialEncounters():
         Combat.battle(player_party_instance, enemy_party)
         if len(player_party_instance.members) != 0:
             Message.special_encounter_message(player_party_instance.progress, player_party_instance.name,"success_messages")
-            Message.end_game_message(player_party_instance)
-        else:
-            Message.special_encounter_message(player_party_instance.progress, player_party_instance.name,"failure_messages")
+            end_game_message = f"""
+Fortranus the Ancient One has been Vanquished at the hands of {player_party_instance.name}
+
+
+Your adventure has been completed, you may start a new adventure if you so choose
+"""
+
+            __class__.display_message(end_game_message, 2)
+
+            if Interaction.global_game_mode == "MANUAL":
+                save_game(player_party_instance)
+            else:
+                Message.special_encounter_message(player_party_instance.progress, player_party_instance.name,"failure_messages")
             
         
     ## Hidden Methods

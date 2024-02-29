@@ -1,5 +1,4 @@
 import argparse
-from logging.logging import clear_log
 
 
 def main(mode:str):
@@ -68,6 +67,7 @@ if __name__ == "__main__":
     mode = "AUTO" if args.auto else "MANUAL"
 
     if not args.keep_log:
-        clear_log()
+        pass
+
     
     main(mode)
