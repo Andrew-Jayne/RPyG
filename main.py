@@ -9,7 +9,6 @@ def main(mode:str,use_default:bool):
     from interaction.interaction import Interaction
     from encounters.encounter import check_for_encounter
     
-
     welcome()
 
     match mode:
@@ -47,7 +46,6 @@ def main(mode:str,use_default:bool):
         if len(player_party_instance.members) == 0:
             break
         
-
 
     if len(player_party_instance.members) == 0:
         Message.game_over_message(player_party_instance)

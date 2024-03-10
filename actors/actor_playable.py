@@ -282,6 +282,3 @@ class PlayableActor(Actor, Inventory, Combatant):
             case "ROGUE":
                 special_attack = 'DOUBLE STRIKE'
         return special_attack
-
-
-            

@@ -122,13 +122,6 @@ def standard_encounter(player_party_instance:PlayerParty) -> None:
                     raise ValueError(f"Error Invalid encounter Type Call: {current_event['encounter_type']}")
     else:
         raise ValueError(f"Error Invalid Method Call: {current_event['actor_action']}")
-        
-
-
-
-
-
-
 
     match current_event['actor_action']:
         case "damage":
