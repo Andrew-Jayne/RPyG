@@ -3,7 +3,6 @@ from encounters.encounter_enemy import enemy_encounter
 from encounters.encounter_special import SpecialEncounters
 from encounters.encounter_standard import standard_encounter
 from message.message import Message
-import logic.logic
 # Just for Type Checking
 from actors.actor_party import PlayerParty
 

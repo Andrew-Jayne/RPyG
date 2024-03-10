@@ -180,6 +180,25 @@ Player Attack Power: {player_instance.attack_power}
 """
 
             __class__.display_message(player_report, 2)
+        
+        __class__.display_message("Fallen Members", 2)
+
+        for player_instance in player_party_instance.dead_members:
+            player_report = f"""
+Player Name: {player_instance.name}
+Player Base Health: {player_instance.base_health}                             
+Player Final Health: {player_instance.health}
+Player Int: {player_instance.intellect}
+Player Str: {player_instance.strength}
+Player Agl: {player_instance.agility}
+Player Lck: {player_instance.luck}
+Player Gold: {player_instance.gold}
+Player Potions: {player_instance.potions}
+Player Attack Name: {player_instance.attack_name}
+Player Attack Power: {player_instance.attack_power}
+"""
+
+            __class__.display_message(player_report, 2)
 
 
 

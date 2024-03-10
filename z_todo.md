@@ -1,12 +1,7 @@
 ## Message Project:
-[] All print statments in all functions are shipped to the message class and handled there, even if it's just a dumb print the input str funciton, prep for curses down the road
+[*] All print statments in all functions are shipped to the message class and handled there, even if it's just a dumb print the input str funciton, prep for curses down the road
 
-
-
-
-
-
-## V2 Goals (The Party Update)
+## V2 Goals (The Party Update) (Done!)
 [*] RPC for Mystery Encounters
 [*] Merge Rest & Mystery Encounters
 [*] Finish Merchant Interaction
@@ -27,13 +22,13 @@
 ## Combat Update
 Flesh out combat system with blocking, damage types (melee, magic, frost, fire), add unique attacks to players and enemies
 add persistent effects, allowing for lingering damage, healing spells, defense buffs
-[] add AOE attack that can hit all enemy or player instances
-[] Add Defend, Evade, Elude for secondary combat action
+[] add AOE attack that can hit all enemy or player instances 
+[*] Add Defend, Evade, Elude for secondary combat action
 
-[] add 2nd attack type for each class with new names
+[*] add 2nd attack type for each class with new names (DONE!)
 [] add damage type (Magic, Melee) + Resistances based on Specalization
 
-Updated combat Ideas:
+Updated combat Ideas: (DONE!)
 
 Main Attack (stock, uses standard attack calc for each specalizaion, needs updated names to keep rouge from using fireball and mage from using dagger slash)
 Special attack (AOE For Mages, Dismember for warriors, Poision Blade for Rogue)

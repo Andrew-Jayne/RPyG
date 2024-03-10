@@ -1,8 +1,6 @@
 import argparse
 
-
 def main(mode:str):
-    import copy
     from gameState.file import load_game
     from gameState.welcome import welcome, get_start_type, party_start, default_party
     from actors.actor_playable import PlayableActor
@@ -34,15 +32,14 @@ def main(mode:str):
             raise ValueError("Error No Valid Game Mode was selected")
     
     rounds_without_encounter = 0
-    copy_instance = copy.deepcopy(player_party_instance)
     # The Key Loop
     while player_party_instance.progress != 100:
-        player_party_instance.progress += 1
         if check_for_encounter(player_party_instance, rounds_without_encounter) == False:
             rounds_without_encounter += 1
             Message.empty_travel_message(rounds_without_encounter)
         else:
             rounds_without_encounter = 1
+        player_party_instance.progress += 1
         if len(player_party_instance.members) == 0:
             break
         
@@ -50,14 +47,13 @@ def main(mode:str):
 
     # see the stats for all the player even if their dead (this can be improved)
     if len(player_party_instance.members) == 0:
-        Message.post_game_recap(copy_instance)
         Message.game_over_message(player_party_instance)
         
     else:
         Message.post_game_recap(player_party_instance)
 
 
-
+## Main Function Wrapper to Accept and Pass Args
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='RPyG, a text based RPG in Python')
     parser.add_argument('--keep-log', action='store_true', help='Keep log from previous session.')
