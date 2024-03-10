@@ -4,11 +4,9 @@ import json
 from actors.actor_playable import PlayableActor
 from interaction.interaction import Interaction
 
-
 # Only used for Type checking/Hinting
 from actors.actor_party import PlayerParty, EnemyParty
 from actors.actor_combatant import Combatant
-
 
 class Message():
     @staticmethod

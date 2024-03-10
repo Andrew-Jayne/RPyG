@@ -1,4 +1,3 @@
-
 def sanitize(input_string:str, max_length = 32) -> str:
     """
     This function Sanitizes strings passed into it and returns up to the max length chars (Default is 32)
@@ -41,6 +40,3 @@ def validate_input(choice_list:list[str], prompt_message:str) -> str:
 
 def custom_text_entry(input_message:str, max_length:int) -> str:
     return sanitize(input(input_message)[:max_length])
-
-
-    
