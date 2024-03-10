@@ -6,13 +6,6 @@ from combat.combat_actions import attack, react, special_attack, post_battle
 # Only for Type Checking
 from actors.actor_party import PlayerParty, EnemyParty, Party
 
-#Battle Flow:
-    #Player Party Attacks Enemy
-    #Enemy Party Attacks  Player Party
-# this function makes Linus Torvalds sad, make it better
-
-
-
 class Combat:
     battle_complete = True
 
@@ -21,6 +14,11 @@ class Combat:
             return False
         else:
             return True
+        
+    def clear_dead_members(party_instance:Party) -> None:
+        for member in party_instance.members:
+            if member.health == 0:
+                party_instance.lose_member(member)
     
     def is_battle_complete(player_party_instance:PlayerParty, enemy_party_instance:EnemyParty) -> bool:
             ## Check if all parties are alive before proceeding
@@ -55,6 +53,7 @@ class Combat:
 
                     case "HEAL":
                         player_instance.use_potion()
+                __class__.clear_dead_members(enemy_party_instance)
             else:
                 break
 
@@ -79,6 +78,7 @@ class Combat:
                 if target_player.health == 0:
                     Message.defeated_message(target_player.name)
                     player_party_instance.lose_member(target_player)
+                __class__.clear_dead_members(player_party_instance)
             else:
                 break
 
