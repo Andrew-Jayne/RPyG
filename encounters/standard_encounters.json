@@ -113,7 +113,7 @@
         "encounter_type": "LOOT",
         "message": "",
         "pre_message": "Your party find a small treasure chest",
-        "post_message": "Upon opening an explosion is triggered and every is thrown backwards",
+        "post_message": "Upon opening an explosion is triggered and everyone is thrown backwards",
         "actor_action": "damage",
         "special_action": null,
         "additional_events": null,

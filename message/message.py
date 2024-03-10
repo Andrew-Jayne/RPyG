@@ -151,6 +151,15 @@ class Message():
 
     # Player Messages
                 
+                
+    @staticmethod
+    def game_over_message(player_party_instance:PlayerParty)-> None:
+        game_over_message = f"{player_party_instance.name} has failed in their quest after {player_party_instance.progress * 10} miles"
+
+        __class__.display_message(game_over_message, 2)
+
+
+
     @staticmethod
     def game_over_message(player_party_instance:PlayerParty)-> None:
         game_over_message = f"{player_party_instance.name} has failed in their quest after {player_party_instance.progress * 10} miles"
@@ -201,7 +210,14 @@ Player Attack Power: {player_instance.attack_power}
             __class__.display_message(player_report, 2)
 
 
+    @staticmethod
+    def game_over_message(player_party_instance:PlayerParty)-> None:
+        game_over_message = f"{player_party_instance.name} has failed in their quest after {player_party_instance.progress * 10} miles"
 
+        __class__.display_message(game_over_message, 2)
+        time.sleep(2)
+        __class__.post_game_recap(player_party_instance)
+    
     @staticmethod
     def end_game_message(player_party_instance:PlayerParty) -> None:
         if not isinstance(player_party_instance, PlayerParty):
