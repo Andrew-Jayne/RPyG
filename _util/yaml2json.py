@@ -1,4 +1,3 @@
-
 def main():
     import sys
     import os
@@ -25,7 +24,6 @@ def main():
     # Convert and save as JSON
     with open(output_file, 'w') as json_file:
         json.dump(data, json_file, indent=4)
-
 
 
 if __name__ == "__main__":

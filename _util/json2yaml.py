@@ -22,8 +22,5 @@ def main():
         yaml.dump(data, yaml_file)
 
 
-
-
-
 if __name__ == "__main__":
     main()
