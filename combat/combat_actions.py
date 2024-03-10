@@ -93,7 +93,7 @@ def aoe_attack(attacker_instance:Combatant, target_party_instance:Party) -> None
         target_instance.damage(attack_damage)
     
     if attacker_instance.intellect <= random.randint(0,12):
-        self_damage_amount = int(attack_damage * 0.125)
+        self_damage_amount = int(final_damage * 0.125)
         attacker_instance.damage(self_damage_amount)
         overwhelm_message = f"{attacker_instance.name} is overwhelmed by the power of {attacker_instance.special_attack_name} and takes {self_damage_amount} damage"
         Message.display_message(overwhelm_message, 1)

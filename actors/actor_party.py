@@ -37,10 +37,12 @@ class PlayerParty(Party):
                 raise ValueError("The 'party_member' parameter must be of type Actor. Received type: {}".format(type(party_member).__name__))
         
         Party.__init__(self, members=members)
+        self.dead_members = []
         self.progress = 0
         self.name = name
     
     def lose_member(self, member) -> None:
+        self.dead_members.append(member)
         self.members.remove(member)
     
     def gain_member(self, member) -> None:
