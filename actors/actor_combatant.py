@@ -13,6 +13,7 @@ class Combatant():
 
         self.attack_name = attack_name
         self.special_attack_name = special_attack_name
+        self.special_attack_energy = 2
         self.attack_power = attack_power
         
         self.use_special_attack = False
