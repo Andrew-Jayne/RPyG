@@ -72,17 +72,17 @@ def manual_choose_combat_target(enemy_party_instance:EnemyParty) -> str:
 
    
 def manual_at_merchant(player_party_instance:PlayerParty) -> None:
+    import math
     from message.message import Message
+
     if not isinstance(player_party_instance, PlayerParty):
         raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
 
     player_choice = None
-    merchant_options = ["BUY", "LEAVE"]
+    merchant_options = ["BUY", "LEAVE", "BUY MAX"]
 
     for player_instance in player_party_instance.members:
-        
-        while player_choice != "LEAVE":
-            merchant_message = f"""
+        merchant_message = f"""
 {player_instance.name}
 Gold: {player_instance.gold}
 Potions: {player_instance.potions}
@@ -90,16 +90,29 @@ Potions: {player_instance.potions}
 Choose an Action:
 BUY
 LEAVE
+BUY MAX
 """
+        
+        while player_choice != "LEAVE":
             player_choice = validate_input(merchant_options, merchant_message)
             Message.display_message(f"{player_instance.name} has {player_instance.potions} potions & {player_instance.gold} gold", 1)
-            if player_choice == "BUY":
-                if player_instance.spend_gold(25) == True:
-                    player_instance.gain_potion(1)
-                    Message.display_message(f"{player_instance.name} purchases a potion. They now have {player_instance.potions} & {player_instance.gold} gold", 1)
-                else:
-                    Message.display_message(f"{player_instance.name} does not have enough Gold to purchase more potions", 1)
-                    break
+            match player_choice:
+                case "BUY":
+                    if player_instance.spend_gold(25) == True:
+                        player_instance.gain_potion(1)
+                        Message.display_message(f"{player_instance.name} purchases a potion. They now have {player_instance.potions} & {player_instance.gold} gold", 1)
+                    else:
+                        Message.display_message(f"{player_instance.name} does not have enough Gold to purchase more potions", 1)
+                        player_choice = "LEAVE"
+                case "BUY MAX":
+                    ## Using floor to make sure you can't buy 10 potions with 245 gold
+                    rounds = math.floor(player_instance.gold / 25)
+                    player_instance.spend_gold((round * 25))
+                    player_instance.gain_potion(rounds)
+                    player_choice = "LEAVE"
+                case "LEAVE":
+                    player_choice = "LEAVE"
+
 
 def manual_confirm_rest() -> bool:
     player_choice = None
