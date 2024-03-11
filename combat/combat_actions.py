@@ -27,8 +27,9 @@ def attack(attacker_instance:Combatant, target_instance:Combatant, damage_overri
     if not isinstance(target_instance, Combatant):
         raise ValueError("The 'target_instance' parameter must be of type Combatant. Received type: {}".format(type(target_instance).__name__))
 
+    base_damage = int(attacker_instance.attack_power * damage_override_factor)
     damage_variation = int(attacker_instance.attack_power * 0.1)
-    final_damage = int(attacker_instance.attack_power + random.randint(-damage_variation,damage_variation) * damage_override_factor)
+    final_damage =  base_damage + random.randint(-damage_variation,damage_variation)
 
     if check_for_critical(attacker_instance) == True:
         Message.actor_critical_attack_message(attacker_instance,final_damage)
