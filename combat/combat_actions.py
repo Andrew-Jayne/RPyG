@@ -21,14 +21,14 @@ def check_for_critical(combatant_instance:Combatant) -> bool:
     else:
         return False
 
-def attack(attacker_instance:Combatant, target_instance:Combatant) -> None:
+def attack(attacker_instance:Combatant, target_instance:Combatant, damage_override_factor=1.0) -> None:
     if not isinstance(attacker_instance, Combatant):
         raise ValueError("The 'attacker_instance' parameter must be of type Combatant. Received type: {}".format(type(attacker_instance).__name__))
     if not isinstance(target_instance, Combatant):
         raise ValueError("The 'target_instance' parameter must be of type Combatant. Received type: {}".format(type(target_instance).__name__))
 
     damage_variation = int(attacker_instance.attack_power * 0.1)
-    final_damage = attacker_instance.attack_power + random.randint(-damage_variation,damage_variation)
+    final_damage = int(attacker_instance.attack_power + random.randint(-damage_variation,damage_variation) * damage_override_factor)
 
     if check_for_critical(attacker_instance) == True:
         Message.actor_critical_attack_message(attacker_instance,final_damage)
@@ -74,7 +74,7 @@ def dismember_attack(attacker_instance:Combatant, target_instance:Combatant) -> 
 """
     Message.display_message(dismember_message, 2)
     target_instance.dismember()
-    target_instance.damage(attack_damage)
+    attack(attacker_instance=attacker_instance,target_instance=target_instance, damage_override_factor=0.25)
 
 def aoe_attack(attacker_instance:Combatant, target_party_instance:Party) -> None:
     if not isinstance(attacker_instance, Combatant):
@@ -85,12 +85,12 @@ def aoe_attack(attacker_instance:Combatant, target_party_instance:Party) -> None
     #set damage
     damage_variation = int(attacker_instance.attack_power * 0.1)
     final_damage = attacker_instance.attack_power + random.randint(-damage_variation,damage_variation)
-    attack_damage = int(final_damage / len(target_party_instance.members))
+    override_factor = (1.5 / len(target_party_instance.members))
 
-    aoe_attack_message = f"{attacker_instance.name} attacks with {attacker_instance.special_attack_name} dealing {attack_damage} damage to all enemies"
+    aoe_attack_message = f"{attacker_instance.name} attacks with {attacker_instance.special_attack_name} dealing {int(final_damage * override_factor)} damage to all enemies"
     Message.display_message(aoe_attack_message, 1)
     for target_instance in target_party_instance.members:
-        target_instance.damage(attack_damage)
+        attack(attacker_instance=attacker_instance, target_instance=target_instance, damage_override_factor=override_factor)
     
     if attacker_instance.intellect <= random.randint(0,12):
         self_damage_amount = int(final_damage * 0.125)
@@ -104,10 +104,6 @@ def double_attack(attacker_instance:Combatant, target_party_instance:Party) -> N
     if not isinstance(target_party_instance, Party):
         raise ValueError("The 'target_party_instance' parameter must be of type Party. Received type: {}".format(type(target_party_instance).__name__))
     
-    #set damage
-    damage_variation = int(attacker_instance.attack_power * 0.1)
-    final_damage = attacker_instance.attack_power + random.randint(-damage_variation,damage_variation)
-    
     # set primary target
     primary_target_index = int(Interaction.choose_combat_target(target_party_instance))
     primary_instance = target_party_instance.members[primary_target_index]
@@ -117,17 +113,22 @@ def double_attack(attacker_instance:Combatant, target_party_instance:Party) -> N
     secondary_instance = target_party_instance.members[secondary_target_index]
 
     # exec damage
-    primary_instance.damage(final_damage)
-    Message.actor_attack_message(attacker_instance, final_damage)
+    attack(attacker_instance=attacker_instance, target_instance=primary_instance)
     if primary_instance.health == 0:
         Message.defeated_message(primary_instance.name)
         target_party_instance.lose_member(primary_instance)
 
-    secondary_instance.damage(int(final_damage * 0.5))
-    Message.actor_attack_message(attacker_instance, int(final_damage * 0.5))
-    if secondary_instance.health == 0:
-        Message.defeated_message(secondary_instance.name)
-        target_party_instance.lose_member(secondary_instance)
+    ## Attack 2nd instance
+    if secondary_instance in target_party_instance.members:
+        attack(attacker_instance=attacker_instance, target_instance=secondary_instance, damage_override_factor=0.5)
+        if secondary_instance.health == 0:
+            Message.defeated_message(secondary_instance.name)
+            target_party_instance.lose_member(secondary_instance)
+    ## ask for new target if 2nd target died after the first attack
+    else:
+        Message.display_message("Select a Living Target", 1)
+        secondary_target_index = int(Interaction.choose_combat_target(target_party_instance))
+        secondary_instance = target_party_instance.members[secondary_target_index]
 
     # luck + agl in 25 to get caught and take 50% target damage from target 2
     if (attacker_instance.luck + attacker_instance.agility) < random.randint(0,25):
@@ -157,7 +158,6 @@ def special_attack(attacker_instance:Combatant, target_party_instance:Party) -> 
                         if dumb_check > 10:
                             ## dumb message
                             attack(attacker_instance, target_party_instance.members[0])
-                        
                 dismember_attack(attacker_instance=attacker_instance, target_instance=target_instance)
             case 'MAGE':
                 aoe_attack(attacker_instance,target_party_instance)
