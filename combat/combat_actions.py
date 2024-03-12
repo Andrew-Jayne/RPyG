@@ -21,15 +21,14 @@ def check_for_critical(combatant_instance:Combatant) -> bool:
     else:
         return False
 
-def attack(attacker_instance:Combatant, target_instance:Combatant, damage_override_factor=1.0) -> None:
+def attack(attacker_instance:Combatant, target_instance:Combatant) -> None:
     if not isinstance(attacker_instance, Combatant):
         raise ValueError("The 'attacker_instance' parameter must be of type Combatant. Received type: {}".format(type(attacker_instance).__name__))
     if not isinstance(target_instance, Combatant):
         raise ValueError("The 'target_instance' parameter must be of type Combatant. Received type: {}".format(type(target_instance).__name__))
 
-    base_damage = int(attacker_instance.attack_power * damage_override_factor)
     damage_variation = int(attacker_instance.attack_power * 0.1)
-    final_damage =  base_damage + random.randint(-damage_variation,damage_variation)
+    final_damage =  attacker_instance.attack_power + random.randint(-damage_variation,damage_variation)
 
     if check_for_critical(attacker_instance) == True:
         Message.actor_critical_attack_message(attacker_instance,final_damage)
@@ -53,6 +52,7 @@ def react(combatant_instance:Combatant) -> bool:
         react_result = random.randint(1,30) <= (combatant_instance.luck + combatant_instance.agility)
     return react_result
 
+## TODO Cleanup Var Names and make more readable
 def dismember_attack(attacker_instance:Combatant, target_instance:Combatant) -> None:
     if not isinstance(attacker_instance, Combatant):
         raise ValueError("The 'attacker_instance' parameter must be of type Combatant. Received type: {}".format(type(attacker_instance).__name__))
@@ -73,9 +73,20 @@ def dismember_attack(attacker_instance:Combatant, target_instance:Combatant) -> 
 {attacker_instance.name} dismembers {target_instance.name} inflicting {attack_damage} damage
 {target_instance.name}'s attack power has been reduced by 25%
 """
-    Message.display_message(dismember_message, 2)
-    target_instance.dismember()
-    attack(attacker_instance=attacker_instance,target_instance=target_instance, damage_override_factor=0.25)
+    dismember_critial_message = f"""
+{attacker_instance.name} got a critical hit!
+{attacker_instance.name} dismembers {target_instance.name} inflicting {attack_damage * 2} damage
+{target_instance.name}'s attack power has been reduced by 25%
+"""
+    
+    if check_for_critical(attacker_instance) == True:
+        Message.display_message()
+        target_instance.dismember()
+        target_instance.damage(attack_damage * 2)
+    else:
+        target_instance.damage(attack_damage)
+        target_instance.dismember()
+        Message.display_message(dismember_critial_message, 2)
 
 def aoe_attack(attacker_instance:Combatant, target_party_instance:Party) -> None:
     if not isinstance(attacker_instance, Combatant):
@@ -121,7 +132,7 @@ def double_attack(attacker_instance:Combatant, target_party_instance:Party) -> N
 
     ## Attack 2nd instance
     if secondary_instance in target_party_instance.members:
-        attack(attacker_instance=attacker_instance, target_instance=secondary_instance, damage_override_factor=0.5)
+        attack(attacker_instance=attacker_instance, target_instance=secondary_instance)
         if secondary_instance.health == 0:
             Message.defeated_message(secondary_instance.name)
             target_party_instance.lose_member(secondary_instance)
