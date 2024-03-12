@@ -21,12 +21,12 @@ class Combat:
                 party_instance.lose_member(member)
     
     def is_battle_complete(player_party_instance:PlayerParty, enemy_party_instance:EnemyParty) -> bool:
-            ## Check if all parties are alive before proceeding
+            ## Check if players have died
             if __class__.is_party_alive(player_party_instance) == False:
-                __class__.battle_complete == True
+                __class__.battle_complete = True
                 return True
             elif __class__.is_party_alive(enemy_party_instance) == False:
-                __class__.battle_complete == True
+                __class__.battle_complete = True
                 return True
             else:
                 return False
@@ -97,14 +97,12 @@ class Combat:
             Message.battle_hud_message(player_party_instance, enemy_party_instance)
 
             ## Check if all parties are alive before running player turn
-            if __class__.is_battle_complete(player_party_instance,enemy_party_instance) == True:
-                break
-            __class__.process_player_turn(player_party_instance,enemy_party_instance)
+            if __class__.is_battle_complete(player_party_instance,enemy_party_instance) == False:
+                __class__.process_player_turn(player_party_instance,enemy_party_instance)
 
             ## Check if all parties are alive before running enemy turn
-            if __class__.is_battle_complete(player_party_instance,enemy_party_instance) == True:
-                break
-            __class__.process_enemy_turn(player_party_instance,enemy_party_instance)
+            if __class__.is_battle_complete(player_party_instance,enemy_party_instance) == False:
+                __class__.process_enemy_turn(player_party_instance,enemy_party_instance)
 
             ## Check if all parties are alive after both turns
             __class__.is_battle_complete(player_party_instance,enemy_party_instance)
@@ -115,4 +113,7 @@ class Combat:
             post_battle(player_party_instance)
             return True
         else:
+            print(__class__.is_party_alive(player_party_instance))
+            print( __class__.is_party_alive(enemy_party_instance))
+            print(__class__.battle_complete)
             return False
