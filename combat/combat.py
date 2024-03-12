@@ -113,7 +113,4 @@ class Combat:
             post_battle(player_party_instance)
             return True
         else:
-            print(__class__.is_party_alive(player_party_instance))
-            print( __class__.is_party_alive(enemy_party_instance))
-            print(__class__.battle_complete)
             return False
