@@ -52,7 +52,6 @@ def react(combatant_instance:Combatant) -> bool:
         react_result = random.randint(1,30) <= (combatant_instance.luck + combatant_instance.agility)
     return react_result
 
-## TODO Cleanup Var Names and make more readable
 def dismember_attack(attacker_instance:Combatant, target_instance:Combatant) -> None:
     if not isinstance(attacker_instance, Combatant):
         raise ValueError("The 'attacker_instance' parameter must be of type Combatant. Received type: {}".format(type(attacker_instance).__name__))
@@ -60,7 +59,7 @@ def dismember_attack(attacker_instance:Combatant, target_instance:Combatant) -> 
         raise ValueError("The 'target_instance' parameter must be of type Combatant. Received type: {}".format(type(target_instance).__name__))
     
     
-    if random.randint(0,99) in [range(attacker_instance.luck)]:
+    if random.randint(0,99) in [range(int(attacker_instance.luck / 2))]:
         if isinstance(target_instance, Enemy) and target_instance.is_special == False:
             decapitate_message = f"{attacker_instance.name} decapitates {target_instance.name} killing them instantly"
             Message.display_message(decapitate_message, 1)
@@ -104,8 +103,6 @@ def aoe_attack(attacker_instance:Combatant, target_party_instance:Party) -> None
 {attacker_instance.name} attacks with {attacker_instance.special_attack_name} dealing {per_target_damage * 2} damage to all enemies
 {attacker_instance.name} dealt critical hits to all enemies!
     """
-    
-    Message.display_message(aoe_attack_message, 1)
 
     if check_for_critical(attacker_instance) == True:
         Message.display_message(aoe_critical_attack_message, 1)
@@ -207,8 +204,6 @@ def special_attack(attacker_instance:Combatant, target_party_instance:Party) -> 
                 aoe_attack(attacker_instance,target_party_instance)
             case 'ROGUE':
                 double_attack(attacker_instance,target_party_instance)
-    else:
-        pass
 
 def post_battle(player_party_instance:PlayerParty) -> None:
     if not isinstance(player_party_instance, PlayerParty):
