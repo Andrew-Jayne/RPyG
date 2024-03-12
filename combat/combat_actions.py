@@ -80,7 +80,7 @@ def dismember_attack(attacker_instance:Combatant, target_instance:Combatant) -> 
 """
     
     if check_for_critical(attacker_instance) == True:
-        Message.display_message()
+        Message.display_message(dismember_message, 2)
         target_instance.dismember()
         target_instance.damage(attack_damage * 2)
     else:
@@ -89,6 +89,8 @@ def dismember_attack(attacker_instance:Combatant, target_instance:Combatant) -> 
         Message.display_message(dismember_critial_message, 2)
 
 def aoe_attack(attacker_instance:Combatant, target_party_instance:Party) -> None:
+
+    ## TODO Pretty sure the messages are fucked up
     if not isinstance(attacker_instance, Combatant):
         raise ValueError("The 'attacker_instance' parameter must be of type Combatant. Received type: {}".format(type(attacker_instance).__name__))
     if not isinstance(target_party_instance, Party):
@@ -97,12 +99,18 @@ def aoe_attack(attacker_instance:Combatant, target_party_instance:Party) -> None
     #set damage
     damage_variation = int(attacker_instance.attack_power * 0.1)
     final_damage = attacker_instance.attack_power + random.randint(-damage_variation,damage_variation)
-    override_factor = (1.5 / len(target_party_instance.members))
 
-    aoe_attack_message = f"{attacker_instance.name} attacks with {attacker_instance.special_attack_name} dealing {int(final_damage * override_factor)} damage to all enemies"
+    aoe_attack_message = f"{attacker_instance.name} attacks with {attacker_instance.special_attack_name} dealing {int(final_damage)} damage to all enemies"
     Message.display_message(aoe_attack_message, 1)
-    for target_instance in target_party_instance.members:
-        attack(attacker_instance=attacker_instance, target_instance=target_instance, damage_override_factor=override_factor)
+
+    if check_for_critical(attacker_instance) == True:
+        Message.actor_critical_attack_message(attacker_instance,final_damage)
+        for target_instance in target_party_instance.members:
+            target_instance.damage(final_damage * 2)
+    else:
+        Message.actor_attack_message(attacker_instance, final_damage)
+        for target_instance in target_party_instance.members:
+            target_instance.damage(final_damage)
     
     if attacker_instance.intellect <= random.randint(0,12):
         self_damage_amount = int(final_damage * 0.125)
@@ -125,18 +133,32 @@ def double_attack(attacker_instance:Combatant, target_party_instance:Party) -> N
     secondary_instance = target_party_instance.members[secondary_target_index]
 
     # exec damage
-    attack(attacker_instance=attacker_instance, target_instance=primary_instance)
+    damage_variation = int(attacker_instance.attack_power * 0.1)
+    final_damage =  attacker_instance.attack_power + random.randint(-damage_variation,damage_variation)
+
+    if check_for_critical(attacker_instance) == True:
+        Message.actor_critical_attack_message(attacker_instance,final_damage)
+        primary_instance.damage(final_damage * 2)
+    else:
+        Message.actor_attack_message(attacker_instance, final_damage)
+        primary_instance.damage(final_damage)
     if primary_instance.health == 0:
         Message.defeated_message(primary_instance.name)
         target_party_instance.lose_member(primary_instance)
 
     ## Attack 2nd instance
+    reduced_damage = int(final_damage * 0.5)
     if secondary_instance in target_party_instance.members:
-        attack(attacker_instance=attacker_instance, target_instance=secondary_instance)
+        if check_for_critical(attacker_instance) == True:
+            Message.actor_critical_attack_message(attacker_instance,reduced_damage)
+            secondary_instance.damage(reduced_damage * 2)
+        else:
+            Message.actor_attack_message(attacker_instance, reduced_damage)
+            secondary_instance.damage(reduced_damage)
         if secondary_instance.health == 0:
             Message.defeated_message(secondary_instance.name)
             target_party_instance.lose_member(secondary_instance)
-    ## ask for new target if 2nd target died after the first attack
+    ## ask for new target if 2nd target died after the first attack Need to add a while loop here
     else:
         Message.display_message("Select a Living Target", 1)
         secondary_target_index = int(Interaction.choose_combat_target(target_party_instance))
