@@ -153,29 +153,31 @@ def double_attack(attacker_instance:Combatant, target_party_instance:Party) -> N
     reduced_damage = int(final_damage * 0.5)
 
     # Make Sure a Living target is chosen
-    if secondary_instance not in target_party_instance.members:
-        while secondary_instance not in target_party_instance.members:
-            Message.display_message("Select a Living Target", 1)
-            secondary_target_index = int(Interaction.choose_combat_target(target_party_instance))
-            secondary_instance = target_party_instance.members[secondary_target_index]
+    # This prevents a softlock, if you kill the last target on attack 1
+    if len(target_party_instance.members) == 0:
+        if secondary_instance not in target_party_instance.members:
+            while secondary_instance not in target_party_instance.members:
+                Message.display_message("Select a Living Target", 1)
+                secondary_target_index = int(Interaction.choose_combat_target(target_party_instance))
+                secondary_instance = target_party_instance.members[secondary_target_index]
 
-    if check_for_critical(attacker_instance) == True:
-            Message.actor_critical_attack_message(attacker_instance,reduced_damage)
-            secondary_instance.damage(reduced_damage * 2)
-    else:
-        Message.actor_attack_message(attacker_instance, reduced_damage)
-        secondary_instance.damage(reduced_damage)
+        if check_for_critical(attacker_instance) == True:
+                Message.actor_critical_attack_message(attacker_instance,reduced_damage)
+                secondary_instance.damage(reduced_damage * 2)
+        else:
+            Message.actor_attack_message(attacker_instance, reduced_damage)
+            secondary_instance.damage(reduced_damage)
     
-    # Check if Target Died
-    if secondary_instance.health == 0:
-        Message.defeated_message(primary_instance.name)
-        target_party_instance.lose_member(primary_instance)
+        # Check if Target Died
+        if secondary_instance.health == 0:
+            Message.defeated_message(primary_instance.name)
+            target_party_instance.lose_member(primary_instance)
 
-    # luck + agl in 25 to get caught and take 50% target damage from target 2
-    if (attacker_instance.luck + attacker_instance.agility) < random.randint(0,25):
-        attacker_instance.damage(int(secondary_instance.attack_power * 0.5))
-        caught_attack_message = f"{attacker_instance.name} fails fails do evade an attack from {secondary_instance.name} and takes {int(secondary_instance.attack_power * 0.5)} damage"
-        Message.display_message(caught_attack_message, 2)
+        # luck + agl in 25 to get caught and take 50% target damage from target 2
+        if (attacker_instance.luck + attacker_instance.agility) < random.randint(0,25):
+            attacker_instance.damage(int(secondary_instance.attack_power * 0.5))
+            caught_attack_message = f"{attacker_instance.name} fails fails do evade an attack from {secondary_instance.name} and takes {int(secondary_instance.attack_power * 0.5)} damage"
+            Message.display_message(caught_attack_message, 2)
 
 
 def special_attack(attacker_instance:Combatant, target_party_instance:Party) -> None:
