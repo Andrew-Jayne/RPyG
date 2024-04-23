@@ -1,0 +1,38 @@
+{"dungeons": [
+    {"id":"algolons_fortess",
+        "name": "Algolon's Fortress",
+        "messages": {
+            "start_message":"Algolon's Fortress",
+            "boss_enounter_message": "At the end of the Keep Your Party encounters Algolon's Arch Mage!",
+            "shortcut_message": "Your Party finds a Secret Passage!",
+            "heal_room_message": "Your Party finds a Store Room with some food & potions"
+                },
+        "length":0,
+        "enemies": [ 
+            {"keep_minion" : {
+                    "name": "Acolyte of Algolon",
+                    "health": 140,
+                    "strength": 3,
+                    "intellect": 7,
+                    "agility": 4,
+                    "luck": 6,
+                    "attack_name": "Arcane Bolt",
+                    "is_special": false
+                }}
+            ],
+        "boss": {    
+            "keep_master": {
+                "name": "Algolon's Arch Mage",
+                "health": 450,
+                "strength": 4,
+                "intellect": 10,
+                "agility": 4,
+                "luck": 6,
+                "attack_name": "Arcane Lightning",
+                "is_special": true
+                }
+            }},
+    {"id":"otherplace"},
+    {"id":"othermoredifferentplace"}
+]
+}
