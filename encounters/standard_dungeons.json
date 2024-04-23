@@ -1,0 +1,20 @@
+{
+    "dungeons": [
+        {"dungeon_id": {
+            "dungeon_name": "",
+            "messages": {
+                "start_message":"STR",
+                "boss_enounter_message": "STR",
+                "shortcut_message": "STR",
+                "heal_room_message": "STR"
+                },
+            "length":0,
+            "enemies": [ 
+                    {"enemy_id" : {}}
+                ],
+            "boss": {}
+            }
+        }
+
+    ]
+}
