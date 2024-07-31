@@ -11,10 +11,6 @@ def main():
         base = os.path.splitext(file_name)[0]
         return base + new_extension
 
-    # Read JSON file
-    with open(input_file, 'r') as json_file:
-        data = json.load(json_file)
-
     output_file  = change_file_extension(input_file, ".json")
 
     # Read YAML file
