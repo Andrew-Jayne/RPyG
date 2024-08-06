@@ -1,7 +1,6 @@
 import random
 from interaction.interaction_utilities import validate_input, sanitize, custom_text_entry
 from logic.logic import select_combat_target
-from message.message import Message
 from interaction.interaction_manual import *
 
 # Only Used For Type Hinting/Checking
@@ -58,6 +57,8 @@ class Interaction:
 
     @staticmethod
     def in_battle(player_instance:PlayableActor) -> str:
+        from message.message import Message
+
         if not isinstance(player_instance, PlayableActor):
             raise ValueError("The 'player_instance' parameter must be of type PlayableActor. Received type: {}".format(type(player_instance).__name__))
 
@@ -80,6 +81,8 @@ class Interaction:
 
     @staticmethod
     def at_merchant(player_party_instance:PlayerParty) -> None:
+        from message.message import Message
+
         if not isinstance(player_party_instance, PlayerParty):
             raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
 
