@@ -9,26 +9,6 @@
             "attack_name": "Arcane Firestorm",
             "is_special": true
         },
-    "keep_minion": {
-            "name": "Acolyte of Algolon",
-            "health": 140,
-            "strength": 3,
-            "intellect": 7,
-            "agility": 4,
-            "luck": 6,
-            "attack_name": "Arcane Bolt",
-            "is_special": false
-        },
-    "keep_master": {
-        "name": "Algolon's Arch Mage",
-        "health": 450,
-        "strength": 4,
-        "intellect": 10,
-        "agility": 4,
-        "luck": 6,
-        "attack_name": "Arcane Lightning",
-        "is_special": true
-        },
     "penultimate_boss": {
         "name": "The Great Wizard Algolon",
         "health": 600,
