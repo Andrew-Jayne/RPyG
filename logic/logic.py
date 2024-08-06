@@ -3,6 +3,7 @@ import random
 # Only used for Type Checking
 from actors.actor_party import Party
 
+@staticmethod
 def select_combat_target(target_party_instance:Party) -> int:
     if not isinstance(target_party_instance, Party):
         raise ValueError("The 'target_party_instance' parameter must be of type Party. Received type: {}".format(type(target_party_instance).__name__))
@@ -10,7 +11,6 @@ def select_combat_target(target_party_instance:Party) -> int:
     """
     Takes a full party instance, and returns the index of the target member in the members array/list as an int
     """
-
 
     target_party_members = target_party_instance.members
     method_id = random.choice(["MAX_ATK","MIN_HP","RANDOM"])
