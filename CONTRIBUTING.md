@@ -28,6 +28,9 @@ All functions should have basic type hinting and ideally a description. Below is
 
 ```python
 def string_repeater(source_string: str, repeat_count: int) -> list:
+    """
+Takes a string and count then returns a list of count instances of string
+    """
     repeat_list = []
     for _ in range(repeat_count):
         repeat_list.append(source_string)
