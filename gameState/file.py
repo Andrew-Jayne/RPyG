@@ -25,7 +25,7 @@ def save_game(player_party_instance: PlayerParty) -> None:
 
     with open('savegame.rpygs', 'wb') as save_file:
         save_file.write(signature + serialized_data)
-    Message.display_message(f"Successfully Saved Game for: {player_party_instance.name}")
+    Message.display_message(f"Successfully Saved Game for {player_party_instance.name}")
     save_prompt = """
 Would you like to keep playing?
 YES
