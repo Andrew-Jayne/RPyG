@@ -1,6 +1,6 @@
 This project is now openly accenpting contributions 
 
-please create a branch from main and open a PR for approval
+Please create a branch from main and open a PR for approval
 
 PRs should include a reasonable description of thr changes made and must pass a test run of 'python3 main.py --auto'
 
@@ -14,4 +14,6 @@ This project is built with thr intention of running on any pythnon environment a
 Looking for ideas? Check out todo.md 
 
 Have some ideas? Add them to todo.md
+
+Find a Bug? Open an issue or add it to bugs.md
 
