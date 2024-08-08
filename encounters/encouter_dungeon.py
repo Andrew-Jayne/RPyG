@@ -9,6 +9,7 @@ from message.message import Message
 # Create a Dungeon Object?
 # Dungeon is a Funciton?
 
+#dungeon is an object, traverse_dungeon() is a function in that object
 
 
 
@@ -18,6 +19,9 @@ class Dungeon():
 
         json.load()
         pass 
+        
+    def traverse_dungeon():
+    		pass
 
 
 # Just for Type Checking
