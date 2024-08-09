@@ -1,63 +1,59 @@
 from actors.actor import Actor
+from utilites.utilities import ensure_type
 
-#Only for Type Checking/Hinting
+# Only for Type Checking/Hinting
+from actors.actor_combatant import Combatant
 from actors.actor_playable import PlayableActor
 from actors.actor_enemy import Enemy
 
 
 class Party:
-    def __init__(self, members:list[Actor]) -> None:
-        if not isinstance(members, list):
-            raise ValueError("The 'members' parameter must be of type list. Received type: {}".format(type(members).__name__))
+    def __init__(self, members: list[Actor | PlayableActor | Enemy | Combatant]) -> None:
+        ensure_type(members, list, 'members')
+
         for party_member in members:
-            if not isinstance(party_member, Actor):
-                raise ValueError("The 'party_member' parameter must be of type Actor. Received type: {}".format(type(party_member).__name__))
+            ensure_type(party_member, Actor, 'party_member')
 
         self.members = members
 
     def lose_member(self, member) -> None:
         self.members.remove(member)
-    
+
     def gain_member(self, member) -> None:
         self.members.append(member)
 
+
 class PlayerParty(Party):
     """
-    Stores the progress of the party, and a list/array of member instances 
+    Stores the progress of the party, and a list/array of member instances
     """
 
-    def __init__(self, name:str, members:list[PlayableActor]) -> None:
-        if not isinstance(name, str):
-            raise ValueError("The 'name' parameter must be of type str. Received type: {}".format(type(name).__name__))
-        if not isinstance(members, list):
-            raise ValueError("The 'members' parameter must be of type list. Received type: {}".format(type(members).__name__))
+    def __init__(self, name: str, members: list[PlayableActor | Combatant]) -> None:
+        ensure_type(name, str, 'name')
+        ensure_type(members, list, 'members')
         for party_member in members:
-            if not isinstance(party_member, PlayableActor):
-                raise ValueError("The 'party_member' parameter must be of type Actor. Received type: {}".format(type(party_member).__name__))
-        
+            ensure_type(party_member, PlayableActor, 'party_member' )
+
         Party.__init__(self, members=members)
         self.dead_members = []
         self.progress = 0
         self.name = name
-    
+
     def lose_member(self, member) -> None:
         self.dead_members.append(member)
         self.members.remove(member)
-    
+
     def gain_member(self, member) -> None:
         self.members.append(member)
 
 
 class EnemyParty(Party):
-    def __init__(self, name:str, members:list[Enemy]) -> None:
-        if not isinstance(name, str):
-            raise ValueError("The 'name' parameter must be of type str. Received type: {}".format(type(name).__name__))
-        if not isinstance(members, list):
-            raise ValueError("The 'members' parameter must be of type list. Received type: {}".format(type(members).__name__))
+    def __init__(self, name: str, members: list[Enemy | Combatant]) -> None:
+        ensure_type(name, str, 'name')
+        ensure_type(members, list, 'members')
         for party_member in members:
-            if not isinstance(party_member, Enemy):
-                raise ValueError("The 'party_member' parameter must be of type Actor. Received type: {}".format(type(party_member).__name__))
-        
+            ensure_type(party_member, Enemy, 'party_member')
+
         Party.__init__(self, members=members)
         self.name = name
         self.members = members

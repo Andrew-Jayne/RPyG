@@ -1,24 +1,26 @@
 import random
+from utilites.utilities import ensure_type
 from encounters.encounter_enemy import enemy_encounter
 from encounters.encounter_special import SpecialEncounters
 from encounters.encounter_standard import standard_encounter
 from message.message import Message
+
 # Just for Type Checking
 from actors.actor_party import PlayerParty
 
-def check_for_encounter(player_party_instance:PlayerParty, empty_distance:int) -> bool:
-    if not isinstance(player_party_instance, PlayerParty):
-        raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
 
-    if player_party_instance.progress not in [1,25,50,75,99,100]:
+def check_for_encounter(player_party_instance: PlayerParty, empty_distance: int) -> bool:
+    ensure_type(player_party_instance, PlayerParty, "player_party_instance")
+
+    if player_party_instance.progress not in [1, 25, 50, 75, 99, 100]:
         encounter_check = random.uniform(0, 1)
 
-        if 0 <= encounter_check < 0.125:  #12.5% chance
+        if 0 <= encounter_check < 0.125:  # 12.5% chance
             Message.distance_since_last(empty_distance)
             enemy_encounter(player_party_instance)
             return True
             
-        elif 0.125 <= encounter_check < 0.325:  #20% chance
+        elif 0.125 <= encounter_check < 0.325:  # 20% chance
             Message.distance_since_last(empty_distance)
             standard_encounter(player_party_instance)
             return True
