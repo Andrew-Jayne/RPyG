@@ -40,8 +40,9 @@ Takes a string and count then returns a list of count instances of string
 
 Most if not all functions also use a statement like the one below to ensure that the correct type of object is being passed to funcitons, while not mandatory it is encouraged. 
 ```python
-if not isinstance(input_varible, bool):
-        raise ValueError("The 'input_varible' parameter must be of type bool. Received type: {}".format(type(input_varible).__name__))
+from utilites.utilities import ensure_type
+ensure_type(instance, expected_type, variable_name)
+
 ```
 
 
