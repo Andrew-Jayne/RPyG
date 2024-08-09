@@ -1,14 +1,13 @@
 import random
+from utilites.utilities import ensure_type
 from actors.actor import Actor
 from actors.actor_combatant import Combatant
 
 
 class Inventory:
     def __init__(self, gold:int, potions:int) -> None:
-        if not isinstance(gold, int):
-            raise ValueError("The 'gold' parameter must be of type int. Received type: {}".format(type(gold).__name__))
-        if not isinstance(potions, int):
-            raise ValueError("The 'potions' parameter must be of type int. Received type: {}".format(type(potions).__name__))
+        ensure_type(gold, int, 'gold')
+        ensure_type(potions, int, 'potions')
         
         self.gold = gold
         self.potions = potions
@@ -44,10 +43,8 @@ class Inventory:
 
 class PlayableActor(Actor, Inventory, Combatant):
     def __init__(self, name: str, specialization: str) -> None:
-        if not isinstance(name, str):
-            raise ValueError("The 'name' parameter must be of type str. Received type: {}".format(type(name).__name__))
-        if not isinstance(specialization, str):
-            raise ValueError("The 'specialization' parameter must be of type str. Received type: {}".format(type(specialization).__name__))
+        ensure_type(name, str, 'name')
+        ensure_type(specialization, str, 'specialization')
 
         self.name = name
         self.specialization = specialization

@@ -15,6 +15,7 @@ def welcome() -> None:
 """
     Message.display_message(welcome_message, 1)
 
+
 def get_start_type() -> str:
 
     if os.path.exists('savegame.rpygs'):
@@ -77,10 +78,11 @@ Note: Case is respected but names longer than 64 characters will be truncated
 
 """
 
-    party_size = int(Interaction.validate_input(party_size_choices, party_size_message)) #kinda Yikes but casting str to int is not horrendously unsafe
+    party_size = int(Interaction.validate_input(party_size_choices, party_size_message))
+# kinda Yikes but casting str to int is not horrendously unsafe
     party_members = []
-    for _ in range(0,party_size):
-        member_name =  Interaction.custom_text_entry(member_name_message, 32)
+    for _ in range(0, party_size):
+        member_name = Interaction.custom_text_entry(member_name_message, 32)
         member_specialization = Interaction.validate_input(specialization_choices,specialization_messages)
         member = [member_name, member_specialization]
         party_members.append(member)
