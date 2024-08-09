@@ -72,9 +72,9 @@ class Message():
             time.sleep(2)
 
         actor_critical_attack_message = f"""
-{attacker_instance.name} attacks with {attacker_instance.attack_name} inflicting {damage_value * 2} damage
-{attacker_instance.name} got a critical hit!!
-"""
+	{attacker_instance.name} attacks with {attacker_instance.attack_name} inflicting {damage_value * 2} damage
+	{attacker_instance.name} got a critical hit!!
+	"""
         __class__.display_message(actor_critical_attack_message, 2)
 
 
