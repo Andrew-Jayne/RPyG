@@ -2,37 +2,11 @@ import argparse
 
 
 def main(game_mode: str, using_default_party: bool) -> None:
-    from gameState.file import load_game
-    from gameState.welcome import welcome, get_start_type, party_start, default_party
-    from actors.actor_playable import PlayableActor
-    from actors.actor_party import PlayerParty
     from message.message import Message
-    from interaction.interaction import Interaction
+    from gameState.game_start import start_game
     from encounters.encounter import check_for_encounter
 
-    welcome()
-
-    match game_mode:
-        case "AUTO":
-            Interaction.global_game_mode = "AUTO"
-            player_party_instance = PlayerParty(name="The Default Party", members=default_party())
-        case "MANUAL":
-            Interaction.global_game_mode = "MANUAL"
-            if using_default_party is True:
-                player_party_instance = PlayerParty(name="The Default Party", members=default_party())
-            else:
-                match get_start_type():
-                    case "LOAD":
-                        player_party_instance = load_game()
-                    case "NEW":
-                        my_party, my_party_name = party_start()
-                        my_party_instances = []
-                        for member in my_party:
-                            my_party_instances.append(PlayableActor(member[0], member[1]))
-
-                        player_party_instance = PlayerParty(my_party_name, my_party_instances)
-        case _:
-            raise ValueError("Error No Valid Game Mode was selected")
+    player_party_instance = start_game(game_mode, using_default_party)
 
     rounds_without_encounter = 0
     # The Key Loop

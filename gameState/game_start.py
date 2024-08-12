@@ -3,6 +3,8 @@ from interaction.interaction import Interaction
 from message.message import Message
 from display.display import Display
 from actors.actor_playable import PlayableActor
+from actors.actor_party import PlayerParty
+from gameState.file import load_game
 
 
 def welcome() -> None:
@@ -26,9 +28,9 @@ Options are : NEW & LOAD
 
 NOTE: All Prompts in this game are case insensitive
 
-"""  
+"""
         new_and_load_choices = ["NEW", "LOAD"]
-        player_action = Interaction.validate_input(new_and_load_choices, new_and_load_message)      
+        player_action = Interaction.validate_input(new_and_load_choices, new_and_load_message)
 
     else:
         new_game_message = """
@@ -99,3 +101,27 @@ def default_party() -> list:
         member = (default_names[i], default_specialization[i])
         party_members.append(PlayableActor(member[0], member[1]))
     return party_members
+
+
+def start_game(game_mode: str, using_default_party: bool) -> PlayerParty:
+    from interaction.interaction import Interaction
+    match game_mode:
+        case "AUTO":
+            Interaction.global_game_mode = "AUTO"
+            return PlayerParty(name="The Default Party", members=default_party())
+        case "MANUAL":
+            Interaction.global_game_mode = "MANUAL"
+            if using_default_party is True:
+                return PlayerParty(name="The Default Party", members=default_party())
+            else:
+                match get_start_type():
+                    case "LOAD":
+                        return load_game()
+                    case "NEW":
+                        my_party, my_party_name = party_start()
+                        my_party_instances = []
+                        for member in my_party:
+                            my_party_instances.append(PlayableActor(member[0], member[1]))
+                        return PlayerParty(my_party_name, my_party_instances)
+        case _:
+            raise ValueError("Error No Valid Game Mode was selected")
