@@ -56,6 +56,6 @@ def check_for_encounter(player_party_instance: PlayerParty, empty_distance: int)
                         
                         A man calls to you and says:
                         
-                        'Hey You! Finally Awake!
+                        'Hey You! Finally Awake!'
                         """)
     
