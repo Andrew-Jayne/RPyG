@@ -8,7 +8,7 @@ from actors.actor_enemy import Enemy
 
 
 class Party:
-    def __init__(self, members: list[Actor | PlayableActor | Enemy | Combatant]) -> None:
+    def __init__(self, members: list[Actor]) -> None:
         ensure_type(members, list, 'members')
 
         for party_member in members:
@@ -28,7 +28,7 @@ class PlayerParty(Party):
     Stores the progress of the party, and a list/array of member instances
     """
 
-    def __init__(self, name: str, members: list[PlayableActor | Combatant]) -> None:
+    def __init__(self, name: str, members: list[PlayableActor]) -> None:
         ensure_type(name, str, 'name')
         ensure_type(members, list, 'members')
         for party_member in members:
@@ -48,7 +48,7 @@ class PlayerParty(Party):
 
 
 class EnemyParty(Party):
-    def __init__(self, name: str, members: list[Enemy | Combatant]) -> None:
+    def __init__(self, name: str, members: list[Enemy]) -> None:
         ensure_type(name, str, 'name')
         ensure_type(members, list, 'members')
         for party_member in members:
