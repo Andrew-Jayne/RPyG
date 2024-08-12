@@ -1,18 +1,20 @@
 import random
 import json
 from actors.actor_enemy import Enemy
-from actors.actor_party import EnemyParty, PlayerParty # <- Only for Type Checking
 from combat.combat import Combat
 from message.message import Message
 from interaction.interaction import Interaction
+from utilites.utilities import ensure_type
+
+# Only for Type Checking / Hinting
+from actors.actor_party import EnemyParty, PlayerParty
 
 
-def enemy_encounter(player_party_instance:PlayerParty) -> None:
-    if not isinstance(player_party_instance, PlayerParty):
-        raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
+def enemy_encounter(player_party_instance: PlayerParty) -> None:
+    ensure_type(player_party_instance, PlayerParty, 'player_party_instance')
+    enemy_party_attributes = {}
 
-
-    enemy_chance = random.randint(0,4)
+    enemy_chance = random.randint(0, 4)
     with open('encounters/enemies_common.json', 'r') as enemies_file:
         enemies_lists = json.load(enemies_file)
     if enemy_chance == 6:
@@ -28,7 +30,7 @@ def enemy_encounter(player_party_instance:PlayerParty) -> None:
     elif enemy_chance == 4:
         enemy_party_attributes = random.choice(enemies_lists['large_enemies'])
 
-    #Set Enemy Count
+    # Set Enemy Count
     enemy_count = int(len(player_party_instance.members) + random.randint(-2,2))
     if enemy_count <= 0:
         enemy_count = 1
@@ -44,20 +46,18 @@ def enemy_encounter(player_party_instance:PlayerParty) -> None:
         variant_choice_index = random.randint(0,(len(enemy_party_attributes['variant_lists'][variant_grade]) - 1))
         
         enemy_party_instances.append(Enemy(enemy_party_attributes['variant_lists'][variant_grade][variant_choice_index]))
-    
-        
-    if enemy_count == 1:
+
+    if enemy_count is 1:
         enemy_party_name = f"Lone {enemy_party_instances[0].name}"
     else:
         enemy_party_name  = f"{enemy_party_attributes['group_name']} of {enemy_count} {enemy_party_attributes['pural_name']}"
     
     enemy_party = EnemyParty(enemy_party_name, enemy_party_instances)
 
-
     Message.encounter_message(enemy_party_name)
     match Interaction.encounter_enemy():
         case "BATTLE":
-                Combat.battle(player_party_instance, enemy_party)
+            Combat.battle(player_party_instance, enemy_party)
         case "FLEE":
             for player_instance in player_party_instance.members:
                 if player_instance.luck >= random.randint(4,15):
