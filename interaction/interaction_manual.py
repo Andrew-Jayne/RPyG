@@ -1,9 +1,11 @@
-## Manual Interactions
+# Manual Interactions
 from interaction.interaction_utilities import validate_input
+from utilites.utilities import ensure_type
 
-#Only Used for type checking
+# Only Used for type checking
 from actors.actor_party import PlayerParty, EnemyParty
 from actors.actor_playable import PlayableActor
+
 
 def manual_enemy_encounter() -> str:
     encounter_options = ["BATTLE", "FLEE"]
@@ -16,8 +18,9 @@ FLEE
     return validate_input(encounter_options, encounter_message)
 
 
-def manual_in_battle(player_instance:PlayableActor) -> str:
+def manual_in_battle(player_instance: PlayableActor) -> str:
     from message.message import Message
+    ensure_type(player_instance, PlayableActor, 'player_instance')
     battle_options = ["ATTACK", f"{player_instance.special_attack_name}", f"{player_instance.react_action}", "HEAL"]
     battle_message = f"""
 {player_instance.name}
@@ -52,9 +55,9 @@ SAVE
 """     
     return validate_input(post_battle_options, post_battle_message)
 
-def manual_choose_combat_target(enemy_party_instance:EnemyParty) -> str:
-    if not isinstance(enemy_party_instance, EnemyParty):
-        raise ValueError("The 'enemy_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(enemy_party_instance).__name__))
+
+def manual_choose_combat_target(enemy_party_instance:EnemyParty) -> int:
+    ensure_type(enemy_party_instance, EnemyParty, 'enemy_party_instance')
 
     target_options = []
     for i in range(0,len(enemy_party_instance.members)):
@@ -67,10 +70,9 @@ def manual_choose_combat_target(enemy_party_instance:EnemyParty) -> str:
 
     target_message = "\n".join(base_target_message)
 
-    return validate_input(target_options, target_message)
+    return int(validate_input(target_options, target_message))
 
 
-   
 def manual_at_merchant(player_party_instance:PlayerParty) -> None:
     import math
     from message.message import Message
@@ -105,9 +107,9 @@ BUY MAX
                         Message.display_message(f"{player_instance.name} does not have enough Gold to purchase more potions", 1)
                         player_choice = "LEAVE"
                 case "BUY MAX":
-                    ## Using floor to make sure you can't buy 10 potions with 245 gold
+                    # Using floor to make sure you can't buy 10 potions with 245 gold
                     rounds = math.floor(player_instance.gold / 25)
-                    player_instance.spend_gold((round * 25))
+                    player_instance.spend_gold((rounds * 25))
                     player_instance.gain_potion(rounds)
                     player_choice = "LEAVE"
                 case "LEAVE":
@@ -132,7 +134,8 @@ NO
             return False
         case _:
             return True
-        
+
+
 def manual_mystery_action() -> str:
     player_choice = None
     rest_options = ["ATTACK", "GREET"]
@@ -146,7 +149,6 @@ GREET
 
     return player_choice
     
-        
 
 def manual_loot_action() -> bool:
     player_choice = None
@@ -159,9 +161,15 @@ LEAVE
 """
     player_choice = validate_input(rest_options, rest_message)
 
-    return player_choice
+    match player_choice:
+        case "YES":
+            return True
+        case "NO":
+            return False
+        case _:
+            return True
 
-        
+
 def manual_embark() -> bool: ## i can make this funnier
     from message.message import Message
     player_choice = None
@@ -181,7 +189,7 @@ DRINK
             return True
         case "DRINK":
             Message.display_message("After many drinks, the kings missive sticks in your mind.", 1)
-            if manual_embark() == True:
+            if manual_embark() is True:
                 return True
         case _:
             return True
@@ -189,7 +197,6 @@ DRINK
 
 def manual_accept_quest() -> bool:
     from message.message import Message
-    player_choice = None
     rest_options = ["ACCEPT", "DECLINE"]
     rest_message = """
 Will you accept this quest from the King?
@@ -206,7 +213,7 @@ DECLINE
             return True
         case "DECLINE":
             Message.display_message("The King insists, and asks again", 1)
-            if manual_accept_quest() == True:
+            if manual_accept_quest() is True:
                 return True
         case _:
             return True
