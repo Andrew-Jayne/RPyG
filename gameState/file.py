@@ -11,6 +11,7 @@ from actors.actor_party import PlayerParty
 # """Secret""" key for HMAC, if you break your file that's on you
 secret_key = b"I_WILL_HACK_MY_SAVE_FILE_AND_PROBLEMS_WILL_BE_MY_FAULT"
 
+
 def save_game(player_party_instance: PlayerParty) -> None:
     """
     Call this to Save the current state of the player party object to a pickle file then exits the program 
@@ -25,7 +26,7 @@ def save_game(player_party_instance: PlayerParty) -> None:
 
     with open('savegame.rpygs', 'wb') as save_file:
         save_file.write(signature + serialized_data)
-    Message.display_message(f"Successfully Saved Game for {player_party_instance.name}")
+    Message.display_message(f"Successfully Saved Game for {player_party_instance.name}", 2)
     save_prompt = """
 Would you like to keep playing?
 YES
@@ -33,14 +34,16 @@ NO
 
 
 """
-    save_options = ["YES","NO"]
-    match validate_input(save_options,save_prompt):
+    save_options = ["YES", "NO"]
+    match validate_input(save_options, save_prompt):
         case "YES":
             pass
         case "NO":
             exit()
         case _:
             pass
+
+
 def load_game() -> PlayerParty:
     """
     Call this to load the game stored in the pickle file called 'savegame.rpygs'.
@@ -50,8 +53,7 @@ def load_game() -> PlayerParty:
     
     # Check if the save file exists
     if not os.path.exists(save_file_path):
-        raise FileNotFoundError("Save file not found. Please check the file path and try again, or start a new game when prompted")
-    
+        raise FileNotFoundError("Save file not found. Please check file path & try again, or start a new game")
 
     with open(save_file_path, 'rb') as save_file:
         content = save_file.read()
