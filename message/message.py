@@ -8,6 +8,7 @@ from interaction.interaction import Interaction
 from actors.actor_party import PlayerParty, EnemyParty
 from actors.actor_combatant import Combatant
 
+
 class Message():
     @staticmethod
     def display_message(message: str, new_line_count: int) -> None:
@@ -77,8 +78,6 @@ class Message():
 """
         __class__.display_message(actor_critical_attack_message, 2)
 
-
-
     # Battle Messages
     @staticmethod
     def battle_hud_message(player_party_instance:PlayerParty, enemy_party_instance:EnemyParty) -> None:
@@ -146,30 +145,11 @@ class Message():
             if Interaction.global_game_mode == "MANUAL":
                 time.sleep(2)
 
-
     # Player Messages
-                
-                
-    @staticmethod
-    def game_over_message(player_party_instance:PlayerParty)-> None:
-        game_over_message = f"{player_party_instance.name} has failed in their quest after {player_party_instance.progress * 10} miles"
-
-        __class__.display_message(game_over_message, 2)
-
-
-
-    @staticmethod
-    def game_over_message(player_party_instance:PlayerParty)-> None:
-        game_over_message = f"{player_party_instance.name} has failed in their quest after {player_party_instance.progress * 10} miles"
-
-        __class__.display_message(game_over_message, 2)
-
-
     @staticmethod
     def post_game_recap(player_party_instance:PlayerParty) -> None:
         if not isinstance(player_party_instance, PlayerParty):
             raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
-
 
         for player_instance in player_party_instance.members:
             player_report = f"""
@@ -207,19 +187,13 @@ Player Attack Power: {player_instance.attack_power}
 
             __class__.display_message(player_report, 2)
 
-
     @staticmethod
-    def game_over_message(player_party_instance:PlayerParty)-> None:
+    def game_over_message(player_party_instance:PlayerParty) -> None:
         game_over_message = f"{player_party_instance.name} has failed in their quest after {player_party_instance.progress * 10} miles"
 
         __class__.display_message(game_over_message, 2)
         time.sleep(2)
         __class__.post_game_recap(player_party_instance)
-    
-    @staticmethod
-    def end_game_message(player_party_instance:PlayerParty) -> None:
-        if not isinstance(player_party_instance, PlayerParty):
-            raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
 
     @staticmethod
     def empty_travel_message(empty_distance:int) -> None:

@@ -2,6 +2,7 @@ import random
 from gameState.file import save_game
 from message.message import Message
 from interaction.interaction import Interaction
+from utilites.utilities import ensure_type
 
 
 # Only for Type Checking
@@ -11,9 +12,9 @@ from actors.actor_combatant import Combatant
 from actors.actor_playable import PlayableActor
 from actors.actor_enemy import Enemy
 
+
 def check_for_critical(combatant_instance:Combatant) -> bool:
-    if not isinstance(combatant_instance, Combatant):
-        raise ValueError("The 'combatant_instance' parameter must be of type Combatant. Received type: {}".format(type(combatant_instance).__name__))
+    ensure_type(combatant_instance, Combatant, 'combatant_instance')
 
     crit_check = random.randint(1,100)
     if crit_check <= (combatant_instance.luck + combatant_instance.agility):
@@ -21,45 +22,42 @@ def check_for_critical(combatant_instance:Combatant) -> bool:
     else:
         return False
 
-def attack(attacker_instance:Combatant, target_instance:Combatant) -> None:
-    if not isinstance(attacker_instance, Combatant):
-        raise ValueError("The 'attacker_instance' parameter must be of type Combatant. Received type: {}".format(type(attacker_instance).__name__))
-    if not isinstance(target_instance, Combatant):
-        raise ValueError("The 'target_instance' parameter must be of type Combatant. Received type: {}".format(type(target_instance).__name__))
+
+def attack(attacker_instance: Combatant, target_instance: Combatant) -> None:
+    ensure_type(attacker_instance, Combatant, 'attacker_instance')
+    ensure_type(target_instance, Combatant, 'attacker_instance')
 
     damage_variation = int(attacker_instance.attack_power * 0.1)
     final_damage =  attacker_instance.attack_power + random.randint(-damage_variation,damage_variation)
 
-    if check_for_critical(attacker_instance) == True:
+    if check_for_critical(attacker_instance) is True:
         Message.actor_critical_attack_message(attacker_instance,final_damage)
         target_instance.damage(final_damage * 2)
     else:
         Message.actor_attack_message(attacker_instance, final_damage)
         target_instance.damage(final_damage)
 
-def react(combatant_instance:Combatant) -> bool:
-    if not isinstance(combatant_instance, Combatant):
-        raise ValueError("The 'combatant_instance' parameter must be of type Combatant. Received type: {}".format(type(combatant_instance).__name__))
+
+def react(combatant_instance: Combatant) -> bool:
+    ensure_type(combatant_instance, Combatant, 'combatant_instance')
+
     if isinstance(combatant_instance, PlayableActor):
         match combatant_instance.specialization:
             case 'WARRIOR':
-                react_result = random.randint(1,30) <= (combatant_instance.luck + combatant_instance.strength)
+                return random.randint(1,30) <= (combatant_instance.luck + combatant_instance.strength)
             case 'MAGE':
-                react_result = random.randint(1,30) <= (combatant_instance.luck + combatant_instance.intellect)
+                return random.randint(1,30) <= (combatant_instance.luck + combatant_instance.intellect)
             case 'ROGUE':
-                react_result = random.randint(1,30) <= (combatant_instance.luck + combatant_instance.agility)
+                return random.randint(1,30) <= (combatant_instance.luck + combatant_instance.agility)
     else:
-        react_result = random.randint(1,30) <= (combatant_instance.luck + combatant_instance.agility)
-    return react_result
+        return random.randint(1,30) <= (combatant_instance.luck + combatant_instance.agility)
 
-def dismember_attack(attacker_instance:Combatant, target_instance:Combatant) -> None:
-    if not isinstance(attacker_instance, Combatant):
-        raise ValueError("The 'attacker_instance' parameter must be of type Combatant. Received type: {}".format(type(attacker_instance).__name__))
-    if not isinstance(target_instance, Combatant):
-        raise ValueError("The 'target_instance' parameter must be of type Combatant. Received type: {}".format(type(target_instance).__name__))
-    
-    
-    if random.randint(0,99) in [range(int(attacker_instance.luck / 2))]:
+
+def dismember_attack(attacker_instance: Combatant, target_instance :Combatant) -> None:
+    ensure_type(attacker_instance, Combatant, 'attacker_instance')
+    ensure_type(target_instance, Combatant, 'attacker_instance')
+
+    if random.randint(0, 99) in [range(int(attacker_instance.luck / 2))]:
         if isinstance(target_instance, Enemy) and target_instance.is_special == False:
             decapitate_message = f"{attacker_instance.name} decapitates {target_instance.name} killing them instantly"
             Message.display_message(decapitate_message, 1)
@@ -78,7 +76,7 @@ def dismember_attack(attacker_instance:Combatant, target_instance:Combatant) -> 
 {target_instance.name}'s attack power has been reduced by 25%
 """
     
-    if check_for_critical(attacker_instance) == True:
+    if check_for_critical(attacker_instance) is True:
         target_instance.dismember()
         target_instance.damage(final_damage * 2)
         Message.display_message(dismember_message, 2)
@@ -87,13 +85,12 @@ def dismember_attack(attacker_instance:Combatant, target_instance:Combatant) -> 
         target_instance.dismember()
         Message.display_message(dismember_critical_message, 2)
 
-def aoe_attack(attacker_instance:Combatant, target_party_instance:Party) -> None:
-    if not isinstance(attacker_instance, Combatant):
-        raise ValueError("The 'attacker_instance' parameter must be of type Combatant. Received type: {}".format(type(attacker_instance).__name__))
-    if not isinstance(target_party_instance, Party):
-        raise ValueError("The 'target_party_instance' parameter must be of type Party. Received type: {}".format(type(target_party_instance).__name__))
-    
-    #set damage
+
+def aoe_attack(attacker_instance: Combatant, target_party_instance: Party) -> None:
+    ensure_type(attacker_instance, Combatant, 'attacker_instance')
+    ensure_type(target_party_instance, Party, 'target_party_instance')
+
+    # set damage
     damage_variation = int(attacker_instance.attack_power * 0.1)
     base_damage = int(attacker_instance.attack_power + random.randint(-damage_variation,damage_variation) * 1.5)
     per_target_damage = int(base_damage / len(target_party_instance.members))
@@ -104,7 +101,7 @@ def aoe_attack(attacker_instance:Combatant, target_party_instance:Party) -> None
 {attacker_instance.name} dealt critical hits to all enemies!
     """
 
-    if check_for_critical(attacker_instance) == True:
+    if check_for_critical(attacker_instance) is True:
         Message.display_message(aoe_critical_attack_message, 1)
         for target_instance in target_party_instance.members:
             target_instance.damage(per_target_damage * 2)
@@ -119,12 +116,11 @@ def aoe_attack(attacker_instance:Combatant, target_party_instance:Party) -> None
         overwhelm_message = f"{attacker_instance.name} is overwhelmed by the power of {attacker_instance.special_attack_name} and takes {self_damage_amount} damage"
         Message.display_message(overwhelm_message, 1)
 
-def double_attack(attacker_instance:Combatant, target_party_instance:Party) -> None:
-    if not isinstance(attacker_instance, Combatant):
-        raise ValueError("The 'attacker_instance' parameter must be of type Combatant. Received type: {}".format(type(attacker_instance).__name__))
-    if not isinstance(target_party_instance, Party):
-        raise ValueError("The 'target_party_instance' parameter must be of type Party. Received type: {}".format(type(target_party_instance).__name__))
-    
+
+def double_attack(attacker_instance: Combatant, target_party_instance: Party) -> None:
+    ensure_type(attacker_instance, Combatant, 'attacker_instance')
+    ensure_type(target_party_instance, Party, 'target_party_instance')
+
     # set primary target
     primary_target_index = int(Interaction.choose_combat_target(target_party_instance))
     primary_instance = target_party_instance.members[primary_target_index]
@@ -137,7 +133,7 @@ def double_attack(attacker_instance:Combatant, target_party_instance:Party) -> N
     damage_variation = int(attacker_instance.attack_power * 0.1)
     final_damage =  attacker_instance.attack_power + random.randint(-damage_variation,damage_variation)
 
-    if check_for_critical(attacker_instance) == True:
+    if check_for_critical(attacker_instance) is True:
         Message.actor_critical_attack_message(attacker_instance,final_damage)
         primary_instance.damage(final_damage * 2)
     else:
@@ -149,7 +145,7 @@ def double_attack(attacker_instance:Combatant, target_party_instance:Party) -> N
         Message.defeated_message(primary_instance.name)
         target_party_instance.lose_member(primary_instance)
 
-    ## Damage Secondary Target
+    # Damage Secondary Target
     reduced_damage = int(final_damage * 0.5)
 
     # Make Sure a Living target is chosen
@@ -161,7 +157,7 @@ def double_attack(attacker_instance:Combatant, target_party_instance:Party) -> N
                 secondary_target_index = int(Interaction.choose_combat_target(target_party_instance))
                 secondary_instance = target_party_instance.members[secondary_target_index]
 
-        if check_for_critical(attacker_instance) == True:
+        if check_for_critical(attacker_instance) is True:
                 Message.actor_critical_attack_message(attacker_instance,reduced_damage)
                 secondary_instance.damage(reduced_damage * 2)
         else:
@@ -180,26 +176,24 @@ def double_attack(attacker_instance:Combatant, target_party_instance:Party) -> N
             Message.display_message(caught_attack_message, 2)
 
 
-def special_attack(attacker_instance:Combatant, target_party_instance:Party) -> None:
-    if not isinstance(attacker_instance, Combatant):
-        raise ValueError("The 'attacker_instance' parameter must be of type Combatant. Received type: {}".format(type(attacker_instance).__name__))
-    if not isinstance(target_party_instance, Party):
-        raise ValueError("The 'target_party_instance' parameter must be of type Party. Received type: {}".format(type(target_party_instance).__name__))
-    
+def special_attack(attacker_instance: Combatant, target_party_instance: Party) -> None:
+    ensure_type(attacker_instance, Combatant, 'attacker_instance')
+    ensure_type(target_party_instance, Party, 'target_party_instance')
+
     if isinstance(attacker_instance, PlayableActor):
         match attacker_instance.specialization:
             case 'WARRIOR':
                 target_index = int(Interaction.choose_combat_target(target_party_instance))
                 target_instance = target_party_instance.members[target_index]
-                if target_instance.is_dismembered == True:
+                if target_instance.is_dismembered is True:
                     dumb_check = 0 
-                    while target_instance.is_dismembered == True:
+                    while target_instance.is_dismembered is True:
                         dumb_check += 1
-                        ## message that enemy has been dismembered
+                        # message that enemy has been dismembered
                         target_index = int(Interaction.choose_combat_target(target_party_instance))
                         target_instance = target_party_instance.members[target_index]
                         if dumb_check > 10:
-                            ## dumb message
+                            # dumb message
                             attack(attacker_instance, target_party_instance.members[0])
                 dismember_attack(attacker_instance=attacker_instance, target_instance=target_instance)
             case 'MAGE':
@@ -207,9 +201,9 @@ def special_attack(attacker_instance:Combatant, target_party_instance:Party) -> 
             case 'ROGUE':
                 double_attack(attacker_instance,target_party_instance)
 
-def post_battle(player_party_instance:PlayerParty) -> None:
-    if not isinstance(player_party_instance, PlayerParty):
-        raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
+
+def post_battle(player_party_instance: PlayerParty) -> None:
+    ensure_type(player_party_instance, PlayerParty, 'player_party_instance')
 
     player_post_action = ""
     while player_post_action != "TRAVEL":

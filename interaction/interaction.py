@@ -1,20 +1,23 @@
 import random
 from interaction.interaction_utilities import validate_input, sanitize, custom_text_entry
 from logic.logic import select_combat_target
+from utilites.utilities import ensure_type
 from interaction.interaction_manual import *
 
 # Only Used For Type Hinting/Checking
 from actors.actor_party import PlayerParty, EnemyParty
 from actors.actor_playable import PlayableActor
 
+
 class Interaction:
-    global_game_mode = "AUTO" ## this is a default value that should be can be updated to "MANUAL" during the welcome function
-    global_player_count = "1" ## this is default value that can be updated to a new value in the welcome function
+    # This is a default value that should be can be updated to "MANUAL" during the welcome function
+    global_game_mode = "AUTO"
+    # This is default value that can be updated to a new value in the welcome function
+    global_player_count = "1"
 
     @staticmethod
-    def choose_combat_target(enemy_party_instance:EnemyParty) -> int:
-        if not isinstance(enemy_party_instance, EnemyParty):
-            raise ValueError("The 'player_party_instance' parameter must be of type EnemyParty. Received type: {}".format(type(enemy_party_instance).__name__))
+    def choose_combat_target(enemy_party_instance: EnemyParty) -> int:
+        ensure_type(enemy_party_instance, EnemyParty, 'player_party_instance')
     
         match __class__.global_game_mode:
             case "AUTO":
@@ -22,14 +25,13 @@ class Interaction:
             case "MANUAL":
                 return manual_choose_combat_target(enemy_party_instance)
             case _:
-                return "ATTACK" 
+                return 0
 
-    
     @staticmethod
     def encounter_enemy() -> str:
         match __class__.global_game_mode:
             case "AUTO":
-                chosen_action = random.choice(["FLEE","ATTACK"])
+                chosen_action = random.choice(["FLEE", "ATTACK"])
                 return chosen_action
             case "MANUAL":
                 return manual_enemy_encounter()
@@ -37,9 +39,8 @@ class Interaction:
                 return "ATTACK" 
     
     @staticmethod
-    def post_battle(player_party_instance:PlayerParty) -> str:
-        if not isinstance(player_party_instance, PlayerParty):
-            raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
+    def post_battle(player_party_instance: PlayerParty) -> str:
+        ensure_type(player_party_instance, PlayerParty, 'player_party_instance')
 
         match __class__.global_game_mode:
             case "AUTO":
@@ -54,42 +55,36 @@ class Interaction:
             case _:
                 return "TRAVEL"
 
-
     @staticmethod
-    def in_battle(player_instance:PlayableActor) -> str:
+    def in_battle(player_instance: PlayableActor) -> str:
         from message.message import Message
-
-        if not isinstance(player_instance, PlayableActor):
-            raise ValueError("The 'player_instance' parameter must be of type PlayableActor. Received type: {}".format(type(player_instance).__name__))
+        ensure_type(player_instance, PlayableActor, 'player_instance')
 
         match __class__.global_game_mode:
             case "AUTO":
                 if player_instance.health <= 40 and player_instance.potions != 0:
                     chosen_action = "HEAL" 
                 elif player_instance.potions == 0:
-                        Message.display_message(f"{player_instance.name} has no remaining potions and must make a stand!", 1)
-                        chosen_action = "ATTACK"
+                    Message.display_message(f"{player_instance.name} has no remaining potions and must make a stand!", 1)
+                    chosen_action = "ATTACK"
                 else:
-                        chosen_action = random.choice(["EVADE","ATTACK","ATTACK","ATTACK"])
+                    chosen_action = random.choice(["EVADE", "ATTACK", "ATTACK", "ATTACK"])
                 
                 return chosen_action
             case "MANUAL":
                 return manual_in_battle(player_instance)
             case _:
                 return "ATTACK"
-             
 
     @staticmethod
-    def at_merchant(player_party_instance:PlayerParty) -> None:
+    def at_merchant(player_party_instance: PlayerParty) -> None:
         from message.message import Message
-
-        if not isinstance(player_party_instance, PlayerParty):
-            raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
+        ensure_type(player_party_instance, PlayerParty, 'player_party_instance')
 
         Message.display_message("You arrive at a merchant", 1)
         match __class__.global_game_mode:
             case "AUTO":
-                #init Counts
+                # init Counts
                 player_count = 0
                 gold_spent = 0
                 potions_sold = 0
@@ -97,7 +92,7 @@ class Interaction:
                 for player_instance in player_party_instance.members:
                     player_count += 1
                     while player_instance.potions < 100 and player_instance.gold != 0:
-                        if player_instance.spend_gold(25) == True:
+                        if player_instance.spend_gold(25) is True:
                             gold_spent += 25
 
                             player_instance.gain_potion(1)
@@ -116,7 +111,7 @@ class Interaction:
     def confirm_rest() -> bool:
         match __class__.global_game_mode:
             case "AUTO":
-                return random.choice([True,True,False])
+                return random.choice([True, True, False])
             case "MANUAL":
                 return manual_confirm_rest()
             case _:
@@ -131,6 +126,7 @@ class Interaction:
                 return manual_mystery_action()
             case _:
                 raise ValueError("invalid game mode")
+
     @staticmethod
     def loot_action() -> bool:
         match __class__.global_game_mode:
@@ -140,6 +136,7 @@ class Interaction:
                 return manual_loot_action()
             case _:
                 raise ValueError("invalid game mode")
+
     @staticmethod
     def embark() -> bool:
         match __class__.global_game_mode:
@@ -149,6 +146,7 @@ class Interaction:
                 return manual_embark()
             case _:
                 raise ValueError("invalid game mode")
+
     @staticmethod
     def accept_quest() -> bool:
             match __class__.global_game_mode:
@@ -160,13 +158,13 @@ class Interaction:
                     raise ValueError("invalid game mode")
             
     @staticmethod
-    def validate_input(choice_list:list[str], prompt_message:str):
+    def validate_input(choice_list: list[str], prompt_message: str):
         return validate_input(choice_list, prompt_message)
     
     @staticmethod
-    def sanitize(input_string:str):
+    def sanitize(input_string: str):
         return sanitize(input_string)
     
     @staticmethod
-    def custom_text_entry(input_message:str, max_length:int):
-         return custom_text_entry(input_message,max_length)
+    def custom_text_entry(input_message: str, max_length: int):
+        return custom_text_entry(input_message, max_length)

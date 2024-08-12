@@ -5,27 +5,24 @@ from message.message import Message
 from actors.actor_party import EnemyParty
 from combat.combat import Combat
 from message.message import Message
+from utilites.utilities import ensure_type
 
-# Create a Dungeon Object?
-# Dungeon is a Funciton?
+# Just for Type Checking
+from actors.actor_party import PlayerParty
 
-
-
+# Dungeon is an object, traverse_dungeon is a function
 
 
 class Dungeon():
-    def __init__(self,dungeon_id) -> None:
+    def __init__(self, dungeon_id) -> None:
 
         json.load()
         pass 
 
 
-# Just for Type Checking
-from actors.actor_party import PlayerParty
+def enemy_keep_visit(player_party_instance: PlayerParty) -> None:
+    ensure_type(player_party_instance, PlayerParty, 'player_party_instance')
 
-def enemy_keep_visit(player_party_instance:PlayerParty) -> None:
-    if not isinstance(player_party_instance, PlayerParty):
-        raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
     sub_step = 0
     while sub_step < 10:
         sub_step += 1
