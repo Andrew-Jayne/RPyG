@@ -52,7 +52,7 @@ class Combat:
             if __class__.is_party_alive(enemy_party_instance) is True:
                 match Interaction.in_battle(player_instance):
                     case "ATTACK": #select target
-                        target_index = int(Interaction.choose_combat_target(enemy_party_instance))
+                        target_index = Interaction.choose_combat_target(enemy_party_instance)
                         enemy_instance = enemy_party_instance.members[target_index]
                         attack(attacker_instance=player_instance, target_instance=enemy_instance)
                         if enemy_instance.health == 0:
