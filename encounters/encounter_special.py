@@ -53,6 +53,10 @@ class SpecialEncounters():
     # holy Fucking Yikes....
     @staticmethod
     def enemy_keep_visit(player_party_instance: PlayerParty) -> None:
+        pass
+
+    @staticmethod
+    def _enemy_keep_visit(player_party_instance: PlayerParty) -> None:
         ensure_type(player_party_instance, PlayerParty, 'player_party_instance')
         sub_step = 0
         while sub_step < 10:
@@ -125,7 +129,7 @@ class SpecialEncounters():
         Message.display_message(f"Your Party must now battle {enemy_instance.name}!", 1)
         enemy_party = EnemyParty(enemy_instance.name,[enemy_instance])
         Combat.battle(player_party_instance, enemy_party)
-        if len(player_party_instance.members) != 0:
+        if len(player_party_instance.members) is not 0:
             Message.special_encounter_message(
                 player_party_instance.progress,
                 player_party_instance.name,
@@ -137,7 +141,7 @@ Fortranus the Ancient One has been Vanquished at the hands of {player_party_inst
 Your adventure has been completed, you may start a new adventure if you so choose
 """
 
-            __class__.display_message(end_game_message, 2)
+            Message.display_message(end_game_message, 2)
 
             if Interaction.global_game_mode == "MANUAL":
                 save_game(player_party_instance)
