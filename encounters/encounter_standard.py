@@ -16,8 +16,8 @@ def find_encounter_by_id(full_item_list:list, target_item_id:str) -> object:
         if active_item['id'] == target_item_id:
             found_item = active_item
             return found_item
-        if found_item is None:
-            raise FileNotFoundError(f"Error Unable to Find an Event with the ID {target_item_id}")
+    if found_item is None:
+        raise FileNotFoundError(f"Error Unable to Find an Event with the ID {target_item_id}")
 
 
 def execute_actor_action(event_object:object, target_instance_list:list[PlayableActor]) -> None:
