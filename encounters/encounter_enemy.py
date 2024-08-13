@@ -9,7 +9,6 @@ from utilites.utilities import ensure_type
 # Only for Type Checking / Hinting
 from actors.actor_party import EnemyParty, PlayerParty
 
-
 @staticmethod
 def generate_enemy_party(enemy_party_attributes: dict ,enemy_count: int) -> EnemyParty:
     ensure_type(enemy_party_attributes, dict, 'enemy_party_attributes')
@@ -62,7 +61,6 @@ def enemy_encounter(player_party_instance: PlayerParty) -> None:
         enemy_count = 1
 
     enemy_party = generate_enemy_party(enemy_party_attributes, enemy_count)
-
 
 
     Message.encounter_message(enemy_party.name)

@@ -6,6 +6,7 @@ from actors.actor_party import EnemyParty
 from combat.combat import Combat
 from message.message import Message
 from utilites.utilities import ensure_type
+
 from encounters.encounter_dungeon import Dungeon
 
 # Just for Type Checking
@@ -68,6 +69,7 @@ class SpecialEncounters():
         active_dungeon = Dungeon(dungeon_attributes)
         active_dungeon.travese_dungeon(player_party_instance)
 
+
     @staticmethod
     def penultimate_boss(player_party_instance: PlayerParty) -> None:
         ensure_type(player_party_instance, PlayerParty, 'player_party_instance')
@@ -111,3 +113,4 @@ Your adventure has been completed, you may start a new adventure if you so choos
 
             if Interaction.global_game_mode == "MANUAL":
                 save_game(player_party_instance)
+
