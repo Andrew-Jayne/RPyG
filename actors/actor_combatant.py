@@ -1,12 +1,12 @@
+from utilites.utilities import ensure_type
+
 class Combatant():
     def __init__(self, health:int, attack_name:str, attack_power:int, special_attack_name:str) -> None:
 
-        if not isinstance(health, int):
-            raise ValueError("The 'health' parameter must be of type int. Received type: {}".format(type(health).__name__))
-        if not isinstance(attack_name, str):
-            raise ValueError("The 'attack_name' parameter must be of type str. Received type: {}".format(type(attack_name).__name__))
-        if not isinstance(attack_power, int):
-            raise ValueError("The 'name' parameter must be of type int. Received type: {}".format(type(attack_power).__name__))
+        ensure_type(health, int, 'health')
+        ensure_type(attack_name, str, 'attack_name')
+        ensure_type(attack_power, int, 'attack_power')
+        #ensure_type(special_attack_name, str, 'special_attack_name')
 
         self.health = health
         self.base_health = health
@@ -21,6 +21,8 @@ class Combatant():
         self.is_dismembered = False
 
     def damage(self, damage_amount:int) -> None:
+        ensure_type(damage_amount, int, 'damage_amount')
+
         from message.message import Message
         self.health -= damage_amount
         if self.health == 0:
@@ -33,6 +35,8 @@ class Combatant():
         Message.display_message(health_remaining_message, 2)
     
     def heal(self, heal_amount:int) -> None:
+        ensure_type(heal_amount, int, 'heal_amount')
+
         from message.message import Message
         self.health += heal_amount
         if self.health > self.base_health:
