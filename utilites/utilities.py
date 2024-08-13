@@ -1,4 +1,3 @@
-# type_utils.py
 def ensure_type(instance: object, expected_type: type, variable_name: str):
     if not isinstance(instance, expected_type):
         raise ValueError(f"""
