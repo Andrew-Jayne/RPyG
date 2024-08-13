@@ -11,8 +11,6 @@ from interaction.interaction import Interaction
 # Just for Type Checking
 from actors.actor_party import PlayerParty
 
-
-
 class Dungeon():
     def __init__(self, dungeon_attributes: dict) -> None:
         self.name = dungeon_attributes['name']
