@@ -38,19 +38,12 @@ there are differing pools of encounters (you should not find a big city a step 9
 
 Would keep there from being major immersion violations due to RNG
 
-### Mini Dungeons as Objects & encounter Expansions 
-Use this for cobolus' lair and algolon's fortress (midway_dungeon, enemy_fortress)
 
-build mini dungeons as objects with custom actors, rewards, and routes
-```json
-mini_dungeon:{
-    "enemy_list": [],
-    "length" : 10,
-    "final_boss": {},
-    "reward":{}
-}
-```
 Add negative progress encounter (you get lost a lose a days progress)
 add shortcuts, with dynamic chances for enemy and rest encounters
 optional mini dungeons
+
+
+
+## Active
 Move all json files to a story dir with support for multiple files in enemies_common, encounters_special etc, to make it easy to import or export custom event packs
