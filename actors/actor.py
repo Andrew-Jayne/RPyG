@@ -1,3 +1,5 @@
+from utilites.utilities import ensure_type
+
 class Actor:
     def __init__(self, 
                  name:str, 
@@ -6,16 +8,11 @@ class Actor:
                  agility:int,
                  luck:int):
         
-        if not isinstance(name, str):
-            raise ValueError("The 'name' parameter must be of type str. Received type: {}".format(type(name).__name__))
-        if not isinstance(strength, int):
-            raise ValueError("The 'strength' parameter must be of type int. Received type: {}".format(type(strength).__name__))
-        if not isinstance(intellect, int):
-            raise ValueError("The 'intellect' parameter must be of type int. Received type: {}".format(type(intellect).__name__))
-        if not isinstance(agility, int):
-            raise ValueError("The 'agility' parameter must be of type int. Received type: {}".format(type(agility).__name__))
-        if not isinstance(luck, int):
-            raise ValueError("The 'luck' parameter must be of type int. Received type: {}".format(type(luck).__name__))
+        ensure_type(name, str, 'name')
+        ensure_type(strength, int, 'strengh')
+        ensure_type(intellect, int, 'intellect')
+        ensure_type(agility, int, 'agility')
+        ensure_type(luck, int, 'luck')
         
         self.name = name
         self.strength = strength

@@ -1,23 +1,18 @@
 from actors.actor import Actor
 from actors.actor_combatant import Combatant
+from utilites.utilities import ensure_type
 
 class Enemy(Actor, Combatant):
     def __init__(self, enemy_attributes:dict) -> None:
-
-        if not isinstance(enemy_attributes['name'], str):
-            raise ValueError("The 'enemy_attributes['name']' parameter must be of type str. Received type: {}".format(type(enemy_attributes['name']).__name__))
-        if not isinstance(enemy_attributes['health'], int):
-            raise ValueError("The 'enemy_attributes['health']' parameter must be of type int. Received type: {}".format(type(enemy_attributes['health']).__name__))
-        if not isinstance(enemy_attributes['strength'], int):
-            raise ValueError("The 'enemy_attributes['strength']' parameter must be of type int. Received type: {}".format(type(enemy_attributes['strength']).__name__))
-        if not isinstance(enemy_attributes['intellect'], int):
-            raise ValueError("The 'enemy_attributes['intellect']' parameter must be of type int. Received type: {}".format(type(enemy_attributes['intellect']).__name__))
-        if not isinstance(enemy_attributes['agility'], int):
-            raise ValueError("The 'agility=enemy_attributes['agility']' parameter must be of type int. Received type: {}".format(type(agility=enemy_attributes['agility']).__name__))
-        if not isinstance(enemy_attributes['luck'], int):
-            raise ValueError("The 'enemy_attributes['luck']' parameter must be of type int. Received type: {}".format(type(enemy_attributes['luck']).__name__))
-        if not isinstance(enemy_attributes['attack_name'], str):
-            raise ValueError("The 'enemy_attributes['attack_name']' parameter must be of type str. Received type: {}".format(type(enemy_attributes['attack_name']).__name__))
+        ensure_type(enemy_attributes, dict, 'enemy_attributes')
+        ensure_type(enemy_attributes['name'], str, "enemy_attributes['name']")
+        ensure_type(enemy_attributes['health'], int, "enemy_attributes['health']")
+        ensure_type(enemy_attributes['strength'], int, "enemy_attributes['strength']")
+        ensure_type(enemy_attributes['intellect'], int, "enemy_attributes['intellect']")
+        ensure_type(enemy_attributes['agility'], int, "enemy_attributes['agility']")
+        ensure_type(enemy_attributes['luck'], int, "enemy_attributes['luck']")
+        ensure_type(enemy_attributes['attack_name'], str, "enemy_attributes['attack_name']")
+        ensure_type(enemy_attributes['is_special'] , bool, "enemy_attributes['is_special']")
 
         name=enemy_attributes['name']
         health=enemy_attributes['health']
