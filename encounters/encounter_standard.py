@@ -24,23 +24,21 @@ def set_encounter_targets(current_event_targets: str, player_party_instance: Pla
     
 
 @staticmethod
-# current model will not scale well with large encounter lists
-def find_encounter_by_id(full_item_list:list, target_item_id:str) -> object:
-    ensure_type(full_item_list, list, 'full_item_list')
+def find_encounter_by_id(encounters_dict: dict, target_item_id: str) -> object:
+    ensure_type(encounters_dict, dict, 'encounters_dict')
     ensure_type(target_item_id, str, 'target_item_id')
 
-    found_item = None
-    for active_item in full_item_list:
-        if active_item['id'] == target_item_id:
-            found_item = active_item
-            return found_item
+    # Directly access the event by its ID
+    found_item = encounters_dict.get(target_item_id)
     if found_item is None:
-        raise FileNotFoundError(f"Error Unable to Find an Event with the ID {target_item_id}")
+        raise FileNotFoundError(f"Error: Unable to find an event with the ID {target_item_id}")
+    return found_item
+
 
 
 @staticmethod
-def execute_actor_action(event_object:object, target_instance_list:list[PlayableActor]) -> None:
-    ensure_type(event_object, object, 'event_object')
+def execute_actor_action(event_object: dict, target_instance_list: list[PlayableActor]) -> None:
+    ensure_type(event_object, dict, 'event_object')
     ensure_type(target_instance_list, list, 'target_instance_list')
 
     magnitude = int(event_object['magnitude'] / len(target_instance_list))
@@ -67,8 +65,8 @@ def execute_actor_action(event_object:object, target_instance_list:list[Playable
 
 
 @staticmethod
-def execute_special_action(event_object:object, player_party_instance: PlayerParty):
-    ensure_type(event_object, object, 'event_object')
+def execute_special_action(event_object: dict, player_party_instance: PlayerParty):
+    ensure_type(event_object, dict, 'event_object')
     ensure_type(player_party_instance, PlayerParty, 'player_party_instance')
     match event_object['special_action']:
         case "at_merchant":
@@ -78,15 +76,15 @@ def execute_special_action(event_object:object, player_party_instance: PlayerPar
 
 
 @staticmethod
-def run_extra_actions(event_object: object, player_party_instance: PlayerParty, encounters_objects_dict: dict) -> None:
+def run_extra_actions(event_object: object, player_party_instance: PlayerParty, encounter_objects: dict) -> None:
     ensure_type(event_object, object, 'event_object')
     ensure_type(player_party_instance, PlayerParty, 'player_party_instance')
-    ensure_type(encounters_objects_dict, dict, 'encounters_objects_dict')
+    ensure_type(encounter_objects, dict, 'encounter_objects_dict')
 
     # Run extra Actions if they exist
     if event_object['additional_events'] is not None:
         for event_id in event_object['additional_events']:
-            new_event = find_encounter_by_id(encounters_objects_dict['events'],event_id)
+            new_event = find_encounter_by_id(encounter_objects, event_id)
             targets = set_encounter_targets(new_event['targets'], player_party_instance)
             execute_actor_action(new_event, targets)
 
@@ -100,8 +98,8 @@ def standard_encounter(player_party_instance: PlayerParty) -> None:
     ensure_type(player_party_instance, PlayerParty, 'player_party_instance')
 
     with open('encounters/standard_encounters.json', 'r') as encounters_file:
-        encounters_objects_list = json.load(encounters_file)
-        current_event = random.choice(encounters_objects_list['events'])
+        encounter_objects = json.load(encounters_file)['events']
+        current_event = encounter_objects[random.choice(list(encounter_objects.keys()))]
 
     targets = set_encounter_targets(current_event['targets'], player_party_instance)
 
@@ -110,7 +108,7 @@ def standard_encounter(player_party_instance: PlayerParty) -> None:
             Message.display_message(current_event['pre_message'], 1)
             if Interaction.confirm_rest() is True:
                 execute_actor_action(current_event, targets)
-                run_extra_actions(current_event, player_party_instance, encounters_objects_list)
+                run_extra_actions(current_event, player_party_instance, encounter_objects)
                 Message.display_message(current_event['post_message'], 1)
             else:
                     Message.display_message("They Travel onwards", 1)
@@ -122,13 +120,13 @@ def standard_encounter(player_party_instance: PlayerParty) -> None:
             match Interaction.mystery_action():
                 case "GREET":
                     execute_actor_action(current_event, targets)
-                    run_extra_actions(current_event, player_party_instance, encounters_objects_list)
+                    run_extra_actions(current_event, player_party_instance, encounter_objects)
                     Message.display_message(current_event['post_message'], 1)
                 case "ATTACK":
                     # if you attack you get attacked
-                    static_event = find_encounter_by_id(encounters_objects_list['events'],'surprise_attack')
+                    static_event = find_encounter_by_id(encounter_objects,'surprise_attack')
                     execute_actor_action(static_event, targets)
-                    run_extra_actions(current_event, player_party_instance, encounters_objects_list)
+                    run_extra_actions(current_event, player_party_instance, encounter_objects)
                     Message.display_message(static_event['post_message'],1)
                 case _:
                         raise ValueError("Null Action Set MonkaS")
@@ -139,12 +137,14 @@ def standard_encounter(player_party_instance: PlayerParty) -> None:
             match Interaction.loot_action():
                 case "OPEN":
                     execute_actor_action(current_event, targets)
-                    run_extra_actions(current_event, player_party_instance, encounters_objects_list)
+                    run_extra_actions(current_event, player_party_instance, encounter_objects)
                     Message.display_message(current_event['post_message'],1)
                 case "LEAVE":
                         Message.display_message("You leave the chest undisturbed",1)
                 case _:
                         raise ValueError("Null Action Set MonkaS")
+
+
         case "NONE":
             pass
         case _:
