@@ -7,6 +7,8 @@ from interaction.interaction import Interaction
 from actors.actor_playable import PlayableActor
 from actors.actor_party import PlayerParty
 
+## herein lies the problem we must solve
+
 
 # Update Encounter Declaration to be a key of ID with a value of Encounter data
 # current model will not scale well with large encounter lists
