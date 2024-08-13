@@ -1,27 +1,52 @@
-{"dungeons": [
-    {"id":"algolons_fortess",
+{
+    "algolons_fortess": {
         "name": "Algolon's Fortress",
         "messages": {
-            "start_message":"Algolon's Fortress",
+            "start_message": "Your Party Enters Algolon's Fortress",
             "boss_enounter_message": "At the end of the Keep Your Party encounters Algolon's Arch Mage!",
             "shortcut_message": "Your Party finds a Secret Passage!",
             "heal_room_message": "Your Party finds a Store Room with some food & potions"
-                },
-        "length":0,
-        "enemies": [ 
-            {"keep_minion" : {
-                    "name": "Acolyte of Algolon",
-                    "health": 140,
-                    "strength": 3,
-                    "intellect": 7,
-                    "agility": 4,
-                    "luck": 6,
-                    "attack_name": "Arcane Bolt",
-                    "is_special": false
-                }}
-            ],
-        "boss": {    
-            "keep_master": {
+        },
+        "length": 20,
+        "enemies": [
+            {
+                "pural_name": "Acolytes of Algolon",
+                "group_name": "Cult",
+                "variant_lists": {
+                    "lesser_variants": [{
+                        "name": "Initiate of Algolon",
+                        "health": 100,
+                        "strength": 2,
+                        "intellect": 5,
+                        "agility": 3,
+                        "luck": 4,
+                        "attack_name": "Weak Arcane Bolt",
+                        "is_special": false
+                    }],
+                    "common_variants": [{
+                        "name": "Acolyte of Algolon",
+                        "health": 140,
+                        "strength": 3,
+                        "intellect": 7,
+                        "agility": 4,
+                        "luck": 6,
+                        "attack_name": "Arcane Bolt",
+                        "is_special": false
+                    }],
+                    "greater_variants": [{
+                        "name": "High Acolyte of Algolon",
+                        "health": 180,
+                        "strength": 4,
+                        "intellect": 9,
+                        "agility": 5,
+                        "luck": 8,
+                        "attack_name": "Empowered Arcane Bolt",
+                        "is_special": false
+                    }]
+                }
+            }
+        ],
+        "boss": {
                 "name": "Algolon's Arch Mage",
                 "health": 450,
                 "strength": 4,
@@ -30,9 +55,6 @@
                 "luck": 6,
                 "attack_name": "Arcane Lightning",
                 "is_special": true
-                }
-            }},
-    {"id":"otherplace"},
-    {"id":"othermoredifferentplace"}
-]
+            }
+    }
 }

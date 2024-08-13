@@ -1,6 +1,4 @@
-import random
 import json
-import copy
 from gameState.file import save_game
 from interaction.interaction import Interaction
 from actors.actor_enemy import Enemy
@@ -9,11 +7,23 @@ from combat.combat import Combat
 from message.message import Message
 from utilites.utilities import ensure_type
 
+from encounters.encounter_dungeon import Dungeon
+
 # Just for Type Checking
 from actors.actor_party import PlayerParty
 
 
 class SpecialEncounters():
+    
+    @staticmethod
+    def get_special_enemy(enemy_identifier) -> Enemy:
+        with open('encounters/enemies_special.json', 'r') as file:
+            enemies_list = json.load(file)
+        enemy_attributes = enemies_list[enemy_identifier]
+        
+        return Enemy(enemy_attributes)
+
+
     @staticmethod
     def tavern_notice(player_party_instance: PlayerParty) -> None:
         ensure_type(player_party_instance, PlayerParty, 'player_party_instance' )
@@ -41,7 +51,7 @@ class SpecialEncounters():
     def midway_boss(player_party_instance: PlayerParty) -> None:
         ensure_type(player_party_instance, PlayerParty, 'player_party_instance')
 
-        enemy_instance = __class__._get_special_enemy('midway_boss')
+        enemy_instance = __class__.get_special_enemy('midway_boss')
         Message.special_encounter_message(player_party_instance.progress, player_party_instance.name,"messages")
         enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
         Combat.battle(player_party_instance, enemy_party)
@@ -50,63 +60,21 @@ class SpecialEncounters():
         else:
             Message.special_encounter_message(player_party_instance.progress, player_party_instance.name,"failure_messages")
 
-    # holy Fucking Yikes....
     @staticmethod
     def enemy_keep_visit(player_party_instance: PlayerParty) -> None:
-        pass
+        Message.special_encounter_message(player_party_instance.progress, player_party_instance.name,"messages")
+        with open('encounters/special_dungeons.json', 'r') as file:
+            special_dungeons_list = json.load(file)
+        dungeon_attributes = special_dungeons_list['algolons_fortess']
+        active_dungeon = Dungeon(dungeon_attributes)
+        active_dungeon.travese_dungeon(player_party_instance)
 
-    @staticmethod
-    def _enemy_keep_visit(player_party_instance: PlayerParty) -> None:
-        ensure_type(player_party_instance, PlayerParty, 'player_party_instance')
-        sub_step = 0
-        while sub_step < 10:
-            sub_step += 1
-            Message.display_message(f"{sub_step}", 1)
-            dungeon_chance = random.randint(0,5)
-            match dungeon_chance:
-                case 0:
-                    Message.display_message("Your Party finds a Store Room with some food & potions", 1)
-                    for member_instance in player_party_instance.members:
-                        member_instance.gain_potion(2)
-                        member_instance.heal(20)
-                case 1:
-                    sub_step += 2
-                    Message.display_message("Your Party finds a Secret Passage!", 1)
-                case 4:
-                    enemy_instance = __class__._get_special_enemy('keep_minion')  # Need to move this to a Party
-                    Message.display_message(f"Your Party encounter a group of {enemy_instance.name}s!", 1)
-                    enemy_count = int(len(player_party_instance.members) + random.randint(-2,2))
-                    if enemy_count == 0:
-                        enemy_count = 1
-
-                    enemy_party_instances = []
-                    for _ in range(0,enemy_count):
-                        enemy_party_instances.append(copy.deepcopy(enemy_instance))
-                    enemy_party = EnemyParty(f"group of {enemy_count} {enemy_instance.name}" ,enemy_party_instances)
-                    Combat.battle(player_party_instance, enemy_party)
-            if len(player_party_instance.members) == 0:
-                break
-        if len(player_party_instance.members) != 0:
-            Message.display_message("At the end of the Keep Your Party encounters Algolon's Arch Mage!", 1)
-            enemy_instance = __class__._get_special_enemy('keep_master')
-            enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
-            Combat.battle(player_party_instance, enemy_party)
-            if len(player_party_instance.members) != 0:
-                Message.special_encounter_message(
-                    player_party_instance.progress,
-                    player_party_instance.name,
-                    "success_messages")
-            else:
-                Message.special_encounter_message(
-                    player_party_instance.progress,
-                    player_party_instance.name,
-                    "failure_messages")
 
     @staticmethod
     def penultimate_boss(player_party_instance: PlayerParty) -> None:
         ensure_type(player_party_instance, PlayerParty, 'player_party_instance')
 
-        enemy_instance = __class__._get_special_enemy('penultimate_boss')
+        enemy_instance = __class__.get_special_enemy('penultimate_boss')
         Message.display_message(f"Your Party Battles {enemy_instance.name}!", 1)
         enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
         Combat.battle(player_party_instance, enemy_party)
@@ -125,7 +93,7 @@ class SpecialEncounters():
     def final_boss(player_party_instance: PlayerParty) -> None:
         ensure_type(player_party_instance, PlayerParty, 'player_party_instance')
 
-        enemy_instance = __class__._get_special_enemy('ultimate_boss')
+        enemy_instance = __class__.get_special_enemy('ultimate_boss')
         Message.display_message(f"Your Party must now battle {enemy_instance.name}!", 1)
         enemy_party = EnemyParty(enemy_instance.name,[enemy_instance])
         Combat.battle(player_party_instance, enemy_party)
@@ -145,17 +113,4 @@ Your adventure has been completed, you may start a new adventure if you so choos
 
             if Interaction.global_game_mode == "MANUAL":
                 save_game(player_party_instance)
-            else:
-                Message.special_encounter_message(
-                    player_party_instance.progress,
-                    player_party_instance.name,
-                    "failure_messages")
 
-    # Hidden Methods
-    @staticmethod
-    def _get_special_enemy(enemy_identifier) -> object:
-        with open('encounters/enemies_special.json', 'r') as file:
-            enemies_list = json.load(file)
-        enemy_attributes = enemies_list[enemy_identifier]
-        
-        return Enemy(enemy_attributes)

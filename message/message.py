@@ -129,11 +129,10 @@ class Message():
         __class__.display_message(flee_success_message, 1)
 
     def special_encounter_message(progress_value:int, party_name:str,message_type:str)-> None:
-        if message_type not in ["messages","success_messages","failure_messages"]:
-            raise ValueError('Message type must be one of ["messages","success_messages","failure_messages"]')
+        if message_type not in ["messages", "success_messages", "failure_messages"]:
+            raise ValueError('Message type must be one of ["messages", "success_messages", "failure_messages"]')
         with open('encounters/story_events.json') as file:
             story_events_list = json.load(file)
-
 
         all_events = story_events_list['progress_events']
 
