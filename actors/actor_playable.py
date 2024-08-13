@@ -94,7 +94,7 @@ class PlayableActor(Actor, Inventory, Combatant):
 
     def use_potion(self) -> None:
         from message.message import Message
-        if self.potions != 0 and not self.is_fully_healed():
+        if self.potions is not 0 and not self.is_fully_healed():
             drink_potion_message = f"{self.name} drinks a potion"
             Message.display_message(drink_potion_message, 1)
             self.lose_potion(1)
@@ -146,7 +146,7 @@ class PlayableActor(Actor, Inventory, Combatant):
             strength_skill = "fair"
         elif self.strength in range(7, 10):
             strength_skill = "strong"
-        elif self.strength == 10:
+        elif self.strength is 10:
             strength_skill = "mighty"
 
         if self.intellect in range(1, 4):
@@ -155,7 +155,7 @@ class PlayableActor(Actor, Inventory, Combatant):
             intellect_skill = "ordinary"
         elif self.intellect in range(7, 10):
             intellect_skill = "smart"
-        elif self.intellect == 10:
+        elif self.intellect is 10:
             intellect_skill = "brilliant"
                 
         player_skill = str(f"{strength_skill}:{intellect_skill}")
