@@ -1,0 +1,46 @@
+{
+    "medium_enemies": [
+        {
+            "pural_name": "Dire Wolves",
+            "group_name": "Pack",
+            "variant_lists": {
+                "lesser_variants": [
+                    {
+                        "name": "Young Dire Wolf",
+                        "health": 75,
+                        "strength": 4,
+                        "intellect": 3,
+                        "agility": 8,
+                        "luck": 6,
+                        "attack_name": "Wolf Bite",
+                        "is_special": false
+                    }
+                ],
+                "common_variants": [
+                    {
+                        "name": "Dire Wolf",
+                        "health": 100,
+                        "strength": 5,
+                        "intellect": 3,
+                        "agility": 8,
+                        "luck": 6,
+                        "attack_name": "Wolf Bite",
+                        "is_special": false
+                    }
+                ],
+                "greater_variants": [
+                    {
+                        "name": "Alpha Dire Wolf",
+                        "health": 150,
+                        "strength": 6,
+                        "intellect": 4,
+                        "agility": 8,
+                        "luck": 6,
+                        "attack_name": "Wolf Bite",
+                        "is_special": false
+                    }
+                ]
+            }
+        }
+    ]
+}
