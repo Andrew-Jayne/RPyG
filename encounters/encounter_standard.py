@@ -1,5 +1,5 @@
-import json
 import random
+from content.content import ENCOUNTERS_STANDARD
 from message.message import Message
 from interaction.interaction import Interaction
 from utilites.utilities import ensure_type
@@ -97,9 +97,7 @@ def run_extra_actions(event_object: object, player_party_instance: PlayerParty, 
 def standard_encounter(player_party_instance: PlayerParty) -> None:
     ensure_type(player_party_instance, PlayerParty, 'player_party_instance')
 
-    with open('encounters/standard_encounters.json', 'r') as encounters_file:
-        encounter_objects = json.load(encounters_file)['events']
-        current_event = encounter_objects[random.choice(list(encounter_objects.keys()))]
+    current_event = ENCOUNTERS_STANDARD[random.choice(list(ENCOUNTERS_STANDARD.keys()))]
 
     targets = set_encounter_targets(current_event['targets'], player_party_instance)
 
@@ -108,7 +106,7 @@ def standard_encounter(player_party_instance: PlayerParty) -> None:
             Message.display_message(current_event['pre_message'], 1)
             if Interaction.confirm_rest() is True:
                 execute_actor_action(current_event, targets)
-                run_extra_actions(current_event, player_party_instance, encounter_objects)
+                run_extra_actions(current_event, player_party_instance, ENCOUNTERS_STANDARD)
                 Message.display_message(current_event['post_message'], 1)
             else:
                     Message.display_message("They Travel onwards", 1)
@@ -120,13 +118,13 @@ def standard_encounter(player_party_instance: PlayerParty) -> None:
             match Interaction.mystery_action():
                 case "GREET":
                     execute_actor_action(current_event, targets)
-                    run_extra_actions(current_event, player_party_instance, encounter_objects)
+                    run_extra_actions(current_event, player_party_instance, ENCOUNTERS_STANDARD)
                     Message.display_message(current_event['post_message'], 1)
                 case "ATTACK":
                     # if you attack you get attacked
-                    static_event = find_encounter_by_id(encounter_objects,'surprise_attack')
+                    static_event = find_encounter_by_id(ENCOUNTERS_STANDARD,'surprise_attack')
                     execute_actor_action(static_event, targets)
-                    run_extra_actions(current_event, player_party_instance, encounter_objects)
+                    run_extra_actions(current_event, player_party_instance, ENCOUNTERS_STANDARD)
                     Message.display_message(static_event['post_message'],1)
                 case _:
                         raise ValueError("Null Action Set MonkaS")
@@ -137,7 +135,7 @@ def standard_encounter(player_party_instance: PlayerParty) -> None:
             match Interaction.loot_action():
                 case "OPEN":
                     execute_actor_action(current_event, targets)
-                    run_extra_actions(current_event, player_party_instance, encounter_objects)
+                    run_extra_actions(current_event, player_party_instance, ENCOUNTERS_STANDARD)
                     Message.display_message(current_event['post_message'],1)
                 case "LEAVE":
                         Message.display_message("You leave the chest undisturbed",1)

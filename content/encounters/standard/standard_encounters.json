@@ -1,5 +1,4 @@
 {
-  "events": {
       "rest_small_refuge": {
           "encounter_type": "REST",
           "message": "",
@@ -130,5 +129,4 @@
           "targets": "all",
           "magnitude": 500
       }
-  }
 }
