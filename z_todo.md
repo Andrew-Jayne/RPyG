@@ -34,9 +34,9 @@
   - Relics can also be stolen 
 
 - **Non-Special Dungeons:**
-- Use the existing JSON schema for special dungeons.
-- Optionally, introduce random encounters ("You find a $dungeon_identify").
-- this needs more planning and work
+    - Use the existing JSON schema for special dungeons.
+    - Optionally, introduce random encounters ("You find a $dungeon_identify").
+    - this needs more planning and work
   
 - **Travel Encounter:**
   - Create a "TRAVEL" encounter type.
