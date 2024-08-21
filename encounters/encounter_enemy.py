@@ -2,9 +2,11 @@ import random
 import json
 from actors.actor_enemy import Enemy
 from combat.combat import Combat
+from content.content import ENEMIES_STANDARD
 from message.message import Message
 from interaction.interaction import Interaction
 from utilites.utilities import ensure_type
+
 
 # Only for Type Checking / Hinting
 from actors.actor_party import EnemyParty, PlayerParty
@@ -40,20 +42,18 @@ def enemy_encounter(player_party_instance: PlayerParty) -> None:
     enemy_party_attributes = {}
 
     enemy_chance = random.randint(0, 4)
-    with open('encounters/enemies_common.json', 'r') as enemies_file:
-        enemies_lists = json.load(enemies_file)
     if enemy_chance == 6:
         raise ValueError("Random gave unexpected value for 'enemy chance'")
 
     # Select Enemy Type From options
     elif enemy_chance == 0 or enemy_chance == 1:
-        enemy_party_attributes = random.choice(enemies_lists['small_enemies'])
+        enemy_party_attributes = random.choice(ENEMIES_STANDARD['small_enemies'])
         
     elif enemy_chance == 2 or enemy_chance == 3:
-        enemy_party_attributes = random.choice(enemies_lists['medium_enemies'])
+        enemy_party_attributes = random.choice(ENEMIES_STANDARD['medium_enemies'])
 
     elif enemy_chance == 4:
-        enemy_party_attributes = random.choice(enemies_lists['large_enemies'])
+        enemy_party_attributes = random.choice(ENEMIES_STANDARD['large_enemies'])
 
     # Set Enemy Count
     enemy_count = int(len(player_party_instance.members) + random.randint(-2,2))

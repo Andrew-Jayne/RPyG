@@ -1,0 +1,46 @@
+{
+    "medium_enemies": [
+        {
+            "pural_name": "Demons",
+            "group_name": "Band",
+            "variant_lists": {
+                "lesser_variants": [
+                    {
+                        "name": "Demon Fiendling",
+                        "health": 90,
+                        "strength": 3,
+                        "intellect": 5,
+                        "agility": 6,
+                        "luck": 1,
+                        "attack_name": "Soul Decay Burst",
+                        "is_special": false
+                    }
+                ],
+                "common_variants": [
+                    {
+                        "name": "Abyssal Demon",
+                        "health": 130,
+                        "strength": 4,
+                        "intellect": 7,
+                        "agility": 3,
+                        "luck": 2,
+                        "attack_name": "Soul Decay Orb",
+                        "is_special": false
+                    }
+                ],
+                "greater_variants": [
+                    {
+                        "name": "Demon Archfiend",
+                        "health": 180,
+                        "strength": 5,
+                        "intellect": 9,
+                        "agility": 4,
+                        "luck": 1,
+                        "attack_name": "Soul Decay Wave",
+                        "is_special": false
+                    }
+                ]
+            }
+        }
+    ]
+}

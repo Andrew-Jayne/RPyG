@@ -1,8 +1,8 @@
 import time
 import textwrap
-import json
 from actors.actor_playable import PlayableActor
 from interaction.interaction import Interaction
+from content.content import STORY
 
 # Only used for Type checking/Hinting
 from actors.actor_party import PlayerParty, EnemyParty
@@ -131,10 +131,8 @@ class Message():
     def special_encounter_message(progress_value:int, party_name:str,message_type:str)-> None:
         if message_type not in ["messages", "success_messages", "failure_messages"]:
             raise ValueError('Message type must be one of ["messages", "success_messages", "failure_messages"]')
-        with open('encounters/story_events.json') as file:
-            story_events_list = json.load(file)
 
-        all_events = story_events_list['progress_events']
+        all_events = STORY['progress_events']
 
         current_event = all_events[str(progress_value)]
         for message in current_event[message_type]:
