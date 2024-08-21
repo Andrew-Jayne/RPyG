@@ -12,7 +12,6 @@ ENEMIES_SPECIAL_PATH = 'content/enemies/special'
 
 STORY_PATH = 'content/story'
 
-
 def load_content_files(dir_path: str) -> dict:
     """
     Load all JSON files in the given directory and merge their contents into a single dictionary.
@@ -55,9 +54,6 @@ def load_enemy_content_files(dir_path) -> dict:
                                 combined_content[key].extend(content_object[key])
 
         return combined_content
-
-
-
 
 
 DUNGEONS_STANDARD = load_content_files(DUNGEONS_STANDARD_PATH)
