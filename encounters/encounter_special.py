@@ -1,4 +1,3 @@
-import json
 from gameState.file import save_game
 from interaction.interaction import Interaction
 from actors.actor_enemy import Enemy
@@ -6,6 +5,7 @@ from actors.actor_party import EnemyParty
 from combat.combat import Combat
 from message.message import Message
 from utilites.utilities import ensure_type
+from content.content import ENEMIES_SPECIAL, DUNGEONS_SPECIAL
 
 from encounters.encounter_dungeon import Dungeon
 
@@ -17,9 +17,7 @@ class SpecialEncounters():
     
     @staticmethod
     def get_special_enemy(enemy_identifier) -> Enemy:
-        with open('encounters/enemies_special.json', 'r') as file:
-            enemies_list = json.load(file)
-        enemy_attributes = enemies_list[enemy_identifier]
+        enemy_attributes = ENEMIES_SPECIAL[enemy_identifier]
         
         return Enemy(enemy_attributes)
 
@@ -63,9 +61,7 @@ class SpecialEncounters():
     @staticmethod
     def enemy_keep_visit(player_party_instance: PlayerParty) -> None:
         Message.special_encounter_message(player_party_instance.progress, player_party_instance.name,"messages")
-        with open('encounters/special_dungeons.json', 'r') as file:
-            special_dungeons_list = json.load(file)
-        dungeon_attributes = special_dungeons_list['algolons_fortess']
+        dungeon_attributes = DUNGEONS_SPECIAL['algolons_fortess']
         active_dungeon = Dungeon(dungeon_attributes)
         active_dungeon.travese_dungeon(player_party_instance)
 
