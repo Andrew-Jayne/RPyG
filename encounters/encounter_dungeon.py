@@ -1,5 +1,6 @@
 import random
 import time
+from config import GLOBAL_GAME_MODE
 from message.message import Message
 from actors.actor_party import EnemyParty
 from combat.combat import Combat
@@ -26,7 +27,7 @@ class Dungeon():
 
         while dungeon_progress < self.length:
             dungeon_progress += 1
-            if Interaction.global_game_mode == "MANUAL":
+            if GLOBAL_GAME_MODE == "MANUAL":
                 time.sleep(2)
             encouter_chance = random.randint(0,5)
             match encouter_chance:

@@ -1,5 +1,6 @@
 import time
 import textwrap
+from config import GLOBAL_GAME_MODE
 from actors.actor_playable import PlayableActor
 from interaction.interaction import Interaction
 from content.content import STORY
@@ -54,10 +55,11 @@ class Message():
     
     @staticmethod
     def actor_attack_message(attacker_instance:Combatant, damage_value:int) -> None:
+        
         if not isinstance(attacker_instance, Combatant):
             raise ValueError("The 'attacker_instance' parameter must be of type Combatant. Received type: {}".format(type(attacker_instance).__name__))
 
-        if Interaction.global_game_mode == "MANUAL" and isinstance(attacker_instance, PlayableActor) == False:
+        if GLOBAL_GAME_MODE == "MANUAL" and isinstance(attacker_instance, PlayableActor) == False:
             time.sleep(2)
 
         actor_attack_message = f"{attacker_instance.name} attacks with {attacker_instance.attack_name} inflicting {damage_value} damage"
@@ -66,10 +68,11 @@ class Message():
 
     @staticmethod
     def actor_critical_attack_message(attacker_instance:Combatant, damage_value:int) -> None:
+        
         if not isinstance(attacker_instance, Combatant):
             raise ValueError("The 'attacker_instance' parameter must be of type Combatant. Received type: {}".format(type(attacker_instance).__name__))
 
-        if Interaction.global_game_mode == "MANUAL" and isinstance(attacker_instance, PlayableActor) == False:
+        if GLOBAL_GAME_MODE == "MANUAL" and isinstance(attacker_instance, PlayableActor) == False:
             time.sleep(2)
 
         actor_critical_attack_message = f"""
@@ -115,9 +118,10 @@ class Message():
 
     @staticmethod
     def flee_failure_message(player_name:str, enemy_name:str) -> None:
+        
         flee_failure_message = f"{player_name} has Failed to Escape the {enemy_name}!"
 
-        if Interaction.global_game_mode == "MANUAL":
+        if GLOBAL_GAME_MODE == "MANUAL":
             time.sleep(2)
 
         __class__.display_message(flee_failure_message, 1)
@@ -129,6 +133,7 @@ class Message():
         __class__.display_message(flee_success_message, 1)
 
     def special_encounter_message(progress_value:int, party_name:str,message_type:str)-> None:
+        
         if message_type not in ["messages", "success_messages", "failure_messages"]:
             raise ValueError('Message type must be one of ["messages", "success_messages", "failure_messages"]')
 
@@ -139,7 +144,7 @@ class Message():
             formatted_message = message.format(party_name=party_name)
         
             __class__.display_message(formatted_message, 2)
-            if Interaction.global_game_mode == "MANUAL":
+            if GLOBAL_GAME_MODE == "MANUAL":
                 time.sleep(2)
 
     # Player Messages
@@ -194,7 +199,8 @@ Player Attack Power: {player_instance.attack_power}
 
     @staticmethod
     def empty_travel_message(empty_distance:int) -> None:
-        if Interaction.global_game_mode == "MANUAL":
+        
+        if GLOBAL_GAME_MODE == "MANUAL":
             time.sleep(2)
         empty_travel_message = f"{'.' * (empty_distance - 1 )}"
 

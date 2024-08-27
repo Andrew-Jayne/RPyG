@@ -1,3 +1,4 @@
+from config import GLOBAL_GAME_MODE
 from gameState.file import save_game
 from interaction.interaction import Interaction
 from actors.actor_enemy import Enemy
@@ -106,7 +107,6 @@ Your adventure has been completed, you may start a new adventure if you so choos
 """
 
             Message.display_message(end_game_message, 2)
-
-            if Interaction.global_game_mode == "MANUAL":
+            if GLOBAL_GAME_MODE == "MANUAL":
                 save_game(player_party_instance)
 
