@@ -1,5 +1,5 @@
 import os
-from config import GLOBAL_GAME_MODE
+from config import update_global_game_mode
 from interaction.interaction import Interaction
 from message.message import Message
 from display.display import Display
@@ -16,18 +16,17 @@ def welcome() -> None:
             If the next line is split please widen your terminal.
 ----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----
 """
-    Message.display_message(welcome_message, 1)
+    Message.display_message(welcome_message, 3)
 
 
 def get_start_type() -> str:
-
     if os.path.exists('savegame.rpygs') is True:
         start_game_options = ["NEW","LOAD"]
         start_game_messages = ["Would you like to Start a new game or Load an existing save?", "NOTE: All Prompts in this game are case insensitive", "Options are:"]
 
     else:
         start_game_options = ["NEW"]
-        start_game_messages = ["Type 'NEW' to start a new game","You will be able to save your game later and load it here", "NOTE: All Prompts in this game are case insensitive","Options are :"]
+        start_game_messages = ["Type 'NEW' to start a new game","You will be able to save your game later and load it here", "NOTE: All Prompts in this game are case insensitive","Options are:"]
         
     player_action = Interaction.prompt_user(start_game_options, start_game_messages)
     Display.clear_display()
@@ -47,14 +46,19 @@ def party_start() -> tuple:
 
 
     party_size = Interaction.prompt_user(party_size_choices, party_size_messages, return_int=True)
+    Display.clear_display()
+
     party_members = []
     for _ in range(0, party_size):
         member_name = Interaction.custom_text_entry(member_name_messages, 32)
-        member_specialization = Interaction.validate_input(specialization_choices, specialization_messages)
+        member_specialization = Interaction.prompt_user(specialization_choices, specialization_messages)
         member_attrib = [member_name, member_specialization]
         party_members.append(member_attrib)
+        Display.clear_display()
+    
     party_name = Interaction.custom_text_entry(party_name_messages, 64)
     Display.clear_display()
+
     return party_members, party_name
 
 
@@ -69,13 +73,13 @@ def default_party() -> list:
 
 
 def start_game(game_mode: str, using_default_party: bool) -> PlayerParty:
-
+    welcome()
     match game_mode:
         case "AUTO":
-            GLOBAL_GAME_MODE = "AUTO"
+            update_global_game_mode("AUTO")
             return PlayerParty(name="The Default Party", members=default_party())
         case "MANUAL":
-            GLOBAL_GAME_MODE = "MANUAL"
+            update_global_game_mode("MANUAL")
             if using_default_party is True:
                 return PlayerParty(name="The Default Party", members=default_party())
             else:

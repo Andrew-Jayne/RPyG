@@ -1,8 +1,7 @@
 import time
 import textwrap
-from config import GLOBAL_GAME_MODE
+import config
 from actors.actor_playable import PlayableActor
-from interaction.interaction import Interaction
 from content.content import STORY
 
 # Only used for Type checking/Hinting
@@ -59,7 +58,7 @@ class Message():
         if not isinstance(attacker_instance, Combatant):
             raise ValueError("The 'attacker_instance' parameter must be of type Combatant. Received type: {}".format(type(attacker_instance).__name__))
 
-        if GLOBAL_GAME_MODE == "MANUAL" and isinstance(attacker_instance, PlayableActor) == False:
+        if config.GLOBAL_GAME_MODE == "MANUAL" and isinstance(attacker_instance, PlayableActor) == False:
             time.sleep(2)
 
         actor_attack_message = f"{attacker_instance.name} attacks with {attacker_instance.attack_name} inflicting {damage_value} damage"
@@ -72,7 +71,7 @@ class Message():
         if not isinstance(attacker_instance, Combatant):
             raise ValueError("The 'attacker_instance' parameter must be of type Combatant. Received type: {}".format(type(attacker_instance).__name__))
 
-        if GLOBAL_GAME_MODE == "MANUAL" and isinstance(attacker_instance, PlayableActor) == False:
+        if config.GLOBAL_GAME_MODE == "MANUAL" and isinstance(attacker_instance, PlayableActor) == False:
             time.sleep(2)
 
         actor_critical_attack_message = f"""
@@ -121,7 +120,7 @@ class Message():
         
         flee_failure_message = f"{player_name} has Failed to Escape the {enemy_name}!"
 
-        if GLOBAL_GAME_MODE == "MANUAL":
+        if config.GLOBAL_GAME_MODE == "MANUAL":
             time.sleep(2)
 
         __class__.display_message(flee_failure_message, 1)
@@ -144,7 +143,7 @@ class Message():
             formatted_message = message.format(party_name=party_name)
         
             __class__.display_message(formatted_message, 2)
-            if GLOBAL_GAME_MODE == "MANUAL":
+            if config.GLOBAL_GAME_MODE == "MANUAL":
                 time.sleep(2)
 
     # Player Messages
@@ -200,7 +199,7 @@ Player Attack Power: {player_instance.attack_power}
     @staticmethod
     def empty_travel_message(empty_distance:int) -> None:
         
-        if GLOBAL_GAME_MODE == "MANUAL":
+        if config.GLOBAL_GAME_MODE == "MANUAL":
             time.sleep(2)
         empty_travel_message = f"{'.' * (empty_distance - 1 )}"
 

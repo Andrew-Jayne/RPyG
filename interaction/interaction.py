@@ -1,7 +1,8 @@
 import random
-from config import GLOBAL_GAME_MODE
+import config
 from logic.logic import select_combat_target
 from utilites.utilities import ensure_type
+from message.message import Message
 
 # Only Used For Type Hinting/Checking
 from actors.actor_party import PlayerParty, EnemyParty
@@ -15,7 +16,6 @@ class Interaction:
 
     @staticmethod
     def sanitize(input_string: str, max_length=32) -> str:
-        from message.message import Message
         """
         This function Sanitizes strings passed into it and returns up to the max length chars (Default is 32)
         With most escape sequences and control chars removed
@@ -40,20 +40,20 @@ class Interaction:
 
 
     @staticmethod
-    def validate_input(choice_list:list[str], prompt_messages:list[str]) -> str:
-        from message.message import Message
+    def validate_input(choice_list:list[str]) -> str:
+        
         """
         Checks that the string input by the user is in the allowed list of responses
         Sanizites the input then returns up to the max length specified
         """
-
+        options_list = "\n".join(choice_list)
         chosen_action = ""
         dumb_check = 0
-        for message in prompt_messages:
-            Message.display_message(message, 1)
         while chosen_action not in choice_list:
-            chosen_action = __class__.sanitize(input().upper())
+            chosen_action = __class__.sanitize(input("").upper())
             if chosen_action not in choice_list:
+                Message.display_message("That is not a Valid Option. Try again, valid options are", 2)
+                Message.display_message(options_list, 1)
                 dumb_check += 1
                 if dumb_check == 10:
                     raise FileNotFoundError("Look it's not hard, just enter a valid choice....")
@@ -61,21 +61,31 @@ class Interaction:
 
     @staticmethod
     def custom_text_entry(input_messages: list[str], max_length: int) -> str:
-        from message.message import Message
         for message in input_messages:
             Message.display_message(message, 1)
         return __class__.sanitize(input()[:max_length])
 
 
     def prompt_user(options:list[str], base_messages:list[str], return_int=False) -> str|int:
+        ensure_type(options, list, 'options')
+        ensure_type(base_messages, list, 'base_messages')
+        ensure_type(return_int, bool, 'return_int')
+
         formatted_message = ""
         for message in base_messages:
-            formatted_message + f"{message}\n"
+            formatted_message += f"{message}\n"
 
         for option in options:
-            formatted_message + f"{option}\n"
+            formatted_message += f"{option}\n"
+        
+        Message.display_message(formatted_message, 1)
+
+        if return_int is True:
+            options = []
+            for i in range(len(options) + 1):
+                options.append(str(i))
             
-        response = __class__.validate_input(options, formatted_message)
+        response = __class__.validate_input(options)
 
         if return_int is True:
             return int(response)
@@ -89,7 +99,7 @@ class Interaction:
 
         ensure_type(enemy_party_instance, EnemyParty, 'player_party_instance')
     
-        match GLOBAL_GAME_MODE:
+        match config.GLOBAL_GAME_MODE:
             case "AUTO":
                 return select_combat_target(enemy_party_instance)
             case "MANUAL":
@@ -98,7 +108,7 @@ class Interaction:
                 for i,member in enumerate(enemy_party_instance.members):
                     target_options.append(f"{i} {member.name}:{member.health}")
 
-                target_messages = ["Which enemy will you attack?", ""]
+                target_messages = ["Which enemy will you attack?", ]
 
                 return __class__.prompt_user(target_options, target_messages, True)
             case _:
@@ -106,7 +116,7 @@ class Interaction:
 
     @staticmethod
     def encounter_enemy() -> str:
-        match GLOBAL_GAME_MODE:
+        match config.GLOBAL_GAME_MODE:
             case "AUTO":
                 chosen_action = random.choice(["FLEE", "ATTACK"])
                 return chosen_action
@@ -123,7 +133,7 @@ class Interaction:
 
         ensure_type(player_party_instance, PlayerParty, 'player_party_instance')
 
-        match GLOBAL_GAME_MODE:
+        match config.GLOBAL_GAME_MODE:
             case "AUTO":
                 for player_instance in player_party_instance.members:
                     if player_instance.health < 20 and player_instance.potions != 0:
@@ -142,10 +152,9 @@ class Interaction:
     def in_battle(player_instance: PlayableActor) -> str:
         
 
-        from message.message import Message
         ensure_type(player_instance, PlayableActor, 'player_instance')
 
-        match GLOBAL_GAME_MODE:
+        match config.GLOBAL_GAME_MODE:
             case "AUTO":
                 if player_instance.health <= 40 and player_instance.potions != 0:
                     chosen_action = "HEAL" 
@@ -179,12 +188,11 @@ class Interaction:
     def at_merchant(player_party_instance: PlayerParty) -> None:
         
 
-        from message.message import Message
         import math
         ensure_type(player_party_instance, PlayerParty, 'player_party_instance')
 
         Message.display_message("You arrive at a merchant", 1)
-        match GLOBAL_GAME_MODE:
+        match config.GLOBAL_GAME_MODE:
             case "AUTO":
                 # init Counts
                 player_count = 0
@@ -236,12 +244,12 @@ class Interaction:
     @staticmethod
     def confirm_rest() -> bool:
         
-        match GLOBAL_GAME_MODE:
+        match config.GLOBAL_GAME_MODE:
             case "AUTO":
                 return random.choice([True, True, False])
             case "MANUAL":
                     rest_options = ["YES", "NO"]
-                    rest_message = "Will you Rest here?:"
+                    rest_message = ["Will you Rest here?:"]
                     return __class__.prompt_user(rest_options, rest_message)
             case _:
                 raise ValueError("invalid game mode")
@@ -249,12 +257,12 @@ class Interaction:
     @staticmethod
     def mystery_action() -> str:
         
-        match GLOBAL_GAME_MODE:
+        match config.GLOBAL_GAME_MODE:
             case "AUTO":
                 return random.choice(["GREET","GREET","ATTACK"])
             case "MANUAL":
                 rest_options = ["ATTACK", "GREET"]
-                rest_message = "What do you do?:"
+                rest_message = ["What do you do?:"]
                 return __class__.prompt_user(rest_options, rest_message)
             case _:
                 raise ValueError("invalid game mode")
@@ -262,32 +270,27 @@ class Interaction:
     @staticmethod
     def loot_action() -> bool:
         
-        match GLOBAL_GAME_MODE:
+        match config.GLOBAL_GAME_MODE:
             case "AUTO":
                 return random.choice(["OPEN","OPEN","LEAVE"])
             case "MANUAL":
                 rest_options = ["OPEN", "LEAVE"]
-                rest_message = "What do you do?:"
+                rest_message = ["What do you do?:"]
                 return __class__.prompt_user(rest_options, rest_message)
             case _:
                 raise ValueError("invalid game mode")
 
     @staticmethod
     def embark() -> bool:
-        
-        from message.message import Message
-
-        match GLOBAL_GAME_MODE:
+        match config.GLOBAL_GAME_MODE:
             case "AUTO":
                 return True
             case "MANUAL":
                 player_choice = None
                 embark_options = ["EMBARK", "DRINK"]
-                embark_options_message = "What shall the party do?"
-                
-                player_choice = __class__.prompt_user(embark_options, embark_options_message)
+                embark_options_message = ["What shall the party do?"]
 
-                while player_choice is not "ACCEPT":
+                while player_choice != "EMBARK":
                     player_choice = __class__.prompt_user(embark_options, embark_options_message)
                     match player_choice:
                         case "EMBARK":
@@ -304,16 +307,14 @@ class Interaction:
         
         from message.message import Message
 
-        match GLOBAL_GAME_MODE:
+        match config.GLOBAL_GAME_MODE:
             case "AUTO":
                 return True
             case "MANUAL":
                 quest_options = ["ACCEPT", "DECLINE"]
                 quest_message = ["Will you accept this quest from the King?"]
-                
-                player_choice = __class__.prompt_user(quest_options, quest_message)
 
-                while player_choice is not "ACCEPT":
+                while player_choice != "ACCEPT":
                     player_choice = __class__.prompt_user(quest_options, quest_message)
                     match player_choice:
                         case "ACCEPT":
