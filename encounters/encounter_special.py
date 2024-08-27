@@ -1,4 +1,4 @@
-from config import GLOBAL_GAME_MODE
+import config
 from gameState.file import save_game
 from interaction.interaction import Interaction
 from actors.actor_enemy import Enemy
@@ -94,7 +94,7 @@ class SpecialEncounters():
         Message.display_message(f"Your Party must now battle {enemy_instance.name}!", 1)
         enemy_party = EnemyParty(enemy_instance.name,[enemy_instance])
         Combat.battle(player_party_instance, enemy_party)
-        if len(player_party_instance.members) is not 0:
+        if len(player_party_instance.members) != 0:
             Message.special_encounter_message(
                 player_party_instance.progress,
                 player_party_instance.name,
@@ -107,6 +107,6 @@ Your adventure has been completed, you may start a new adventure if you so choos
 """
 
             Message.display_message(end_game_message, 2)
-            if GLOBAL_GAME_MODE == "MANUAL":
+            if config.GLOBAL_GAME_MODE == "MANUAL":
                 save_game(player_party_instance)
 
