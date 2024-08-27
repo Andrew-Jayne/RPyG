@@ -2,8 +2,10 @@ import pickle
 import hmac
 import hashlib
 import os
+from interaction.interaction import Interaction
+from utilites.utilities import ensure_type
 from message.message import Message
-from interaction.interaction_utilities import validate_input
+
 
 # Only used for Type Checking
 from actors.actor_party import PlayerParty
@@ -18,8 +20,7 @@ def save_game(player_party_instance: PlayerParty) -> None:
     This serves to save all progress of the party
     """
 
-    if not isinstance(player_party_instance, PlayerParty):
-        raise ValueError("The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(type(player_party_instance).__name__))
+    ensure_type(player_party_instance, PlayerParty,'player_party_instance')
 
     serialized_data = pickle.dumps(player_party_instance)
     signature = hmac.new(secret_key, serialized_data, hashlib.sha256).digest()
@@ -27,15 +28,10 @@ def save_game(player_party_instance: PlayerParty) -> None:
     with open('savegame.rpygs', 'wb') as save_file:
         save_file.write(signature + serialized_data)
     Message.display_message(f"Successfully Saved Game for {player_party_instance.name}", 2)
-    save_prompt = """
-Would you like to keep playing?
-YES
-NO
 
-
-"""
+    save_prompt = ["Would you like to keep playing?"]
     save_options = ["YES", "NO"]
-    match validate_input(save_options, save_prompt):
+    match Interaction.prompt_user(save_options, save_prompt):
         case "YES":
             pass
         case "NO":

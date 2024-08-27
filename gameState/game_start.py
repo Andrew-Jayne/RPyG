@@ -1,4 +1,5 @@
 import os
+from config import GLOBAL_GAME_MODE
 from interaction.interaction import Interaction
 from message.message import Message
 from display.display import Display
@@ -20,75 +21,39 @@ def welcome() -> None:
 
 def get_start_type() -> str:
 
-    if os.path.exists('savegame.rpygs'):
-        new_and_load_message = """
-Would you like to Start a new game or Load an existing save?
-Options are : NEW & LOAD
-
-
-NOTE: All Prompts in this game are case insensitive
-
-"""
-        new_and_load_choices = ["NEW", "LOAD"]
-        player_action = Interaction.validate_input(new_and_load_choices, new_and_load_message)
+    if os.path.exists('savegame.rpygs') is True:
+        start_game_options = ["NEW","LOAD"]
+        start_game_messages = ["Would you like to Start a new game or Load an existing save?", "NOTE: All Prompts in this game are case insensitive", "Options are:"]
 
     else:
-        new_game_message = """
-Type "NEW" to start a new game
-You will be able to save your game later and load it here
-
-Options are : NEW
-
-
-NOTE: All Prompts in this game are case insensitive
-"""
-        new_game_choices = ["NEW", "LOAD"]
-        player_action = Interaction.validate_input(new_game_choices, new_game_message)
-        Display.clear_display()
+        start_game_options = ["NEW"]
+        start_game_messages = ["Type 'NEW' to start a new game","You will be able to save your game later and load it here", "NOTE: All Prompts in this game are case insensitive","Options are :"]
+        
+    player_action = Interaction.prompt_user(start_game_options, start_game_messages)
+    Display.clear_display()
     return player_action
 
 
 def party_start() -> tuple:
     party_size_choices = ["1","2","3"]
+    party_size_messages = ["How many members are in your party?"]
+
     specialization_choices = ["WARRIOR", "MAGE", "ROGUE"]
-    party_size_message = """
-How many members are in your party?
-1
-2
-3
+    specialization_messages = ["What Specialization will this member use?"]
 
-"""
-    specialization_messages = """
-What Specialization will this member use?
-WARRIOR
-MAGE
-ROGUE
+    member_name_messages = ["Before their journey can begin you must name your Character", "NOTE: Case is respected but names longer than 32 characters will be truncated"]
 
-"""
+    party_name_messages = ["Before their journey can begin you must name your Party", "NOTE: Case is respected but names longer than 64 characters will be truncated"]
 
-    member_name_message = """
-Before their journey can begin you must name your Character
 
-Note: Case is respected but names longer than 32 characters will be truncated
-
-"""
-
-    party_name_message = """
-Before their journey can begin you must name your Party
-
-Note: Case is respected but names longer than 64 characters will be truncated
-
-"""
-
-    party_size = int(Interaction.validate_input(party_size_choices, party_size_message))
-# kinda Yikes but casting str to int is not horrendously unsafe
+    party_size = Interaction.prompt_user(party_size_choices, party_size_messages, return_int=True)
     party_members = []
     for _ in range(0, party_size):
-        member_name = Interaction.custom_text_entry(member_name_message, 32)
-        member_specialization = Interaction.validate_input(specialization_choices,specialization_messages)
-        member = [member_name, member_specialization]
-        party_members.append(member)
-    party_name = Interaction.custom_text_entry(party_name_message, 64)
+        member_name = Interaction.custom_text_entry(member_name_messages, 32)
+        member_specialization = Interaction.validate_input(specialization_choices, specialization_messages)
+        member_attrib = [member_name, member_specialization]
+        party_members.append(member_attrib)
+    party_name = Interaction.custom_text_entry(party_name_messages, 64)
     Display.clear_display()
     return party_members, party_name
 
@@ -104,13 +69,13 @@ def default_party() -> list:
 
 
 def start_game(game_mode: str, using_default_party: bool) -> PlayerParty:
-    from interaction.interaction import Interaction
+
     match game_mode:
         case "AUTO":
-            Interaction.global_game_mode = "AUTO"
+            GLOBAL_GAME_MODE = "AUTO"
             return PlayerParty(name="The Default Party", members=default_party())
         case "MANUAL":
-            Interaction.global_game_mode = "MANUAL"
+            GLOBAL_GAME_MODE = "MANUAL"
             if using_default_party is True:
                 return PlayerParty(name="The Default Party", members=default_party())
             else:
