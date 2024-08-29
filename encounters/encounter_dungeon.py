@@ -1,5 +1,6 @@
 import random
 import time
+import config
 from message.message import Message
 from actors.actor_party import EnemyParty
 from combat.combat import Combat
@@ -26,7 +27,7 @@ class Dungeon():
 
         while dungeon_progress < self.length:
             dungeon_progress += 1
-            if Interaction.global_game_mode == "MANUAL":
+            if config.GLOBAL_GAME_MODE == "MANUAL":
                 time.sleep(2)
             encouter_chance = random.randint(0,5)
             match encouter_chance:
@@ -46,17 +47,17 @@ class Dungeon():
                     enemy_party = generate_enemy_party(chosen_enemy,enemy_count)
                     Message.encounter_message(enemy_party.name)
                     Combat.battle(player_party_instance, enemy_party)
-                    if len(player_party_instance.members) is 0:
+                    if len(player_party_instance.members) == 0:
                         return False
                 case _:
                     Message.empty_travel_message(1)
 
-        if len(player_party_instance.members) is not 0:
+        if len(player_party_instance.members) != 0:
             Message.display_message("At the end of the Keep Your Party encounters Algolon's Arch Mage!", 1)
             enemy_instance = Enemy(self.boss)
             enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
             Combat.battle(player_party_instance, enemy_party)
-            if len(player_party_instance.members) is not 0:
+            if len(player_party_instance.members) != 0:
                 Message.special_encounter_message(player_party_instance.progress, player_party_instance.name,"success_messages")
                 return True
             else:
