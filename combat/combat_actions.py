@@ -122,11 +122,11 @@ def double_attack(attacker_instance: Combatant, target_party_instance: Party) ->
     ensure_type(target_party_instance, Party, 'target_party_instance')
 
     # set primary target
-    primary_target_index = int(Interaction.choose_combat_target(target_party_instance))
+    primary_target_index = Interaction.choose_combat_target(target_party_instance)
     primary_instance = target_party_instance.members[primary_target_index]
 
     # set secondary target
-    secondary_target_index = int(Interaction.choose_combat_target(target_party_instance))
+    secondary_target_index = Interaction.choose_combat_target(target_party_instance)
     secondary_instance = target_party_instance.members[secondary_target_index]
 
     # Damage Primary Target
@@ -145,16 +145,18 @@ def double_attack(attacker_instance: Combatant, target_party_instance: Party) ->
         Message.defeated_message(primary_instance.name)
         target_party_instance.lose_member(primary_instance)
 
-    # Damage Secondary Target
-    reduced_damage = int(final_damage * 0.5)
+
 
     # Make Sure a Living target is chosen
     # This prevents a softlock, if you kill the last target on attack 1
-    if len(target_party_instance.members) == 0:
+    if len(target_party_instance.members) != 0:
+        # Damage Secondary Target
+        reduced_damage = int(final_damage * 0.5)
+
         if secondary_instance not in target_party_instance.members:
             while secondary_instance not in target_party_instance.members:
                 Message.display_message("Select a Living Target", 1)
-                secondary_target_index = int(Interaction.choose_combat_target(target_party_instance))
+                secondary_target_index = Interaction.choose_combat_target(target_party_instance)
                 secondary_instance = target_party_instance.members[secondary_target_index]
 
         if check_for_critical(attacker_instance) is True:
@@ -189,8 +191,10 @@ def special_attack(attacker_instance: Combatant, target_party_instance: Party) -
                     dumb_check = 0 
                     while target_instance.is_dismembered is True:
                         dumb_check += 1
+                        already_dismemebered_message = f"{target_instance.name} has been dismembered already"
+                        Message.display_message(already_dismemebered_message, 1)
                         # message that enemy has been dismembered
-                        target_index = int(Interaction.choose_combat_target(target_party_instance))
+                        target_index = Interaction.choose_combat_target(target_party_instance)
                         target_instance = target_party_instance.members[target_index]
                         if dumb_check > 10:
                             # dumb message
