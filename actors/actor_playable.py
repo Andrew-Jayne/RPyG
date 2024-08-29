@@ -85,7 +85,7 @@ class PlayableActor(Actor, Inventory, Combatant):
                            )
         
         Combatant.__init__(self, 
-                           health=10000 + int((strength + intellect) * 10),
+                           health=100 + int((strength + intellect) * 10),
                            attack_name=__class__.__get_attack_name(self),
                            attack_power=__class__.___get_attack_power(self),
                            special_attack_name=__class__.__get_special_attack(self)
