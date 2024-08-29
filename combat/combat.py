@@ -61,6 +61,10 @@ class Combat:
 
                     case player_instance.special_attack_name:
                         special_attack(player_instance, enemy_party_instance)
+                        for enemy_instance in enemy_party_instance.members:
+                            if enemy_instance.health == 0:
+                                Message.defeated_message(enemy_instance.name)
+                                enemy_party_instance.lose_member(enemy_instance)
 
                     case player_instance.react_action:
                         Message.display_message(player_instance.react_messages['prep_message'],new_line_count=2)
