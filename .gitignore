@@ -5,6 +5,7 @@
 # Game Files
 *.rpygs
 log.txt
+zest.py
 
 
 # Byte-compiled / optimized / DLL files

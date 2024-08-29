@@ -81,9 +81,10 @@ class Interaction:
         Message.display_message(formatted_message, 1)
 
         if return_int is True:
-            options = []
+            int_options = []
             for i in range(len(options) + 1):
-                options.append(str(i))
+                int_options.append(str(i))
+            options = int_options
             
         response = __class__.validate_input(options)
 
@@ -304,13 +305,11 @@ class Interaction:
 
     @staticmethod
     def accept_quest() -> bool:
-        
-        from message.message import Message
-
         match config.GLOBAL_GAME_MODE:
             case "AUTO":
                 return True
             case "MANUAL":
+                player_choice = ""
                 quest_options = ["ACCEPT", "DECLINE"]
                 quest_message = ["Will you accept this quest from the King?"]
 
