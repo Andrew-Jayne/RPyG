@@ -1,22 +1,24 @@
 import random
-from utilites.utilities import ensure_type
+
 from actors.actor import Actor
 from actors.actor_combatant import Combatant
+from utilites.utilities import ensure_type
 
 
 class Inventory:
-    def __init__(self, gold:int, potions:int) -> None:
-        ensure_type(gold, int, 'gold')
-        ensure_type(potions, int, 'potions')
-        
+    def __init__(self, gold: int, potions: int) -> None:
+        ensure_type(gold, int, "gold")
+        ensure_type(potions, int, "potions")
+
         self.gold = gold
         self.potions = potions
 
-    def gain_gold(self, amount:int) -> None:
+    def gain_gold(self, amount: int) -> None:
         self.gold += amount
 
-    def spend_gold(self, amount:int) -> bool:
+    def spend_gold(self, amount: int) -> bool:
         from message.message import Message
+
         if self.gold < amount:
             insufficient_gold_message = f"{self.name} has insufficient gold"
             Message.display_message(insufficient_gold_message, 1)
@@ -24,87 +26,86 @@ class Inventory:
         else:
             __class__.lose_gold(self, amount)
             return True
-    
-    def lose_gold(self, amount:int) -> None:
-            from message.message import Message
-            self.gold -= amount
-            if self.gold < 0:
-                self.gold = 0
-                no_gold_message = f"{self.name} has no gold remaining"
-                Message.display_message(no_gold_message, 1)
-                
-        
 
-    def gain_potion(self, amount:int) -> None:
+    def lose_gold(self, amount: int) -> None:
+        from message.message import Message
+
+        self.gold -= amount
+        if self.gold < 0:
+            self.gold = 0
+            no_gold_message = f"{self.name} has no gold remaining"
+            Message.display_message(no_gold_message, 1)
+
+    def gain_potion(self, amount: int) -> None:
         self.potions += amount
-    
-    def lose_potion(self, amount:int) -> None:
+
+    def lose_potion(self, amount: int) -> None:
         self.potions -= amount
+
 
 class PlayableActor(Actor, Inventory, Combatant):
     def __init__(self, name: str, specialization: str) -> None:
-        ensure_type(name, str, 'name')
-        ensure_type(specialization, str, 'specialization')
+        ensure_type(name, str, "name")
+        ensure_type(specialization, str, "specialization")
 
         self.name = name
         self.specialization = specialization
         self.react_action = __class__.__get_react_action(self)[0]
         self.react_messages = __class__.__get_react_action(self)[1]
-                 
 
         match specialization:
             case "WARRIOR":
-                strength = random.randint(5,10)
-                intellect = random.randint(1,5)
-                agility = random.randint(4,8)
-                luck = random.randint(1,10)
+                strength = random.randint(5, 10)
+                intellect = random.randint(1, 5)
+                agility = random.randint(4, 8)
+                luck = random.randint(1, 10)
             case "MAGE":
-                strength = random.randint(1,5)
-                intellect = random.randint(5,10)
-                agility = random.randint(4,8)
-                luck = random.randint(1,10)
+                strength = random.randint(1, 5)
+                intellect = random.randint(5, 10)
+                agility = random.randint(4, 8)
+                luck = random.randint(1, 10)
             case "ROGUE":
-                strength = random.randint(4,8)
-                intellect = random.randint(4,8)
-                agility = random.randint(5,10)
-                luck = random.randint(1,10)
+                strength = random.randint(4, 8)
+                intellect = random.randint(4, 8)
+                agility = random.randint(5, 10)
+                luck = random.randint(1, 10)
             case _:
                 raise ValueError(f"Error Invalid Specialization {specialization}")
-        
-    ## Init Inherited Classes
-        Actor.__init__(self, 
-                       name=name,
-                       strength=strength, 
-                       intellect=intellect, 
-                       agility=agility, 
-                       luck=luck)
 
-        Inventory.__init__(self, 
-                           gold=strength * 25, 
-                           potions=int(intellect / 2) 
-                           )
-        
-        Combatant.__init__(self, 
-                           health=100 + int((strength + intellect) * 10),
-                           attack_name=__class__.__get_attack_name(self),
-                           attack_power=__class__.___get_attack_power(self),
-                           special_attack_name=__class__.__get_special_attack(self)
-                           )
-    
+        ## Init Inherited Classes
+        Actor.__init__(
+            self,
+            name=name,
+            strength=strength,
+            intellect=intellect,
+            agility=agility,
+            luck=luck,
+        )
+
+        Inventory.__init__(self, gold=strength * 25, potions=int(intellect / 2))
+
+        Combatant.__init__(
+            self,
+            health=100 + int((strength + intellect) * 10),
+            attack_name=__class__.__get_attack_name(self),
+            attack_power=__class__.___get_attack_power(self),
+            special_attack_name=__class__.__get_special_attack(self),
+        )
 
     def use_potion(self) -> None:
         from message.message import Message
+
         if self.potions is not 0 and not self.is_fully_healed():
             drink_potion_message = f"{self.name} drinks a potion"
             Message.display_message(drink_potion_message, 1)
             self.lose_potion(1)
-            self.heal(100 + random.randint(-20,20))
+            self.heal(100 + random.randint(-20, 20))
             drank_potion_message = f"""
 {self.name} has {self.potions} remaining
 {self.name}'s health is now {self.health}
 """
             Message.display_message(drank_potion_message, 2)
-            
+
         elif self.potions == 0:
             no_potions_message = f"{self.name} has no remaining potions!"
             Message.display_message(no_potions_message, 1)
@@ -116,7 +117,7 @@ class PlayableActor(Actor, Inventory, Combatant):
         if self.strength > self.intellect:
             self.attack_power = self.strength
         elif self.strength >= 7 and self.intellect >= 7:
-            self.attack_power = int(self.strength + self.intellect * .75)
+            self.attack_power = int(self.strength + self.intellect * 0.75)
         else:
             self.attack_power = self.intellect
 
@@ -124,16 +125,17 @@ class PlayableActor(Actor, Inventory, Combatant):
 
     def ___get_attack_power(self) -> int:
         match self.specialization:
-            case "WARRIOR": # Str + 1/4 agility
-                attack_power = self.strength + int(self.agility * .25)
+            case "WARRIOR":  # Str + 1/4 agility
+                attack_power = self.strength + int(self.agility * 0.25)
                 return attack_power * 10
-            case "MAGE": # Int + 1/4 Str
-                attack_power = self.intellect + int(self.strength * .25)
+            case "MAGE":  # Int + 1/4 Str
+                attack_power = self.intellect + int(self.strength * 0.25)
                 return attack_power * 10
-            case "ROGUE": # Agl + 1/4 average of str & int
-                attack_power = self.agility + int(((self.strength + self.intellect) * 0.5) * 0.25)
+            case "ROGUE":  # Agl + 1/4 average of str & int
+                attack_power = self.agility + int(
+                    ((self.strength + self.intellect) * 0.5) * 0.25
+                )
                 return attack_power * 10
-
 
     def __get_skill(self) -> str:
         strength_skill = ""
@@ -157,11 +159,11 @@ class PlayableActor(Actor, Inventory, Combatant):
             intellect_skill = "smart"
         elif self.intellect is 10:
             intellect_skill = "brilliant"
-                
+
         player_skill = str(f"{strength_skill}:{intellect_skill}")
 
         return player_skill
-    
+
     def __set_attack_name(self) -> str:
         player_skill = __class__.__get_skill(self)
 
@@ -199,83 +201,95 @@ class PlayableActor(Actor, Inventory, Combatant):
                 self.attack_name = "Great Fireball"
             case "strong:brilliant":
                 self.attack_name = "Seismic Hammer Slam"
-            case "mighty:brilliant" :
+            case "mighty:brilliant":
                 self.attack_name = "Cosmic Greatsword Cleave"
 
         return self.attack_name
-    
-    def __get_attack_name(self) -> str:
-        
 
+    def __get_attack_name(self) -> str:
         match self.specialization:
             case "WARRIOR":
                 return "Greatsword Cleave"
-                #if self.intellect >= 7:
+                # if self.intellect >= 7:
                 #    attack = "Arcane Greatsword Cleave"
-                #else:
+                # else:
                 #    attack = "Greatsword Cleave"
-                
-                #min str: 5
-                #max str: 10
 
-                #min int: 1
-                #max int: 5 
+                # min str: 5
+                # max str: 10
 
-                #min agl: 4
-                #max agl: 8
+                # min int: 1
+                # max int: 5
+
+                # min agl: 4
+                # max agl: 8
             case "MAGE":
                 return "Arcane Lightning"
-                #if self.strength >= 7:
+                # if self.strength >= 7:
                 #    attack = "Arcane Shockwave"
-                #else:
+                # else:
                 #    attack = "Arcane Bolt"
-                #min str: 1
-                #max str: 5
+                # min str: 1
+                # max str: 5
 
-                #min int: 5
-                #max int: 10 
-                
-                #min agl: 4
-                #max agl: 8
+                # min int: 5
+                # max int: 10
+
+                # min agl: 4
+                # max agl: 8
             case "ROGUE":
                 return "Precision Strike"
-                #if self.intellect >= 7 and self.strength >= 7:
+                # if self.intellect >= 7 and self.strength >= 7:
                 #    attack = "Cool Attack"
-                #else:
+                # else:
                 #    attack = "Precision Dagger Strike"
-                #min str: 4
-                #max str: 8
+                # min str: 4
+                # max str: 8
 
-                #min int: 4
-                #max int: 8 
-                
-                #min agl: 5
-                #max agl: 10
+                # min int: 4
+                # max int: 8
+
+                # min agl: 5
+                # max agl: 10
             case _:
                 raise ValueError(f"Error Invalid Specialization {self.specialization}")
 
-    def __get_react_action(self) -> tuple[str,dict]:
+    def __get_react_action(self) -> tuple[str, dict]:
         match self.specialization:
             case "WARRIOR":
-                return ("DEFLECT",{"prep_message": f"{self.name} prepares to deflect against next attack",
-                                 "success_message": f"{self.name} successfully deflected the enemy's attack!",
-                                 "failure_message" : f"{self.name} failed to deflect the attack!"})
+                return (
+                    "DEFLECT",
+                    {
+                        "prep_message": f"{self.name} prepares to deflect against next attack",
+                        "success_message": f"{self.name} successfully deflected the enemy's attack!",
+                        "failure_message": f"{self.name} failed to deflect the attack!",
+                    },
+                )
             case "MAGE":
-                return ("ELUDE",{"prep_message": f"{self.name} prepares to elude the next attack",
-                                "success_message": f"{self.name} fools the enemy with an illusion!",
-                                "failure_message" : f"{self.name} failed to fool the enemy illusion!"})
+                return (
+                    "ELUDE",
+                    {
+                        "prep_message": f"{self.name} prepares to elude the next attack",
+                        "success_message": f"{self.name} fools the enemy with an illusion!",
+                        "failure_message": f"{self.name} failed to fool the enemy illusion!",
+                    },
+                )
             case "ROGUE":
-                return ("EVADE",{"prep_message": f"{self.name} prepares to evade the next attack",
-                                "success_message": f"{self.name} deftly evades the enemy's attack!",
-                                "failure_message" : f"{self.name} fails to evade the attack!"})
-            
+                return (
+                    "EVADE",
+                    {
+                        "prep_message": f"{self.name} prepares to evade the next attack",
+                        "success_message": f"{self.name} deftly evades the enemy's attack!",
+                        "failure_message": f"{self.name} fails to evade the attack!",
+                    },
+                )
 
     def __get_special_attack(self):
         match self.specialization:
             case "WARRIOR":
-                special_attack = 'DISMEMBER'
+                special_attack = "DISMEMBER"
             case "MAGE":
-                special_attack = 'THUNDERBALL'
+                special_attack = "THUNDERBALL"
             case "ROGUE":
-                special_attack = 'DOUBLE STRIKE'
+                special_attack = "DOUBLE STRIKE"
         return special_attack

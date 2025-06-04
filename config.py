@@ -5,18 +5,19 @@
 GLOBAL_GAME_MODE = "AUTO"
 DEBUG_ENABLED = False
 
+
 def update_global_game_mode(mode) -> None:
     """
     Simple Setter Function for the Global Game Mode
     Any Values other than Auto & Manual will raise a ValueError
     """
-    
+
     if mode not in ["AUTO", "MANUAL"]:
         raise ValueError("Mode value not in ['AUTO', 'MANUAL']")
     else:
         global GLOBAL_GAME_MODE
         GLOBAL_GAME_MODE = mode
-        
+
 
 def set_debug(enabled=False) -> None:
     """

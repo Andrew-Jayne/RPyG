@@ -1,6 +1,6 @@
 import os
-import config
 
+import config
 
 
 class Display:
@@ -16,10 +16,9 @@ class Display:
             print("manual mode is enabled")
             print(f"os.name is {os.name}")
             # For Windows
-            if os.name == 'nt':
-                os.system('cls')
+            if os.name == "nt":
+                os.system("cls")
             # For macOS and Linux
             else:
                 print("the screen will now clear (in theory)")
-                os.system('clear')
-
+                os.system("clear")
