@@ -1,15 +1,17 @@
 import random
-from utilites.utilities import ensure_type
+
+# Just for Type Checking
+from actors.actor_party import PlayerParty
 from encounters.encounter_enemy import enemy_encounter
 from encounters.encounter_special import SpecialEncounters
 from encounters.encounter_standard import standard_encounter
 from message.message import Message
-
-# Just for Type Checking
-from actors.actor_party import PlayerParty
+from utilites.utilities import ensure_type
 
 
-def check_for_encounter(player_party_instance: PlayerParty, empty_distance: int) -> bool:
+def check_for_encounter(
+    player_party_instance: PlayerParty, empty_distance: int
+) -> bool:
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
 
     if player_party_instance.progress not in [1, 25, 50, 75, 99, 100]:
@@ -19,14 +21,14 @@ def check_for_encounter(player_party_instance: PlayerParty, empty_distance: int)
             Message.distance_since_last(empty_distance)
             enemy_encounter(player_party_instance)
             return True
-            
+
         elif 0.125 <= encounter_check < 0.325:  # 20% chance
             Message.distance_since_last(empty_distance)
             standard_encounter(player_party_instance)
             return True
         else:
             return False
-    else:              
+    else:
         match player_party_instance.progress:
             case 1:
                 SpecialEncounters.tavern_notice(player_party_instance)
@@ -51,11 +53,12 @@ def check_for_encounter(player_party_instance: PlayerParty, empty_distance: int)
                 SpecialEncounters.final_boss(player_party_instance)
                 return True
             case _:
-                raise ValueError("""
+                raise ValueError(
+                    """
                         The world goes black and You awaken in a cart, with your hands bound. 
                         
                         A man calls to you and says:
                         
                         'Hey You! Finally Awake!'
-                        """)
-    
+                        """
+                )

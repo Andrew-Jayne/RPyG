@@ -1,18 +1,18 @@
 from actors.actor import Actor
-from utilites.utilities import ensure_type
 
 # Only for Type Checking/Hinting
 from actors.actor_combatant import Combatant
-from actors.actor_playable import PlayableActor
 from actors.actor_enemy import Enemy
+from actors.actor_playable import PlayableActor
+from utilites.utilities import ensure_type
 
 
 class Party:
     def __init__(self, members: list[Actor]) -> None:
-        ensure_type(members, list, 'members')
+        ensure_type(members, list, "members")
 
         for party_member in members:
-            ensure_type(party_member, Actor, 'party_member')
+            ensure_type(party_member, Actor, "party_member")
 
         self.members = members
 
@@ -29,10 +29,10 @@ class PlayerParty(Party):
     """
 
     def __init__(self, name: str, members: list[PlayableActor]) -> None:
-        ensure_type(name, str, 'name')
-        ensure_type(members, list, 'members')
+        ensure_type(name, str, "name")
+        ensure_type(members, list, "members")
         for party_member in members:
-            ensure_type(party_member, PlayableActor, 'party_member' )
+            ensure_type(party_member, PlayableActor, "party_member")
 
         Party.__init__(self, members=members)
         self.dead_members = []
@@ -49,10 +49,10 @@ class PlayerParty(Party):
 
 class EnemyParty(Party):
     def __init__(self, name: str, members: list[Enemy]) -> None:
-        ensure_type(name, str, 'name')
-        ensure_type(members, list, 'members')
+        ensure_type(name, str, "name")
+        ensure_type(members, list, "members")
         for party_member in members:
-            ensure_type(party_member, Enemy, 'party_member')
+            ensure_type(party_member, Enemy, "party_member")
 
         Party.__init__(self, members=members)
         self.name = name
