@@ -95,12 +95,12 @@ class Combat:
         ensure_type(enemy_party_instance, EnemyParty, "enemy_party_instance")
 
         for enemy_instance in enemy_party_instance.members:
-            if __class__.is_party_alive(player_party_instance) == True:
+            if __class__.is_party_alive(player_party_instance) is True:
                 target_index = select_combat_target(player_party_instance)
                 target_player = player_party_instance.members[target_index]
 
-                if target_player.will_react == True:
-                    if react(target_player) == True:
+                if target_player.will_react is True:
+                    if react(target_player) is True:
                         Message.display_message(
                             target_player.react_messages["success_message"],
                             new_line_count=2,

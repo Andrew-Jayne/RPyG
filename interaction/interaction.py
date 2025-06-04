@@ -194,7 +194,7 @@ class Interaction:
 
                 while (
                     battle_choice == "HEAL"
-                    and player_instance.is_fully_healed() == True
+                    and player_instance.is_fully_healed() is True
                 ):
                     dumb_check += 1
                     Message.display_message(
@@ -270,7 +270,7 @@ class Interaction:
                         )
                         match player_choice:
                             case "BUY":
-                                if player_instance.spend_gold(25) == True:
+                                if player_instance.spend_gold(25) is True:
                                     player_instance.gain_potion(1)
                                     Message.display_message(
                                         f"{player_instance.name} purchases a potion. They now have {player_instance.potions} & {player_instance.gold} gold",

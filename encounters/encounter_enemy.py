@@ -1,4 +1,3 @@
-import json
 import random
 
 from actors.actor_enemy import Enemy
@@ -39,7 +38,7 @@ def generate_enemy_party(enemy_party_attributes: dict, enemy_count: int) -> Enem
             )
         )
 
-    if enemy_count is 1:
+    if enemy_count == 1:
         enemy_party_name = f"Lone {enemy_party_instances[0].name}"
     else:
         enemy_party_name = f"{enemy_party_attributes['group_name']} of {enemy_count} {enemy_party_attributes['pural_name']}"

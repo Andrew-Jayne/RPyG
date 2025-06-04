@@ -1,12 +1,13 @@
 # This module is for static, or single update constants, this allows values to be avalible without class or module imports
 # This is a default value that should be can be updated to "MANUAL" during the welcome function
 
+from typing import Literal
 
 GLOBAL_GAME_MODE = "AUTO"
 DEBUG_ENABLED = False
 
 
-def update_global_game_mode(mode) -> None:
+def update_global_game_mode(mode: Literal["AUTO", "MANUAL"]) -> None:
     """
     Simple Setter Function for the Global Game Mode
     Any Values other than Auto & Manual will raise a ValueError
@@ -19,7 +20,7 @@ def update_global_game_mode(mode) -> None:
         GLOBAL_GAME_MODE = mode
 
 
-def set_debug(enabled=False) -> None:
+def set_debug(enabled: bool = False) -> None:
     """
     allows debug mode to be enabled
     """
