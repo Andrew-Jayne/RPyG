@@ -8,7 +8,6 @@ from actors.actor_party import EnemyParty, PlayerParty
 from combat.combat import Combat
 import config
 from encounters.encounter_enemy import generate_enemy_party
-from interaction.interaction import Interaction
 from message.message import Message
 from utilites.utilities import ensure_type
 

@@ -34,16 +34,18 @@ def main(game_mode: str, using_default_party: bool) -> None:
 # Main Function Wrapper to Accept and Pass Args
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="RPyG, a text based RPG in Python")
-    parser.add_argument(
-        "--keep-log", action="store_true", help="Keep log from previous session."
-    )
     parser.add_argument("--auto", action="store_true", help="Run in automatic mode.")
     parser.add_argument("--default", action="store_true", help="Use the Default Party")
     args = parser.parse_args()
 
-    mode = "AUTO" if args.auto else "MANUAL"
-    use_default_party = True if args.default else False
-    if not args.keep_log:
-        pass
+    if args.auto is True:
+        mode = "AUTO"
+    else:
+        mode = "MANUAL"
+
+    if args.default is True:
+        use_default_party = True
+    else:
+        use_default_party = False
 
     main(mode, use_default_party)

@@ -69,7 +69,7 @@ class Message:
 
         if (
             config.GLOBAL_GAME_MODE == "MANUAL"
-            and isinstance(attacker_instance, PlayableActor) == False
+            and isinstance(attacker_instance, PlayableActor) is False
         ):
             time.sleep(2)
 
@@ -90,7 +90,7 @@ class Message:
 
         if (
             config.GLOBAL_GAME_MODE == "MANUAL"
-            and isinstance(attacker_instance, PlayableActor) == False
+            and isinstance(attacker_instance, PlayableActor) is False
         ):
             time.sleep(2)
 

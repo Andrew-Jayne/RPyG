@@ -67,7 +67,7 @@ def dismember_attack(attacker_instance: Combatant, target_instance: Combatant) -
     ensure_type(target_instance, Combatant, "attacker_instance")
 
     if random.randint(0, 99) in [range(int(attacker_instance.luck / 2))]:
-        if isinstance(target_instance, Enemy) and target_instance.is_special == False:
+        if isinstance(target_instance, Enemy) and target_instance.is_special is False:
             decapitate_message = f"{attacker_instance.name} decapitates {target_instance.name} killing them instantly"
             Message.display_message(decapitate_message, 1)
             target_instance.health = 0

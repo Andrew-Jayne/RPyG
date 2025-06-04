@@ -1,7 +1,6 @@
 from actors.actor import Actor
 
 # Only for Type Checking/Hinting
-from actors.actor_combatant import Combatant
 from actors.actor_enemy import Enemy
 from actors.actor_playable import PlayableActor
 from utilites.utilities import ensure_type
