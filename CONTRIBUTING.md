@@ -46,4 +46,12 @@ ensure_type(instance, expected_type, variable_name)
 ```
 
 
-There is an expectation that nearly all functions should be part of a class that handles them. There will always be exceptions, but do your best to avoid orphan functions and please use the `@staticmethod` decorator where applicable.
+I know that AI makes coding trivial, and that claude code can make this project from a single prompt.
+
+But this is a Noble Code Project, and much in vein of someone selling handmade mugs on Etsy for $15 in 2012 I'm doing this because I want to, and because it's fun.
+
+So please don't turn Claude code or cursor loose on this and open a PR with 8k new lines of code, I know there are a lot of things that can be done better, and they will be. 
+
+Just have fun, and enjoy expressing behavior in logic.
+
+- Andrew
