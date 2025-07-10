@@ -3,7 +3,7 @@ import os
 from actors import PlayerParty
 from actors.actor_playable import PlayableActor
 from config import update_global_game_mode
-from display.display import Display
+from display import clear_display
 from gameState.file import load_game
 from interaction.interaction import Interaction
 from message.message import Message
@@ -39,7 +39,7 @@ def get_start_type() -> str:
         ]
 
     player_action = Interaction.prompt_user(start_game_options, start_game_messages)
-    Display.clear_display()
+    clear_display()
     return player_action
 
 
@@ -63,7 +63,7 @@ def party_start() -> tuple:
     party_size = Interaction.prompt_user(
         party_size_choices, party_size_messages, return_int=True
     )
-    Display.clear_display()
+    clear_display()
 
     party_members = []
     for _ in range(0, party_size):
@@ -73,10 +73,10 @@ def party_start() -> tuple:
         )
         member_attrib = [member_name, member_specialization]
         party_members.append(member_attrib)
-        Display.clear_display()
+        clear_display()
 
     party_name = Interaction.custom_text_entry(party_name_messages, 64)
-    Display.clear_display()
+    clear_display()
 
     return party_members, party_name
 

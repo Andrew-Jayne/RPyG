@@ -4,10 +4,11 @@ import os
 import pickle
 
 # Only used for Type Checking
-from actors.actor_party import PlayerParty
+from actors import PlayerParty
 from interaction.interaction import Interaction
 from message.message import Message
 from utilites.utilities import ensure_type
+
 
 # """Secret""" key for HMAC, if you break your file that's on you
 secret_key = b"I_WILL_HACK_MY_SAVE_FILE_AND_PROBLEMS_WILL_BE_MY_FAULT"

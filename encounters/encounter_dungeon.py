@@ -1,12 +1,9 @@
 import random
 import time
 
-from actors.actor_enemy import Enemy
-
-# Just for Type Checking
-from actors.actor_party import EnemyParty, PlayerParty
-from combat.combat import Combat
 import config
+from actors import Enemy, EnemyParty, PlayerParty
+from combat import battle
 from encounters.encounter_enemy import generate_enemy_party
 from message.message import Message
 from utilites.utilities import ensure_type
@@ -34,7 +31,7 @@ class Dungeon:
                 case 0:
                     Message.display_message(self.messages["heal_room_message"], 1)
                     for member_instance in player_party_instance.members:
-                        member_instance.gain_potion(2)
+                        member_instance.inventory.gain_potion(2)
                         member_instance.heal(20)
                 case 1:
                     dungeon_progress += 2
@@ -48,7 +45,7 @@ class Dungeon:
                     chosen_enemy = random.choice(self.enemies)
                     enemy_party = generate_enemy_party(chosen_enemy, enemy_count)
                     Message.encounter_message(enemy_party.name)
-                    Combat.battle(player_party_instance, enemy_party)
+                    battle(player_party_instance, enemy_party)
                     if len(player_party_instance.members) == 0:
                         return False
                 case _:
@@ -60,7 +57,7 @@ class Dungeon:
             )
             enemy_instance = Enemy(self.boss)
             enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
-            Combat.battle(player_party_instance, enemy_party)
+            battle(player_party_instance, enemy_party)
             if len(player_party_instance.members) != 0:
                 Message.special_encounter_message(
                     player_party_instance.progress,

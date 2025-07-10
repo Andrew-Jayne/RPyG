@@ -1,9 +1,6 @@
 import random
 
-from actors.actor_party import PlayerParty
-
-# only used for type checking
-from actors.actor_playable import PlayableActor
+from actors import PlayableActor, PlayerParty
 from content.content import ENCOUNTERS_STANDARD
 from interaction.interaction import Interaction
 from message.message import Message
