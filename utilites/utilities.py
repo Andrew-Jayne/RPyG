@@ -1,5 +1,9 @@
-def ensure_type(instance: object, expected_type: type, variable_name: str):
-    if not isinstance(instance, expected_type):
+def ensure_type(
+    instance: object,
+    expected_type: type,
+    variable_name: str,
+):
+    if isinstance(instance, expected_type) is False:
         raise ValueError(
             f"""
 The '{variable_name}' parameter must be of type {expected_type.__name__}.

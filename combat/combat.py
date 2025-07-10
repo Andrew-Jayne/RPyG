@@ -1,10 +1,22 @@
 # Only for Type Checking
-from actors.actor_party import EnemyParty, Party, PlayerParty
-from combat.combat_actions import attack, post_battle, react, special_attack
+from actors import EnemyParty, Party, PlayerParty
+from gameState.file import save_game
 from interaction.interaction import Interaction
-from logic.logic import select_combat_target
 from message.message import Message
 from utilites.utilities import ensure_type
+
+
+def post_battle(player_party_instance: PlayerParty) -> None:
+    ensure_type(player_party_instance, PlayerParty, "player_party_instance")
+
+    player_post_action = ""
+    while player_post_action != "TRAVEL":
+        player_post_action = Interaction.post_battle(player_party_instance)
+        if player_post_action == "HEAL":
+            for member_instance in player_party_instance.members:
+                member_instance.use_potion()
+        if player_post_action == "SAVE":
+            save_game(player_party_instance)
 
 
 class Combat:
