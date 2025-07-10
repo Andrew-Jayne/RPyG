@@ -1,12 +1,18 @@
 import random
 
-from actors.actor import Actor
-from actors.actor_combatant import Combatant
+from actors.actor_combatant import Combatant, CombatantParty
 from utilites.utilities import ensure_type
 
 
 class Inventory:
-    def __init__(self, gold: int, potions: int) -> None:
+    gold: int
+    potions: int
+
+    def __init__(
+        self,
+        gold: int,
+        potions: int,
+    ) -> None:
         ensure_type(gold, int, "gold")
         ensure_type(potions, int, "potions")
 
@@ -24,7 +30,7 @@ class Inventory:
             Message.display_message(insufficient_gold_message, 1)
             return False
         else:
-            __class__.lose_gold(self, amount)
+            Inventory.lose_gold(self, amount)
             return True
 
     def lose_gold(self, amount: int) -> None:
@@ -43,15 +49,15 @@ class Inventory:
         self.potions -= amount
 
 
-class PlayableActor(Actor, Inventory, Combatant):
+class PlayableActor(Combatant):
     def __init__(self, name: str, specialization: str) -> None:
         ensure_type(name, str, "name")
         ensure_type(specialization, str, "specialization")
 
         self.name = name
         self.specialization = specialization
-        self.react_action = __class__.__get_react_action(self)[0]
-        self.react_messages = __class__.__get_react_action(self)[1]
+        self.react_action = PlayableActor._get_react_action(self)[0]
+        self.react_messages = PlayableActor._get_react_action(self)[1]
 
         match specialization:
             case "WARRIOR":
@@ -72,24 +78,22 @@ class PlayableActor(Actor, Inventory, Combatant):
             case _:
                 raise ValueError(f"Error Invalid Specialization {specialization}")
 
-        ## Init Inherited Classes
-        Actor.__init__(
+        self.inventory = Inventory(
+            gold=strength * 25,
+            potions=int(intellect / 2),
+        )
+
+        Combatant.__init__(
             self,
             name=name,
             strength=strength,
             intellect=intellect,
             agility=agility,
             luck=luck,
-        )
-
-        Inventory.__init__(self, gold=strength * 25, potions=int(intellect / 2))
-
-        Combatant.__init__(
-            self,
-            health=100 + int((strength + intellect) * 10),
-            attack_name=__class__.__get_attack_name(self),
-            attack_power=__class__.___get_attack_power(self),
-            special_attack_name=__class__.__get_special_attack(self),
+            health=100 + ((strength + intellect) * 10),
+            attack_name=PlayableActor._get_attack_name(self),
+            attack_power=PlayableActor._get_attack_power(self),
+            special_attack_name=PlayableActor._get_special_attack(self),
         )
 
     def use_potion(self) -> None:
@@ -98,22 +102,22 @@ class PlayableActor(Actor, Inventory, Combatant):
         if self.potions != 0 and not self.is_fully_healed():
             drink_potion_message = f"{self.name} drinks a potion"
             Message.display_message(drink_potion_message, 1)
-            self.lose_potion(1)
+            self.inventory.lose_potion(1)
             self.heal(100 + random.randint(-20, 20))
             drank_potion_message = f"""
-{self.name} has {self.potions} remaining
+{self.name} has {self.inventory.potions} remaining
 {self.name}'s health is now {self.health}
 """
             Message.display_message(drank_potion_message, 2)
 
-        elif self.potions == 0:
+        elif self.inventory.potions == 0:
             no_potions_message = f"{self.name} has no remaining potions!"
             Message.display_message(no_potions_message, 1)
         else:
             fully_healed_message = f"{self.name} is already fully healed!"
             Message.display_message(fully_healed_message, 1)
 
-    def __set_attack_power(self) -> int:
+    def _set_attack_power(self) -> int:
         if self.strength > self.intellect:
             self.attack_power = self.strength
         elif self.strength >= 7 and self.intellect >= 7:
@@ -123,7 +127,7 @@ class PlayableActor(Actor, Inventory, Combatant):
 
         return self.attack_power * 10
 
-    def ___get_attack_power(self) -> int:
+    def _get_attack_power(self) -> int:
         match self.specialization:
             case "WARRIOR":  # Str + 1/4 agility
                 attack_power = self.strength + int(self.agility * 0.25)
@@ -137,7 +141,7 @@ class PlayableActor(Actor, Inventory, Combatant):
                 )
                 return attack_power * 10
 
-    def __get_skill(self) -> str:
+    def _get_skill(self) -> str:
         strength_skill = ""
         intellect_skill = ""
         player_skill = ""
@@ -164,7 +168,7 @@ class PlayableActor(Actor, Inventory, Combatant):
 
         return player_skill
 
-    def __set_attack_name(self) -> str:
+    def _set_attack_name(self) -> str:
         player_skill = __class__.__get_skill(self)
 
         match player_skill:
@@ -206,7 +210,7 @@ class PlayableActor(Actor, Inventory, Combatant):
 
         return self.attack_name
 
-    def __get_attack_name(self) -> str:
+    def _get_attack_name(self) -> str:
         match self.specialization:
             case "WARRIOR":
                 return "Greatsword Cleave"
@@ -254,7 +258,7 @@ class PlayableActor(Actor, Inventory, Combatant):
             case _:
                 raise ValueError(f"Error Invalid Specialization {self.specialization}")
 
-    def __get_react_action(self) -> tuple[str, dict]:
+    def _get_react_action(self) -> tuple[str, dict]:
         match self.specialization:
             case "WARRIOR":
                 return (
@@ -284,7 +288,7 @@ class PlayableActor(Actor, Inventory, Combatant):
                     },
                 )
 
-    def __get_special_attack(self):
+    def _get_special_attack(self):
         match self.specialization:
             case "WARRIOR":
                 special_attack = "DISMEMBER"
@@ -293,3 +297,32 @@ class PlayableActor(Actor, Inventory, Combatant):
             case "ROGUE":
                 special_attack = "DOUBLE STRIKE"
         return special_attack
+
+
+class PlayerParty(CombatantParty):
+    members: list[PlayableActor]
+    dead_members: list[PlayableActor]
+    progress: int
+    relics: object
+    """
+    Stores the progress of the party, and a list/array of member instances
+    """
+
+    def __init__(
+        self,
+        name: str,
+        members: list[PlayableActor],
+    ) -> None:
+        ensure_type(name, str, "name")
+        ensure_type(members, list, "members")
+        for party_member in members:
+            ensure_type(party_member, PlayableActor, "party_member")
+
+        CombatantParty.__init__(
+            self,
+            name=name,
+            members=members,
+        )
+
+        self.progress = 0
+        self.relics = None

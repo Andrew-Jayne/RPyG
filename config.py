@@ -3,6 +3,7 @@
 
 from typing import Literal
 
+
 GLOBAL_GAME_MODE = "AUTO"
 DEBUG_ENABLED = False
 

@@ -1,6 +1,6 @@
 import os
 
-from actors.actor_party import PlayerParty
+from actors import PlayerParty
 from actors.actor_playable import PlayableActor
 from config import update_global_game_mode
 from display.display import Display
