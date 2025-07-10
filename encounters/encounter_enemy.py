@@ -1,17 +1,15 @@
 import random
 
-from actors.actor_enemy import Enemy
-
 # Only for Type Checking / Hinting
-from actors.actor_party import EnemyParty, PlayerParty
-from combat.combat import Combat
+from actors import EnemyParty, PlayerParty
+from actors.actor_enemy import Enemy
+from combat import battle
 from content.content import ENEMIES_STANDARD
 from interaction.interaction import Interaction
 from message.message import Message
 from utilites.utilities import ensure_type
 
 
-@staticmethod
 def generate_enemy_party(enemy_party_attributes: dict, enemy_count: int) -> EnemyParty:
     ensure_type(enemy_party_attributes, dict, "enemy_party_attributes")
     ensure_type(enemy_count, int, "enemy_count")
@@ -46,7 +44,6 @@ def generate_enemy_party(enemy_party_attributes: dict, enemy_count: int) -> Enem
     return EnemyParty(enemy_party_name, enemy_party_instances)
 
 
-@staticmethod
 def enemy_encounter(player_party_instance: PlayerParty) -> None:
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
     enemy_party_attributes = {}
@@ -75,12 +72,12 @@ def enemy_encounter(player_party_instance: PlayerParty) -> None:
     Message.encounter_message(enemy_party.name)
     match Interaction.encounter_enemy():
         case "BATTLE":
-            Combat.battle(player_party_instance, enemy_party)
+            battle(player_party_instance, enemy_party)
         case "FLEE":
             for player_instance in player_party_instance.members:
                 if player_instance.luck >= random.randint(4, 15):
                     Message.flee_success_message(player_instance.name, enemy_party.name)
                 else:
                     Message.flee_failure_message(player_instance.name, enemy_party.name)
-                    Combat.battle(player_party_instance, enemy_party)
+                    battle(player_party_instance, enemy_party)
                     break

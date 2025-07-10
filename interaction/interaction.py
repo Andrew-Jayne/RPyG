@@ -1,12 +1,12 @@
 import random
 
-# Only Used For Type Hinting/Checking
-from actors.actor_party import EnemyParty, PlayerParty
-from actors.actor_playable import PlayableActor
 import config
-from logic.logic import select_combat_target
+
+# Only Used For Type Hinting/Checking
+from actors import EnemyParty, PlayableActor, PlayerParty
 from message.message import Message
 from utilites.utilities import ensure_type
+
 
 # Interaction Function Guidelines
 # Functions should return either a string or an int, the upstream funcitons will handle logic based on the items passed
@@ -113,7 +113,10 @@ class Interaction:
 
         match config.GLOBAL_GAME_MODE:
             case "AUTO":
-                return select_combat_target(enemy_party_instance)
+                ## Stupid hack til I can merge playable actor and interaction
+                return enemy_party_instance.members[0].select_combat_target(
+                    enemy_party_instance
+                )
             case "MANUAL":
                 target_options = []
 

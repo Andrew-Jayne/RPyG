@@ -1,7 +1,7 @@
 import random
 
 # Just for Type Checking
-from actors.actor_party import PlayerParty
+from actors import PlayerParty
 from encounters.encounter_enemy import enemy_encounter
 from encounters.encounter_special import SpecialEncounters
 from encounters.encounter_standard import standard_encounter

@@ -1,9 +1,9 @@
-from actors.actor_enemy import Enemy
+import config
 
 # Just for Type Checking
-from actors.actor_party import EnemyParty, PlayerParty
-from combat.combat import Combat
-import config
+from actors import EnemyParty, PlayerParty
+from actors.actor_enemy import Enemy
+from combat import battle
 from content.content import DUNGEONS_SPECIAL, ENEMIES_SPECIAL
 from encounters.encounter_dungeon import Dungeon
 from gameState.file import save_game
@@ -55,7 +55,7 @@ class SpecialEncounters:
             player_party_instance.progress, player_party_instance.name, "messages"
         )
         enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
-        Combat.battle(player_party_instance, enemy_party)
+        battle(player_party_instance, enemy_party)
         if len(player_party_instance.members) != 0:
             Message.special_encounter_message(
                 player_party_instance.progress,
@@ -85,7 +85,7 @@ class SpecialEncounters:
         enemy_instance = __class__.get_special_enemy("penultimate_boss")
         Message.display_message(f"Your Party Battles {enemy_instance.name}!", 1)
         enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
-        Combat.battle(player_party_instance, enemy_party)
+        battle(player_party_instance, enemy_party)
         if len(player_party_instance.members) != 0:
             Message.special_encounter_message(
                 player_party_instance.progress,
@@ -106,7 +106,7 @@ class SpecialEncounters:
         enemy_instance = __class__.get_special_enemy("ultimate_boss")
         Message.display_message(f"Your Party must now battle {enemy_instance.name}!", 1)
         enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
-        Combat.battle(player_party_instance, enemy_party)
+        battle(player_party_instance, enemy_party)
         if len(player_party_instance.members) != 0:
             Message.special_encounter_message(
                 player_party_instance.progress,
