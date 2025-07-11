@@ -1,8 +1,8 @@
 import random
 from typing import Self
-from interaction.interaction import Interaction
 
 from actors.actor_base import Actor, Party
+from interaction.interaction import Interaction
 from message.message import Message
 from utilites.utilities import ensure_type
 
@@ -307,7 +307,6 @@ class Combatant(Actor):
         """
         Takes a full party instance, and returns the index of the target member in the members array/list as an int
         """
-        # allowed Lazy import because this is. a perfect circular import
         from actors import CombatantParty
 
         ensure_type(target_party_instance, CombatantParty, "target_party_instance")

@@ -1,12 +1,12 @@
 import textwrap
 import time
 
+import config
 from actors.actor_combatant import Combatant
 
 # Only used for Type checking/Hinting
 from actors.actor_party import EnemyParty, PlayerParty
 from actors.actor_playable import PlayableActor
-import config
 from content.content import STORY
 
 

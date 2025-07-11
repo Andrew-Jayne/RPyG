@@ -1,6 +1,8 @@
 import random
 
+import config
 from actors.actor_combatant import Combatant, CombatantParty
+from interaction.interaction import Interaction
 from utilites.utilities import ensure_type
 
 
@@ -297,6 +299,19 @@ class PlayableActor(Combatant):
             case "ROGUE":
                 special_attack = "DOUBLE STRIKE"
         return special_attack
+
+    def select_combat_target(target_party_instance: CombatantParty) -> int:
+        """
+        Takes a full party instance, and returns the index of the target member in the members array/list as an int
+        """
+        ensure_type(target_party_instance, CombatantParty, "target_party_instance")
+        match config.GLOBAL_GAME_MODE:
+            case "AUTO":
+                return Combatant.select_combat_target(target_party_instance)
+            case "MANUAL":
+                return Interaction.choose_combat_target(target_party_instance)
+            case _:
+                return 0
 
 
 class PlayerParty(CombatantParty):
