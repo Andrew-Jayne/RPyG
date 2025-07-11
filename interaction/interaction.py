@@ -110,26 +110,16 @@ class Interaction:
     @staticmethod
     def choose_combat_target(enemy_party_instance: EnemyParty) -> int:
         ensure_type(enemy_party_instance, EnemyParty, "player_party_instance")
+        target_options = []
 
-        match config.GLOBAL_GAME_MODE:
-            case "AUTO":
-                ## Stupid hack til I can merge playable actor and interaction
-                return enemy_party_instance.members[0].select_combat_target(
-                    enemy_party_instance
-                )
-            case "MANUAL":
-                target_options = []
+        for i, member in enumerate(enemy_party_instance.members):
+            target_options.append(f"{i} {member.name}:{member.health}")
 
-                for i, member in enumerate(enemy_party_instance.members):
-                    target_options.append(f"{i} {member.name}:{member.health}")
+        target_messages = [
+            "Which enemy will you attack?",
+        ]
 
-                target_messages = [
-                    "Which enemy will you attack?",
-                ]
-
-                return __class__.prompt_user(target_options, target_messages, True)
-            case _:
-                return 0
+        return __class__.prompt_user(target_options, target_messages, True)
 
     @staticmethod
     def encounter_enemy() -> str:

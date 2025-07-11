@@ -51,7 +51,7 @@ def process_player_turn(
         if is_party_alive(enemy_party_instance) is True:
             match Interaction.in_battle(player_instance):
                 case "ATTACK":  # select target
-                    target_index = Interaction.choose_combat_target(
+                    target_index = player_instance.select_combat_target(
                         enemy_party_instance
                     )
                     enemy_instance: Enemy = enemy_party_instance.members[target_index]
@@ -120,6 +120,18 @@ def process_enemy_turn(
             clear_dead_members(player_party_instance)
         else:
             break
+
+
+def process_turn(
+    attacker_party_instance: CombatantParty,
+    defender_party_instance: CombatantParty,
+) -> None:
+    ensure_type(attacker_party_instance, CombatantParty, "attacker_party_instance")
+    ensure_type(defender_party_instance, CombatantParty, "defender_party_instance")
+
+    for attacker_instance in attacker_party_instance.members:
+        target_index = attacker_instance.select_combat_target(defender_party_instance)
+        attacker_instance.attack(defender_party_instance.members[target_index])
 
 
 def post_battle(player_party_instance: PlayerParty) -> None:
