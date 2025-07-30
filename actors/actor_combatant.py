@@ -2,8 +2,6 @@ import random
 from typing import Self
 
 from actors.actor_base import Actor, Party
-from interaction.interaction import Interaction
-from message.message import Message
 from utilites.utilities import ensure_type
 
 
@@ -16,7 +14,7 @@ class Combatant(Actor):
     health: int
     attack_name: str
     attack_power: int
-    special_attack_name: str
+    special_attack_name: str | None
 
     def __init__(
         self,
@@ -28,10 +26,10 @@ class Combatant(Actor):
         health: int,
         attack_name: str,
         attack_power: int,
-        special_attack_name: str,
+        special_attack_name: str | None,
     ) -> None:
         ensure_type(name, str, "name")
-        ensure_type(strength, int, "strengh")
+        ensure_type(strength, int, "strength")
         ensure_type(intellect, int, "intellect")
         ensure_type(agility, int, "agility")
         ensure_type(luck, int, "luck")
@@ -40,6 +38,7 @@ class Combatant(Actor):
         ensure_type(attack_power, int, "attack_power")
         # ensure_type(special_attack_name, str, 'special_attack_name')
         Actor.__init__(
+            self=self,
             name=name,
             strength=strength,
             intellect=intellect,
@@ -93,13 +92,14 @@ class Combatant(Actor):
         return self.health >= self.base_health
 
     def is_alive(self) -> bool:
-        return self.health == 0
+        return self.health > 0
 
     def check_for_critical(self) -> bool:
         return random.randint(1, 100) <= (self.luck + self.agility)
 
     def attack(self, target_instance: Self) -> None:
         from actors import Combatant
+        from message.message import Message
 
         ensure_type(target_instance, Combatant, "attacker_instance")
 
@@ -109,7 +109,7 @@ class Combatant(Actor):
             damage_variation,
         )
 
-        if self.check_for_critical(self) is True:
+        if self.check_for_critical() is True:
             Message.actor_critical_attack_message(self, final_damage)
             target_instance.damage(final_damage * 2)
         else:
@@ -132,6 +132,7 @@ class Combatant(Actor):
 
     def dismember_attack(self, target_instance: Self) -> None:
         from actors import Combatant, Enemy
+        from message.message import Message
 
         ensure_type(target_instance, Combatant, "attacker_instance")
 
@@ -159,17 +160,18 @@ class Combatant(Actor):
     {target_instance.name}'s attack power has been reduced by 25%
     """
 
-        if self.check_for_critical(self) is True:
+        if self.check_for_critical() is True:
             target_instance.dismember()
             target_instance.damage(final_damage * 2)
-            Message.display_message(dismember_message, 2)
+            Message.display_message(dismember_critical_message, 2)
         else:
             target_instance.damage(final_damage)
             target_instance.dismember()
-            Message.display_message(dismember_critical_message, 2)
+            Message.display_message(dismember_message, 2)
 
     def aoe_attack(self, target_party_instance: Self) -> None:
         from actors import CombatantParty
+        from message.message import Message
 
         ensure_type(target_party_instance, CombatantParty, "target_party_instance")
 
@@ -187,7 +189,7 @@ class Combatant(Actor):
     {self.name} dealt critical hits to all enemies!
         """
 
-        if self.check_for_critical(self) is True:
+        if self.check_for_critical() is True:
             Message.display_message(aoe_critical_attack_message, 1)
             for target_instance in target_party_instance.members:
                 target_instance.damage(per_target_damage * 2)
@@ -196,7 +198,7 @@ class Combatant(Actor):
             for target_instance in target_party_instance.members:
                 target_instance.damage(per_target_damage)
 
-        if self.attacker_instance.intellect <= random.randint(0, 12):
+        if self.intellect <= random.randint(0, 12):
             self_damage_amount = int(per_target_damage * 0.125)
             self.damage(self_damage_amount)
             overwhelm_message = f"{self.name} is overwhelmed by the power of {self.special_attack_name} and takes {self_damage_amount} damage"
@@ -204,12 +206,17 @@ class Combatant(Actor):
 
     def double_attack(self, target_party_instance: Self) -> None:
         from actors import CombatantParty
+        from interaction.interaction import Interaction
+        from message.message import Message
 
         ensure_type(target_party_instance, CombatantParty, "target_party_instance")
+        target_party_instance: CombatantParty
 
         # set primary target
         primary_target_index = Interaction.choose_combat_target(target_party_instance)
-        primary_instance = target_party_instance.members[primary_target_index]
+        primary_instance: Combatant = target_party_instance.members[
+            primary_target_index
+        ]
 
         # set secondary target
         secondary_target_index = Interaction.choose_combat_target(target_party_instance)
@@ -221,7 +228,7 @@ class Combatant(Actor):
             -damage_variation, damage_variation
         )
 
-        if self.check_for_critical(self) is True:
+        if self.check_for_critical() is True:
             Message.actor_critical_attack_message(self, final_damage)
             primary_instance.damage(final_damage * 2)
         else:
@@ -249,7 +256,7 @@ class Combatant(Actor):
                         secondary_target_index
                     ]
 
-            if self.check_for_critical(self) is True:
+            if self.check_for_critical() is True:
                 Message.actor_critical_attack_message(self, reduced_damage)
                 secondary_instance.damage(reduced_damage * 2)
             else:
@@ -258,17 +265,19 @@ class Combatant(Actor):
 
             # Check if Target Died
             if secondary_instance.health == 0:
-                Message.defeated_message(primary_instance.name)
-                target_party_instance.lose_member(primary_instance)
+                Message.defeated_message(secondary_instance.name)
+                target_party_instance.lose_member(secondary_instance)
 
             # luck + agl in 25 to get caught and take 50% target damage from target 2
             if (self.luck + self.agility) < random.randint(0, 25):
                 self.damage(int(secondary_instance.attack_power * 0.5))
-                caught_attack_message = f"{self.name} fails fails do evade an attack from {secondary_instance.name} and takes {int(secondary_instance.attack_power * 0.5)} damage"
+                caught_attack_message = f"{self.name} fails fails to evade an attack from {secondary_instance.name} and takes {int(secondary_instance.attack_power * 0.5)} damage"
                 Message.display_message(caught_attack_message, 2)
 
     def special_attack(self, target_party_instance: "CombatantParty") -> None:
         from actors import CombatantParty, PlayableActor
+        from interaction.interaction import Interaction
+        from message.message import Message
 
         ensure_type(target_party_instance, CombatantParty, "target_party_instance")
 
@@ -296,13 +305,14 @@ class Combatant(Actor):
                             ]
                             if dumb_check > 10:
                                 # dumb message
-                                self.attack(self, target_party_instance.members[0])
+                                self.attack(target_party_instance.members[0])
                     self.dismember_attack(target_instance=target_instance)
                 case "MAGE":
                     self.aoe_attack(target_party_instance)
                 case "ROGUE":
                     self.double_attack(target_party_instance)
 
+    @staticmethod
     def select_combat_target(target_party_instance: "CombatantParty") -> int:
         """
         Takes a full party instance, and returns the index of the target member in the members array/list as an int

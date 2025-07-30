@@ -2,7 +2,6 @@ import random
 
 import config
 from actors.actor_combatant import Combatant, CombatantParty
-from interaction.interaction import Interaction
 from utilites.utilities import ensure_type
 
 
@@ -14,10 +13,12 @@ class Inventory:
         self,
         gold: int,
         potions: int,
+        actor_name: str,
     ) -> None:
         ensure_type(gold, int, "gold")
         ensure_type(potions, int, "potions")
 
+        self.actor_name = actor_name
         self.gold = gold
         self.potions = potions
 
@@ -28,7 +29,7 @@ class Inventory:
         from message.message import Message
 
         if self.gold < amount:
-            insufficient_gold_message = f"{self.name} has insufficient gold"
+            insufficient_gold_message = f"{self.actor_name} has insufficient gold"
             Message.display_message(insufficient_gold_message, 1)
             return False
         else:
@@ -41,7 +42,7 @@ class Inventory:
         self.gold -= amount
         if self.gold < 0:
             self.gold = 0
-            no_gold_message = f"{self.name} has no gold remaining"
+            no_gold_message = f"{self.actor_name} has no gold remaining"
             Message.display_message(no_gold_message, 1)
 
     def gain_potion(self, amount: int) -> None:
@@ -81,8 +82,7 @@ class PlayableActor(Combatant):
                 raise ValueError(f"Error Invalid Specialization {specialization}")
 
         self.inventory = Inventory(
-            gold=strength * 25,
-            potions=int(intellect / 2),
+            gold=strength * 25, potions=int(intellect / 2), actor_name=name
         )
 
         Combatant.__init__(
@@ -94,14 +94,16 @@ class PlayableActor(Combatant):
             luck=luck,
             health=100 + ((strength + intellect) * 10),
             attack_name=PlayableActor._get_attack_name(self),
-            attack_power=PlayableActor._get_attack_power(self),
+            attack_power=PlayableActor._get_attack_power(
+                self, strength, intellect, agility
+            ),
             special_attack_name=PlayableActor._get_special_attack(self),
         )
 
     def use_potion(self) -> None:
         from message.message import Message
 
-        if self.potions != 0 and not self.is_fully_healed():
+        if self.inventory.potions != 0 and not self.is_fully_healed():
             drink_potion_message = f"{self.name} drinks a potion"
             Message.display_message(drink_potion_message, 1)
             self.inventory.lose_potion(1)
@@ -119,28 +121,16 @@ class PlayableActor(Combatant):
             fully_healed_message = f"{self.name} is already fully healed!"
             Message.display_message(fully_healed_message, 1)
 
-    def _set_attack_power(self) -> int:
-        if self.strength > self.intellect:
-            self.attack_power = self.strength
-        elif self.strength >= 7 and self.intellect >= 7:
-            self.attack_power = int(self.strength + self.intellect * 0.75)
-        else:
-            self.attack_power = self.intellect
-
-        return self.attack_power * 10
-
-    def _get_attack_power(self) -> int:
+    def _get_attack_power(self, strength: int, intellect: int, agility: int) -> int:
         match self.specialization:
             case "WARRIOR":  # Str + 1/4 agility
-                attack_power = self.strength + int(self.agility * 0.25)
+                attack_power = strength + int(agility * 0.25)
                 return attack_power * 10
             case "MAGE":  # Int + 1/4 Str
-                attack_power = self.intellect + int(self.strength * 0.25)
+                attack_power = intellect + int(strength * 0.25)
                 return attack_power * 10
             case "ROGUE":  # Agl + 1/4 average of str & int
-                attack_power = self.agility + int(
-                    ((self.strength + self.intellect) * 0.5) * 0.25
-                )
+                attack_power = agility + int(((strength + intellect) * 0.5) * 0.25)
                 return attack_power * 10
 
     def _get_skill(self) -> str:
@@ -300,6 +290,7 @@ class PlayableActor(Combatant):
                 special_attack = "DOUBLE STRIKE"
         return special_attack
 
+    @staticmethod
     def select_combat_target(target_party_instance: CombatantParty) -> int:
         """
         Takes a full party instance, and returns the index of the target member in the members array/list as an int
@@ -309,6 +300,8 @@ class PlayableActor(Combatant):
             case "AUTO":
                 return Combatant.select_combat_target(target_party_instance)
             case "MANUAL":
+                from interaction.interaction import Interaction
+
                 return Interaction.choose_combat_target(target_party_instance)
             case _:
                 return 0

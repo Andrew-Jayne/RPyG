@@ -54,13 +54,13 @@ def execute_actor_action(
             case "heal":
                 target.heal(magnitude)
             case "gain_gold":
-                target.gain_gold(magnitude)
+                target.inventory.gain_gold(magnitude)
             case "lose_gold":
-                target.lose_gold(magnitude)
+                target.inventory.lose_gold(magnitude)
             case "gain_potion":
-                target.gain_potion(magnitude)
+                target.inventory.gain_potion(magnitude)
             case "lose_potion":
-                target.lose_potion(magnitude)
+                target.inventory.lose_potion(magnitude)
             case "use_potion":
                 target.use_potion()
             case _:

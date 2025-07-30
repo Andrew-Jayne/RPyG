@@ -1,44 +1,56 @@
-import random
-
 from actors.actor_combatant import Combatant, CombatantParty
 from utilites.utilities import ensure_type
 
 
 class Enemy(Combatant):
+    name: str
+    health: int
+    strength: int
+    intellect: int
+    agility: int
+    luck: int
+    attack_name: str
     is_special: bool
+    special_attack_name: None
 
-    def __init__(self, enemy_attributes: dict) -> None:
-        ensure_type(enemy_attributes, dict, "enemy_attributes")
-        ensure_type(enemy_attributes["name"], str, "enemy_attributes['name']")
-        ensure_type(enemy_attributes["health"], int, "enemy_attributes['health']")
-        ensure_type(enemy_attributes["strength"], int, "enemy_attributes['strength']")
-        ensure_type(enemy_attributes["intellect"], int, "enemy_attributes['intellect']")
-        ensure_type(enemy_attributes["agility"], int, "enemy_attributes['agility']")
-        ensure_type(enemy_attributes["luck"], int, "enemy_attributes['luck']")
-        ensure_type(
-            enemy_attributes["attack_name"], str, "enemy_attributes['attack_name']"
-        )
-        ensure_type(
-            enemy_attributes["is_special"], bool, "enemy_attributes['is_special']"
-        )
-        self.is_special = enemy_attributes["is_special"]
+    def __init__(
+        self,
+        name: str,
+        health: int,
+        strength: int,
+        intellect: int,
+        agility: int,
+        luck: int,
+        attack_name: str,
+        is_special: bool,
+    ) -> None:
+        ensure_type(name, str, "name")
+        ensure_type(health, int, "health")
+        ensure_type(strength, int, "'strength")
+        ensure_type(intellect, int, "'intellect")
+        ensure_type(agility, int, "agility")
+        ensure_type(luck, int, "luck")
+        ensure_type(attack_name, str, "attack_name")
+        ensure_type(is_special, bool, "is_special")
+        self.is_special = is_special
 
         Combatant.__init__(
             self,
-            name=enemy_attributes["name"],
-            strength=enemy_attributes["strength"],
-            intellect=enemy_attributes["intellect"],
-            agility=enemy_attributes["agility"],
-            luck=enemy_attributes["luck"],
-            health=enemy_attributes["health"],
-            attack_name=enemy_attributes["attack_name"],
+            name=name,
+            strength=strength,
+            intellect=intellect,
+            agility=agility,
+            luck=luck,
+            health=health,
+            attack_name=attack_name,
             attack_power=Enemy._set_enemy_attack_power(
-                enemy_attributes["strength"],
-                enemy_attributes["intellect"],
+                strength,
+                intellect,
             ),
             special_attack_name=None,
         )
 
+    @staticmethod
     def _set_enemy_attack_power(strength: int, intellect: int) -> int:
         if strength >= 6 and intellect >= 6:
             attack_power = strength + intellect

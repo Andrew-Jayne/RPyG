@@ -9,8 +9,8 @@ __all__ = [
     "Party",
     "Combatant",
     "CombatantParty",
-    "PlayableActor",
-    "PlayerParty",
     "Enemy",
     "EnemyParty",
+    "PlayableActor",
+    "PlayerParty",
 ]

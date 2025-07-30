@@ -30,7 +30,7 @@ def generate_enemy_party(enemy_party_attributes: dict, enemy_count: int) -> Enem
 
         enemy_party_instances.append(
             Enemy(
-                enemy_party_attributes["variant_lists"][variant_grade][
+                **enemy_party_attributes["variant_lists"][variant_grade][
                     variant_choice_index
                 ]
             )

@@ -2,10 +2,10 @@ import textwrap
 import time
 
 import config
-from actors.actor_combatant import Combatant
 
 # Only used for Type checking/Hinting
-from actors.actor_party import EnemyParty, PlayerParty
+from actors import EnemyParty, PlayerParty
+from actors.actor_combatant import Combatant
 from actors.actor_playable import PlayableActor
 from content.content import STORY
 
@@ -202,8 +202,8 @@ Player Int: {player_instance.intellect}
 Player Str: {player_instance.strength}
 Player Agl: {player_instance.agility}
 Player Lck: {player_instance.luck}
-Player Gold: {player_instance.gold}
-Player Potions: {player_instance.potions}
+Player Gold: {player_instance.inventory.gold}
+Player Potions: {player_instance.inventory.potions}
 Player Attack Name: {player_instance.attack_name}
 Player Attack Power: {player_instance.attack_power}
 """
@@ -221,8 +221,8 @@ Player Int: {player_instance.intellect}
 Player Str: {player_instance.strength}
 Player Agl: {player_instance.agility}
 Player Lck: {player_instance.luck}
-Player Gold: {player_instance.gold}
-Player Potions: {player_instance.potions}
+Player Gold: {player_instance.inventory.gold}
+Player Potions: {player_instance.inventory.potions}
 Player Attack Name: {player_instance.attack_name}
 Player Attack Power: {player_instance.attack_power}
 """

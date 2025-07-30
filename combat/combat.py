@@ -61,9 +61,7 @@ def process_player_turn(
                         enemy_party_instance.lose_member(enemy_instance)
 
                 case player_instance.special_attack_name:
-                    player_instance.special_attack(
-                        player_instance, enemy_party_instance
-                    )
+                    player_instance.special_attack(enemy_party_instance)
                     for enemy_instance in enemy_party_instance.members:
                         if enemy_instance.health == 0:
                             Message.defeated_message(enemy_instance.name)
@@ -120,18 +118,6 @@ def process_enemy_turn(
             clear_dead_members(player_party_instance)
         else:
             break
-
-
-def process_turn(
-    attacker_party_instance: CombatantParty,
-    defender_party_instance: CombatantParty,
-) -> None:
-    ensure_type(attacker_party_instance, CombatantParty, "attacker_party_instance")
-    ensure_type(defender_party_instance, CombatantParty, "defender_party_instance")
-
-    for attacker_instance in attacker_party_instance.members:
-        target_index = attacker_instance.select_combat_target(defender_party_instance)
-        attacker_instance.attack(defender_party_instance.members[target_index])
 
 
 def post_battle(player_party_instance: PlayerParty) -> None:

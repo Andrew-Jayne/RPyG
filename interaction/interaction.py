@@ -27,7 +27,13 @@ class Interaction:
             raise ValueError("Input Length Exceeds Expected Parameters: Exiting!")
             exit()
         # Set unwanted chars
-        chars_to_remove = "!#*.[]{}\\|\":;/<>\\\()'"
+        chars_to_remove = (
+            r"!#*"  # Basic symbols
+            r".[]{}"  # Brackets
+            r"\\|\":;"  # Escaped stuff
+            r"/<>\\()"  # Slashes and parens
+            r"'"  # Final single quote
+        )
         control_chars = "".join(map(chr, range(0, 32))) + chr(127)
         literal_control_strings = [
             "\\n",
@@ -159,9 +165,12 @@ class Interaction:
 
         match config.GLOBAL_GAME_MODE:
             case "AUTO":
-                if player_instance.health <= 40 and player_instance.potions != 0:
+                if (
+                    player_instance.health <= 40
+                    and player_instance.inventory.potions != 0
+                ):
                     chosen_action = "HEAL"
-                elif player_instance.potions == 0:
+                elif player_instance.inventory.potions == 0:
                     Message.display_message(
                         f"{player_instance.name} has no remaining potions and must make a stand!",
                         1,
@@ -223,15 +232,18 @@ class Interaction:
 
                 for player_instance in player_party_instance.members:
                     player_count += 1
-                    while player_instance.potions < 100 and player_instance.gold != 0:
-                        if player_instance.spend_gold(25) is True:
+                    while (
+                        player_instance.inventory.potions < 100
+                        and player_instance.inventory.gold != 0
+                    ):
+                        if player_instance.inventory.spend_gold(25) is True:
                             gold_spent += 25
 
-                            player_instance.gain_potion(1)
+                            player_instance.inventory.gain_potion(1)
                             potions_sold += 1
 
                             Message.display_message(
-                                f"{player_instance.name} purchases a potion. They now have {player_instance.potions}",
+                                f"{player_instance.name} purchases a potion. They now have {player_instance.inventory.potions}",
                                 1,
                             )
                         else:
@@ -247,8 +259,8 @@ class Interaction:
                 for player_instance in player_party_instance.members:
                     merchant_messages = [
                         f"{player_instance.name}",
-                        f"Gold: {player_instance.gold}",
-                        f"Potions: {player_instance.potions}",
+                        f"Gold: {player_instance.inventory.gold}",
+                        f"Potions: {player_instance.inventory.potions}",
                         "",
                         "Choose an Action:",
                     ]
@@ -258,15 +270,15 @@ class Interaction:
                             merchant_options, merchant_messages
                         )
                         Message.display_message(
-                            f"{player_instance.name} has {player_instance.potions} potions & {player_instance.gold} gold",
+                            f"{player_instance.name} has {player_instance.inventory.potions} potions & {player_instance.gold} gold",
                             1,
                         )
                         match player_choice:
                             case "BUY":
-                                if player_instance.spend_gold(25) is True:
-                                    player_instance.gain_potion(1)
+                                if player_instance.inventory.spend_gold(25) is True:
+                                    player_instance.inventory.gain_potion(1)
                                     Message.display_message(
-                                        f"{player_instance.name} purchases a potion. They now have {player_instance.potions} & {player_instance.gold} gold",
+                                        f"{player_instance.name} purchases a potion. They now have {player_instance.inventory.potions} & {player_instance.inventory.gold} gold",
                                         1,
                                     )
                                 else:
@@ -278,8 +290,8 @@ class Interaction:
                             case "BUY MAX":
                                 # Using floor to make sure you can't buy 10 potions with 245 gold
                                 rounds = math.floor(player_instance.gold / 25)
-                                player_instance.spend_gold((rounds * 25))
-                                player_instance.gain_potion(rounds)
+                                player_instance.inventory.spend_gold((rounds * 25))
+                                player_instance.inventory.gain_potion(rounds)
                                 player_choice = "LEAVE"
                             case "LEAVE":
                                 player_choice = "LEAVE"
