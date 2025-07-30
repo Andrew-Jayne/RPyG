@@ -17,7 +17,7 @@ class SpecialEncounters:
     def get_special_enemy(enemy_identifier) -> Enemy:
         enemy_attributes = ENEMIES_SPECIAL[enemy_identifier]
 
-        return Enemy(enemy_attributes)
+        return Enemy(**enemy_attributes)
 
     @staticmethod
     def tavern_notice(player_party_instance: PlayerParty) -> None:
@@ -41,7 +41,7 @@ class SpecialEncounters:
         Interaction.accept_quest()
         for member_instance in player_party_instance.members:
             member_instance.heal(300)
-            member_instance.gain_potion(9)
+            member_instance.inventory.gain_potion(9)
 
         keep_depart_message = f"{player_party_instance.name} is are fully rested and have a full stock of potions"
         Message.display_message(keep_depart_message, 2)
