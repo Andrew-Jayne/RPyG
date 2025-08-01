@@ -1,46 +1,45 @@
 {
-    "large_enemies": [
-        {
-            "pural_name": "Cave Trolls",
-            "group_name": "Gang",
-            "variant_lists": {
-                "lesser_variants": [
-                    {
-                        "name": "Stunted Cave Troll",
-                        "health": 200,
-                        "strength": 10,
-                        "intellect": 1,
-                        "agility": 1,
-                        "luck": 2,
-                        "attack_name": "Club Smash",
-                        "is_special": false
-                    }
-                ],
-                "common_variants": [
-                    {
-                        "name": "Cave Troll",
-                        "health": 275,
-                        "strength": 10,
-                        "intellect": 1,
-                        "agility": 1,
-                        "luck": 2,
-                        "attack_name": "Club Smash",
-                        "is_special": false
-                    }
-                ],
-                "greater_variants": [
-                    {
-                        "name": "Cave Troll Chief",
-                        "health": 375,
-                        "strength": 10,
-                        "intellect": 1,
-                        "agility": 1,
-                        "luck": 2,
-                        "attack_name": "Club Smash",
-                        "is_special": false
-                    }
-                ]
-            }
+    "Cave Trolls": {
+        "pural_name": "Cave Trolls",
+        "group_name": "Gang",
+        "weight_class": "large",
+        "variant_lists":    {
+            "lesser_variants": [
+                {
+                    "name": "Stunted Cave Troll",
+                    "health": 200,
+                    "strength": 10,
+                    "intellect": 1,
+                    "agility": 1,
+                    "luck": 2,
+                    "attack_name": "Club Smash",
+                    "is_special": false
+                }
+            ],
+            "common_variants": [
+                {
+                    "name": "Cave Troll",
+                    "health": 275,
+                    "strength": 10,
+                    "intellect": 1,
+                    "agility": 1,
+                    "luck": 2,
+                    "attack_name": "Club Smash",
+                    "is_special": false
+                }
+            ],
+            "greater_variants": [
+                {
+                    "name": "Cave Troll Chief",
+                    "health": 375,
+                    "strength": 10,
+                    "intellect": 1,
+                    "agility": 1,
+                    "luck": 2,
+                    "attack_name": "Club Smash",
+                    "is_special": false
+                }
+            ]
         }
-    ]
+    }
 }

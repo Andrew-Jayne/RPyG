@@ -97,7 +97,7 @@ class PlayableActor(Combatant):
                 specialization, strength, intellect, agility
             ),
             special_attack_name=PlayableActor._get_special_attack(specialization),
-            specialization = specialization
+            specialization=specialization,
         )
 
     def use_potion(self) -> None:
@@ -122,7 +122,12 @@ class PlayableActor(Combatant):
             Message.display_message(fully_healed_message, 1)
 
     @staticmethod
-    def _get_attack_power(specialization:str, strength: int, intellect: int, agility: int,) -> int:
+    def _get_attack_power(
+        specialization: str,
+        strength: int,
+        intellect: int,
+        agility: int,
+    ) -> int:
         match specialization:
             case "WARRIOR":  # Str + 1/4 agility
                 attack_power = strength + int(agility * 0.25)
@@ -255,7 +260,7 @@ class PlayableActor(Combatant):
                 raise ValueError(f"Error Invalid Specialization {specialization}")
 
     @staticmethod
-    def _get_react_action(specialization: str, name:str) -> tuple[str, dict[str, str]]:
+    def _get_react_action(specialization: str, name: str) -> tuple[str, dict[str, str]]:
         match specialization:
             case "WARRIOR":
                 return (

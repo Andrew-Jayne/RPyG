@@ -1,46 +1,45 @@
 {
-    "medium_enemies": [
-        {
-            "pural_name": "Dire Wolves",
-            "group_name": "Pack",
-            "variant_lists": {
-                "lesser_variants": [
-                    {
-                        "name": "Young Dire Wolf",
-                        "health": 75,
-                        "strength": 4,
-                        "intellect": 3,
-                        "agility": 8,
-                        "luck": 6,
-                        "attack_name": "Wolf Bite",
-                        "is_special": false
-                    }
-                ],
-                "common_variants": [
-                    {
-                        "name": "Dire Wolf",
-                        "health": 100,
-                        "strength": 5,
-                        "intellect": 3,
-                        "agility": 8,
-                        "luck": 6,
-                        "attack_name": "Wolf Bite",
-                        "is_special": false
-                    }
-                ],
-                "greater_variants": [
-                    {
-                        "name": "Alpha Dire Wolf",
-                        "health": 150,
-                        "strength": 6,
-                        "intellect": 4,
-                        "agility": 8,
-                        "luck": 6,
-                        "attack_name": "Wolf Bite",
-                        "is_special": false
-                    }
-                ]
-            }
+    "Goblins": {
+        "pural_name": "Goblins",
+        "group_name": "Horde",
+        "weight_class": "small",
+        "variant_lists": {
+            "lesser_variants": [
+                {
+                    "name": "Goblin Runt",
+                    "health": 90,
+                    "strength": 3,
+                    "intellect": 4,
+                    "agility": 6,
+                    "luck": 5,
+                    "attack_name": "Crude Strike",
+                    "is_special": false
+                }
+            ],
+            "common_variants": [
+                {
+                    "name": "Goblin",
+                    "health": 120,
+                    "strength": 4,
+                    "intellect": 5,
+                    "agility": 7,
+                    "luck": 4,
+                    "attack_name": "Goblin Slash",
+                    "is_special": false
+                }
+            ],
+            "greater_variants": [
+                {
+                    "name": "Goblin Chief",
+                    "health": 180,
+                    "strength": 6,
+                    "intellect": 6,
+                    "agility": 6,
+                    "luck": 5,
+                    "attack_name": "Chief's Cleave",
+                    "is_special": false
+                }
+            ]
         }
-    ]
+    }
 }
