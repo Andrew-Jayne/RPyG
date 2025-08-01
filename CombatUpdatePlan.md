@@ -41,6 +41,46 @@ Need to build a matix of what stats give what specials as an option and then giv
 
 also need to have a way to determine the base 3 grades of char
 
+## Stat-Based Attack System (Rough Sketch)
+
+Basic attack threshold: 3+ in stat
+Special attack threshold: 6+ in stat  
+Mastery bonus threshold: 9+ in stat
+
+STR 6+ = Dismember special
+INT 6+ = AOE special
+AGL 6+ = Double Strike special
+
+STR 9+ = 20% instant kill on dismember (non-special enemies)
+INT 9+ = 20% paralyze all on AOE
+AGL 9+ = 50% chance for triple strike
+
+## Example Enemy JSON Structure
+```json
+{
+    "name": "Shadow Drake",
+    "strength": 7,
+    "intellect": 8,
+    "agility": 5,
+    "attack_names": {
+        "melee": "Shadow Claw",
+        "ranged": "Wing Buffet", 
+        "magic": "Dark Breath",
+        "special_str": "Eviscerate",
+        "special_int": "Shadow Storm",
+        "special_agl": null
+    }
+}
+```
+
+Attack availability determined by stats:
+- Can use melee (STR 7 > 3)
+- Can use ranged (AGL 5 > 3)  
+- Can use magic (INT 8 > 3)
+- Gets Dismember special (STR 7 > 6)
+- Gets AOE special (INT 8 > 6)
+- No Double Strike (AGL 5 < 6)
+
 
 
 also want to add elementals to magic use (frost will reduce atk after 3 attacks, or 5% chance to freeze, persistent burning damange (10 per turn for 3 turns), elctric (15% chance to paralize?))

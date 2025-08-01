@@ -1,6 +1,6 @@
 from typing import Generic, TypeVar
 
-from utilites.utilities import ensure_type
+from utilites import ensure_type
 
 
 class Actor:

@@ -1,7 +1,7 @@
 import random
 
 from actors.actor_combatant import Combatant, CombatantParty
-from utilites.utilities import ensure_type
+from utilites import ensure_type
 
 
 class Inventory:

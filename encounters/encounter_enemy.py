@@ -7,7 +7,7 @@ from combat import battle
 from content.content import ENEMIES_STANDARD
 from interaction.interaction import Interaction
 from message.message import Message
-from utilites.utilities import ensure_type
+from utilites import ensure_type
 
 
 def generate_enemy_party(enemy_party_attributes: dict, enemy_count: int) -> EnemyParty:

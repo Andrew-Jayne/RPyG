@@ -1,8 +1,8 @@
 import os
+import config
 
 from actors import PlayerParty
 from actors.actor_playable import PlayableActor
-from config import update_global_game_mode
 from display import clear_display
 from gameState.file import load_game
 from interaction.interaction import Interaction
@@ -97,10 +97,10 @@ def start_game(game_mode: str, using_default_party: bool) -> PlayerParty:
     welcome()
     match game_mode:
         case "AUTO":
-            update_global_game_mode("AUTO")
+            config.GLOBAL_GAME_MODE = "AUTO"
             return PlayerParty(name="The Default Party", members=default_party())
         case "MANUAL":
-            update_global_game_mode("MANUAL")
+            config.GLOBAL_GAME_MODE = "MANUAL"
             if using_default_party is True:
                 return PlayerParty(name="The Default Party", members=default_party())
             else:
@@ -109,8 +109,7 @@ def start_game(game_mode: str, using_default_party: bool) -> PlayerParty:
                         return load_game()
                     case "NEW":
                         my_party, my_party_name = party_start()
-                        my_party_instances: list[PlayableActor]
-                        my_party_instances = []
+                        my_party_instances: list[PlayableActor] = []
                         for member in my_party:
                             my_party_instances.append(
                                 PlayableActor(member[0], member[1])

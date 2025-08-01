@@ -5,7 +5,7 @@ import config
 # Only Used For Type Hinting/Checking
 from actors import PlayableActor, PlayerParty, EnemyParty
 from message.message import Message
-from utilites.utilities import ensure_type
+from utilites import ensure_type
 
 
 # Interaction Function Guidelines

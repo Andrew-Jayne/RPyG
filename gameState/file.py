@@ -7,7 +7,7 @@ import pickle
 from actors import PlayerParty
 from interaction.interaction import Interaction
 from message.message import Message
-from utilites.utilities import ensure_type
+from utilites import ensure_type
 
 
 # """Secret""" key for HMAC, if you break your file that's on you

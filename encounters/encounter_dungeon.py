@@ -6,7 +6,7 @@ from actors import Enemy, EnemyParty, PlayerParty
 from combat import battle
 from encounters.encounter_enemy import generate_enemy_party
 from message.message import Message
-from utilites.utilities import ensure_type
+from utilites import ensure_type
 
 
 class Dungeon:

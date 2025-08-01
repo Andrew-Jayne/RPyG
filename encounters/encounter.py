@@ -6,7 +6,7 @@ from encounters.encounter_enemy import enemy_encounter
 from encounters.encounter_special import SpecialEncounters
 from encounters.encounter_standard import standard_encounter
 from message.message import Message
-from utilites.utilities import ensure_type
+from utilites import ensure_type
 
 
 def check_for_encounter(

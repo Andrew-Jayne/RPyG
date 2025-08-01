@@ -1,4 +1,4 @@
-import argparse
+from argparse import ArgumentParser
 
 
 def main(game_mode: str, using_default_party: bool) -> None:
@@ -33,7 +33,7 @@ def main(game_mode: str, using_default_party: bool) -> None:
 
 # Main Function Wrapper to Accept and Pass Args
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="RPyG, a text based RPG in Python")
+    parser = ArgumentParser(description="RPyG, a text based RPG in Python")
     parser.add_argument("--auto", action="store_true", help="Run in automatic mode.")
     parser.add_argument("--default", action="store_true", help="Use the Default Party")
     args = parser.parse_args()

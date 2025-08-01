@@ -3,7 +3,7 @@ from actors import Enemy, EnemyParty, PlayableActor, PlayerParty, CombatantParty
 from gameState.file import save_game
 from interaction.interaction import Interaction
 from message.message import Message
-from utilites.utilities import ensure_type
+from utilites import ensure_type
 
 
 def is_party_alive(party_instance: Union[EnemyParty, PlayerParty]) -> bool:
