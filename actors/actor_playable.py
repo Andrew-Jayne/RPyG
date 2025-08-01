@@ -1,6 +1,5 @@
 import random
 
-import config
 from actors.actor_combatant import Combatant, CombatantParty
 from utilites.utilities import ensure_type
 
@@ -58,9 +57,9 @@ class PlayableActor(Combatant):
         ensure_type(specialization, str, "specialization")
 
         self.name = name
-        self.specialization = specialization
-        self.react_action = PlayableActor._get_react_action(self)[0]
-        self.react_messages = PlayableActor._get_react_action(self)[1]
+        react_messages = PlayableActor._get_react_action(specialization, name)
+        self.react_action = react_messages[0]
+        self.react_messages = react_messages[1]
 
         match specialization:
             case "WARRIOR":
@@ -93,11 +92,12 @@ class PlayableActor(Combatant):
             agility=agility,
             luck=luck,
             health=100 + ((strength + intellect) * 10),
-            attack_name=PlayableActor._get_attack_name(self),
+            attack_name=PlayableActor._get_attack_name(specialization),
             attack_power=PlayableActor._get_attack_power(
-                self, strength, intellect, agility
+                specialization, strength, intellect, agility
             ),
-            special_attack_name=PlayableActor._get_special_attack(self),
+            special_attack_name=PlayableActor._get_special_attack(specialization),
+            specialization = specialization
         )
 
     def use_potion(self) -> None:
@@ -121,8 +121,9 @@ class PlayableActor(Combatant):
             fully_healed_message = f"{self.name} is already fully healed!"
             Message.display_message(fully_healed_message, 1)
 
-    def _get_attack_power(self, strength: int, intellect: int, agility: int) -> int:
-        match self.specialization:
+    @staticmethod
+    def _get_attack_power(specialization:str, strength: int, intellect: int, agility: int,) -> int:
+        match specialization:
             case "WARRIOR":  # Str + 1/4 agility
                 attack_power = strength + int(agility * 0.25)
                 return attack_power * 10
@@ -132,6 +133,8 @@ class PlayableActor(Combatant):
             case "ROGUE":  # Agl + 1/4 average of str & int
                 attack_power = agility + int(((strength + intellect) * 0.5) * 0.25)
                 return attack_power * 10
+            case _:
+                raise ValueError(f"Invalid specialization {specialization}")
 
     def _get_skill(self) -> str:
         strength_skill = ""
@@ -160,50 +163,51 @@ class PlayableActor(Combatant):
 
         return player_skill
 
-    def _set_attack_name(self) -> str:
-        player_skill = __class__.__get_skill(self)
+    # def _set_attack_name(self) -> str:
+    #     player_skill = self.__get_skill(self)
 
-        match player_skill:
-            case "weak:dull":
-                self.attack_name = "Clumsy Punch"
-            case "fair:dull":
-                self.attack_name = "Axe Chop"
-            case "strong:dull":
-                self.attack_name = "Warhammer Slam"
-            case "mighty:dull":
-                self.attack_name = "Greatsword Cleave"
+    #     match player_skill:
+    #         case "weak:dull":
+    #             self.attack_name = "Clumsy Punch"
+    #         case "fair:dull":
+    #             self.attack_name = "Axe Chop"
+    #         case "strong:dull":
+    #             self.attack_name = "Warhammer Slam"
+    #         case "mighty:dull":
+    #             self.attack_name = "Greatsword Cleave"
 
-            case "weak:ordinary":
-                self.attack_name = "Dagger Slash"
-            case "fair:ordinary":
-                self.attack_name = "Shortsword Slash"
-            case "strong:ordinary":
-                self.attack_name = "Longsword Thrust"
-            case "mighty:ordinary":
-                self.attack_name = "Greatsword Thrust"
+    #         case "weak:ordinary":
+    #             self.attack_name = "Dagger Slash"
+    #         case "fair:ordinary":
+    #             self.attack_name = "Shortsword Slash"
+    #         case "strong:ordinary":
+    #             self.attack_name = "Longsword Thrust"
+    #         case "mighty:ordinary":
+    #             self.attack_name = "Greatsword Thrust"
 
-            case "weak:smart":
-                self.attack_name = "Arcane Bolt"
-            case "fair:smart":
-                self.attack_name = "Fireball"
-            case "strong:smart":
-                self.attack_name = "Arcane Longsword Strike"
-            case "mighty:smart":
-                self.attack_name = "Arcane Greatsword Cleave"
+    #         case "weak:smart":
+    #             self.attack_name = "Arcane Bolt"
+    #         case "fair:smart":
+    #             self.attack_name = "Fireball"
+    #         case "strong:smart":
+    #             self.attack_name = "Arcane Longsword Strike"
+    #         case "mighty:smart":
+    #             self.attack_name = "Arcane Greatsword Cleave"
 
-            case "weak:brilliant":
-                self.attack_name = "Arcane Lighting"
-            case "fair:brilliant":
-                self.attack_name = "Great Fireball"
-            case "strong:brilliant":
-                self.attack_name = "Seismic Hammer Slam"
-            case "mighty:brilliant":
-                self.attack_name = "Cosmic Greatsword Cleave"
+    #         case "weak:brilliant":
+    #             self.attack_name = "Arcane Lighting"
+    #         case "fair:brilliant":
+    #             self.attack_name = "Great Fireball"
+    #         case "strong:brilliant":
+    #             self.attack_name = "Seismic Hammer Slam"
+    #         case "mighty:brilliant":
+    #             self.attack_name = "Cosmic Greatsword Cleave"
 
-        return self.attack_name
+    #     return self.attack_name
 
-    def _get_attack_name(self) -> str:
-        match self.specialization:
+    @staticmethod
+    def _get_attack_name(specialization: str) -> str:
+        match specialization:
             case "WARRIOR":
                 return "Greatsword Cleave"
                 # if self.intellect >= 7:
@@ -248,66 +252,55 @@ class PlayableActor(Combatant):
                 # min agl: 5
                 # max agl: 10
             case _:
-                raise ValueError(f"Error Invalid Specialization {self.specialization}")
+                raise ValueError(f"Error Invalid Specialization {specialization}")
 
-    def _get_react_action(self) -> tuple[str, dict]:
-        match self.specialization:
+    @staticmethod
+    def _get_react_action(specialization: str, name:str) -> tuple[str, dict[str, str]]:
+        match specialization:
             case "WARRIOR":
                 return (
                     "DEFLECT",
                     {
-                        "prep_message": f"{self.name} prepares to deflect against next attack",
-                        "success_message": f"{self.name} successfully deflected the enemy's attack!",
-                        "failure_message": f"{self.name} failed to deflect the attack!",
+                        "prep_message": f"{name} prepares to deflect against next attack",
+                        "success_message": f"{name} successfully deflected the enemy's attack!",
+                        "failure_message": f"{name} failed to deflect the attack!",
                     },
                 )
             case "MAGE":
                 return (
                     "ELUDE",
                     {
-                        "prep_message": f"{self.name} prepares to elude the next attack",
-                        "success_message": f"{self.name} fools the enemy with an illusion!",
-                        "failure_message": f"{self.name} failed to fool the enemy illusion!",
+                        "prep_message": f"{name} prepares to elude the next attack",
+                        "success_message": f"{name} fools the enemy with an illusion!",
+                        "failure_message": f"{name} failed to fool the enemy illusion!",
                     },
                 )
             case "ROGUE":
                 return (
                     "EVADE",
                     {
-                        "prep_message": f"{self.name} prepares to evade the next attack",
-                        "success_message": f"{self.name} deftly evades the enemy's attack!",
-                        "failure_message": f"{self.name} fails to evade the attack!",
+                        "prep_message": f"{name} prepares to evade the next attack",
+                        "success_message": f"{name} deftly evades the enemy's attack!",
+                        "failure_message": f"{name} fails to evade the attack!",
                     },
                 )
-
-    def _get_special_attack(self):
-        match self.specialization:
-            case "WARRIOR":
-                special_attack = "DISMEMBER"
-            case "MAGE":
-                special_attack = "THUNDERBALL"
-            case "ROGUE":
-                special_attack = "DOUBLE STRIKE"
-        return special_attack
+            case _:
+                raise ValueError(f"Invalid specialization {specialization}")
 
     @staticmethod
-    def select_combat_target(target_party_instance: CombatantParty) -> int:
-        """
-        Takes a full party instance, and returns the index of the target member in the members array/list as an int
-        """
-        ensure_type(target_party_instance, CombatantParty, "target_party_instance")
-        match config.GLOBAL_GAME_MODE:
-            case "AUTO":
-                return Combatant.select_combat_target(target_party_instance)
-            case "MANUAL":
-                from interaction.interaction import Interaction
-
-                return Interaction.choose_combat_target(target_party_instance)
+    def _get_special_attack(specialization: str) -> str:
+        match specialization:
+            case "WARRIOR":
+                return "DISMEMBER"
+            case "MAGE":
+                return "THUNDERBALL"
+            case "ROGUE":
+                return "DOUBLE STRIKE"
             case _:
-                return 0
+                raise ValueError(f"Invalid specialization {specialization}")
 
 
-class PlayerParty(CombatantParty):
+class PlayerParty(CombatantParty[PlayableActor]):
     members: list[PlayableActor]
     dead_members: list[PlayableActor]
     progress: int
@@ -326,8 +319,8 @@ class PlayerParty(CombatantParty):
         for party_member in members:
             ensure_type(party_member, PlayableActor, "party_member")
 
-        CombatantParty.__init__(
-            self,
+        ## super() Must be used because of typing and use of generics
+        super().__init__(
             name=name,
             members=members,
         )

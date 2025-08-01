@@ -10,6 +10,11 @@ from utilites.utilities import ensure_type
 
 
 class Dungeon:
+    name: str
+    messages: list[str]
+    length: int
+    enemies: list[EnemyParty]
+    boss: EnemyParty
     def __init__(self, dungeon_attributes: dict) -> None:
         self.name = dungeon_attributes["name"]
         self.messages = dict(dungeon_attributes["messages"])

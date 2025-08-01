@@ -11,7 +11,6 @@ class Enemy(Combatant):
     luck: int
     attack_name: str
     is_special: bool
-    special_attack_name: None
 
     def __init__(
         self,
@@ -48,6 +47,7 @@ class Enemy(Combatant):
                 intellect,
             ),
             special_attack_name=None,
+            specialization=""
         )
 
     @staticmethod
@@ -64,7 +64,7 @@ class Enemy(Combatant):
         return attack_power * 10
 
 
-class EnemyParty(CombatantParty):
+class EnemyParty(CombatantParty[Enemy]):
     members: list[Enemy]
     dead_members: list[Enemy]
     loot: object
@@ -79,8 +79,8 @@ class EnemyParty(CombatantParty):
         for party_member in members:
             ensure_type(party_member, Enemy, "party_member")
 
-        CombatantParty.__init__(
-            self,
+        ## super() Must be used because of typing and use of generics
+        super().__init__(
             name=name,
             members=members,
         )

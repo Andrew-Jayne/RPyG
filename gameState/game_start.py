@@ -43,7 +43,7 @@ def get_start_type() -> str:
     return player_action
 
 
-def party_start() -> tuple:
+def party_start() -> tuple[list[list[str]], str]:
     party_size_choices = ["1", "2", "3"]
     party_size_messages = ["How many members are in your party?"]
 
@@ -60,29 +60,27 @@ def party_start() -> tuple:
         "NOTE: Case is respected but names longer than 64 characters will be truncated",
     ]
 
-    party_size = Interaction.prompt_user(
-        party_size_choices, party_size_messages, return_int=True
-    )
+    party_size = int(Interaction.prompt_user(party_size_choices, party_size_messages, return_index=True))
     clear_display()
 
-    party_members = []
+    party_member_attribs:list[list[str]] = []
     for _ in range(0, party_size):
         member_name = Interaction.custom_text_entry(member_name_messages, 32)
         member_specialization = Interaction.prompt_user(
             specialization_choices, specialization_messages
         )
         member_attrib = [member_name, member_specialization]
-        party_members.append(member_attrib)
+        party_member_attribs.append(member_attrib)
         clear_display()
 
     party_name = Interaction.custom_text_entry(party_name_messages, 64)
     clear_display()
 
-    return party_members, party_name
+    return party_member_attribs, party_name
 
 
-def default_party() -> list:
-    party_members = []
+def default_party() -> list[PlayableActor]:
+    party_members:list[PlayableActor] = []
     default_names = ("Conan", "Merlin", "Robin")
     default_specialization = ("WARRIOR", "MAGE", "ROGUE")
     for i in range(0, 3):
@@ -107,11 +105,14 @@ def start_game(game_mode: str, using_default_party: bool) -> PlayerParty:
                         return load_game()
                     case "NEW":
                         my_party, my_party_name = party_start()
+                        my_party_instances: list[PlayableActor]
                         my_party_instances = []
                         for member in my_party:
                             my_party_instances.append(
                                 PlayableActor(member[0], member[1])
                             )
                         return PlayerParty(my_party_name, my_party_instances)
+                    case _:
+                        raise ValueError("Invalid Game Start Type")
         case _:
             raise ValueError("Error No Valid Game Mode was selected")
