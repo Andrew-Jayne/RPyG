@@ -33,6 +33,7 @@ class Actor:
 
 ActorType = TypeVar("ActorType", bound=Actor)
 
+
 class Party(Generic[ActorType]):
     members: list[ActorType]
 

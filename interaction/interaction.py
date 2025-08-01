@@ -15,7 +15,7 @@ from utilites.utilities import ensure_type
 
 class Interaction:
     @staticmethod
-    def sanitize(input_string: str, max_length: int=32) -> str:
+    def sanitize(input_string: str, max_length: int = 32) -> str:
         """
         This function Sanitizes strings passed into it and returns up to the max length chars (Default is 32)
         With most escape sequences and control chars removed
@@ -121,7 +121,9 @@ class Interaction:
         match config.GLOBAL_GAME_MODE:
             case "AUTO":
                 # need to move this up stream later and/or merge interaction inside playable actor pepeW
-                return target_party_instance.members[0].select_combat_target(target_party_instance)
+                return target_party_instance.members[0].select_combat_target(
+                    target_party_instance
+                )
             case "MANUAL":
                 for i, member in enumerate(target_party_instance.members):
                     target_options.append(f"{i} {member.name}:{member.health}")
@@ -130,7 +132,11 @@ class Interaction:
                     "Which enemy will you attack?",
                 ]
 
-                return int(Interaction.prompt_user(target_options, target_messages, return_index=True))
+                return int(
+                    Interaction.prompt_user(
+                        target_options, target_messages, return_index=True
+                    )
+                )
             case _:
                 raise ValueError("Invalid Game mode")
 
@@ -154,7 +160,10 @@ class Interaction:
         match config.GLOBAL_GAME_MODE:
             case "AUTO":
                 for player_instance in player_party_instance.members:
-                    if player_instance.health < 20 and player_instance.inventory.potions != 0:
+                    if (
+                        player_instance.health < 20
+                        and player_instance.inventory.potions != 0
+                    ):
                         return "HEAL"
                 return "TRAVEL"
 
@@ -198,14 +207,15 @@ class Interaction:
                 battle_messages = [f"{player_instance.name}", "Choose an Action:"]
 
                 battle_choice = Interaction.prompt_user(battle_options, battle_messages)
-                if battle_choice == "HEAL" and player_instance.is_fully_healed() is True:
+                if (
+                    battle_choice == "HEAL"
+                    and player_instance.is_fully_healed() is True
+                ):
                     Message.display_message(
                         f"{player_instance.name} is fully healed, it would be unwise to use a potion",
                         1,
                     )
-                battle_choice = Interaction.prompt_user(
-                        battle_options, battle_messages
-                    )
+                battle_choice = Interaction.prompt_user(battle_options, battle_messages)
                 if battle_choice == "HEAL":
                     Message.display_message(
                         "Stubborn aren't you, fine waste the damn potion", 1
@@ -350,8 +360,8 @@ class Interaction:
                 embark_options = ["EMBARK", "DRINK"]
                 embark_options_message = ["What shall the party do?"]
                 player_choice = Interaction.prompt_user(
-                        embark_options, embark_options_message
-                    )
+                    embark_options, embark_options_message
+                )
 
                 while player_choice != "EMBARK":
                     player_choice = Interaction.prompt_user(
@@ -384,7 +394,9 @@ class Interaction:
                 player_choice = Interaction.prompt_user(quest_options, quest_message)
 
                 while player_choice != "ACCEPT":
-                    player_choice = Interaction.prompt_user(quest_options, quest_message)
+                    player_choice = Interaction.prompt_user(
+                        quest_options, quest_message
+                    )
                     match player_choice:
                         case "ACCEPT":
                             return True

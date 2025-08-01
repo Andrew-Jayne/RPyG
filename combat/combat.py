@@ -28,7 +28,7 @@ def clear_dead_members(party_instance: Union[EnemyParty, PlayerParty]) -> None:
         player_party: PlayerParty = cast(PlayerParty, party_instance)
         for member in player_party.members:
             if member.health == 0:
-                player_party.lose_member(member) 
+                player_party.lose_member(member)
 
 
 def is_battle_complete(

@@ -89,8 +89,7 @@ class Message:
     # Battle Messages
     @staticmethod
     def battle_hud_message(
-        player_party_instance: PlayerParty, 
-        enemy_party_instance: EnemyParty
+        player_party_instance: PlayerParty, enemy_party_instance: EnemyParty
     ) -> None:
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
         ensure_type(enemy_party_instance, EnemyParty, "enemy_party_instance")

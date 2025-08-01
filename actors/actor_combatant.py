@@ -7,6 +7,7 @@ from utilites.utilities import ensure_type
 if TYPE_CHECKING:
     from actors import PlayerParty, EnemyParty
 
+
 class Combatant(Actor):
     name: str
     strength: int
@@ -30,7 +31,7 @@ class Combatant(Actor):
         attack_name: str,
         attack_power: int,
         special_attack_name: str | None,
-        specialization: str
+        specialization: str,
     ) -> None:
         ensure_type(name, str, "name")
         ensure_type(strength, int, "strength")
@@ -210,7 +211,7 @@ class Combatant(Actor):
             overwhelm_message = f"{self.name} is overwhelmed by the power of {self.special_attack_name} and takes {self_damage_amount} damage"
             Message.display_message(overwhelm_message, 1)
 
-    def double_attack(self, target_party_instance:  "PlayerParty | EnemyParty") -> None:
+    def double_attack(self, target_party_instance: "PlayerParty | EnemyParty") -> None:
         from actors import CombatantParty
         from message.message import Message
         from actors import PlayerParty, EnemyParty, Enemy, PlayableActor
@@ -303,22 +304,18 @@ class Combatant(Actor):
 
         match self.specialization:
             case "WARRIOR":
-                target_index = int(
-                    self.select_combat_target(target_party_instance)
-                )
+                target_index = int(self.select_combat_target(target_party_instance))
                 target_instance = target_party_instance.members[target_index]
                 if target_instance.is_dismembered is True:
                     dumb_check = 0
                     while target_instance.is_dismembered is True:
                         dumb_check += 1
-                        Message.display_message(f"{target_instance.name} has been dismembered already", 1)
-                        # message that enemy has been dismembered
-                        target_index = self.select_combat_target(
-                            target_party_instance
+                        Message.display_message(
+                            f"{target_instance.name} has been dismembered already", 1
                         )
-                        target_instance = target_party_instance.members[
-                            target_index
-                        ]
+                        # message that enemy has been dismembered
+                        target_index = self.select_combat_target(target_party_instance)
+                        target_instance = target_party_instance.members[target_index]
                         # might be a case where you try to attack the last enemy with dismemeber
                         # but they have been dismembered, so just skip to attack normal
                         if dumb_check > 10 or len(target_party_instance.members) == 1:
@@ -332,16 +329,22 @@ class Combatant(Actor):
             case _:
                 raise ValueError(f"Invalid specialization {self.specialization}")
 
-    def select_combat_target(self, target_party_instance: "PlayerParty | EnemyParty") -> int:
+    def select_combat_target(
+        self, target_party_instance: "PlayerParty | EnemyParty"
+    ) -> int:
         """
         Takes a full party instance, and returns the index of the target member in the members array/list as an int
         """
         from actors import EnemyParty, PlayableActor
 
         from interaction.interaction import Interaction
+
         ensure_type(target_party_instance, CombatantParty, "target_party_instance")
 
-        if isinstance(self, PlayableActor) is True and isinstance(target_party_instance, EnemyParty) is True:
+        if (
+            isinstance(self, PlayableActor) is True
+            and isinstance(target_party_instance, EnemyParty) is True
+        ):
             enemy_party_instance: EnemyParty = cast(EnemyParty, target_party_instance)
             return Interaction.choose_combat_target(enemy_party_instance)
 
@@ -376,6 +379,7 @@ class Combatant(Actor):
                 return random.randint(0, (len(target_party_members) - 1))
             case _:
                 raise ValueError("Big Problem in Select_Target, Go buy a lotto ticket")
+
 
 CombatantType = TypeVar("CombatantType", bound=Combatant)
 

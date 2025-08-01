@@ -60,10 +60,14 @@ def party_start() -> tuple[list[list[str]], str]:
         "NOTE: Case is respected but names longer than 64 characters will be truncated",
     ]
 
-    party_size = int(Interaction.prompt_user(party_size_choices, party_size_messages, return_index=True))
+    party_size = int(
+        Interaction.prompt_user(
+            party_size_choices, party_size_messages, return_index=True
+        )
+    )
     clear_display()
 
-    party_member_attribs:list[list[str]] = []
+    party_member_attribs: list[list[str]] = []
     for _ in range(0, party_size):
         member_name = Interaction.custom_text_entry(member_name_messages, 32)
         member_specialization = Interaction.prompt_user(
@@ -80,7 +84,7 @@ def party_start() -> tuple[list[list[str]], str]:
 
 
 def default_party() -> list[PlayableActor]:
-    party_members:list[PlayableActor] = []
+    party_members: list[PlayableActor] = []
     default_names = ("Conan", "Merlin", "Robin")
     default_specialization = ("WARRIOR", "MAGE", "ROGUE")
     for i in range(0, 3):

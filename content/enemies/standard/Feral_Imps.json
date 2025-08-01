@@ -1,46 +1,45 @@
 {
-    "small_enemies": [
-        {
-            "pural_name": "Feral Imps",
-            "group_name": "Mischief",
-            "variant_lists": {
-                "lesser_variants": [
-                    {
-                        "name": "Young Feral Imp",
-                        "health": 60,
-                        "strength": 1,
-                        "intellect": 3,
-                        "agility": 4,
-                        "luck": 6,
-                        "attack_name": "Weak Fireball",
-                        "is_special": false
-                    }
-                ],
-                "common_variants": [
-                    {
-                        "name": "Feral Imp",
-                        "health": 80,
-                        "strength": 3,
-                        "intellect": 5,
-                        "agility": 5,
-                        "luck": 3,
-                        "attack_name": "Fireball",
-                        "is_special": false
-                    }
-                ],
-                "greater_variants": [
-                    {
-                        "name": "Painted Feral Imp",
-                        "health": 120,
-                        "strength": 5,
-                        "intellect": 6,
-                        "agility": 4,
-                        "luck": 4,
-                        "attack_name": "Empowered Fireball",
-                        "is_special": false
-                    }
-                ]
-            }
+    "Feral Imps": {
+        "pural_name": "Feral Imps",
+        "group_name": "Mischief",
+        "weight_class": "small",
+        "variant_lists": {
+            "lesser_variants": [
+                {
+                    "name": "Young Feral Imp",
+                    "health": 60,
+                    "strength": 1,
+                    "intellect": 3,
+                    "agility": 4,
+                    "luck": 6,
+                    "attack_name": "Weak Fireball",
+                    "is_special": false
+                }
+            ],
+            "common_variants": [
+                {
+                    "name": "Feral Imp",
+                    "health": 80,
+                    "strength": 3,
+                    "intellect": 5,
+                    "agility": 5,
+                    "luck": 3,
+                    "attack_name": "Fireball",
+                    "is_special": false
+                }
+            ],
+            "greater_variants": [
+                {
+                    "name": "Painted Feral Imp",
+                    "health": 120,
+                    "strength": 5,
+                    "intellect": 6,
+                    "agility": 4,
+                    "luck": 4,
+                    "attack_name": "Empowered Fireball",
+                    "is_special": false
+                }
+            ]
         }
-    ]
+    }
 }

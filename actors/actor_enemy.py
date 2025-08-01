@@ -47,7 +47,7 @@ class Enemy(Combatant):
                 intellect,
             ),
             special_attack_name=None,
-            specialization=""
+            specialization="",
         )
 
     @staticmethod

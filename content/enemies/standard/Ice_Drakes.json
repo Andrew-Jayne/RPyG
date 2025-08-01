@@ -1,46 +1,45 @@
 {
-    "large_enemies": [
-        {
-            "pural_name": "Ice Drakes",
-            "group_name": "Clan",
-            "variant_lists": {
-                "lesser_variants": [
-                    {
-                        "name": "Juvenile Ice Drake",
-                        "health": 175,
-                        "strength": 7,
-                        "intellect": 5,
-                        "agility": 6,
-                        "luck": 8,
-                        "attack_name": "Blizzard Breath",
-                        "is_special": false
-                    }
-                ],
-                "common_variants": [
-                    {
-                        "name": "Ice Drake",
-                        "health": 250,
-                        "strength": 8,
-                        "intellect": 6,
-                        "agility": 6,
-                        "luck": 8,
-                        "attack_name": "Blizzard Breath",
-                        "is_special": false
-                    }
-                ],
-                "greater_variants": [
-                    {
-                        "name": "Ice Drake Matriarch",
-                        "health": 325,
-                        "strength": 9,
-                        "intellect": 7,
-                        "agility": 6,
-                        "luck": 8,
-                        "attack_name": "Blizzard Breath",
-                        "is_special": false
-                    }
-                ]
-            }
+    "Ice Drakes": {
+        "pural_name": "Ice Drakes",
+        "group_name": "Clan",
+        "weight_class": "large",
+        "variant_lists": {
+            "lesser_variants": [
+                {
+                    "name": "Juvenile Ice Drake",
+                    "health": 175,
+                    "strength": 7,
+                    "intellect": 5,
+                    "agility": 6,
+                    "luck": 8,
+                    "attack_name": "Blizzard Breath",
+                    "is_special": false
+                }
+            ],
+            "common_variants": [
+                {
+                    "name": "Ice Drake",
+                    "health": 250,
+                    "strength": 8,
+                    "intellect": 6,
+                    "agility": 6,
+                    "luck": 8,
+                    "attack_name": "Blizzard Breath",
+                    "is_special": false
+                }
+            ],
+            "greater_variants": [
+                {
+                    "name": "Ice Drake Matriarch",
+                    "health": 325,
+                    "strength": 9,
+                    "intellect": 7,
+                    "agility": 6,
+                    "luck": 8,
+                    "attack_name": "Blizzard Breath",
+                    "is_special": false
+                }
+            ]
         }
-    ]
+    }
 }
