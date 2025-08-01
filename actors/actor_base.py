@@ -1,3 +1,5 @@
+from typing import Generic, TypeVar
+
 from utilites.utilities import ensure_type
 
 
@@ -29,21 +31,23 @@ class Actor:
         self.luck = luck
 
 
-class Party:
-    members: list[Actor]
+ActorType = TypeVar("ActorType", bound=Actor)
+
+class Party(Generic[ActorType]):
+    members: list[ActorType]
 
     def __init__(
         self,
-        members: list[Actor],
+        members: list[ActorType],
     ) -> None:
         ensure_type(members, list, "members")
-        for party_member in members:
-            ensure_type(party_member, Actor, "party_member")
+        for member in members:
+            ensure_type(member, Actor, "member")
 
         self.members = members
 
-    def lose_member(self, member) -> None:
+    def lose_member(self, member: ActorType) -> None:
         self.members.remove(member)
 
-    def gain_member(self, member) -> None:
+    def gain_member(self, member: ActorType) -> None:
         self.members.append(member)

@@ -1,12 +1,12 @@
-# Only for Type Checking
-from actors import CombatantParty, Enemy, EnemyParty, PlayableActor, PlayerParty
+from typing import Union, cast
+from actors import Enemy, EnemyParty, PlayableActor, PlayerParty, CombatantParty
 from gameState.file import save_game
 from interaction.interaction import Interaction
 from message.message import Message
 from utilites.utilities import ensure_type
 
 
-def is_party_alive(party_instance: CombatantParty) -> bool:
+def is_party_alive(party_instance: Union[EnemyParty, PlayerParty]) -> bool:
     ensure_type(party_instance, CombatantParty, "party_instance")
 
     if len(party_instance.members) <= 0:
@@ -15,12 +15,20 @@ def is_party_alive(party_instance: CombatantParty) -> bool:
         return True
 
 
-def clear_dead_members(party_instance: CombatantParty) -> None:
+def clear_dead_members(party_instance: Union[EnemyParty, PlayerParty]) -> None:
     ensure_type(party_instance, CombatantParty, "party_instance")
 
-    for member in party_instance.members:
-        if member.health == 0:
-            party_instance.lose_member(member)
+    if isinstance(party_instance, EnemyParty) is True:
+        enemy_party: EnemyParty = cast(EnemyParty, party_instance)
+        for member in enemy_party.members:
+            if member.health == 0:
+                enemy_party.lose_member(member)
+
+    if isinstance(party_instance, PlayerParty) is True:
+        player_party: PlayerParty = cast(PlayerParty, party_instance)
+        for member in player_party.members:
+            if member.health == 0:
+                player_party.lose_member(member) 
 
 
 def is_battle_complete(
@@ -32,10 +40,8 @@ def is_battle_complete(
 
     # Check if players have died
     if is_party_alive(player_party_instance) is False:
-        battle_complete = True
         return True
     elif is_party_alive(enemy_party_instance) is False:
-        battle_complete = True
         return True
     else:
         return False
@@ -49,7 +55,8 @@ def process_player_turn(
 
     for player_instance in player_party_instance.members:
         if is_party_alive(enemy_party_instance) is True:
-            match Interaction.in_battle(player_instance):
+            player_action = Interaction.in_battle(player_instance)
+            match player_action:
                 case "ATTACK":  # select target
                     target_index = player_instance.select_combat_target(
                         enemy_party_instance
@@ -76,6 +83,9 @@ def process_player_turn(
 
                 case "HEAL":
                     player_instance.use_potion()
+                case _:
+                    raise ValueError(f"Invalid player_action {player_action}")
+
             clear_dead_members(enemy_party_instance)
         else:
             break

@@ -7,6 +7,7 @@ import config
 from actors import EnemyParty, PlayerParty
 from actors.actor_combatant import Combatant
 from actors.actor_playable import PlayableActor
+from utilites.utilities import ensure_type
 from content.content import STORY
 
 
@@ -45,12 +46,7 @@ class Message:
 
     @staticmethod
     def actor_health_message(actor_instance: Combatant) -> None:
-        if not isinstance(actor_instance, Combatant):
-            raise ValueError(
-                "The 'actor_instance' parameter must be of type Combatant. Received type: {}".format(
-                    type(actor_instance).__name__
-                )
-            )
+        ensure_type(actor_instance, Combatant, "actor_instance")
 
         actor_health_message = (
             f"{actor_instance.name} has {actor_instance.health} Health remaining"
@@ -60,12 +56,7 @@ class Message:
 
     @staticmethod
     def actor_attack_message(attacker_instance: Combatant, damage_value: int) -> None:
-        if not isinstance(attacker_instance, Combatant):
-            raise ValueError(
-                "The 'attacker_instance' parameter must be of type Combatant. Received type: {}".format(
-                    type(attacker_instance).__name__
-                )
-            )
+        ensure_type(attacker_instance, Combatant, "actor_instance")
 
         if (
             config.GLOBAL_GAME_MODE == "MANUAL"
@@ -81,12 +72,7 @@ class Message:
     def actor_critical_attack_message(
         attacker_instance: Combatant, damage_value: int
     ) -> None:
-        if not isinstance(attacker_instance, Combatant):
-            raise ValueError(
-                "The 'attacker_instance' parameter must be of type Combatant. Received type: {}".format(
-                    type(attacker_instance).__name__
-                )
-            )
+        ensure_type(attacker_instance, Combatant, "actor_instance")
 
         if (
             config.GLOBAL_GAME_MODE == "MANUAL"
@@ -103,20 +89,11 @@ class Message:
     # Battle Messages
     @staticmethod
     def battle_hud_message(
-        player_party_instance: PlayerParty, enemy_party_instance: EnemyParty
+        player_party_instance: PlayerParty, 
+        enemy_party_instance: EnemyParty
     ) -> None:
-        if not isinstance(player_party_instance, PlayerParty):
-            raise ValueError(
-                "The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(
-                    type(player_party_instance).__name__
-                )
-            )
-        if not isinstance(enemy_party_instance, EnemyParty):
-            raise ValueError(
-                "The 'enemy_party_instance' parameter must be of type PlayerParty. Received type: {}".format(
-                    type(enemy_party_instance).__name__
-                )
-            )
+        ensure_type(player_party_instance, PlayerParty, "player_party_instance")
+        ensure_type(enemy_party_instance, EnemyParty, "enemy_party_instance")
 
         battle_hud_message = ""
 
@@ -165,6 +142,7 @@ class Message:
 
         __class__.display_message(flee_success_message, 1)
 
+    @staticmethod
     def special_encounter_message(
         progress_value: int, party_name: str, message_type: str
     ) -> None:
@@ -186,12 +164,7 @@ class Message:
     # Player Messages
     @staticmethod
     def post_game_recap(player_party_instance: PlayerParty) -> None:
-        if not isinstance(player_party_instance, PlayerParty):
-            raise ValueError(
-                "The 'player_party_instance' parameter must be of type PlayerParty. Received type: {}".format(
-                    type(player_party_instance).__name__
-                )
-            )
+        ensure_type(player_party_instance, PlayerParty, "player_party_instance")
 
         for player_instance in player_party_instance.members:
             player_report = f"""
