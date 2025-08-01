@@ -40,7 +40,7 @@ Takes a string and count then returns a list of count instances of string
 
 Most if not all functions also use a statement like the one below to ensure that the correct type of object is being passed to funcitons, while not mandatory it is encouraged. 
 ```python
-from utilites.utilities import ensure_type
+from utilites import ensure_type
 ensure_type(instance, expected_type, variable_name)
 
 ```

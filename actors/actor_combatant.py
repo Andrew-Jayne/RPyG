@@ -2,7 +2,7 @@ import random
 from typing import Generic, TypeVar, TYPE_CHECKING, cast
 
 from actors.actor_base import Actor, Party
-from utilites.utilities import ensure_type
+from utilites import ensure_type
 
 if TYPE_CHECKING:
     from actors import PlayerParty, EnemyParty

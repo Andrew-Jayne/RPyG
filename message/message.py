@@ -7,7 +7,7 @@ import config
 from actors import EnemyParty, PlayerParty
 from actors.actor_combatant import Combatant
 from actors.actor_playable import PlayableActor
-from utilites.utilities import ensure_type
+from utilites import ensure_type
 from content.content import STORY
 
 

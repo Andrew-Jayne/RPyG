@@ -9,13 +9,13 @@ from encounters.encounter_dungeon import Dungeon
 from gameState.file import save_game
 from interaction.interaction import Interaction
 from message.message import Message
-from utilites.utilities import ensure_type
+from utilites import ensure_type
 
 
 class SpecialEncounters:
     @staticmethod
-    def get_special_enemy(enemy_identifier) -> Enemy:
-        enemy_attributes = ENEMIES_SPECIAL[enemy_identifier]
+    def get_special_enemy(enemy_identifier: str) -> Enemy:
+        enemy_attributes: dict[str, object] = ENEMIES_SPECIAL[enemy_identifier]
 
         return Enemy(**enemy_attributes)
 

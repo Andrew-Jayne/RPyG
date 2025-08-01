@@ -4,7 +4,7 @@ from actors import PlayableActor, PlayerParty
 from content.content import ENCOUNTERS_STANDARD
 from interaction.interaction import Interaction
 from message.message import Message
-from utilites.utilities import ensure_type
+from utilites import ensure_type
 
 
 @staticmethod
@@ -24,7 +24,10 @@ def set_encounter_targets(
 
 
 @staticmethod
-def find_encounter_by_id(encounters_dict: dict, target_item_id: str) -> object:
+def find_encounter_by_id(
+    encounters_dict: dict[str, object],
+    target_item_id: str,
+) -> object:
     ensure_type(encounters_dict, dict, "encounters_dict")
     ensure_type(target_item_id, str, "target_item_id")
 
@@ -39,7 +42,8 @@ def find_encounter_by_id(encounters_dict: dict, target_item_id: str) -> object:
 
 @staticmethod
 def execute_actor_action(
-    event_object: dict, target_instance_list: list[PlayableActor]
+    event_object: dict[str, object],
+    target_instance_list: list[PlayableActor],
 ) -> None:
     ensure_type(event_object, dict, "event_object")
     ensure_type(target_instance_list, list, "target_instance_list")
@@ -70,7 +74,9 @@ def execute_actor_action(
 
 
 @staticmethod
-def execute_special_action(event_object: dict, player_party_instance: PlayerParty):
+def execute_special_action(
+    event_object: dict[str, object], player_party_instance: PlayerParty
+):
     ensure_type(event_object, dict, "event_object")
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
     match event_object["special_action"]:
@@ -84,7 +90,9 @@ def execute_special_action(event_object: dict, player_party_instance: PlayerPart
 
 @staticmethod
 def run_extra_actions(
-    event_object: object, player_party_instance: PlayerParty, encounter_objects: dict
+    event_object: object,
+    player_party_instance: PlayerParty,
+    encounter_objects: dict[str, object],
 ) -> None:
     ensure_type(event_object, object, "event_object")
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")

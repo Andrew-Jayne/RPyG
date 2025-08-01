@@ -2,7 +2,7 @@ import json
 import os
 from typing import Final, cast
 
-from utilites.utilities import ensure_type
+from utilites import ensure_type
 
 
 DUNGEONS_STANDARD_PATH = "content/dungeons/standard"
@@ -28,9 +28,8 @@ def load_content_files(dir_path: str) -> dict[str, object]:
         for file_name in files:
             if file_name.endswith(".json"):
                 file_path = os.path.join(root, file_name)
-                content_object: dict[str, object]
                 with open(file_path, "r") as file:
-                    content_object = json.load(file)
+                    content_object: dict[str, object] = json.load(file)
                     # Merge the content into the combined dictionary
                 combined_content.update(content_object)
 
@@ -53,10 +52,7 @@ def load_enemy_content(
         "medium_enemies": [],
         "large_enemies": [],
     }
-    print(type(typed_enemy_data))
     for item in typed_enemy_data.values():
-        print(type(item))
-        print(json.dumps(item))
         match item["weight_class"]:
             case "small":
                 processed_enemy_data["small_enemies"].append(item)
