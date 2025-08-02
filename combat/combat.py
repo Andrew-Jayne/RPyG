@@ -1,12 +1,11 @@
-from typing import Union, cast
-from actors import Enemy, EnemyParty, PlayableActor, PlayerParty, CombatantParty
+from actors import CombatantParty, Enemy, EnemyParty, PlayableActor, PlayerParty
 from gameState.file import save_game
 from interaction.interaction import Interaction
 from message.message import Message
 from utilites import ensure_type
 
 
-def is_party_alive(party_instance: Union[EnemyParty, PlayerParty]) -> bool:
+def is_party_alive(party_instance: CombatantParty) -> bool:
     ensure_type(party_instance, CombatantParty, "party_instance")
 
     if len(party_instance.members) <= 0:
@@ -15,20 +14,11 @@ def is_party_alive(party_instance: Union[EnemyParty, PlayerParty]) -> bool:
         return True
 
 
-def clear_dead_members(party_instance: Union[EnemyParty, PlayerParty]) -> None:
+def clear_dead_members(party_instance: CombatantParty) -> None:
     ensure_type(party_instance, CombatantParty, "party_instance")
-
-    if isinstance(party_instance, EnemyParty) is True:
-        enemy_party: EnemyParty = cast(EnemyParty, party_instance)
-        for member in enemy_party.members:
-            if member.health == 0:
-                enemy_party.lose_member(member)
-
-    if isinstance(party_instance, PlayerParty) is True:
-        player_party: PlayerParty = cast(PlayerParty, party_instance)
-        for member in player_party.members:
-            if member.health == 0:
-                player_party.lose_member(member)
+    for member in party_instance.members:
+        if member.health == 0:
+            party_instance.lose_member(member)
 
 
 def is_battle_complete(
