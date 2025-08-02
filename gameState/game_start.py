@@ -1,6 +1,6 @@
 import os
-import config
 
+import config
 from actors import PlayerParty
 from actors.actor_playable import PlayableActor
 from display import clear_display

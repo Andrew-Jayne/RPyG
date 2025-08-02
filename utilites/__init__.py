@@ -2,7 +2,7 @@ def ensure_type(
     instance: object,
     expected_type: type,
     variable_name: str,
-):
+) -> None:
     if isinstance(instance, expected_type) is False:
         raise ValueError(
             f"""

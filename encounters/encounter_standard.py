@@ -1,4 +1,5 @@
 import random
+from typing import Any
 
 from actors import PlayableActor, PlayerParty
 from content.content import ENCOUNTERS_STANDARD
@@ -42,7 +43,7 @@ def find_encounter_by_id(
 
 @staticmethod
 def execute_actor_action(
-    event_object: dict[str, object],
+    event_object: dict[str, Any],
     target_instance_list: list[PlayableActor],
 ) -> None:
     ensure_type(event_object, dict, "event_object")
@@ -90,18 +91,17 @@ def execute_special_action(
 
 @staticmethod
 def run_extra_actions(
-    event_object: object,
+    event_object: Any,
     player_party_instance: PlayerParty,
-    encounter_objects: dict[str, object],
+    encounter_objects: dict[str, Any],
 ) -> None:
-    ensure_type(event_object, object, "event_object")
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
     ensure_type(encounter_objects, dict, "encounter_objects_dict")
 
     # Run extra Actions if they exist
     if event_object["additional_events"] is not None:
         for event_id in event_object["additional_events"]:
-            new_event = find_encounter_by_id(encounter_objects, event_id)
+            new_event: dict = find_encounter_by_id(encounter_objects, event_id)
             targets = set_encounter_targets(new_event["targets"], player_party_instance)
             execute_actor_action(new_event, targets)
 
@@ -142,7 +142,7 @@ def standard_encounter(player_party_instance: PlayerParty) -> None:
                     Message.display_message(current_event["post_message"], 1)
                 case "ATTACK":
                     # if you attack you get attacked
-                    static_event = find_encounter_by_id(
+                    static_event: dict = find_encounter_by_id(
                         ENCOUNTERS_STANDARD, "surprise_attack"
                     )
                     execute_actor_action(static_event, targets)

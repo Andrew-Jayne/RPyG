@@ -1,3 +1,5 @@
+from typing import Any
+
 import config
 
 # Just for Type Checking
@@ -15,7 +17,7 @@ from utilites import ensure_type
 class SpecialEncounters:
     @staticmethod
     def get_special_enemy(enemy_identifier: str) -> Enemy:
-        enemy_attributes: dict[str, object] = ENEMIES_SPECIAL[enemy_identifier]
+        enemy_attributes: dict[str, Any] = ENEMIES_SPECIAL[enemy_identifier]
 
         return Enemy(**enemy_attributes)
 

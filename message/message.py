@@ -7,8 +7,8 @@ import config
 from actors import EnemyParty, PlayerParty
 from actors.actor_combatant import Combatant
 from actors.actor_playable import PlayableActor
-from utilites import ensure_type
 from content.content import STORY
+from utilites import ensure_type
 
 
 class Message:
@@ -154,6 +154,7 @@ class Message:
 
         current_event = all_events[str(progress_value)]
         for message in current_event[message_type]:
+            message: str
             formatted_message = message.format(party_name=party_name)
 
             __class__.display_message(formatted_message, 2)
