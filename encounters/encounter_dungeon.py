@@ -1,5 +1,6 @@
 import random
 import time
+from typing import Any
 
 import config
 from actors import Enemy, EnemyParty, PlayerParty
@@ -11,14 +12,14 @@ from utilites import ensure_type
 
 class Dungeon:
     name: str
-    messages: list[str]
+    messages: dict[str, str]
     length: int
-    enemies: list[EnemyParty]
-    boss: EnemyParty
+    enemies: list[dict]
+    boss: dict
 
-    def __init__(self, dungeon_attributes: dict) -> None:
+    def __init__(self, dungeon_attributes: dict[str, Any]) -> None:
         self.name = dungeon_attributes["name"]
-        self.messages = dict(dungeon_attributes["messages"])
+        self.messages = dungeon_attributes["messages"]
         self.length = dungeon_attributes["length"]
         self.enemies = dungeon_attributes["enemies"]
         self.boss = dungeon_attributes["boss"]
@@ -48,7 +49,7 @@ class Dungeon:
                     )
                     if enemy_count == 0:
                         enemy_count = 1
-                    chosen_enemy = random.choice(self.enemies)
+                    chosen_enemy: dict = random.choice(self.enemies)
                     enemy_party = generate_enemy_party(chosen_enemy, enemy_count)
                     Message.encounter_message(enemy_party.name)
                     battle(player_party_instance, enemy_party)
@@ -61,7 +62,7 @@ class Dungeon:
             Message.display_message(
                 "At the end of the Keep Your Party encounters Algolon's Arch Mage!", 1
             )
-            enemy_instance = Enemy(self.boss)
+            enemy_instance = Enemy(**self.boss)
             enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
             battle(player_party_instance, enemy_party)
             if len(player_party_instance.members) != 0:
@@ -78,3 +79,4 @@ class Dungeon:
                     "failure_messages",
                 )
                 return False
+        return False

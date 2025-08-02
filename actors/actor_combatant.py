@@ -1,5 +1,6 @@
 import random
-from typing import Generic, TypeVar, TYPE_CHECKING
+from typing import Generic, TypeVar
+
 from actors.actor_base import Actor, Party
 from utilites import ensure_type
 

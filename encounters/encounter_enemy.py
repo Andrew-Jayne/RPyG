@@ -15,9 +15,9 @@ def generate_enemy_party(enemy_party_attributes: dict, enemy_count: int) -> Enem
     ensure_type(enemy_count, int, "enemy_count")
 
     # Create Instances & Add to Instance List
-    enemy_party_instances = []
+    enemy_party_instances: list[Enemy] = []
     for _ in range(0, enemy_count):
-        variant_list = enemy_party_attributes["variant_lists"]
+        variant_list: dict = enemy_party_attributes["variant_lists"]
 
         variant_grade_index = random.randint(
             0, (len(list(variant_list.keys())) - 1)

@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Final
+from typing import Final, Any
 
 from utilites import ensure_type
 
@@ -17,11 +17,11 @@ ENEMIES_SPECIAL_PATH = "content/enemies/special"
 STORY_PATH = "content/story"
 
 
-def load_content_files(dir_path: str) -> dict[str, dict[str, object]]:
+def load_content_files(dir_path: str) -> dict[str, dict[str, Any]]:
     """
     Load all JSON files in the given directory and merge their contents into a single dictionary.
     """
-    combined_content: dict[str, dict[str, object]] = {}
+    combined_content: dict[str, dict[str, Any]] = {}
 
     # Walk through the directory and look for JSON files
     for root, _dirs, files in os.walk(dir_path):
@@ -29,7 +29,7 @@ def load_content_files(dir_path: str) -> dict[str, dict[str, object]]:
             if file_name.endswith(".json"):
                 file_path = os.path.join(root, file_name)
                 with open(file_path, "r") as file:
-                    content_object: dict[str, dict[str, object]] = json.load(file)
+                    content_object: dict[str, dict[str, Any]] = json.load(file)
                     # Merge the content into the combined dictionary
                 combined_content.update(content_object)
 
@@ -37,8 +37,8 @@ def load_content_files(dir_path: str) -> dict[str, dict[str, object]]:
 
 
 def load_enemy_content(
-    raw_enemy_data: dict[str, dict[str, object]],
-) -> dict[str, list[dict[str, object]]]:
+    raw_enemy_data: dict[str, dict[str, Any]],
+) -> dict[str, list[dict[str, Any]]]:
     # behold Run time safe dict loading (totaly easier than using a data class)
     ensure_type(raw_enemy_data, dict, "raw_enemy_data")
     for item_key in raw_enemy_data.keys():
@@ -46,7 +46,7 @@ def load_enemy_content(
     for item_value in raw_enemy_data.values():
         ensure_type(item_value, dict, "item_value")
 
-    processed_enemy_data: dict[str, list[dict[str, object]]] = {
+    processed_enemy_data: dict[str, list[dict[str, Any]]] = {
         "small_enemies": [],
         "medium_enemies": [],
         "large_enemies": [],
