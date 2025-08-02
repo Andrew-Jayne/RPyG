@@ -3,7 +3,7 @@ import random
 import config
 
 # Only Used For Type Hinting/Checking
-from actors import PlayableActor, PlayerParty, EnemyParty
+from actors import CombatantParty, PlayableActor, PlayerParty
 from message.message import Message
 from utilites import ensure_type
 
@@ -114,8 +114,8 @@ class Interaction:
         return response
 
     @staticmethod
-    def choose_combat_target(target_party_instance: EnemyParty) -> int:
-        ensure_type(target_party_instance, EnemyParty, "target_party_instance")
+    def choose_combat_target(target_party_instance: CombatantParty) -> int:
+        ensure_type(target_party_instance, CombatantParty, "target_party_instance")
         target_options: list[str]
         target_options = []
         match config.GLOBAL_GAME_MODE:
