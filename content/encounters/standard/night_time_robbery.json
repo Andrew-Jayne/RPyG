@@ -4,21 +4,21 @@
         "message": "",
         "pre_message": "Your Party finds a Small Refuge",
         "post_message": "They Make camp for the night",
-        "actor_action": "heal",
+        "actor_action": "HEAL",
         "special_action": null,
         "additional_events": [
             "night_time_robbery_1"
         ],
-        "targets": "all",
+        "targets": "ALL",
         "magnitude": 300
     },
     "night_time_robbery_1": {
         "encounter_type": "NONE",
         "message": "You awaken to discover that Gold has been stolen from your Party!",
-        "actor_action": "lose_gold",
+        "actor_action": "LOSE_GOLD",
         "special_action": null,
         "additional_events": null,
-        "targets": "all",
+        "targets": "ALL",
         "magnitude": 500
     }
 }
