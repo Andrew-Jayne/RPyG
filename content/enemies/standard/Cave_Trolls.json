@@ -3,7 +3,7 @@
         "pural_name": "Cave Trolls",
         "group_name": "Gang",
         "weight_class": "large",
-        "variant_lists_data":    {
+        "variant_lists_data": {
             "lesser_variants_data": [
                 {
                     "name": "Stunted Cave Troll",

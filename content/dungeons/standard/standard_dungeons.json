@@ -1,75 +1,74 @@
 {
-    "first_dungeon": {
-      "dungeon_name": "First Placeholder Dungeon",
-      "messages": {
-        "start_message": "First Dungeon Start Message",
-        "boss_enounter_message": "First Dungeon Boss Encounter Message",
-        "shortcut_message": "First Dungeon Shortcut Message",
-        "heal_room_message": "First Dungeon Heal Room Message"
-      },
-      "length": 10,
-      "enemies": [
-        {
-          "first_enemy": {
-            "name": "First Placeholder Enemy",
-            "health": 100,
-            "strength": 2,
-            "intellect": 3,
-            "agility": 2,
-            "luck": 1,
-            "attack_name": "First Placeholder Attack",
-            "is_special": false
-          }
-        }
-      ],
-      "boss": {
-        "first_boss": {
-          "name": "First Placeholder Boss",
-          "health": 300,
-          "strength": 5,
-          "intellect": 5,
-          "agility": 4,
-          "luck": 3,
-          "attack_name": "First Boss Attack",
-          "is_special": true
+  "first_dungeon": {
+    "dungeon_name": "First Placeholder Dungeon",
+    "messages": {
+      "start_message": "First Dungeon Start Message",
+      "boss_enounter_message": "First Dungeon Boss Encounter Message",
+      "shortcut_message": "First Dungeon Shortcut Message",
+      "heal_room_message": "First Dungeon Heal Room Message"
+    },
+    "length": 10,
+    "enemies": [
+      {
+        "first_enemy": {
+          "name": "First Placeholder Enemy",
+          "health": 100,
+          "strength": 2,
+          "intellect": 3,
+          "agility": 2,
+          "luck": 1,
+          "attack_name": "First Placeholder Attack",
+          "is_special": false
         }
       }
+    ],
+    "boss": {
+      "first_boss": {
+        "name": "First Placeholder Boss",
+        "health": 300,
+        "strength": 5,
+        "intellect": 5,
+        "agility": 4,
+        "luck": 3,
+        "attack_name": "First Boss Attack",
+        "is_special": true
+      }
+    }
+  },
+  "second_dungeon": {
+    "dungeon_name": "Second Placeholder Dungeon",
+    "messages": {
+      "start_message": "Second Dungeon Start Message",
+      "boss_enounter_message": "Second Dungeon Boss Encounter Message",
+      "shortcut_message": "Second Dungeon Shortcut Message",
+      "heal_room_message": "Second Dungeon Heal Room Message"
     },
-    "second_dungeon": {
-      "dungeon_name": "Second Placeholder Dungeon",
-      "messages": {
-        "start_message": "Second Dungeon Start Message",
-        "boss_enounter_message": "Second Dungeon Boss Encounter Message",
-        "shortcut_message": "Second Dungeon Shortcut Message",
-        "heal_room_message": "Second Dungeon Heal Room Message"
-      },
-      "length": 15,
-      "enemies": [
-        {
-          "second_enemy": {
-            "name": "Second Placeholder Enemy",
-            "health": 120,
-            "strength": 3,
-            "intellect": 4,
-            "agility": 3,
-            "luck": 2,
-            "attack_name": "Second Placeholder Attack",
-            "is_special": false
-          }
+    "length": 15,
+    "enemies": [
+      {
+        "second_enemy": {
+          "name": "Second Placeholder Enemy",
+          "health": 120,
+          "strength": 3,
+          "intellect": 4,
+          "agility": 3,
+          "luck": 2,
+          "attack_name": "Second Placeholder Attack",
+          "is_special": false
         }
-      ],
-      "boss": {
-        "second_boss": {
-          "name": "Second Placeholder Boss",
-          "health": 350,
-          "strength": 6,
-          "intellect": 6,
-          "agility": 5,
-          "luck": 4,
-          "attack_name": "Second Boss Attack",
-          "is_special": true
-        }
+      }
+    ],
+    "boss": {
+      "second_boss": {
+        "name": "Second Placeholder Boss",
+        "health": 350,
+        "strength": 6,
+        "intellect": 6,
+        "agility": 5,
+        "luck": 4,
+        "attack_name": "Second Boss Attack",
+        "is_special": true
       }
     }
   }
-  
+}
