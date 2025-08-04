@@ -3,6 +3,7 @@ import os
 from typing import Any, Final
 
 from content.enemy_library import EnemyLibrary
+from content.encounter_library import EncounterLibrary
 from utilites import ensure_type
 
 
@@ -61,14 +62,16 @@ def load_enemy_content(
             case "large":
                 processed_enemy_data["large_enemies_data"].append(item)
             case _:
-                raise ValueError(f"Got Invalid weight class {item["weight_class"]}")
+                raise ValueError(f"Got Invalid weight class {item.get('weight_class')}")
 
     return processed_enemy_data
 
 
 DUNGEONS_STANDARD: Final = load_content_files(DUNGEONS_STANDARD_PATH)
 DUNGEONS_SPECIAL: Final = load_content_files(DUNGEONS_SPECIAL_PATH)
-ENCOUNTERS_STANDARD: Final = load_content_files(ENCOUNTERS_STANDARD_PATH)
+ENCOUNTERS_STANDARD: Final[EncounterLibrary] = EncounterLibrary(
+    encounters_data=load_content_files(ENCOUNTERS_STANDARD_PATH)
+)
 ENCOUNTERS_SPECIAL: Final = load_content_files(ENCOUNTERS_SPECIAL_PATH)
 ENEMIES_STANDARD: Final[EnemyLibrary] = EnemyLibrary(
     **load_enemy_content(load_content_files(ENEMIES_STANDARD_PATH))

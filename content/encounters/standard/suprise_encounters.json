@@ -4,10 +4,10 @@
         "message": "",
         "pre_message": "Your party Encounters A Strange Figure!",
         "post_message": "The Figure blasts your party with an Arcane Bolt and vanishes into a Flash of Light!",
-        "actor_action": "damage",
+        "actor_action": "DAMAGE",
         "special_action": null,
         "additional_events": null,
-        "targets": "all",
+        "targets": "ALL",
         "magnitude": 30
     },
     "surprise_heal": {
@@ -15,10 +15,10 @@
         "message": "",
         "pre_message": "Your party Encounters A Strange Figure!",
         "post_message": "The Figure heals your party and vanishes into the darkness!",
-        "actor_action": "heal",
+        "actor_action": "HEAL",
         "special_action": null,
         "additional_events": null,
-        "targets": "all",
+        "targets": "ALL",
         "magnitude": 30
     },
     "surprise_chest": {
@@ -26,10 +26,10 @@
         "message": "",
         "pre_message": "Your party find a small treasure chest",
         "post_message": "Upon opening it reveals 100 gold",
-        "actor_action": "gain_gold",
+        "actor_action": "GAIN_GOLD",
         "special_action": null,
         "additional_events": null,
-        "targets": "all",
+        "targets": "ALL",
         "magnitude": 100
     },
     "surprise_bomb": {
@@ -37,10 +37,10 @@
         "message": "",
         "pre_message": "Your party find a small treasure chest",
         "post_message": "Upon opening an explosion is triggered and everyone is thrown backwards",
-        "actor_action": "damage",
+        "actor_action": "DAMAGE",
         "special_action": null,
         "additional_events": null,
-        "targets": "all",
+        "targets": "ALL",
         "magnitude": 150
     }
 }
