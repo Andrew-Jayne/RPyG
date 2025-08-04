@@ -3,8 +3,8 @@
         "pural_name": "Dire Wolves",
         "group_name": "Pack",
         "weight_class": "medium",
-        "variant_lists": {
-            "lesser_variants": [
+        "variant_lists_data": {
+            "lesser_variants_data": [
                 {
                     "name": "Young Dire Wolf",
                     "health": 75,
@@ -16,7 +16,7 @@
                     "is_special": false
                 }
             ],
-            "common_variants": [
+            "common_variants_data": [
                 {
                     "name": "Dire Wolf",
                     "health": 100,
@@ -28,7 +28,7 @@
                     "is_special": false
                 }
             ],
-            "greater_variants": [
+            "greater_variants_data": [
                 {
                     "name": "Alpha Dire Wolf",
                     "health": 150,

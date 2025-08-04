@@ -12,8 +12,8 @@
             {
                 "pural_name": "Acolytes of Algolon",
                 "group_name": "Cult",
-                "variant_lists": {
-                    "lesser_variants": [{
+                "variant_lists_data": {
+                    "lesser_variants_data": [{
                         "name": "Initiate of Algolon",
                         "health": 100,
                         "strength": 2,
@@ -23,7 +23,7 @@
                         "attack_name": "Weak Arcane Bolt",
                         "is_special": false
                     }],
-                    "common_variants": [{
+                    "common_variants_data": [{
                         "name": "Acolyte of Algolon",
                         "health": 140,
                         "strength": 3,
@@ -33,7 +33,7 @@
                         "attack_name": "Arcane Bolt",
                         "is_special": false
                     }],
-                    "greater_variants": [{
+                    "greater_variants_data": [{
                         "name": "High Acolyte of Algolon",
                         "health": 180,
                         "strength": 4,

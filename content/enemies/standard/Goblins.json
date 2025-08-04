@@ -3,8 +3,8 @@
         "pural_name": "Goblins",
         "group_name": "Horde",
         "weight_class": "small",
-        "variant_lists": {
-            "lesser_variants": [
+        "variant_lists_data": {
+            "lesser_variants_data": [
                 {
                     "name": "Goblin Runt",
                     "health": 90,
@@ -16,7 +16,7 @@
                     "is_special": false
                 }
             ],
-            "common_variants": [
+            "common_variants_data": [
                 {
                     "name": "Goblin",
                     "health": 120,
@@ -28,7 +28,7 @@
                     "is_special": false
                 }
             ],
-            "greater_variants": [
+            "greater_variants_data": [
                 {
                     "name": "Goblin Chief",
                     "health": 180,
