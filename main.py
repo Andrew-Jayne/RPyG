@@ -12,14 +12,12 @@ def main(game_mode: str, using_default_party: bool) -> None:
     # The Key Loop
     while player_party_instance.progress != 100:
         player_party_instance.progress += 1
-        if (
-            check_for_encounter(player_party_instance, rounds_without_encounter)
-            is False
-        ):
-            rounds_without_encounter += 1
-            Message.empty_travel_message(rounds_without_encounter)
-        else:
-            rounds_without_encounter = 1
+        match check_for_encounter(player_party_instance, rounds_without_encounter):
+            case True:
+                rounds_without_encounter = 1
+            case False:
+                rounds_without_encounter += 1
+                Message.empty_travel_message(rounds_without_encounter)
 
         if len(player_party_instance.members) == 0:
             break

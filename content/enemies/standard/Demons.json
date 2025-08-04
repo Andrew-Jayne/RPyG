@@ -3,8 +3,8 @@
         "pural_name": "Demons",
         "group_name": "Band",
         "weight_class": "medium",
-        "variant_lists": {
-            "lesser_variants": [
+        "variant_lists_data": {
+            "lesser_variants_data": [
                 {
                     "name": "Demon Fiendling",
                     "health": 90,
@@ -16,7 +16,7 @@
                     "is_special": false
                 }
             ],
-            "common_variants": [
+            "common_variants_data": [
                 {
                     "name": "Abyssal Demon",
                     "health": 130,
@@ -28,7 +28,7 @@
                     "is_special": false
                 }
             ],
-            "greater_variants": [
+            "greater_variants_data": [
                 {
                     "name": "Demon Archfiend",
                     "health": 180,

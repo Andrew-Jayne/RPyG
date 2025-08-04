@@ -1,7 +1,8 @@
 import json
 import os
-from typing import Final, Any
+from typing import Any, Final
 
+from content.enemy_library import EnemyLibrary
 from utilites import ensure_type
 
 
@@ -47,18 +48,18 @@ def load_enemy_content(
         ensure_type(item_value, dict, "item_value")
 
     processed_enemy_data: dict[str, list[dict[str, Any]]] = {
-        "small_enemies": [],
-        "medium_enemies": [],
-        "large_enemies": [],
+        "small_enemies_data": [],
+        "medium_enemies_data": [],
+        "large_enemies_data": [],
     }
     for item in raw_enemy_data.values():
         match item["weight_class"]:
             case "small":
-                processed_enemy_data["small_enemies"].append(item)
+                processed_enemy_data["small_enemies_data"].append(item)
             case "medium":
-                processed_enemy_data["medium_enemies"].append(item)
+                processed_enemy_data["medium_enemies_data"].append(item)
             case "large":
-                processed_enemy_data["large_enemies"].append(item)
+                processed_enemy_data["large_enemies_data"].append(item)
             case _:
                 raise ValueError(f"Got Invalid weight class {item["weight_class"]}")
 
@@ -69,6 +70,8 @@ DUNGEONS_STANDARD: Final = load_content_files(DUNGEONS_STANDARD_PATH)
 DUNGEONS_SPECIAL: Final = load_content_files(DUNGEONS_SPECIAL_PATH)
 ENCOUNTERS_STANDARD: Final = load_content_files(ENCOUNTERS_STANDARD_PATH)
 ENCOUNTERS_SPECIAL: Final = load_content_files(ENCOUNTERS_SPECIAL_PATH)
-ENEMIES_STANDARD: Final = load_enemy_content(load_content_files(ENEMIES_STANDARD_PATH))
+ENEMIES_STANDARD: Final[EnemyLibrary] = EnemyLibrary(
+    **load_enemy_content(load_content_files(ENEMIES_STANDARD_PATH))
+)
 ENEMIES_SPECIAL: Final = load_content_files(ENEMIES_SPECIAL_PATH)
 STORY: Final = load_content_files(STORY_PATH)

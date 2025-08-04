@@ -5,69 +5,62 @@ from actors import EnemyParty, PlayerParty
 from actors.actor_enemy import Enemy
 from combat import battle
 from content.content import ENEMIES_STANDARD
+from content.enemy_library import EnemySet
 from interaction.interaction import Interaction
 from message.message import Message
 from utilites import ensure_type
 
 
-def generate_enemy_party(enemy_party_attributes: dict, enemy_count: int) -> EnemyParty:
-    ensure_type(enemy_party_attributes, dict, "enemy_party_attributes")
+def generate_enemy_party(enemy_set: EnemySet, enemy_count: int) -> EnemyParty:
+    ensure_type(enemy_set, EnemySet, "enemy_party_attributes")
     ensure_type(enemy_count, int, "enemy_count")
 
     # Create Instances & Add to Instance List
     enemy_party_instances: list[Enemy] = []
     for _ in range(0, enemy_count):
-        variant_list: dict = enemy_party_attributes["variant_lists"]
+        variant_lists: list[list[Enemy]] = [
+            enemy_set.variant_lists.lesser_variants,
+            enemy_set.variant_lists.common_variants,
+            enemy_set.variant_lists.greater_variants,
+        ]
 
-        variant_grade_index = random.randint(
-            0, (len(list(variant_list.keys())) - 1)
-        )  # set the index of the key
-        variant_grade = list(variant_list.keys())[variant_grade_index]
+        active_variant_list: list[Enemy] = random.choice(variant_lists)
 
-        variant_choice_index = random.randint(
-            0, (len(enemy_party_attributes["variant_lists"][variant_grade]) - 1)
-        )
+        variant_choice: Enemy = random.choice(active_variant_list)
 
-        enemy_party_instances.append(
-            Enemy(
-                **enemy_party_attributes["variant_lists"][variant_grade][
-                    variant_choice_index
-                ]
-            )
-        )
-
+        enemy_party_instances.append(variant_choice)
     if enemy_count == 1:
         enemy_party_name = f"Lone {enemy_party_instances[0].name}"
     else:
-        enemy_party_name = f"{enemy_party_attributes['group_name']} of {enemy_count} {enemy_party_attributes['pural_name']}"
+        enemy_party_name = (
+            f"{enemy_set.group_name} of {enemy_count} {enemy_set.pural_name}"
+        )
 
     return EnemyParty(enemy_party_name, enemy_party_instances)
 
 
 def enemy_encounter(player_party_instance: PlayerParty) -> None:
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
-    enemy_party_attributes = {}
+    enemy_set: EnemySet
 
-    enemy_chance = random.randint(0, 4)
-    if enemy_chance == 6:
-        raise ValueError("Random gave unexpected value for 'enemy chance'")
-
-    # Select Enemy Type From options
-    elif enemy_chance == 0 or enemy_chance == 1:
-        enemy_party_attributes = random.choice(ENEMIES_STANDARD["small_enemies"])
-
-    elif enemy_chance == 2 or enemy_chance == 3:
-        enemy_party_attributes = random.choice(ENEMIES_STANDARD["medium_enemies"])
-
-    elif enemy_chance == 4:
-        enemy_party_attributes = random.choice(ENEMIES_STANDARD["large_enemies"])
+    match random.randint(0, 4):
+        case 0 | 1:
+            enemy_set = random.choice(ENEMIES_STANDARD.small_enemies)
+        case 2 | 3:
+            enemy_set = random.choice(ENEMIES_STANDARD.medium_enemies)
+        case 4:
+            enemy_set = random.choice(ENEMIES_STANDARD.large_enemies)
+        case _:
+            raise ValueError(
+                "Comsic Bit Flip, has occured and `random.randint(0, 4)` has returned something it shoudn't"
+            )
 
     # Set Enemy Count
-    enemy_count = int(len(player_party_instance.members) + random.randint(-2, 2))
+    enemy_count = len(player_party_instance.members) + random.randint(-2, 2)
     if enemy_count <= 0:
         enemy_count = 1
 
-    enemy_party = generate_enemy_party(enemy_party_attributes, enemy_count)
+    enemy_party = generate_enemy_party(enemy_set, enemy_count)
 
     Message.encounter_message(enemy_party.name)
     match Interaction.encounter_enemy():
