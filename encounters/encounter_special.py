@@ -6,7 +6,6 @@ import config
 from actors import EnemyParty, PlayerParty
 from actors.actor_enemy import Enemy
 from combat import battle
-from content.content import DUNGEONS, ENEMIES
 from encounters.encounter_dungeon import Dungeon
 from gameState.file import save_game
 from interaction.interaction import Interaction
@@ -14,18 +13,22 @@ from message.message import Message
 from utilites import ensure_type
 
 
+# TODO, make this not a pile of static method, or otherwise de-stupid-ify this module
+
+
 class SpecialEncounters:
     @staticmethod
     def get_special_enemy(enemy_identifier: str) -> Enemy:
-        from content.enemy_library import EnemyLibrary
+        from content import ContentLibrary
+
+        content_library: ContentLibrary = ContentLibrary.get_library()
 
         ensure_type(enemy_identifier, str, "enemy_identifier")
-        ensure_type(ENEMIES, EnemyLibrary, "ENEMIES")
-        if enemy_identifier not in ENEMIES.special_enemies.keys():
+        if enemy_identifier not in content_library.special_enemies.keys():
             raise FileNotFoundError(
                 f"Unable to locate Enemy with ID: {enemy_identifier}"
             )
-        return ENEMIES.special_enemies[enemy_identifier]
+        return content_library.special_enemies[enemy_identifier]
 
     @staticmethod
     def tavern_notice(player_party_instance: PlayerParty) -> None:
@@ -79,14 +82,17 @@ class SpecialEncounters:
 
     @staticmethod
     def enemy_keep_visit(player_party_instance: PlayerParty) -> None:
+        from content import ContentLibrary
+
+        content_library: ContentLibrary = ContentLibrary.get_library()
         Message.special_encounter_message(
             player_party_instance.progress, player_party_instance.name, "messages"
         )
-        if "algolons_fortress" not in DUNGEONS.special_dungeons.keys():
+        if "algolons_fortress" not in content_library.special_dungeons.keys():
             raise FileNotFoundError(
-                f"Unable to locate Dungeon with the ID algolons_fortress, avalible IDs are {DUNGEONS.special_dungeons.keys()}"
+                f"Unable to locate Dungeon with the ID algolons_fortress, avalible IDs are {content_library.special_dungeons.keys()}"
             )
-        active_dungeon: Dungeon = DUNGEONS.special_dungeons["algolons_fortress"]
+        active_dungeon: Dungeon = content_library.special_dungeons["algolons_fortress"]
         active_dungeon.travese_dungeon(player_party_instance)
 
     @staticmethod

@@ -7,7 +7,6 @@ import config
 from actors import EnemyParty, PlayerParty
 from actors.actor_combatant import Combatant
 from actors.actor_playable import PlayableActor
-from content.content import STORY
 from utilites import ensure_type
 
 
@@ -143,16 +142,22 @@ class Message:
 
     @staticmethod
     def special_encounter_message(
-        progress_value: int, party_name: str, message_type: str
+        progress_value: int,
+        party_name: str,
+        message_type: str,
     ) -> None:
+        from content import ContentLibrary
+
+        content_library: ContentLibrary = ContentLibrary.get_library()
+
         if message_type not in ["messages", "success_messages", "failure_messages"]:
             raise ValueError(
                 'Message type must be one of ["messages", "success_messages", "failure_messages"]'
             )
 
-        all_events = STORY["progress_events"]
+        all_events = content_library.story_events
 
-        current_event = all_events[str(progress_value)]
+        current_event = all_events[progress_value]
         for message in current_event[message_type]:
             message: str
             formatted_message = message.format(party_name=party_name)

@@ -3,7 +3,7 @@ import random
 # Only for Type Checking / Hinting
 from actors import PlayerParty
 from combat import battle
-from content.content import ENEMIES
+from content import ContentLibrary
 from content.enemy_library import EnemySet
 from interaction.interaction import Interaction
 from message.message import Message
@@ -14,20 +14,21 @@ def enemy_encounter(player_party_instance: PlayerParty) -> None:
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
     enemy_set: EnemySet
     enemy_count: int
+    content_library: ContentLibrary = ContentLibrary.get_library()
 
     match random.randint(0, 4):
         case 0 | 1:
-            enemy_set = random.choice(ENEMIES.small_enemies)
+            enemy_set = random.choice(content_library.small_enemies)
             enemy_count = len(player_party_instance.members) + random.randint(-1, 3)
         case 2 | 3:
-            enemy_set = random.choice(ENEMIES.medium_enemies)
+            enemy_set = random.choice(content_library.medium_enemies)
             enemy_count = len(player_party_instance.members) + random.randint(-2, 2)
         case 4:
-            enemy_set = random.choice(ENEMIES.large_enemies)
+            enemy_set = random.choice(content_library.large_enemies)
             enemy_count = len(player_party_instance.members) + random.randint(-2, 1)
         case _:
             raise ValueError(
-                "Comsic Bit Flip, has occured and `random.randint(0, 4)` has returned something it shouldn't"
+                "Comsic Bit Flip has occured and `random.randint(0, 4)` has returned something it shouldn't"
             )
 
     # Set Enemy Count

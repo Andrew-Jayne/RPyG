@@ -98,7 +98,6 @@ class Encounter:
 
 
 class EncounterLibrary:
-    __slots__: tuple = ("standard_encounters", "special_encounters")
     standard_encounters: dict[str, Encounter]
     special_encounters: dict[str, Encounter]
 

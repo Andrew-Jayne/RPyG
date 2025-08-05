@@ -1,7 +1,7 @@
 import random
 
 from actors import PlayableActor, PlayerParty
-from content.content import ENCOUNTERS
+from content import ContentLibrary
 from content.encounter_library import (
     ActorAction,
     Encounter,
@@ -117,8 +117,9 @@ def run_extra_actions(
 @staticmethod
 def standard_encounter(player_party_instance: PlayerParty) -> None:
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
+    content_library: ContentLibrary = ContentLibrary.get_library()
 
-    current_event = random.choice(list(ENCOUNTERS.standard_encounters.values()))
+    current_event = random.choice(list(content_library.standard_encounters.values()))
 
     targets = set_encounter_targets(current_event.targets, player_party_instance)
 
@@ -127,7 +128,11 @@ def standard_encounter(player_party_instance: PlayerParty) -> None:
             Message.display_message(current_event.pre_message, 1)
             if Interaction.confirm_rest() is True:
                 execute_actor_action(current_event, targets)
-                run_extra_actions(current_event, player_party_instance, ENCOUNTERS)
+                run_extra_actions(
+                    current_event,
+                    player_party_instance,
+                    content_library.standard_encounters,
+                )
                 Message.display_message(current_event.post_message, 1)
             else:
                 Message.display_message("They Travel onwards", 1)
@@ -141,19 +146,19 @@ def standard_encounter(player_party_instance: PlayerParty) -> None:
                     run_extra_actions(
                         current_event,
                         player_party_instance,
-                        ENCOUNTERS,
+                        content_library.standard_encounters,
                     )
                     Message.display_message(current_event.post_message, 1)
                 case "ATTACK":
                     # if you attack you get attacked
                     static_event: Encounter = find_encounter_by_id(
-                        ENCOUNTERS, "surprise_attack"
+                        content_library.standard_encounters, "surprise_attack"
                     )
                     execute_actor_action(static_event, targets)
                     run_extra_actions(
                         current_event,
                         player_party_instance,
-                        ENCOUNTERS,
+                        content_library.standard_encounters,
                     )
                     Message.display_message(static_event.post_message, 1)
                 case _:
@@ -167,7 +172,7 @@ def standard_encounter(player_party_instance: PlayerParty) -> None:
                     run_extra_actions(
                         current_event,
                         player_party_instance,
-                        ENCOUNTERS,
+                        content_library.standard_encounters,
                     )
                     Message.display_message(current_event.post_message, 1)
                 case "LEAVE":
