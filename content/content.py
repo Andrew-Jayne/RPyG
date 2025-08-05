@@ -1,5 +1,6 @@
 import json
 import os
+import tomllib
 from dataclasses import dataclass
 from typing import Any, Self
 
@@ -8,6 +9,32 @@ from content.encounter_library import EncounterLibrary
 from content.enemy_library import EnemyLibrary
 from content.story_library import StoryLibrary
 from utilites import ensure_type
+
+
+def _unflatten_dict(flat_dict: dict[str, Any]) -> dict[str, Any]:
+    """Convert a dict with dotted keys into a properly nested dict."""
+    result = {}
+
+    for key, value in flat_dict.items():
+        # Split flattened key at "." into a list of str
+        parts = key.split('.')
+        # Copy global result dict into the loop scope
+        current = result
+
+        # Navigate/create the nested structure
+        # iterate through all parent keys of the target (-1) and make sure they exist
+        for part in parts[:-1]:
+            # if key_id not in current_object, create an emtpy dict at that value
+            if part not in current:
+                current[part] = {}
+            # cd into the dict to the value of part
+            current = current[part]
+
+        # Set the final value now that we have created the object and navigated to it.
+        current[parts[-1]] = value
+
+    return result
+    # TOML is human freindly and I don't want to write a yaml parser
 
 
 @dataclass
@@ -60,20 +87,32 @@ class ContentLibrary(
         # Walk through the directory and look for JSON files
         for root, _dirs, files in os.walk(dir_path):
             for file_name in files:
-                if file_name.endswith(".json"):
-                    file_path = os.path.join(root, file_name)
-                    with open(file_path, "r") as file:
-                        content_object: dict[str, dict[str, Any]] = json.load(file)
-                        # Merge the content into the combined dictionary
-                        conflicts = set(content_object.keys()).intersection(
-                            set(combined_content.keys())
-                        )
-                    if conflicts == set():
-                        combined_content.update(content_object)
-                    else:
-                        raise ValueError(
-                            f"Duplicate Key Declaration found while processing {file_path} conflicting keys {conflicts}"
-                        )
+                file_path = os.path.join(root, file_name)
+                file_extension = os.path.splitext(file_path)[1]
+                content_object: dict[str, dict[str, Any]] = {}
+                match file_extension:
+                    case ".json":
+                        with open(file_path, "r") as json_file:
+                            content_object: dict[str, dict[str, Any]] = json.load(
+                                json_file
+                            )
+                    case ".toml":
+                        with open(file_path, "rb") as toml_file:
+                            content_object: dict[str, dict[str, Any]] = _unflatten_dict(
+                                tomllib.load(toml_file)
+                            )
+                    case _:
+                        pass
+
+                conflicts = set(content_object.keys()).intersection(
+                    set(combined_content.keys())
+                )
+                if conflicts == set():
+                    combined_content.update(content_object)
+                else:
+                    raise ValueError(
+                        f"Duplicate Key Declaration found while processing {file_path} conflicting keys {conflicts}"
+                    )
 
         return combined_content
 
@@ -118,10 +157,9 @@ class ContentLibrary(
         Gateway style function to access the content library as a global singleton, you should not store the instance when init-ing
         Rather use this funciton to inject access at the lowest needed scope
         """
-        if cls._instance._initialized is True:
+        if cls._instance is not None:
             return cls._instance
         else:
-            print(cls._instance._initialized)
             raise RuntimeError(
                 "Attempted to access ContentLibrary before initialization has completed"
             )

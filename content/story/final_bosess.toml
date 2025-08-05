@@ -1,0 +1,29 @@
+["99"]
+messages = [
+  "You arrive at the summit of Godsblood Peak, and find Algolon engulfed in a typhoon of magical energy!",
+  "Could it be? Has the ritual begun alone!? you begin combat at once!"
+]
+success_messages = [
+  "Algolon lays defeated, but the typhoon of magical energy does not subside.",
+  "Rather it grows in power and from the eye of this storm emerges a great black figure."
+]
+failure_messages = [
+  "Finally succumbing to the black magic of Algolon, A gaping maw is torn in the world betwixt {party_name} and Algolon",
+  "Their limp bodies fall into the cold abyss, tumbling through the cold infinite nothingness of this rift between world",
+  "As the rift snaps shut a burning red firestorm engulfs the world beyond..."
+]
+
+["100"]
+messages = [
+  "It is him, Fortranus the Ancient One. His form grows giant and black the massive beast bellows and releases waves of fire from its great gaping maw, its burning orange eyes lock on to your party. From deep within its massive chest you hear it bellow.",
+  "Mortals, embrace the end of this world and submit to me, and I shall make your end swift and painless.",
+  "You Begin battle with the beast..."
+]
+success_messages = [
+  "The great beast collapses onto the ground, brought to near death by {party_name}, as it lays, ragged breaths spew forth small wisps of smoke, you position yourselves to make the killing blow.",
+  "A crack of blinding light engulfs your party and the body of the great dragon evaporates into a great stone skeleton as cold as the as the snow that begins to fall upon it."
+]
+failure_messages = [
+  "{party_name} lays defeated, their smoldering corpses lay motionless on the swirl of ash & snow, as the great wings of the ancient dragon carry into the skys.",
+  "A dark cloud follows in his wake, little do the inhabitants of this world know they have seen their last sunrise..."
+]

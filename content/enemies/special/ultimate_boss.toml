@@ -1,0 +1,9 @@
+[ultimate_boss]
+name = "Fortranus the Ancient One"
+health = 1000
+strength = 14
+intellect = 10
+agility = 7
+luck = 6
+attack_name = "Dragon Fire"
+is_special = true

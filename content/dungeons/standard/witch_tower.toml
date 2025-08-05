@@ -1,0 +1,68 @@
+[witch_tower]
+dungeon_name = "Witch's Tower"
+length = 7
+
+[witch_tower.messages]
+start_message = "The party finds a stone tower with a pulsing green light eminating from the top"
+boss_encounter_message = """
+You find Valerica the High preistess a top the tower. 
+The green light is eminating from her as you move forward the light turns blood red and her body evaporates. 
+When she stood a hulking Demonic Figure Roars as a storm gathers around the tower
+"""
+shortcut_message = "The party Find a secret passage!"
+heal_room_message = "The party finds a alchemy lab with food & potions!"
+
+[[witch_tower.enemies]]
+plural_name = "Valerica's Minions"
+group_name = "Coven"
+weight_class = "SPECIAL"
+
+[[witch_tower.enemies.variant_lists_data.lesser_variants_data]]
+name = "Appretice Witch"
+health = 100
+strength = 2
+intellect = 6
+agility = 3
+luck = 4
+attack_name = "Ice Spear"
+is_special = false
+
+[[witch_tower.enemies.variant_lists_data.lesser_variants_data]]
+name = "Servant"
+health = 60
+strength = 3
+intellect = 3
+agility = 3
+luck = 3
+attack_name = "Punch"
+is_special = false
+
+[[witch_tower.enemies.variant_lists_data.common_variants_data]]
+name = "Valerica"
+health = 140
+strength = 3
+intellect = 7
+agility = 4
+luck = 6
+attack_name = "Fire Storm"
+is_special = false
+
+[[witch_tower.enemies.variant_lists_data.greater_variants_data]]
+name = "Ascended Valerica"
+health = 180
+strength = 4
+intellect = 9
+agility = 5
+luck = 8
+attack_name = "Lighing Storm"
+is_special = false
+
+[witch_tower.boss]
+name = "Thunder Demon Lord"
+health = 350
+strength = 8
+intellect = 10
+agility = 7
+luck = 2
+attack_name = "Lighting Strike"
+is_special = true

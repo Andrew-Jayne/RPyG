@@ -1,0 +1,34 @@
+["Ice_Drakes"]
+plural_name = "Ice Drakes"
+group_name = "Clan"
+weight_class = "LARGE"
+
+[["Ice_Drakes.variant_lists_data.lesser_variants_data"]]
+name = "Juvenile Ice Drake"
+health = 175
+strength = 7
+intellect = 5
+agility = 6
+luck = 8
+attack_name = "Blizzard Breath"
+is_special = false
+
+[["Ice_Drakes.variant_lists_data.common_variants_data"]]
+name = "Ice Drake"
+health = 250
+strength = 8
+intellect = 6
+agility = 6
+luck = 8
+attack_name = "Blizzard Breath"
+is_special = false
+
+[["Ice_Drakes.variant_lists_data.greater_variants_data"]]
+name = "Ice Drake Matriarch"
+health = 325
+strength = 9
+intellect = 7
+agility = 6
+luck = 8
+attack_name = "Blizzard Breath"
+is_special = false

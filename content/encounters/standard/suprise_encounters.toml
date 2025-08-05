@@ -1,0 +1,43 @@
+[surprise_attack]
+encounter_type = "MYSTERY"
+message = ""
+pre_message = "Your party Encounters A Strange Figure!"
+post_message = "The Figure blasts your party with an Arcane Bolt and vanishes into a Flash of Light!"
+actor_action = "DAMAGE"
+# special_action is None
+# additional_events is None
+targets = "ALL"
+magnitude = 30
+
+[surprise_heal]
+encounter_type = "MYSTERY"
+message = ""
+pre_message = "Your party Encounters A Strange Figure!"
+post_message = "The Figure heals your party and vanishes into the darkness!"
+actor_action = "HEAL"
+# special_action is None
+# additional_events is None
+targets = "ALL"
+magnitude = 30
+
+[surprise_chest]
+encounter_type = "LOOT"
+message = ""
+pre_message = "Your party find a small treasure chest"
+post_message = "Upon opening it reveals 100 gold"
+actor_action = "GAIN_GOLD"
+# special_action is None
+# additional_events is None
+targets = "ALL"
+magnitude = 100
+
+[surprise_bomb]
+encounter_type = "LOOT"
+message = ""
+pre_message = "Your party find a small treasure chest"
+post_message = "Upon opening an explosion is triggered and everyone is thrown backwards"
+actor_action = "DAMAGE"
+# special_action is None
+# additional_events is None
+targets = "ALL"
+magnitude = 150

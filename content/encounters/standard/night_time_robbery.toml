@@ -1,0 +1,19 @@
+[night_time_robbery_0]
+encounter_type = "REST"
+# message is None
+pre_message = "Your Party finds a Small Refuge"
+post_message = "They Make camp for the night"
+actor_action = "HEAL"
+# special_action is None
+additional_events = ["night_time_robbery_1"]
+targets = "ALL"
+magnitude = 300
+
+[night_time_robbery_1]
+encounter_type = "NONE"
+message = "You awaken to discover that Gold has been stolen from your Party!"
+actor_action = "LOSE_GOLD"
+# special_action is None
+additional_events = []
+targets = "ALL"
+magnitude = 500
