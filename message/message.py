@@ -158,9 +158,7 @@ class Message:
 
         content_library: ContentLibrary = ContentLibrary.get_library()
 
-        all_events = content_library.story_events
-
-        current_event = all_events[progress_value]
+        current_event = content_library.story_events[progress_value]
         match message_type:
             case "messages":
                 for message in current_event.messages:
