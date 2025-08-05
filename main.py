@@ -48,11 +48,12 @@ def main(game_mode: str, using_default_party: bool) -> None:
         if len(player_party_instance.members) == 0:
             break
 
-    if len(player_party_instance.members) == 0:
-        Message.game_over_message(player_party_instance)
-
-    else:
+    if player_party_instance.members != []:
         Message.post_game_recap(player_party_instance)
+
+    # [] means all players are in the dead_members list, this is like... 5% safer than len() == 0 because it is looking at the list as a list rather than a property of it against an int
+    else:
+        Message.game_over_message(player_party_instance)
 
 
 # Main Function Wrapper to Accept and Pass Args

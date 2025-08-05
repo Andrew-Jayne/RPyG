@@ -23,14 +23,8 @@
       "Rumors say that outside the town of Debina on the wizard Cobolus, a known collaborator of Algolon has been sighted.",
       "The king asks this great task of {party_name}, go forth and find Cobolus, attempt to ascertain the whereabouts of Algolon and where he plans to carry out this ritual."
     ],
-    "success_messages": [
-      "str1",
-      "str2"
-    ],
-    "failure_messages": [
-      "str1",
-      "str2"
-    ]
+    "success_messages": [],
+    "failure_messages": []
   },
   "50": {
     "messages": [
@@ -82,7 +76,7 @@
     ],
     "success_messages": [
       "The great beast collapses onto the ground, brought to near death by {party_name}, as it lays, ragged breaths spew forth small wisps of smoke, you position yourselves to make the killing blow.",
-      "A crack of blinding light engulfs your party and the body of the great dragon evaporates into not more than a great stone skeleton as cold as the as the snow that begins to fall upon it."
+      "A crack of blinding light engulfs your party and the body of the great dragon evaporates into a great stone skeleton as cold as the as the snow that begins to fall upon it."
     ],
     "failure_messages": [
       "{party_name} lays defeated, their smoldering corpses lay motionless on the swirl of ash & snow, as the great wings of the ancient dragon carry into the skys.",
