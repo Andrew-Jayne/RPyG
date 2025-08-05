@@ -2,8 +2,9 @@ import json
 import os
 from typing import Any, Final
 
-from content.enemy_library import EnemyLibrary
+from content.dungeon_library import DungeonLibrary
 from content.encounter_library import EncounterLibrary
+from content.enemy_library import EnemyLibrary
 from utilites import ensure_type
 
 
@@ -23,6 +24,7 @@ def load_content_files(dir_path: str) -> dict[str, dict[str, Any]]:
     """
     Load all JSON files in the given directory and merge their contents into a single dictionary.
     """
+    ensure_type(dir_path, str, "dir_path")
     combined_content: dict[str, dict[str, Any]] = {}
 
     # Walk through the directory and look for JSON files
@@ -38,43 +40,20 @@ def load_content_files(dir_path: str) -> dict[str, dict[str, Any]]:
     return combined_content
 
 
-def load_enemy_content(
-    raw_enemy_data: dict[str, dict[str, Any]],
-) -> dict[str, list[dict[str, Any]]]:
-    # behold Run time safe dict loading (totaly easier than using a data class)
-    ensure_type(raw_enemy_data, dict, "raw_enemy_data")
-    for item_key in raw_enemy_data.keys():
-        ensure_type(item_key, str, "item_key")
-    for item_value in raw_enemy_data.values():
-        ensure_type(item_value, dict, "item_value")
-
-    processed_enemy_data: dict[str, list[dict[str, Any]]] = {
-        "small_enemies_data": [],
-        "medium_enemies_data": [],
-        "large_enemies_data": [],
-    }
-    for item in raw_enemy_data.values():
-        match item["weight_class"]:
-            case "small":
-                processed_enemy_data["small_enemies_data"].append(item)
-            case "medium":
-                processed_enemy_data["medium_enemies_data"].append(item)
-            case "large":
-                processed_enemy_data["large_enemies_data"].append(item)
-            case _:
-                raise ValueError(f"Got Invalid weight class {item.get('weight_class')}")
-
-    return processed_enemy_data
-
-
-DUNGEONS_STANDARD: Final = load_content_files(DUNGEONS_STANDARD_PATH)
-DUNGEONS_SPECIAL: Final = load_content_files(DUNGEONS_SPECIAL_PATH)
-ENCOUNTERS_STANDARD: Final[EncounterLibrary] = EncounterLibrary(
-    encounters_data=load_content_files(ENCOUNTERS_STANDARD_PATH)
+DUNGEONS = ""
+ENCOUTNERS = ""
+ENEMIES: Final[EnemyLibrary] = EnemyLibrary(
+    special_enemies_data=load_content_files(ENEMIES_SPECIAL_PATH),
+    standard_enemies_data=load_content_files(ENEMIES_STANDARD_PATH),
 )
-ENCOUNTERS_SPECIAL: Final = load_content_files(ENCOUNTERS_SPECIAL_PATH)
-ENEMIES_STANDARD: Final[EnemyLibrary] = EnemyLibrary(
-    **load_enemy_content(load_content_files(ENEMIES_STANDARD_PATH))
+ENCOUNTERS: Final[EncounterLibrary] = EncounterLibrary(
+    standard_encounters_data=load_content_files(ENCOUNTERS_STANDARD_PATH),
+    special_encounters_data=load_content_files(ENCOUNTERS_SPECIAL_PATH),
 )
-ENEMIES_SPECIAL: Final = load_content_files(ENEMIES_SPECIAL_PATH)
+
+DUNGEONS: Final[DungeonLibrary] = DungeonLibrary(
+    standard_dungeons_data=load_content_files(DUNGEONS_STANDARD_PATH),
+    special_dungeons_data=load_content_files(DUNGEONS_SPECIAL_PATH),
+)
+
 STORY: Final = load_content_files(STORY_PATH)

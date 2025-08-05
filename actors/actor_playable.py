@@ -91,7 +91,7 @@ class PlayableActor(Combatant):
             intellect=intellect,
             agility=agility,
             luck=luck,
-            health=100 + ((strength + intellect) * 10),
+            health=1000 + ((strength + intellect) * 10),
             attack_name=PlayableActor._get_attack_name(specialization),
             attack_power=PlayableActor._get_attack_power(
                 specialization, strength, intellect, agility

@@ -1,7 +1,7 @@
 import random
 
 from actors import PlayableActor, PlayerParty
-from content.content import ENCOUNTERS_STANDARD
+from content.content import ENCOUNTERS
 from content.encounter_library import (
     ActorAction,
     Encounter,
@@ -36,11 +36,11 @@ def find_encounter_by_id(
     encounter_library: EncounterLibrary,
     target_item_id: str,
 ) -> Encounter:
-    ensure_type(encounter_library, EncounterLibrary, "encounters_library")
+    ensure_type(encounter_library, EncounterLibrary, "encounter_library")
     ensure_type(target_item_id, str, "target_item_id")
 
     # Directly access the event by its ID
-    found_item = encounter_library.encounters.get(target_item_id)
+    found_item = encounter_library.standard_encounters.get(target_item_id)
     if found_item is None:
         raise FileNotFoundError(
             f"Error: Unable to find an event with the ID {target_item_id}"
@@ -118,7 +118,7 @@ def run_extra_actions(
 def standard_encounter(player_party_instance: PlayerParty) -> None:
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
 
-    current_event = random.choice(list(ENCOUNTERS_STANDARD.encounters.values()))
+    current_event = random.choice(list(ENCOUNTERS.standard_encounters.values()))
 
     targets = set_encounter_targets(current_event.targets, player_party_instance)
 
@@ -127,9 +127,7 @@ def standard_encounter(player_party_instance: PlayerParty) -> None:
             Message.display_message(current_event.pre_message, 1)
             if Interaction.confirm_rest() is True:
                 execute_actor_action(current_event, targets)
-                run_extra_actions(
-                    current_event, player_party_instance, ENCOUNTERS_STANDARD
-                )
+                run_extra_actions(current_event, player_party_instance, ENCOUNTERS)
                 Message.display_message(current_event.post_message, 1)
             else:
                 Message.display_message("They Travel onwards", 1)
@@ -141,17 +139,21 @@ def standard_encounter(player_party_instance: PlayerParty) -> None:
                 case "GREET":
                     execute_actor_action(current_event, targets)
                     run_extra_actions(
-                        current_event, player_party_instance, ENCOUNTERS_STANDARD
+                        current_event,
+                        player_party_instance,
+                        ENCOUNTERS,
                     )
                     Message.display_message(current_event.post_message, 1)
                 case "ATTACK":
                     # if you attack you get attacked
                     static_event: Encounter = find_encounter_by_id(
-                        ENCOUNTERS_STANDARD, "surprise_attack"
+                        ENCOUNTERS, "surprise_attack"
                     )
                     execute_actor_action(static_event, targets)
                     run_extra_actions(
-                        current_event, player_party_instance, ENCOUNTERS_STANDARD
+                        current_event,
+                        player_party_instance,
+                        ENCOUNTERS,
                     )
                     Message.display_message(static_event.post_message, 1)
                 case _:
@@ -165,7 +167,7 @@ def standard_encounter(player_party_instance: PlayerParty) -> None:
                     run_extra_actions(
                         current_event,
                         player_party_instance,
-                        ENCOUNTERS_STANDARD,
+                        ENCOUNTERS,
                     )
                     Message.display_message(current_event.post_message, 1)
                 case "LEAVE":

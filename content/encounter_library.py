@@ -98,13 +98,29 @@ class Encounter:
 
 
 class EncounterLibrary:
-    encounters: dict[str, Encounter]
+    __slots__: tuple = ("standard_encounters", "special_encounters")
+    standard_encounters: dict[str, Encounter]
+    special_encounters: dict[str, Encounter]
 
-    def __init__(self, encounters_data: dict[str, Any]) -> None:
-        ensure_type(encounters_data, dict, "encoutner_data")
+    @staticmethod
+    def create_encounter_instances(
+        encounter_data: dict[str, Any],
+    ) -> dict[str, Encounter]:
+        ensure_type(encounter_data, dict, "encounter_data")
         encounters: dict[str, Encounter] = {}
-        for encounter_key in encounters_data.keys():
+        for encounter_key in encounter_data.keys():
             ensure_type(encounter_key, str, "encounter_key")
-            encounters[encounter_key] = Encounter(**encounters_data[encounter_key])
+            encounters[encounter_key] = Encounter(**encounter_data[encounter_key])
+        return encounters
 
-        self.encounters = encounters
+    def __init__(
+        self,
+        standard_encounters_data: dict[str, Any],
+        special_encounters_data: dict[str, Any],
+    ) -> None:
+        self.standard_encounters = EncounterLibrary.create_encounter_instances(
+            standard_encounters_data
+        )
+        self.special_encounters = EncounterLibrary.create_encounter_instances(
+            special_encounters_data
+        )

@@ -1,8 +1,8 @@
 {
     "Goblins": {
-        "pural_name": "Goblins",
+        "plural_name": "Goblins",
         "group_name": "Horde",
-        "weight_class": "small",
+        "weight_class": "SMALL",
         "variant_lists_data": {
             "lesser_variants_data": [
                 {

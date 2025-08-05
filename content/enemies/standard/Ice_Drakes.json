@@ -1,8 +1,8 @@
 {
     "Ice Drakes": {
-        "pural_name": "Ice Drakes",
+        "plural_name": "Ice Drakes",
         "group_name": "Clan",
-        "weight_class": "large",
+        "weight_class": "LARGE",
         "variant_lists_data": {
             "lesser_variants_data": [
                 {
