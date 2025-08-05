@@ -141,30 +141,40 @@ class Message:
         __class__.display_message(flee_success_message, 1)
 
     @staticmethod
+    # TODO This function gives me the ick, and sucks
     def special_encounter_message(
         progress_value: int,
         party_name: str,
         message_type: str,
     ) -> None:
-        from content import ContentLibrary
-
-        content_library: ContentLibrary = ContentLibrary.get_library()
-
-        if message_type not in ["messages", "success_messages", "failure_messages"]:
-            raise ValueError(
-                'Message type must be one of ["messages", "success_messages", "failure_messages"]'
-            )
-
-        all_events = content_library.story_events
-
-        current_event = all_events[progress_value]
-        for message in current_event[message_type]:
-            message: str
+        def show_message(message: str) -> None:
             formatted_message = message.format(party_name=party_name)
 
             __class__.display_message(formatted_message, 2)
             if config.GLOBAL_GAME_MODE == "MANUAL":
                 time.sleep(2)
+
+        from content import ContentLibrary
+
+        content_library: ContentLibrary = ContentLibrary.get_library()
+
+        all_events = content_library.story_events
+
+        current_event = all_events[progress_value]
+        match message_type:
+            case "messages":
+                for message in current_event.messages:
+                    show_message(message)
+            case "success_messages":
+                for message in current_event.success_messages:
+                    show_message(message)
+            case "failure_messages":
+                for message in current_event.failure_messages:
+                    show_message(message)
+            case _:
+                raise ValueError(
+                    'Message type must be one of ["messages", "success_messages", "failure_messages"]'
+                )
 
     # Player Messages
     @staticmethod
