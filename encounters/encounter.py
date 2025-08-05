@@ -9,6 +9,9 @@ from message.message import Message
 from utilites import ensure_type
 
 
+## TODO, this needs some work, but the whole story system is due for updates so it's fine for now
+
+
 def check_for_encounter(
     player_party_instance: PlayerParty, empty_distance: int
 ) -> bool:

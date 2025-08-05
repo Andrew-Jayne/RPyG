@@ -18,7 +18,7 @@ from utilites import ensure_type
 @staticmethod
 def set_encounter_targets(
     current_event_targets: EncounterTarget, player_party_instance: PlayerParty
-):
+) -> list[PlayableActor]:
     ensure_type(current_event_targets, EncounterTarget, "current_event_targets")
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
 
@@ -33,14 +33,15 @@ def set_encounter_targets(
 
 @staticmethod
 def find_encounter_by_id(
-    encounter_library: EncounterLibrary,
     target_item_id: str,
 ) -> Encounter:
-    ensure_type(encounter_library, EncounterLibrary, "encounter_library")
     ensure_type(target_item_id, str, "target_item_id")
+    from content import ContentLibrary
+
+    content_library: ContentLibrary = ContentLibrary.get_library()
 
     # Directly access the event by its ID
-    found_item = encounter_library.standard_encounters.get(target_item_id)
+    found_item = content_library.standard_encounters.get(target_item_id)
     if found_item is None:
         raise FileNotFoundError(
             f"Error: Unable to find an event with the ID {target_item_id}"
@@ -59,7 +60,8 @@ def execute_actor_action(
         ensure_type(actor, PlayableActor, "actor")
 
     magnitude = int(encounter.magnitude / len(target_instance_list))
-    Message.display_message(encounter.message, 1)
+    if encounter.message is not None:
+        Message.display_message(encounter.message, 1)
 
     for target in target_instance_list:
         match encounter.actor_action:
@@ -96,16 +98,13 @@ def execute_special_action(encounter: Encounter, player_party_instance: PlayerPa
 def run_extra_actions(
     encounter: Encounter,
     player_party_instance: PlayerParty,
-    encounter_library: EncounterLibrary,
 ) -> None:
     ensure_type(encounter, Encounter, "encounter")
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
-    ensure_type(encounter_library, EncounterLibrary, "encounter_library")
-
     # Run extra Actions if they exist
     if encounter.additional_events is not None:
         for event_id in encounter.additional_events:
-            new_event: Encounter = find_encounter_by_id(encounter_library, event_id)
+            new_event: Encounter = find_encounter_by_id(event_id)
             targets = set_encounter_targets(new_event.targets, player_party_instance)
             execute_actor_action(new_event, targets)
 
@@ -125,56 +124,56 @@ def standard_encounter(player_party_instance: PlayerParty) -> None:
 
     match current_event.encounter_type:
         case EncounterType.REST:
-            Message.display_message(current_event.pre_message, 1)
+            if current_event.pre_message is not None:
+                Message.display_message(current_event.pre_message, 1)
             if Interaction.confirm_rest() is True:
                 execute_actor_action(current_event, targets)
                 run_extra_actions(
                     current_event,
                     player_party_instance,
-                    content_library.standard_encounters,
                 )
-                Message.display_message(current_event.post_message, 1)
+                if current_event.post_message is not None:
+                    Message.display_message(current_event.post_message, 1)
             else:
                 Message.display_message("They Travel onwards", 1)
 
         case EncounterType.MYSTERY:
             # this is pretty brittle right now, can be reworked later
-            Message.display_message(current_event.pre_message, 1)
+            if current_event.pre_message is not None:
+                Message.display_message(current_event.pre_message, 1)
             match Interaction.mystery_action():
                 case "GREET":
                     execute_actor_action(current_event, targets)
                     run_extra_actions(
                         current_event,
                         player_party_instance,
-                        content_library.standard_encounters,
                     )
-                    Message.display_message(current_event.post_message, 1)
+                    if current_event.post_message is not None:
+                        Message.display_message(current_event.post_message, 1)
                 case "ATTACK":
                     # if you attack you get attacked
-                    static_event: Encounter = find_encounter_by_id(
-                        content_library.standard_encounters, "surprise_attack"
-                    )
+                    static_event: Encounter = find_encounter_by_id("surprise_attack")
                     execute_actor_action(static_event, targets)
                     run_extra_actions(
                         current_event,
                         player_party_instance,
-                        content_library.standard_encounters,
                     )
                     Message.display_message(static_event.post_message, 1)
                 case _:
                     raise ValueError("Null Action Set MonkaS")
 
         case EncounterType.LOOT:
-            Message.display_message(current_event.pre_message, 1)
+            if current_event.pre_message is not None:
+                Message.display_message(current_event.pre_message, 1)
             match Interaction.loot_action():
                 case "OPEN":
                     execute_actor_action(current_event, targets)
                     run_extra_actions(
                         current_event,
                         player_party_instance,
-                        content_library.standard_encounters,
                     )
-                    Message.display_message(current_event.post_message, 1)
+                    if current_event.post_message is not None:
+                        Message.display_message(current_event.post_message, 1)
                 case "LEAVE":
                     Message.display_message("You leave the chest undisturbed", 1)
                 case _:

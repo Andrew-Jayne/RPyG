@@ -25,7 +25,7 @@ def main(game_mode: str, using_default_party: bool) -> None:
             special_dungeons_path=DUNGEONS_SPECIAL_PATH,
             standard_dungeons_path=DUNGEONS_STANDARD_PATH,
             special_encounters_path=ENCOUNTERS_SPECIAL_PATH,
-            standard_encounters_path=ENCOUNTERS_SPECIAL_PATH,
+            standard_encounters_path=ENCOUNTERS_STANDARD_PATH,
             special_enemies_path=ENEMIES_SPECIAL_PATH,
             standard_enemies_path=ENEMIES_STANDARD_PATH,
             story_path=STORY_PATH,
