@@ -1,8 +1,8 @@
 {
     "Demons": {
-        "pural_name": "Demons",
+        "plural_name": "Demons",
         "group_name": "Band",
-        "weight_class": "medium",
+        "weight_class": "MEDIUM",
         "variant_lists_data": {
             "lesser_variants_data": [
                 {

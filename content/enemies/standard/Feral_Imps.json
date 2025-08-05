@@ -1,8 +1,8 @@
 {
     "Feral Imps": {
-        "pural_name": "Feral Imps",
+        "plural_name": "Feral Imps",
         "group_name": "Mischief",
-        "weight_class": "small",
+        "weight_class": "SMALL",
         "variant_lists_data": {
             "lesser_variants_data": [
                 {

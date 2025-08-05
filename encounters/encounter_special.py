@@ -6,7 +6,7 @@ import config
 from actors import EnemyParty, PlayerParty
 from actors.actor_enemy import Enemy
 from combat import battle
-from content.content import DUNGEONS_SPECIAL, ENEMIES_SPECIAL
+from content.content import DUNGEONS, ENEMIES
 from encounters.encounter_dungeon import Dungeon
 from gameState.file import save_game
 from interaction.interaction import Interaction
@@ -17,9 +17,15 @@ from utilites import ensure_type
 class SpecialEncounters:
     @staticmethod
     def get_special_enemy(enemy_identifier: str) -> Enemy:
-        enemy_attributes: dict[str, Any] = ENEMIES_SPECIAL[enemy_identifier]
+        from content.enemy_library import EnemyLibrary
 
-        return Enemy(**enemy_attributes)
+        ensure_type(enemy_identifier, str, "enemy_identifier")
+        ensure_type(ENEMIES, EnemyLibrary, "ENEMIES")
+        if enemy_identifier not in ENEMIES.special_enemies.keys():
+            raise FileNotFoundError(
+                f"Unable to locate Enemy with ID: {enemy_identifier}"
+            )
+        return ENEMIES.special_enemies[enemy_identifier]
 
     @staticmethod
     def tavern_notice(player_party_instance: PlayerParty) -> None:
@@ -52,7 +58,7 @@ class SpecialEncounters:
     def midway_boss(player_party_instance: PlayerParty) -> None:
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
 
-        enemy_instance = __class__.get_special_enemy("midway_boss")
+        enemy_instance = SpecialEncounters.get_special_enemy("midway_boss")
         Message.special_encounter_message(
             player_party_instance.progress, player_party_instance.name, "messages"
         )
@@ -76,15 +82,18 @@ class SpecialEncounters:
         Message.special_encounter_message(
             player_party_instance.progress, player_party_instance.name, "messages"
         )
-        dungeon_attributes = DUNGEONS_SPECIAL["algolons_fortess"]
-        active_dungeon = Dungeon(dungeon_attributes)
+        if "algolons_fortress" not in DUNGEONS.special_dungeons.keys():
+            raise FileNotFoundError(
+                f"Unable to locate Dungeon with the ID algolons_fortress, avalible IDs are {DUNGEONS.special_dungeons.keys()}"
+            )
+        active_dungeon: Dungeon = DUNGEONS.special_dungeons["algolons_fortress"]
         active_dungeon.travese_dungeon(player_party_instance)
 
     @staticmethod
     def penultimate_boss(player_party_instance: PlayerParty) -> None:
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
 
-        enemy_instance = __class__.get_special_enemy("penultimate_boss")
+        enemy_instance = SpecialEncounters.get_special_enemy("penultimate_boss")
         Message.display_message(f"Your Party Battles {enemy_instance.name}!", 1)
         enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
         battle(player_party_instance, enemy_party)
@@ -105,7 +114,7 @@ class SpecialEncounters:
     def final_boss(player_party_instance: PlayerParty) -> None:
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
 
-        enemy_instance = __class__.get_special_enemy("ultimate_boss")
+        enemy_instance = SpecialEncounters.get_special_enemy("ultimate_boss")
         Message.display_message(f"Your Party must now battle {enemy_instance.name}!", 1)
         enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
         battle(player_party_instance, enemy_party)

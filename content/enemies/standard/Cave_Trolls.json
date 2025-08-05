@@ -1,8 +1,8 @@
 {
     "Cave Trolls": {
-        "pural_name": "Cave Trolls",
+        "plural_name": "Cave Trolls",
         "group_name": "Gang",
-        "weight_class": "large",
+        "weight_class": "LARGE",
         "variant_lists_data": {
             "lesser_variants_data": [
                 {
