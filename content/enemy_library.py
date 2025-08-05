@@ -167,7 +167,7 @@ class EnemyLibrary:
 
     def __init__(
         self,
-        standard_enemies_data: dict[str, list[dict[str, Any]]],
+        standard_enemies_data: dict[str, Any],
         special_enemies_data: dict[str, Any],
     ) -> None:
         ensure_type(special_enemies_data, dict, "special_enemies_data")

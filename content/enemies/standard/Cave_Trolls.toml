@@ -1,0 +1,34 @@
+["Cave_Trolls"]
+plural_name = "Cave Trolls"
+group_name = "Gang"
+weight_class = "LARGE"
+
+[["Cave_Trolls.variant_lists_data.lesser_variants_data"]]
+name = "Stunted Cave Troll"
+health = 200
+strength = 10
+intellect = 1
+agility = 1
+luck = 2
+attack_name = "Club Smash"
+is_special = false
+
+[["Cave_Trolls.variant_lists_data.common_variants_data"]]
+name = "Cave Troll"
+health = 275
+strength = 10
+intellect = 1
+agility = 1
+luck = 2
+attack_name = "Club Smash"
+is_special = false
+
+[["Cave_Trolls.variant_lists_data.greater_variants_data"]]
+name = "Cave Troll Chief"
+health = 375
+strength = 10
+intellect = 1
+agility = 1
+luck = 2
+attack_name = "Club Smash"
+is_special = false
