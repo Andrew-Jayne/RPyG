@@ -110,12 +110,6 @@ class EnemySet:
 
 
 class EnemyLibrary:
-    __slots__: tuple = (
-        "small_enemies",
-        "medium_enemies",
-        "large_enemies",
-        "special_enemies",
-    )
     small_enemies: list[EnemySet]
     medium_enemies: list[EnemySet]
     large_enemies: list[EnemySet]

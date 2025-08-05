@@ -1,10 +1,36 @@
 from argparse import ArgumentParser
 
 
+DUNGEONS_STANDARD_PATH = "content/dungeons/standard"
+DUNGEONS_SPECIAL_PATH = "content/dungeons/special"
+
+ENCOUNTERS_STANDARD_PATH = "content/encounters/standard"
+ENCOUNTERS_SPECIAL_PATH = "content/encounters/special"
+
+ENEMIES_STANDARD_PATH = "content/enemies/standard"
+ENEMIES_SPECIAL_PATH = "content/enemies/special"
+
+STORY_PATH = "content/story"
+
+
 def main(game_mode: str, using_default_party: bool) -> None:
+    from content import ContentLibrary, ContentPaths
     from encounters.encounter import check_for_encounter
     from gameState.game_start import start_game
     from message.message import Message
+
+    # Launch Content Library, accessed via gateway patern in consuming modules
+    ContentLibrary(
+        ContentPaths(
+            special_dungeons_path=DUNGEONS_SPECIAL_PATH,
+            standard_dungeons_path=DUNGEONS_STANDARD_PATH,
+            special_encounters_path=ENCOUNTERS_SPECIAL_PATH,
+            standard_encounters_path=ENCOUNTERS_SPECIAL_PATH,
+            special_enemies_path=ENEMIES_SPECIAL_PATH,
+            standard_enemies_path=ENEMIES_STANDARD_PATH,
+            story_path=STORY_PATH,
+        )
+    )
 
     player_party_instance = start_game(game_mode, using_default_party)
 
