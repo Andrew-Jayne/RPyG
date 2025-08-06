@@ -1,11 +1,10 @@
 import random
 
-import config
+from RPyG.actors import CombatantParty, PlayableActor, PlayerParty
 
 # Only Used For Type Hinting/Checking
-from actors import CombatantParty, PlayableActor, PlayerParty
-from message.message import Message
-from utilites import ensure_type
+from RPyG.message.message import Message
+from RPyG.utilites import ensure_type
 
 
 # Interaction Function Guidelines
@@ -118,7 +117,10 @@ class Interaction:
         ensure_type(target_party_instance, CombatantParty, "target_party_instance")
         target_options: list[str]
         target_options = []
-        match config.GLOBAL_GAME_MODE:
+        from RPyG.config import Config
+
+        config = Config.get_config()
+        match config.global_game_mode:
             case "AUTO":
                 # need to move this up stream later and/or merge interaction inside playable actor pepeW
                 return target_party_instance.members[0].select_combat_target(
@@ -142,7 +144,10 @@ class Interaction:
 
     @staticmethod
     def encounter_enemy() -> str:
-        match config.GLOBAL_GAME_MODE:
+        from RPyG.config import Config
+
+        config = Config.get_config()
+        match config.global_game_mode:
             case "AUTO":
                 chosen_action = random.choice(["FLEE", "ATTACK"])
                 return chosen_action
@@ -156,8 +161,11 @@ class Interaction:
     @staticmethod
     def post_battle(player_party_instance: PlayerParty) -> str:
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
+        from RPyG.config import Config
 
-        match config.GLOBAL_GAME_MODE:
+        config = Config.get_config()
+
+        match config.global_game_mode:
             case "AUTO":
                 for player_instance in player_party_instance.members:
                     if (
@@ -177,8 +185,11 @@ class Interaction:
     @staticmethod
     def in_battle(player_instance: PlayableActor) -> str:
         ensure_type(player_instance, PlayableActor, "player_instance")
+        from RPyG.config import Config
 
-        match config.GLOBAL_GAME_MODE:
+        config = Config.get_config()
+
+        match config.global_game_mode:
             case "AUTO":
                 if (
                     player_instance.health <= 40
@@ -230,9 +241,12 @@ class Interaction:
         import math
 
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
+        from RPyG.config import Config
+
+        config = Config.get_config()
 
         Message.display_message("You arrive at a merchant", 1)
-        match config.GLOBAL_GAME_MODE:
+        match config.global_game_mode:
             case "AUTO":
                 # init Counts
                 player_count = 0
@@ -312,7 +326,10 @@ class Interaction:
 
     @staticmethod
     def confirm_rest() -> bool:
-        match config.GLOBAL_GAME_MODE:
+        from RPyG.config import Config
+
+        config = Config.get_config()
+        match config.global_game_mode:
             case "AUTO":
                 return random.choice([True, True, False])
             case "MANUAL":
@@ -329,7 +346,10 @@ class Interaction:
 
     @staticmethod
     def mystery_action() -> str:
-        match config.GLOBAL_GAME_MODE:
+        from RPyG.config import Config
+
+        config = Config.get_config()
+        match config.global_game_mode:
             case "AUTO":
                 return random.choice(["GREET", "GREET", "ATTACK"])
             case "MANUAL":
@@ -341,7 +361,10 @@ class Interaction:
 
     @staticmethod
     def loot_action() -> str:
-        match config.GLOBAL_GAME_MODE:
+        from RPyG.config import Config
+
+        config = Config.get_config()
+        match config.global_game_mode:
             case "AUTO":
                 return random.choice(["OPEN", "OPEN", "LEAVE"])
             case "MANUAL":
@@ -353,7 +376,10 @@ class Interaction:
 
     @staticmethod
     def embark() -> bool:
-        match config.GLOBAL_GAME_MODE:
+        from RPyG.config import Config
+
+        config = Config.get_config()
+        match config.global_game_mode:
             case "AUTO":
                 return True
             case "MANUAL":
@@ -385,7 +411,10 @@ class Interaction:
 
     @staticmethod
     def accept_quest() -> bool:
-        match config.GLOBAL_GAME_MODE:
+        from RPyG.config import Config
+
+        config = Config.get_config()
+        match config.global_game_mode:
             case "AUTO":
                 return True
             case "MANUAL":

@@ -1,12 +1,12 @@
 import os
 
-import config
-from actors import PlayerParty
-from actors.actor_playable import PlayableActor
-from display import clear_display
-from gameState.file import load_game
-from interaction.interaction import Interaction
-from message.message import Message
+from RPyG.actors import PlayerParty
+from RPyG.actors.actor_playable import PlayableActor
+from RPyG.config import Config
+from RPyG.display import clear_display
+from RPyG.gameState.file import load_game
+from RPyG.interaction.interaction import Interaction
+from RPyG.message.message import Message
 
 
 def welcome() -> None:
@@ -95,12 +95,13 @@ def default_party() -> list[PlayableActor]:
 
 def start_game(game_mode: str, using_default_party: bool) -> PlayerParty:
     welcome()
+    config = Config.get_config()
     match game_mode:
         case "AUTO":
-            config.GLOBAL_GAME_MODE = "AUTO"
+            config.global_game_mode = "AUTO"
             return PlayerParty(name="The Default Party", members=default_party())
         case "MANUAL":
-            config.GLOBAL_GAME_MODE = "MANUAL"
+            config.global_game_mode = "MANUAL"
             if using_default_party is True:
                 return PlayerParty(name="The Default Party", members=default_party())
             else:

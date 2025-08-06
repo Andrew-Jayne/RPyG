@@ -4,11 +4,11 @@ import tomllib
 from dataclasses import dataclass
 from typing import Any, Self
 
-from content.dungeon_library import DungeonLibrary
-from content.encounter_library import EncounterLibrary
-from content.enemy_library import EnemyLibrary
-from content.story_library import StoryLibrary
-from utilites import ensure_type
+from RPyG.content.dungeon_library import DungeonLibrary
+from RPyG.content.encounter_library import EncounterLibrary
+from RPyG.content.enemy_library import EnemyLibrary
+from RPyG.content.story_library import StoryLibrary
+from RPyG.utilites import ensure_type
 
 
 def _unflatten_dict(flat_dict: dict[str, Any]) -> dict[str, Any]:

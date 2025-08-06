@@ -1,8 +1,8 @@
 import random
 from typing import Generic, TypeVar
 
-from actors.actor_base import Actor, Party
-from utilites import ensure_type
+from RPyG.actors.actor_base import Actor, Party
+from RPyG.utilites import ensure_type
 
 
 class Combatant(Actor):
@@ -65,7 +65,7 @@ class Combatant(Actor):
     def damage(self, damage_amount: int) -> None:
         ensure_type(damage_amount, int, "damage_amount")
 
-        from message.message import Message
+        from RPyG.message.message import Message
 
         self.health -= damage_amount
         if self.health == 0:
@@ -78,7 +78,7 @@ class Combatant(Actor):
     def heal(self, heal_amount: int) -> None:
         ensure_type(heal_amount, int, "heal_amount")
 
-        from message.message import Message
+        from RPyG.message.message import Message
 
         self.health += heal_amount
         if self.health > self.base_health:
@@ -100,8 +100,8 @@ class Combatant(Actor):
         return random.randint(1, 100) <= (self.luck + self.agility)
 
     def attack(self, target_instance: "Combatant") -> None:
-        from actors import Combatant
-        from message.message import Message
+        from RPyG.actors import Combatant
+        from RPyG.message.message import Message
 
         ensure_type(target_instance, Combatant, "attacker_instance")
 
@@ -119,7 +119,7 @@ class Combatant(Actor):
             target_instance.damage(final_damage)
 
     def react(self) -> bool:
-        from actors import PlayableActor
+        from RPyG.actors import PlayableActor
 
         if isinstance(self, PlayableActor):
             match self.specialization:
@@ -135,8 +135,8 @@ class Combatant(Actor):
             return random.randint(1, 30) <= (self.luck + self.agility)
 
     def dismember_attack(self, target_instance: "Combatant") -> None:
-        from actors import Combatant, Enemy
-        from message.message import Message
+        from RPyG.actors import Combatant, Enemy
+        from RPyG.message.message import Message
 
         ensure_type(target_instance, Combatant, "attacker_instance")
 
@@ -174,8 +174,8 @@ class Combatant(Actor):
             Message.display_message(dismember_message, 2)
 
     def aoe_attack(self, target_party_instance: "CombatantParty") -> None:
-        from actors import CombatantParty
-        from message.message import Message
+        from RPyG.actors import CombatantParty
+        from RPyG.message.message import Message
 
         ensure_type(target_party_instance, CombatantParty, "target_party_instance")
 
@@ -209,8 +209,8 @@ class Combatant(Actor):
             Message.display_message(overwhelm_message, 1)
 
     def double_attack(self, target_party_instance: "CombatantParty") -> None:
-        from actors import CombatantParty
-        from message.message import Message
+        from RPyG.actors import CombatantParty
+        from RPyG.message.message import Message
 
         ensure_type(target_party_instance, CombatantParty, "target_party_instance")
 
@@ -279,8 +279,8 @@ class Combatant(Actor):
                 Message.display_message(caught_attack_message, 2)
 
     def special_attack(self, target_party_instance: "CombatantParty") -> None:
-        from actors import CombatantParty
-        from message.message import Message
+        from RPyG.actors import CombatantParty
+        from RPyG.message.message import Message
 
         ensure_type(target_party_instance, CombatantParty, "target_party_instance")
 
@@ -315,8 +315,8 @@ class Combatant(Actor):
         """
         Takes a full party instance, and returns the index of the target member in the members array/list as an int
         """
-        from actors import EnemyParty, PlayableActor
-        from interaction.interaction import Interaction
+        from RPyG.actors import EnemyParty, PlayableActor
+        from RPyG.interaction.interaction import Interaction
 
         ensure_type(target_party_instance, CombatantParty, "target_party_instance")
 

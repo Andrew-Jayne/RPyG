@@ -1,5 +1,5 @@
-from actors.actor_combatant import Combatant, CombatantParty
-from utilites import ensure_type
+from RPyG.actors.actor_combatant import Combatant, CombatantParty
+from RPyG.utilites import ensure_type
 
 
 class Enemy(Combatant):

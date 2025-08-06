@@ -1,16 +1,12 @@
-from typing import Any
-
-import config
-
 # Just for Type Checking
-from actors import EnemyParty, PlayerParty
-from actors.actor_enemy import Enemy
-from combat import battle
-from encounters.encounter_dungeon import Dungeon
-from gameState.file import save_game
-from interaction.interaction import Interaction
-from message.message import Message
-from utilites import ensure_type
+from RPyG.actors import Enemy, EnemyParty, PlayerParty
+from RPyG.combat import battle
+from RPyG.config import Config
+from RPyG.encounters.encounter_dungeon import Dungeon
+from RPyG.gameState.file import save_game
+from RPyG.interaction.interaction import Interaction
+from RPyG.message.message import Message
+from RPyG.utilites import ensure_type
 
 
 # TODO, make this not a pile of static method, or otherwise de-stupid-ify this module
@@ -19,7 +15,7 @@ from utilites import ensure_type
 class SpecialEncounters:
     @staticmethod
     def get_special_enemy(enemy_identifier: str) -> Enemy:
-        from content import ContentLibrary
+        from RPyG.content import ContentLibrary
 
         content_library: ContentLibrary = ContentLibrary.get_library()
 
@@ -82,7 +78,7 @@ class SpecialEncounters:
 
     @staticmethod
     def enemy_keep_visit(player_party_instance: PlayerParty) -> None:
-        from content import ContentLibrary
+        from RPyG.content import ContentLibrary
 
         content_library: ContentLibrary = ContentLibrary.get_library()
         Message.special_encounter_message(
@@ -138,5 +134,6 @@ Your adventure has been completed, you may start a new adventure if you so choos
 """
 
             Message.display_message(end_game_message, 2)
-            if config.GLOBAL_GAME_MODE == "MANUAL":
+            config = Config.get_config()
+            if config.global_game_mode == "MANUAL":
                 save_game(player_party_instance)

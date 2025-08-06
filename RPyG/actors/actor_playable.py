@@ -1,7 +1,7 @@
 import random
 
-from actors.actor_combatant import Combatant, CombatantParty
-from utilites import ensure_type
+from RPyG.actors.actor_combatant import Combatant, CombatantParty
+from RPyG.utilites import ensure_type
 
 
 class Inventory:
@@ -25,7 +25,7 @@ class Inventory:
         self.gold += amount
 
     def spend_gold(self, amount: int) -> bool:
-        from message.message import Message
+        from RPyG.message.message import Message
 
         if self.gold < amount:
             insufficient_gold_message = f"{self.actor_name} has insufficient gold"
@@ -36,7 +36,7 @@ class Inventory:
             return True
 
     def lose_gold(self, amount: int) -> None:
-        from message.message import Message
+        from RPyG.message.message import Message
 
         self.gold -= amount
         if self.gold < 0:
@@ -101,7 +101,7 @@ class PlayableActor(Combatant):
         )
 
     def use_potion(self) -> None:
-        from message.message import Message
+        from RPyG.message.message import Message
 
         if self.inventory.potions != 0 and not self.is_fully_healed():
             drink_potion_message = f"{self.name} drinks a potion"

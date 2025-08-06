@@ -1,18 +1,17 @@
 import random
 
-from actors import PlayableActor, PlayerParty
-from content import ContentLibrary
-from content.encounter_library import (
+from RPyG.actors import PlayableActor, PlayerParty
+from RPyG.content import ContentLibrary
+from RPyG.content.encounter_library import (
     ActorAction,
     Encounter,
-    EncounterLibrary,
     EncounterTarget,
     EncounterType,
     SpecialAction,
 )
-from interaction.interaction import Interaction
-from message.message import Message
-from utilites import ensure_type
+from RPyG.interaction.interaction import Interaction
+from RPyG.message.message import Message
+from RPyG.utilites import ensure_type
 
 
 @staticmethod
@@ -36,7 +35,7 @@ def find_encounter_by_id(
     target_item_id: str,
 ) -> Encounter:
     ensure_type(target_item_id, str, "target_item_id")
-    from content import ContentLibrary
+    from RPyG.content import ContentLibrary
 
     content_library: ContentLibrary = ContentLibrary.get_library()
 

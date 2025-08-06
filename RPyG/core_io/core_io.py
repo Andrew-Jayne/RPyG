@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Self
+from typing import Self
 
 
 class RPyGInterface(ABC):

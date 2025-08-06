@@ -1,13 +1,10 @@
 import textwrap
 import time
 
-import config
+from RPyG.actors import Combatant, EnemyParty, PlayableActor, PlayerParty
 
 # Only used for Type checking/Hinting
-from actors import EnemyParty, PlayerParty
-from actors.actor_combatant import Combatant
-from actors.actor_playable import PlayableActor
-from utilites import ensure_type
+from RPyG.utilites import ensure_type
 
 
 class Message:
@@ -56,9 +53,12 @@ class Message:
     @staticmethod
     def actor_attack_message(attacker_instance: Combatant, damage_value: int) -> None:
         ensure_type(attacker_instance, Combatant, "actor_instance")
+        from RPyG.config import Config
+
+        config = Config.get_config()
 
         if (
-            config.GLOBAL_GAME_MODE == "MANUAL"
+            config.global_game_mode == "MANUAL"
             and isinstance(attacker_instance, PlayableActor) is False
         ):
             time.sleep(2)
@@ -72,9 +72,12 @@ class Message:
         attacker_instance: Combatant, damage_value: int
     ) -> None:
         ensure_type(attacker_instance, Combatant, "actor_instance")
+        from RPyG.config import Config
+
+        config = Config.get_config()
 
         if (
-            config.GLOBAL_GAME_MODE == "MANUAL"
+            config.global_game_mode == "MANUAL"
             and isinstance(attacker_instance, PlayableActor) is False
         ):
             time.sleep(2)
@@ -126,8 +129,11 @@ class Message:
     @staticmethod
     def flee_failure_message(player_name: str, enemy_name: str) -> None:
         flee_failure_message = f"{player_name} has Failed to Escape the {enemy_name}!"
+        from RPyG.config import Config
 
-        if config.GLOBAL_GAME_MODE == "MANUAL":
+        config = Config.get_config()
+
+        if config.global_game_mode == "MANUAL":
             time.sleep(2)
 
         __class__.display_message(flee_failure_message, 1)
@@ -149,12 +155,15 @@ class Message:
     ) -> None:
         def show_message(message: str) -> None:
             formatted_message = message.format(party_name=party_name)
+            from RPyG.config import Config
+
+            config = Config.get_config()
 
             __class__.display_message(formatted_message, 2)
-            if config.GLOBAL_GAME_MODE == "MANUAL":
+            if config.global_game_mode == "MANUAL":
                 time.sleep(2)
 
-        from content import ContentLibrary
+        from RPyG.content import ContentLibrary
 
         content_library: ContentLibrary = ContentLibrary.get_library()
 
@@ -225,7 +234,10 @@ Player Attack Power: {player_instance.attack_power}
 
     @staticmethod
     def empty_travel_message(empty_distance: int) -> None:
-        if config.GLOBAL_GAME_MODE == "MANUAL":
+        from RPyG.config import Config
+
+        config = Config.get_config()
+        if config.global_game_mode == "MANUAL":
             time.sleep(2)
         empty_travel_message = f"{'.' * (empty_distance - 1)}"
 
