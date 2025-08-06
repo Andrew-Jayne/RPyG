@@ -1,5 +1,6 @@
 from enum import Enum
 from typing import Any
+from types import MappingProxyType
 
 from RPyG.utilites import ensure_type
 
@@ -31,7 +32,7 @@ class SpecialAction(Enum):
 
 
 class Encounter:
-    __slots__: tuple = (
+    __slots__ = (
         "encounter_type",
         "targets",
         "magnitude",
@@ -98,8 +99,8 @@ class Encounter:
 
 
 class EncounterLibrary:
-    standard_encounters: dict[str, Encounter]
-    special_encounters: dict[str, Encounter]
+    standard_encounters: MappingProxyType[str, Encounter]
+    special_encounters: MappingProxyType[str, Encounter]
 
     @staticmethod
     def create_encounter_instances(
@@ -117,9 +118,9 @@ class EncounterLibrary:
         standard_encounters_data: dict[str, Any],
         special_encounters_data: dict[str, Any],
     ) -> None:
-        self.standard_encounters = EncounterLibrary.create_encounter_instances(
-            standard_encounters_data
+        self.standard_encounters = MappingProxyType(
+            EncounterLibrary.create_encounter_instances(standard_encounters_data)
         )
-        self.special_encounters = EncounterLibrary.create_encounter_instances(
-            special_encounters_data
+        self.special_encounters = MappingProxyType(
+            EncounterLibrary.create_encounter_instances(special_encounters_data)
         )
