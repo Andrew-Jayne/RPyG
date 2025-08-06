@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 from typing import Literal
 
 import RPyG
-from interface.terminal_interface import BasicTerminalInterface
+from interfaces import BasicTerminalInterface
 
 
 DUNGEONS_STANDARD_PATH = "game_content/dungeons/standard"
