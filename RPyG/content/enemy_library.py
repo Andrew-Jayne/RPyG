@@ -2,8 +2,8 @@ import random
 from enum import Enum
 from typing import Any
 
-from actors import Enemy, EnemyParty
-from utilites import ensure_type
+from RPyG.actors import Enemy, EnemyParty
+from RPyG.utilites import ensure_type
 
 
 class EnemyVariantSet:
@@ -59,7 +59,7 @@ class EnemySet:
 
     @staticmethod
     def generate_enemy_party(enemy_set: "EnemySet", enemy_count: int) -> EnemyParty:
-        from content.enemy_library import EnemySet
+        from RPyG.content.enemy_library import EnemySet
 
         ensure_type(enemy_set, EnemySet, "enemy_party_attributes")
         ensure_type(enemy_count, int, "enemy_count")

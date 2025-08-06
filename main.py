@@ -6,7 +6,7 @@ from interfaces import BasicTerminalInterface
 
 
 DUNGEONS_STANDARD_PATH = "game_content/dungeons/standard"
-DUNGEONS_SPECIAL_PATH = "contgame_contentent/dungeons/special"
+DUNGEONS_SPECIAL_PATH = "game_content/dungeons/special"
 
 ENCOUNTERS_STANDARD_PATH = "game_content/encounters/standard"
 ENCOUNTERS_SPECIAL_PATH = "game_content/encounters/special"

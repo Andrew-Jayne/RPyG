@@ -2,11 +2,11 @@ import random
 import time
 from typing import Any
 
-import combat
-import config
-from actors import Enemy, EnemyParty, PlayerParty
-from content.enemy_library import EnemySet
-from utilites import ensure_type
+from RPyG import combat
+from RPyG.actors import Enemy, EnemyParty, PlayerParty
+from RPyG.config import Config
+from RPyG.content.enemy_library import EnemySet
+from RPyG.utilites import ensure_type
 
 
 class DungeonMessages:
@@ -74,7 +74,7 @@ class Dungeon:
         self.boss = Enemy(**boss)
 
     def travese_dungeon(self, player_party_instance: PlayerParty) -> bool:
-        from message.message import Message
+        from RPyG.message.message import Message
 
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
         dungeon_progress = 0
@@ -82,7 +82,8 @@ class Dungeon:
 
         while dungeon_progress < self.length:
             dungeon_progress += 1
-            if config.GLOBAL_GAME_MODE == "MANUAL":
+            config = Config.get_config()
+            if config.global_game_mode == "MANUAL":
                 time.sleep(2)
             encouter_chance = random.randint(0, 5)
             match encouter_chance:

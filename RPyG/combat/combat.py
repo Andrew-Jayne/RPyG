@@ -1,8 +1,8 @@
-from actors import CombatantParty, Enemy, EnemyParty, PlayableActor, PlayerParty
-from gameState.file import save_game
-from interaction.interaction import Interaction
-from message.message import Message
-from utilites import ensure_type
+from RPyG.actors import CombatantParty, Enemy, EnemyParty, PlayableActor, PlayerParty
+from RPyG.gameState.file import save_game
+from RPyG.interaction.interaction import Interaction
+from RPyG.message.message import Message
+from RPyG.utilites import ensure_type
 
 
 def is_party_alive(party_instance: CombatantParty) -> bool:

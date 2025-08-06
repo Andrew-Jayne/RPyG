@@ -1,13 +1,13 @@
 import random
 
 # Only for Type Checking / Hinting
-from actors import PlayerParty
-from combat import battle
-from content import ContentLibrary
-from content.enemy_library import EnemySet
-from interaction.interaction import Interaction
-from message.message import Message
-from utilites import ensure_type
+from RPyG.actors import PlayerParty
+from RPyG.combat import battle
+from RPyG.content import ContentLibrary
+from RPyG.content.enemy_library import EnemySet
+from RPyG.interaction.interaction import Interaction
+from RPyG.message.message import Message
+from RPyG.utilites import ensure_type
 
 
 def enemy_encounter(player_party_instance: PlayerParty) -> None:

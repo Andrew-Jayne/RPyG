@@ -1,7 +1,7 @@
 from typing import Any
 
-from encounters.encounter_dungeon import Dungeon
-from utilites import ensure_type
+from RPyG.encounters.encounter_dungeon import Dungeon
+from RPyG.utilites import ensure_type
 
 
 class DungeonLibrary:

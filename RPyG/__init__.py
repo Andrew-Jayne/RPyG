@@ -1,7 +1,7 @@
 from typing import Literal
 
-from content import ContentPaths
-from core_io import RPyGInterface
+from RPyG.content import ContentPaths
+from RPyG.core_io import RPyGInterface
 
 
 def launch_game(
@@ -10,14 +10,19 @@ def launch_game(
     content_paths: ContentPaths,
     interface: RPyGInterface,
 ) -> None:
-    from content import ContentLibrary
-    from core_io import CoreIO
-    from encounters.encounter import check_for_encounter
-    from gameState.game_start import start_game
-    from message.message import Message
+    from RPyG.config import Config
+    from RPyG.content import ContentLibrary
+    from RPyG.core_io import CoreIO
+    from RPyG.encounters.encounter import check_for_encounter
+    from RPyG.gameState.game_start import start_game
+    from RPyG.message.message import Message
 
     # These are gateway singletons so we just need to create them
     # at a scope where they live for the lifetime of the applications
+    Config(
+        global_game_mode=game_mode,
+        debug_enabled=False,
+    )
     ContentLibrary(content_paths)
     CoreIO(interface)
 

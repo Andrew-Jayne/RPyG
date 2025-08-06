@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Any
 
-from utilites import ensure_type
+from RPyG.utilites import ensure_type
 
 
 class EncounterType(Enum):

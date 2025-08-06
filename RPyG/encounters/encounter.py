@@ -1,12 +1,12 @@
 import random
 
 # Just for Type Checking
-from actors import PlayerParty
-from encounters.encounter_enemy import enemy_encounter
-from encounters.encounter_special import SpecialEncounters
-from encounters.encounter_standard import standard_encounter
-from message.message import Message
-from utilites import ensure_type
+from RPyG.actors import PlayerParty
+from RPyG.encounters.encounter_enemy import enemy_encounter
+from RPyG.encounters.encounter_special import SpecialEncounters
+from RPyG.encounters.encounter_standard import standard_encounter
+from RPyG.message.message import Message
+from RPyG.utilites import ensure_type
 
 
 ## TODO, this needs some work, but the whole story system is due for updates so it's fine for now

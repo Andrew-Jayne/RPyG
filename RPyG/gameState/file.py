@@ -4,10 +4,10 @@ import os
 import pickle
 
 # Only used for Type Checking
-from actors import PlayerParty
-from interaction.interaction import Interaction
-from message.message import Message
-from utilites import ensure_type
+from RPyG.actors import PlayerParty
+from RPyG.interaction.interaction import Interaction
+from RPyG.message.message import Message
+from RPyG.utilites import ensure_type
 
 
 # """Secret""" key for HMAC, if you break your file that's on you
