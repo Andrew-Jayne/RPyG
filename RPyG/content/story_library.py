@@ -1,40 +1,35 @@
+from dataclasses import dataclass
+from types import MappingProxyType
 from typing import Any
 
 from RPyG.utilites import ensure_type
 
 
+# Fully Runtime Immutable
+@dataclass(frozen=True, slots=True)
 class StoryEvent:
-    messages: list[str]
-    success_messages: list[str]
-    failure_messages: list[str]
+    messages: tuple[str, ...]
+    success_messages: tuple[str, ...]
+    failure_messages: tuple[str, ...]
 
-    def __init__(
-        self,
-        messages: list[str],
-        success_messages: list[str],
-        failure_messages: list[str],
-    ) -> None:
-        ensure_type(messages, list, "messages")
-        ensure_type(success_messages, list, "success_messages")
-        ensure_type(failure_messages, list, "failure_messages")
+    def __post_init__(self) -> None:
+        ensure_type(self.messages, list, "messages")
+        ensure_type(self.success_messages, list, "success_messages")
+        ensure_type(self.failure_messages, list, "failure_messages")
 
-        if len(messages) > 0:
-            for messages_item in messages:
+        if len(self.messages) > 0:
+            for messages_item in self.messages:
                 ensure_type(messages_item, str, "messages_item")
-        if len(messages) > 0:
-            for success_messages_item in success_messages:
+        if len(self.messages) > 0:
+            for success_messages_item in self.success_messages:
                 ensure_type(success_messages_item, str, "success_messages_item")
-        if len(failure_messages) > 0:
-            for failure_messages_item in failure_messages:
+        if len(self.failure_messages) > 0:
+            for failure_messages_item in self.failure_messages:
                 ensure_type(failure_messages_item, str, "failure_messages_item")
-
-        self.messages = messages
-        self.success_messages = success_messages
-        self.failure_messages = failure_messages
 
 
 class StoryLibrary:
-    story_events: dict[int, StoryEvent]
+    story_events: MappingProxyType[int, StoryEvent]
 
     def __init__(self, event_data: dict[str, Any]) -> None:
         ensure_type(event_data, dict, "event_data")
@@ -47,4 +42,4 @@ class StoryLibrary:
 
             story_events[int(event_data_key)] = StoryEvent(**event_data_value)
 
-        self.story_events = story_events
+        self.story_events = MappingProxyType(story_events)

@@ -1,5 +1,6 @@
 import random
 from enum import Enum
+from types import MappingProxyType
 from typing import Any
 
 from RPyG.actors import Enemy, EnemyParty
@@ -7,10 +8,10 @@ from RPyG.utilites import ensure_type
 
 
 class EnemyVariantSet:
-    __slots__: tuple = ("lesser_variants", "common_variants", "greater_variants")
-    lesser_variants: list[Enemy]
-    common_variants: list[Enemy]
-    greater_variants: list[Enemy]
+    __slots__ = ("lesser_variants", "common_variants", "greater_variants")
+    lesser_variants: tuple[Enemy, ...]
+    common_variants: tuple[Enemy, ...]
+    greater_variants: tuple[Enemy, ...]
 
     @staticmethod
     def validate_variant_data(variant_data: list[dict[str, Any]]) -> None:
@@ -21,12 +22,12 @@ class EnemyVariantSet:
                 ensure_type(variant_data_item_key, str, "variant_data_item_key")
 
     @staticmethod
-    def build_enemies(enemy_data_list: list[dict[str, Any]]) -> list[Enemy]:
+    def build_enemies(enemy_data_list: list[dict[str, Any]]) -> tuple[Enemy, ...]:
         enemy_list: list[Enemy] = []
         for enemy_data in enemy_data_list:
             enemy_list.append(Enemy(**enemy_data))
 
-        return enemy_list
+        return tuple(enemy_list)
 
     def __init__(
         self,
@@ -51,7 +52,7 @@ class EnemyWeightClass(Enum):
 
 
 class EnemySet:
-    __slots__: tuple = ("plural_name", "group_name", "weight_class", "variant_lists")
+    __slots__ = ("plural_name", "group_name", "weight_class", "variant_lists")
     plural_name: str
     group_name: str
     weight_class: EnemyWeightClass
@@ -110,10 +111,10 @@ class EnemySet:
 
 
 class EnemyLibrary:
-    small_enemies: list[EnemySet]
-    medium_enemies: list[EnemySet]
-    large_enemies: list[EnemySet]
-    special_enemies: dict[str, Enemy]
+    small_enemies: tuple[EnemySet, ...]
+    medium_enemies: tuple[EnemySet, ...]
+    large_enemies: tuple[EnemySet, ...]
+    special_enemies: MappingProxyType[str, Enemy]
 
     @staticmethod
     def validate_enemy_list(enemy_list: list[dict[str, Any]], list_name: str) -> None:
@@ -124,11 +125,11 @@ class EnemyLibrary:
                 ensure_type(enemy_item_key, str, f"{list_name}item_key")
 
     @staticmethod
-    def build_enemy_sets(enemy_set_data_list: list[dict[str, Any]]) -> list[EnemySet]:
-        enemy_set: list[EnemySet] = []
+    def build_enemy_sets(enemy_set_data_list: list[dict[str, Any]]) -> tuple[EnemySet]:
+        enemy_sets: list[EnemySet] = []
         for enemy_set_data in enemy_set_data_list:
-            enemy_set.append(EnemySet(**enemy_set_data))
-        return enemy_set
+            enemy_sets.append(EnemySet(**enemy_set_data))
+        return tuple(enemy_sets)
 
     @staticmethod
     def sort_standard_enemies(
@@ -188,4 +189,4 @@ class EnemyLibrary:
         special_enemies_instances: dict[str, Enemy] = {}
         for enemy_id, enemy_data in special_enemies_data.items():
             special_enemies_instances[enemy_id] = Enemy(**enemy_data)
-        self.special_enemies = special_enemies_instances
+        self.special_enemies = MappingProxyType(special_enemies_instances)

@@ -37,7 +37,9 @@ def _unflatten_dict(flat_dict: dict[str, Any]) -> dict[str, Any]:
     # TOML is human freindly and I don't want to write a yaml parser
 
 
-@dataclass
+# Makes the content paths immutable at runtime,
+# so we ensure there is only one true set of content paths
+@dataclass(frozen=True)
 class ContentPaths:
     standard_dungeons_path: str
     special_dungeons_path: str
