@@ -71,9 +71,8 @@ class ContentLibrary(
         "standard_dungeons",
         "special_dungeons",
         "story_events",
-        "_initialized",
+        "_instance",
     )
-    _initialized: bool
     _instance: Self | None
 
     @staticmethod
@@ -148,8 +147,10 @@ class ContentLibrary(
             self, event_data=ContentLibrary.load_content_files(content_paths.story_path)
         )
 
-        self._initialized = True
-        ContentLibrary._instance = self
+        if ContentLibrary._instance is not None:
+            ContentLibrary._instance = self
+        else:
+            raise RuntimeError("ContentLibrary already initialized")
 
     @classmethod
     def get_library(cls) -> "ContentLibrary":
@@ -157,8 +158,8 @@ class ContentLibrary(
         Gateway style function to access the content library as a global singleton, you should not store the instance when init-ing
         Rather use this funciton to inject access at the lowest needed scope
         """
-        if cls._instance is not None:
-            return cls._instance
+        if ContentLibrary._instance is not None:
+            return ContentLibrary._instance
         else:
             raise RuntimeError(
                 "Attempted to access ContentLibrary before initialization has completed"
