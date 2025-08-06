@@ -1,27 +1,30 @@
 from argparse import ArgumentParser
+from typing import Literal
+
+import RPyG
+from interface.terminal_interface import BasicTerminalInterface
 
 
-DUNGEONS_STANDARD_PATH = "content/dungeons/standard"
-DUNGEONS_SPECIAL_PATH = "content/dungeons/special"
+DUNGEONS_STANDARD_PATH = "game_content/dungeons/standard"
+DUNGEONS_SPECIAL_PATH = "contgame_contentent/dungeons/special"
 
-ENCOUNTERS_STANDARD_PATH = "content/encounters/standard"
-ENCOUNTERS_SPECIAL_PATH = "content/encounters/special"
+ENCOUNTERS_STANDARD_PATH = "game_content/encounters/standard"
+ENCOUNTERS_SPECIAL_PATH = "game_content/encounters/special"
 
-ENEMIES_STANDARD_PATH = "content/enemies/standard"
-ENEMIES_SPECIAL_PATH = "content/enemies/special"
+ENEMIES_STANDARD_PATH = "game_content/enemies/standard"
+ENEMIES_SPECIAL_PATH = "game_content/enemies/special"
 
-STORY_PATH = "content/story"
+STORY_PATH = "game_content/story"
 
 
-def main(game_mode: str, using_default_party: bool) -> None:
-    from content import ContentLibrary, ContentPaths
-    from encounters.encounter import check_for_encounter
-    from gameState.game_start import start_game
-    from message.message import Message
-
-    # Launch Content Library, accessed via gateway patern in consuming modules
-    ContentLibrary(
-        ContentPaths(
+def main(
+    game_mode: Literal["AUTO", "MANUAL"],
+    use_default_party: bool,
+):
+    RPyG.launch_game(
+        game_mode=game_mode,
+        using_default_party=use_default_party,
+        content_paths=RPyG.ContentPaths(
             special_dungeons_path=DUNGEONS_SPECIAL_PATH,
             standard_dungeons_path=DUNGEONS_STANDARD_PATH,
             special_encounters_path=ENCOUNTERS_SPECIAL_PATH,
@@ -29,31 +32,9 @@ def main(game_mode: str, using_default_party: bool) -> None:
             special_enemies_path=ENEMIES_SPECIAL_PATH,
             standard_enemies_path=ENEMIES_STANDARD_PATH,
             story_path=STORY_PATH,
-        )
+        ),
+        interface=BasicTerminalInterface,
     )
-
-    player_party_instance = start_game(game_mode, using_default_party)
-
-    rounds_without_encounter = 0
-    # The Key Loop
-    while player_party_instance.progress != 100:
-        player_party_instance.progress += 1
-        match check_for_encounter(player_party_instance, rounds_without_encounter):
-            case True:
-                rounds_without_encounter = 1
-            case False:
-                rounds_without_encounter += 1
-                Message.empty_travel_message(rounds_without_encounter)
-
-        if len(player_party_instance.members) == 0:
-            break
-
-    if player_party_instance.members != []:
-        Message.post_game_recap(player_party_instance)
-
-    # [] means all players are in the dead_members list, this is like... 5% safer than len() == 0 because it is looking at the list as a list rather than a property of it against an int
-    else:
-        Message.game_over_message(player_party_instance)
 
 
 # Main Function Wrapper to Accept and Pass Args
@@ -64,13 +45,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.auto is True:
-        mode = "AUTO"
+        game_mode = "AUTO"
     else:
-        mode = "MANUAL"
+        game_mode = "MANUAL"
 
     if args.default is True:
         use_default_party = True
     else:
         use_default_party = False
 
-    main(mode, use_default_party)
+    main(game_mode, use_default_party)
