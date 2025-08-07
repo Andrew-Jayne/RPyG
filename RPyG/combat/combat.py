@@ -1,7 +1,5 @@
 from RPyG.actors import CombatantParty, Enemy, EnemyParty, PlayableActor, PlayerParty
 from RPyG.gameState.file import save_game
-from RPyG.interaction.interaction import Interaction
-from RPyG.message.message import Message
 from RPyG.utilites import ensure_type
 
 
@@ -40,6 +38,10 @@ def is_battle_complete(
 def process_player_turn(
     player_party_instance: PlayerParty, enemy_party_instance: EnemyParty
 ) -> None:
+    from RPyG.core_io import CoreIO
+
+    core_io = CoreIO.get_core_io()
+
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
     ensure_type(enemy_party_instance, EnemyParty, "enemy_party_instance")
 
@@ -54,20 +56,17 @@ def process_player_turn(
                     enemy_instance: Enemy = enemy_party_instance.members[target_index]
                     player_instance.attack(enemy_instance)
                     if enemy_instance.health == 0:
-                        Message.defeated_message(enemy_instance.name)
                         enemy_party_instance.lose_member(enemy_instance)
 
                 case player_instance.special_attack_name:
                     player_instance.special_attack(enemy_party_instance)
                     for enemy_instance in enemy_party_instance.members:
                         if enemy_instance.health == 0:
-                            Message.defeated_message(enemy_instance.name)
                             enemy_party_instance.lose_member(enemy_instance)
 
                 case player_instance.react_action:
-                    Message.display_message(
-                        player_instance.react_messages["prep_message"],
-                        new_line_count=2,
+                    core_io.send_output(
+                        {"messages": player_instance.react_messages["prep_message"]}
                     )
                     player_instance.will_react = True
 
@@ -85,6 +84,9 @@ def process_enemy_turn(
     player_party_instance: PlayerParty,
     enemy_party_instance: EnemyParty,
 ) -> None:
+    from RPyG.core_io import CoreIO
+
+    core_io = CoreIO.get_core_io()
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
     ensure_type(enemy_party_instance, EnemyParty, "enemy_party_instance")
 
@@ -95,14 +97,12 @@ def process_enemy_turn(
 
             if target_player.will_react is True:
                 if target_player.react() is True:
-                    Message.display_message(
-                        target_player.react_messages["success_message"],
-                        new_line_count=2,
+                    core_io.send_output(
+                        {"messages": target_player.react_messages["success_message"]}
                     )
                 else:
-                    Message.display_message(
-                        target_player.react_messages["failure_message"],
-                        new_line_count=2,
+                    core_io.send_output(
+                        {"messages": target_player.react_messages["failure_message"]}
                     )
                     enemy_instance.attack(
                         target_instance=target_player,
@@ -113,7 +113,6 @@ def process_enemy_turn(
                 enemy_instance.attack(target_instance=target_player)
 
             if target_player.health == 0:
-                Message.defeated_message(target_player.name)
                 player_party_instance.lose_member(target_player)
             clear_dead_members(player_party_instance)
         else:
@@ -139,11 +138,27 @@ def battle(
 ) -> bool:
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
     ensure_type(enemy_party_instance, EnemyParty, "enemy_party_instance")
+    from RPyG.core_io import CoreIO
 
-    Message.battle_start_message()
+    core_io = CoreIO.get_core_io()
+
+    core_io.send_output({"messages": "The Battle Begins!"})
     battle_complete = False
     while battle_complete is False:
-        Message.battle_hud_message(player_party_instance, enemy_party_instance)
+        battle_hud_message = ""
+
+        for playable_instance in player_party_instance.members:
+            battle_hud_message += (
+                f"{playable_instance.name}: {playable_instance.health}"
+            )
+            battle_hud_message += "\n"
+        battle_hud_message += "\n"
+
+        for enemy_instance in enemy_party_instance.members:
+            battle_hud_message += f"{enemy_instance.name}: {enemy_instance.health}\n"
+            battle_hud_message += "\n"
+
+        core_io.send_output({"messages": battle_hud_message})
 
         ## Check if all parties are alive before running player turn
         if is_battle_complete(player_party_instance, enemy_party_instance) is False:
@@ -167,7 +182,6 @@ def battle(
         and is_party_alive(enemy_party_instance) is False
         and battle_complete is True
     ):
-        Message.defeated_message(enemy_party_instance.name)
         post_battle(player_party_instance)
         return True
     else:

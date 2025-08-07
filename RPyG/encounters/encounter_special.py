@@ -1,11 +1,8 @@
 # Just for Type Checking
 from RPyG.actors import Enemy, EnemyParty, PlayerParty
 from RPyG.combat import battle
-from RPyG.config import Config
 from RPyG.encounters.encounter_dungeon import Dungeon
 from RPyG.gameState.file import save_game
-from RPyG.interaction.interaction import Interaction
-from RPyG.message.message import Message
 from RPyG.utilites import ensure_type
 
 

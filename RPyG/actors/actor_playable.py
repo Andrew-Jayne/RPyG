@@ -25,24 +25,28 @@ class Inventory:
         self.gold += amount
 
     def spend_gold(self, amount: int) -> bool:
-        from RPyG.message.message import Message
+        from RPyG.core_io import CoreIO
+
+        core_io = CoreIO.get_core_io()
 
         if self.gold < amount:
             insufficient_gold_message = f"{self.actor_name} has insufficient gold"
-            Message.display_message(insufficient_gold_message, 1)
+            core_io.send_output({"messages": insufficient_gold_message})
             return False
         else:
             Inventory.lose_gold(self, amount)
             return True
 
     def lose_gold(self, amount: int) -> None:
-        from RPyG.message.message import Message
+        from RPyG.core_io import CoreIO
+
+        core_io = CoreIO.get_core_io()
 
         self.gold -= amount
         if self.gold < 0:
             self.gold = 0
             no_gold_message = f"{self.actor_name} has no gold remaining"
-            Message.display_message(no_gold_message, 1)
+            core_io.send_output({"messages": no_gold_message})
 
     def gain_potion(self, amount: int) -> None:
         self.potions += amount
@@ -101,25 +105,27 @@ class PlayableActor(Combatant):
         )
 
     def use_potion(self) -> None:
-        from RPyG.message.message import Message
+        from RPyG.core_io import CoreIO
+
+        core_io = CoreIO.get_core_io()
 
         if self.inventory.potions != 0 and not self.is_fully_healed():
             drink_potion_message = f"{self.name} drinks a potion"
-            Message.display_message(drink_potion_message, 1)
+            core_io.send_output({"messages": drink_potion_message})
             self.inventory.lose_potion(1)
             self.heal(100 + random.randint(-20, 20))
             drank_potion_message = f"""
 {self.name} has {self.inventory.potions} remaining
 {self.name}'s health is now {self.health}
 """
-            Message.display_message(drank_potion_message, 2)
+            core_io.send_output({"messages": drank_potion_message})
 
         elif self.inventory.potions == 0:
             no_potions_message = f"{self.name} has no remaining potions!"
-            Message.display_message(no_potions_message, 1)
+            core_io.send_output({"messages": no_potions_message})
         else:
             fully_healed_message = f"{self.name} is already fully healed!"
-            Message.display_message(fully_healed_message, 1)
+            core_io.send_output({"messages": fully_healed_message})
 
     @staticmethod
     def _get_attack_power(

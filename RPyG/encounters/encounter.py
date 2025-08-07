@@ -5,7 +5,6 @@ from RPyG.actors import PlayerParty
 from RPyG.encounters.encounter_enemy import enemy_encounter
 from RPyG.encounters.encounter_special import SpecialEncounters
 from RPyG.encounters.encounter_standard import standard_encounter
-from RPyG.message.message import Message
 from RPyG.utilites import ensure_type
 
 
