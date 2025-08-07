@@ -1,7 +1,16 @@
 import os
-from typing import Any, Literal
+import textwrap
+import time
+from typing import Any, Literal, cast
 
-from RPyG import InputRequest, OutputMessage, RPyGInterface
+from RPyG import (
+    CustomTextRequest,
+    InputRequest,
+    OutputMessage,
+    RPyGInterface,
+    UIElement,
+    UserPromptRequest,
+)
 from RPyG.actors import PlayableActor
 from RPyG.utilites import ensure_type
 
@@ -10,11 +19,9 @@ welcome_message = """
              This game looks best with a width of at least 80.
             If the next line is split please widen your terminal.
 ----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----
+
+             NOTE: All Prompts in this game are case insensitive
 """
-
-note = ("NOTE: All Prompts in this game are case insensitive",)
-
-## Monkas this file is huge lol
 
 
 class BasicTerminalInterface(RPyGInterface):
@@ -26,12 +33,46 @@ class BasicTerminalInterface(RPyGInterface):
         self.input_buffer = {}
         self.game_mode = game_mode
         self.use_default = use_default
+        self.show_ouput(OutputMessage(welcome_message))
 
     def show_ouput(self, output_data: OutputMessage) -> None:
-        return print(output_data)
+        ending = "\n"
+        wrapped_message = ""
+
+        # Split the message into lines to handle them individually
+        lines = output_data.message.split("\n")
+        for line in lines:
+            # Apply text wrapping to each line individually
+            wrapped_line = textwrap.fill(line, width=80)
+            wrapped_message += wrapped_line + "\n"
+
+        # Print the final wrapped message, removing the last added newline and adding the custom ending
+        print(wrapped_message.rstrip("\n"), end=ending)
 
     def request_input(self, request: InputRequest) -> None:
-        self.input_buffer = {"data": input(str(request))}
+        ensure_type(request, InputRequest, "request")
+        match type(request).__name__:
+            case "InputRequest":
+                return NotImplemented
+            case "UserPromptRequest":
+                prompt_request = cast(UserPromptRequest, request)
+                content = self.prompt_user(
+                    options=prompt_request.options,
+                    prompts=prompt_request.prompts,
+                )
+
+            case "CustomTextRequest":
+                text_request = cast(CustomTextRequest, request)
+                content = self.custom_text_entry(
+                    text_request.prompts,
+                    text_request.max_length,
+                )
+            case _:
+                raise ValueError(
+                    f"Got Unknow Child class of InputRequest {type(request).__name__}"
+                )
+
+        self.input_buffer = {"data": content}
 
     def receive_input(self) -> dict:
         data = self.input_buffer.get("data")
@@ -119,9 +160,10 @@ class BasicTerminalInterface(RPyGInterface):
             chosen_action = self.sanitize(input("").upper())
             if chosen_action not in choice_list:
                 self.show_ouput(
-                    "That is not a Valid Option. Try again, valid options are", 2
+                    OutputMessage(
+                        f"That is not a Valid Option. Try again, valid options are \n{options_list}"
+                    )
                 )
-                self.show_ouput(options_list, 1)
                 dumb_check += 1
                 if dumb_check == 10:
                     raise FileNotFoundError(
@@ -134,35 +176,25 @@ class BasicTerminalInterface(RPyGInterface):
         input_messages: list[str],
         max_length: int,
     ) -> str:
-        for message in input_messages:
-            self.show_ouput(message, 1)
+        self.show_ouput(OutputMessage("\n".join(input_messages)))
         return self.sanitize(input()[:max_length])
 
     def prompt_user(
         self,
         options: list[str],
-        base_messages: list[str],
-        *,
-        return_index: bool = False,
+        prompts: list[str],
     ) -> str:
         ensure_type(options, list, "options")
-        ensure_type(base_messages, list, "base_messages")
+        ensure_type(prompts, list, "base_messages")
 
         formatted_message = ""
-        for message in base_messages:
+        for message in prompts:
             formatted_message += f"{message}\n"
 
         for option in options:
             formatted_message += f"{option}\n"
 
-        self.show_ouput(formatted_message, 1)
-
-        if return_index is True:
-            int_options: list[str]
-            int_options = []
-            for i in range(len(options) + 1):
-                int_options.append(str(i))
-            options = int_options
+        self.show_ouput(OutputMessage(formatted_message))
 
         response = self.validate_input(options)
         return response
