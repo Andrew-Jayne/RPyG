@@ -62,5 +62,5 @@
 
 # Active Development
 
-- **Streamline Interaction Prompts:**
+- **Streamline User Prompts:**
   - Develop a more generic "choose action" prompt template to avoid redundancy in designing individual interactions.

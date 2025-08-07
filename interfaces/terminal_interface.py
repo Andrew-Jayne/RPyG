@@ -6,27 +6,20 @@ from RPyG.utilites import ensure_type
 
 import os
 
-from RPyG.config import Config
 
+welcome_message = """
+             This game looks best with a width of at least 80.
+            If the next line is split please widen your terminal.
+----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----
+"""
 
-def clear_display() -> None:
-    "If the game is not in Auto Mode, will clear the display"
-    config = Config.get_config()
-    # Screen is not cleared in Auto mode since It's better for testing
-    # Auto mode is kinda turning into a debug mode (I might make that an option at some point)
-    if config.global_game_mode == "MANUAL":
-        # For Windows
-        if os.name == "nt":
-            os.system("cls")
-        # For macOS and Linux
-        else:
-            os.system("clear")
-
+note ="NOTE: All Prompts in this game are case insensitive",
 
 ## Monkas this file is huge lol
 
 class BasicTerminalInterface(RPyGInterface):
     input_buffer: dict[str, Any]
+    game_mode: Literal["AUTO", "MANUAL"] = "MANUAL"
 
     def __init__(self):
         super().__init__()
@@ -47,6 +40,30 @@ class BasicTerminalInterface(RPyGInterface):
         # reset buffer
         self.input_buffer = {}
         return data
+    
+    @staticmethod
+    def default_party() -> list[PlayableActor]:
+        party_members: list[PlayableActor] = []
+        default_names = ("Conan", "Merlin", "Robin")
+        default_specialization = ("WARRIOR", "MAGE", "ROGUE")
+        for i in range(0, 3):
+            member = (default_names[i], default_specialization[i])
+            party_members.append(PlayableActor(member[0], member[1]))
+        return party_members
+    
+
+    @staticmethod
+    def clear_display() -> None:
+        "If the game is not in Auto Mode, will clear the display"
+        # Screen is not cleared in Auto mode since It's better for testing
+        # Auto mode is kinda turning into a debug mode (I might make that an option at some point)
+        if BasicTerminalInterface.game_mode == "MANUAL":
+            # For Windows
+            if os.name == "nt":
+                os.system("cls")
+            # For macOS and Linux
+            else:
+                os.system("clear")
 
     @staticmethod
     def sanitize(input_string: str, max_length: int = 32) -> str:
@@ -153,8 +170,7 @@ class BasicTerminalInterface(RPyGInterface):
 #### logic that is interface data that has been expunged from the program itself
 
     ## from New game
-    config = Config.get_config()
-    match game_mode:
+    match BasicTerminalInterface.game_mode:
         case "AUTO":
             config.global_game_mode = "AUTO"
             return PlayerParty(name="The Default Party", members=default_party())
@@ -237,21 +253,19 @@ from RPyG.message.message import Message
 from RPyG.utilites import ensure_type
 
 
-# Interaction Function Guidelines
+# Function Guidelines
 # Functions should return either a string or an int, the upstream functions will handle logic based on the items passed
 # Adding the str to bool logic here just adds bloat and over-complicates very, very simple functions
 
 
-class Interaction:
+class LEGACYInteraction:
     @staticmethod
     def choose_combat_target(target_party_instance: CombatantParty) -> int:
         ensure_type(target_party_instance, CombatantParty, "target_party_instance")
         target_options: list[str]
         target_options = []
-        from RPyG.config import Config
 
-        config = Config.get_config()
-        match config.global_game_mode:
+        match BasicTerminalInterface.game_mode:
             case "AUTO":
                 # need to move this up stream later and/or merge interaction inside playable actor pepeW
                 return target_party_instance.members[0].select_combat_target(
@@ -260,28 +274,21 @@ class Interaction:
 
     @staticmethod
     def encounter_enemy() -> str:
-        from RPyG.config import Config
-
-        config = Config.get_config()
-        match config.global_game_mode:
+        match BasicTerminalInterface.game_mode:
             case "AUTO":
                 chosen_action = random.choice(["FLEE", "ATTACK"])
                 return chosen_action
             case "MANUAL":
-                encounter_options = ["BATTLE", "FLEE"]
-                encounter_message = ["Choose an Action:"]
-                return Interaction.prompt_user(encounter_options, encounter_message)
+
+                return prompt_user(encounter_options, encounter_message)
             case _:
                 return "ATTACK"
 
     @staticmethod
     def post_battle(player_party_instance: PlayerParty) -> str:
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
-        from RPyG.config import Config
 
-        config = Config.get_config()
-
-        match config.global_game_mode:
+        match BasicTerminalInterface.game_mode:
             case "AUTO":
                 for player_instance in player_party_instance.members:
                     if (
@@ -292,20 +299,16 @@ class Interaction:
                 return "TRAVEL"
 
             case "MANUAL":
-                post_battle_options = ["HEAL", "TRAVEL", "SAVE"]
-                post_battle_message = ["Choose an Action:"]
-                return Interaction.prompt_user(post_battle_options, post_battle_message)
+
+                return prompt_user(post_battle_options, post_battle_message)
             case _:
                 return "TRAVEL"
 
     @staticmethod
     def in_battle(player_instance: PlayableActor) -> str:
         ensure_type(player_instance, PlayableActor, "player_instance")
-        from RPyG.config import Config
 
-        config = Config.get_config()
-
-        match config.global_game_mode:
+        match BasicTerminalInterface.game_mode:
             case "AUTO":
                 if (
                     player_instance.health <= 40
@@ -325,30 +328,7 @@ class Interaction:
 
                 return chosen_action
             case "MANUAL":
-                battle_options = [
-                    "ATTACK",
-                    f"{player_instance.special_attack_name}",
-                    f"{player_instance.react_action}",
-                    "HEAL",
-                ]
-                battle_messages = [f"{player_instance.name}", "Choose an Action:"]
-
-                battle_choice = Interaction.prompt_user(battle_options, battle_messages)
-                if (
-                    battle_choice == "HEAL"
-                    and player_instance.is_fully_healed() is True
-                ):
-                    Message.display_message(
-                        f"{player_instance.name} is fully healed, it would be unwise to use a potion",
-                        1,
-                    )
-                battle_choice = Interaction.prompt_user(battle_options, battle_messages)
-                if battle_choice == "HEAL":
-                    Message.display_message(
-                        "Stubborn aren't you, fine waste the damn potion", 1
-                    )
-
-                return battle_choice
+                return 
             case _:
                 return "ATTACK"
 
@@ -357,12 +337,8 @@ class Interaction:
         import math
 
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
-        from RPyG.config import Config
-
-        config = Config.get_config()
-
         Message.display_message("You arrive at a merchant", 1)
-        match config.global_game_mode:
+        match BasicTerminalInterface.game_mode:
             case "AUTO":
                 # init Counts
                 player_count = 0
@@ -392,121 +368,25 @@ class Interaction:
                             )
                             break
             case "MANUAL":
-                player_choice = None
-                merchant_options = ["BUY", "LEAVE", "BUY MAX"]
+                OMG = True
 
-                for player_instance in player_party_instance.members:
-                    merchant_messages = [
-                        f"{player_instance.name}",
-                        f"Gold: {player_instance.inventory.gold}",
-                        f"Potions: {player_instance.inventory.potions}",
-                        "",
-                        "Choose an Action:",
-                    ]
-
-                    while player_choice != "LEAVE":
-                        player_choice = Interaction.prompt_user(
-                            merchant_options, merchant_messages
-                        )
-                        Message.display_message(
-                            f"{player_instance.name} has {player_instance.inventory.potions} potions & {player_instance.inventory.gold} gold",
-                            1,
-                        )
-                        match player_choice:
-                            case "BUY":
-                                if player_instance.inventory.spend_gold(25) is True:
-                                    player_instance.inventory.gain_potion(1)
-                                    Message.display_message(
-                                        f"{player_instance.name} purchases a potion. They now have {player_instance.inventory.potions} & {player_instance.inventory.gold} gold",
-                                        1,
-                                    )
-                                else:
-                                    Message.display_message(
-                                        f"{player_instance.name} does not have enough Gold to purchase more potions",
-                                        1,
-                                    )
-                                    player_choice = "LEAVE"
-                            case "BUY MAX":
-                                # Using floor to make sure you can't buy 10 potions with 245 gold
-                                rounds = math.floor(player_instance.inventory.gold / 25)
-                                player_instance.inventory.spend_gold((rounds * 25))
-                                player_instance.inventory.gain_potion(rounds)
-                                player_choice = "LEAVE"
-                            case "LEAVE":
-                                player_choice = "LEAVE"
-                            case _:
-                                player_choice = "LEAVE"
-
-            case _:
-                raise ValueError("invalid game mode")
-
-    @staticmethod
-    def confirm_rest() -> bool:
-        from RPyG.config import Config
-
-        config = Config.get_config()
-        match config.global_game_mode:
-            case "AUTO":
-                return random.choice([True, True, False])
-            case "MANUAL":
-                rest_options = ["YES", "NO"]
-                rest_message = ["Will you Rest here?:"]
-                rest_choice = Interaction.prompt_user(rest_options, rest_message)
-                if rest_choice == "YES":
-                    return True
-                if rest_choice == "NO":
-                    return False
-                return False
-            case _:
-                raise ValueError("invalid game mode")
-
-    @staticmethod
-    def mystery_action() -> str:
-        from RPyG.config import Config
-
-        config = Config.get_config()
-        match config.global_game_mode:
-            case "AUTO":
-                return random.choice(["GREET", "GREET", "ATTACK"])
-            case "MANUAL":
-                rest_options = ["ATTACK", "GREET"]
-                rest_message = ["What do you do?:"]
-                return Interaction.prompt_user(rest_options, rest_message)
-            case _:
-                raise ValueError("invalid game mode")
-
-    @staticmethod
-    def loot_action() -> str:
-        from RPyG.config import Config
-
-        config = Config.get_config()
-        match config.global_game_mode:
-            case "AUTO":
-                return random.choice(["OPEN", "OPEN", "LEAVE"])
-            case "MANUAL":
-                rest_options = ["OPEN", "LEAVE"]
-                rest_message = ["What do you do?:"]
-                return Interaction.prompt_user(rest_options, rest_message)
             case _:
                 raise ValueError("invalid game mode")
 
     @staticmethod
     def embark() -> bool:
-        from RPyG.config import Config
-
-        config = Config.get_config()
-        match config.global_game_mode:
+        match BasicTerminalInterface.game_mode:
             case "AUTO":
                 return True
             case "MANUAL":
                 embark_options = ["EMBARK", "DRINK"]
                 embark_options_message = ["What shall the party do?"]
-                player_choice = Interaction.prompt_user(
+                player_choice = prompt_user(
                     embark_options, embark_options_message
                 )
 
                 while player_choice != "EMBARK":
-                    player_choice = Interaction.prompt_user(
+                    player_choice = prompt_user(
                         embark_options, embark_options_message
                     )
 
@@ -527,31 +407,11 @@ class Interaction:
 
     @staticmethod
     def accept_quest() -> bool:
-        from RPyG.config import Config
-
-        config = Config.get_config()
-        match config.global_game_mode:
+        match BasicTerminalInterface.game_mode:
             case "AUTO":
                 return True
             case "MANUAL":
-                quest_options = ["ACCEPT", "DECLINE"]
-                quest_message = ["Will you accept this quest from the King?"]
-                player_choice = Interaction.prompt_user(quest_options, quest_message)
-
-                while player_choice != "ACCEPT":
-                    player_choice = Interaction.prompt_user(
-                        quest_options, quest_message
-                    )
-                    match player_choice:
-                        case "ACCEPT":
-                            return True
-                        case "DECLINE":
-                            Message.display_message(
-                                "The King insists, and asks again", 1
-                            )
-                        case _:
-                            return True
-                return True
+                pass
             case _:
                 raise ValueError("invalid game mode")
 
@@ -568,7 +428,7 @@ from RPyG.actors import Combatant, EnemyParty, PlayableActor, PlayerParty
 from RPyG.utilites import ensure_type
 
 
-class Message:
+class LEGACYMessage:
     @staticmethod
     def display_message(message: str, new_line_count: int) -> None:
         """
@@ -588,29 +448,6 @@ class Message:
         # Print the final wrapped message, removing the last added newline and adding the custom ending
         print(wrapped_message.rstrip("\n"), end=ending)
 
-    # Actor Messages
-    @staticmethod
-    def defeated_message(name: str) -> None:
-        defeated_message = 
-
-        __class__.display_message(defeated_message, 2)
-
-    @staticmethod
-    def encounter_message(group_name: str) -> None:
-        encounter_message = 
-
-        __class__.display_message(encounter_message, 2)
-
-    @staticmethod
-    def actor_health_message(actor_instance: Combatant) -> None:
-        ensure_type(actor_instance, Combatant, "actor_instance")
-
-        actor_health_message = (
-            f"{actor_instance.name} has {actor_instance.health} Health remaining"
-        )
-
-        __class__.display_message(actor_health_message, 2)
-
     # Battle Messages
     @staticmethod
     def battle_hud_message(
@@ -629,94 +466,14 @@ class Message:
 
         __class__.display_message(battle_start_message, 3)
 
-    # Encounter Messages
-    @staticmethod
-    def distance_since_last(no_encounters_since: int) -> None:
-        distance_since_last_message = (
-            f"After {no_encounters_since * 10} miles of travel"
-        )
-
-        __class__.display_message(distance_since_last_message, 1)
-
-    @staticmethod
-    def flee_failure_message(player_name: str, enemy_name: str) -> None:
-        flee_failure_message = f"{player_name} has Failed to Escape the {enemy_name}!"
-        from RPyG.config import Config
-
-        config = Config.get_config()
-
-        if config.global_game_mode == "MANUAL":
-            time.sleep(2)
-
-        __class__.display_message(flee_failure_message, 1)
-
-    @staticmethod
-    def flee_success_message(player_name: str, enemy_name: str) -> None:
-        flee_success_message = (
-            f"{player_name} has Successfully Escaped the {enemy_name}!"
-        )
-
-        __class__.display_message(flee_success_message, 1)
-
-    @staticmethod
-    # TODO This function gives me the ick, and sucks
-
-    # Player Messages
-    @staticmethod
-    def post_game_recap(player_party_instance: PlayerParty) -> None:
-        ensure_type(player_party_instance, PlayerParty, "player_party_instance")
-
-        for player_instance in player_party_instance.members:
-            player_report = f"""
-Player Name: {player_instance.name}
-Player Base Health: {player_instance.base_health}                             
-Player Final Health: {player_instance.health}
-Player Int: {player_instance.intellect}
-Player Str: {player_instance.strength}
-Player Agl: {player_instance.agility}
-Player Lck: {player_instance.luck}
-Player Gold: {player_instance.inventory.gold}
-Player Potions: {player_instance.inventory.potions}
-Player Attack Name: {player_instance.attack_name}
-Player Attack Power: {player_instance.attack_power}
-"""
-
-            __class__.display_message(player_report, 2)
-
-        __class__.display_message("Fallen Members", 2)
-
-        for player_instance in player_party_instance.dead_members:
-            player_report = f"""
-Player Name: {player_instance.name}
-Player Base Health: {player_instance.base_health}                             
-Player Final Health: {player_instance.health}
-Player Int: {player_instance.intellect}
-Player Str: {player_instance.strength}
-Player Agl: {player_instance.agility}
-Player Lck: {player_instance.luck}
-Player Gold: {player_instance.inventory.gold}
-Player Potions: {player_instance.inventory.potions}
-Player Attack Name: {player_instance.attack_name}
-Player Attack Power: {player_instance.attack_power}
-"""
-
-            __class__.display_message(player_report, 2)
-
-    @staticmethod
-    def game_over_message(player_party_instance: PlayerParty) -> None:
-        game_over_message = f"{player_party_instance.name} has failed in their quest after {player_party_instance.progress * 10} miles"
-
-        __class__.display_message(game_over_message, 2)
-        time.sleep(2)
-        __class__.post_game_recap(player_party_instance)
-
     @staticmethod
     def empty_travel_message(empty_distance: int) -> None:
-        from RPyG.config import Config
-
-        config = Config.get_config()
-        if config.global_game_mode == "MANUAL":
+        if BasicTerminalInterface.game_mode == "MANUAL":
             time.sleep(2)
         empty_travel_message = f"{'.' * (empty_distance - 1)}"
 
         __class__.display_message(empty_travel_message, 1)
+
+
+
+f"{actor_instance.name} has {actor_instance.health} Health remaining"

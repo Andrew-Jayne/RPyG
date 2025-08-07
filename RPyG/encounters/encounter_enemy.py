@@ -5,6 +5,7 @@ from RPyG.actors import PlayerParty
 from RPyG.combat import battle
 from RPyG.content import ContentLibrary
 from RPyG.content.enemy_library import EnemySet
+from RPyG.core_io import CoreIO
 from RPyG.utilites import ensure_type
 
 
@@ -12,7 +13,8 @@ def enemy_encounter(player_party_instance: PlayerParty) -> None:
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
     enemy_set: EnemySet
     enemy_count: int
-    content_library: ContentLibrary = ContentLibrary.get_library()
+    core_io = CoreIO.get_core_io()
+    content_library = ContentLibrary.get_library()
 
     match random.randint(0, 4):
         case 0 | 1:
@@ -35,15 +37,26 @@ def enemy_encounter(player_party_instance: PlayerParty) -> None:
 
     enemy_party = EnemySet.generate_enemy_party(enemy_set, enemy_count)
 
-    Message.encounter_message(enemy_party.name)
-    match Interaction.encounter_enemy():
+    core_io.send_output({"message": f"Your Party encounters a {enemy_party.name}!"})
+    encounter_options = ["BATTLE", "FLEE"]
+    encounter_message = ["Choose an Action:"]
+    core_io.request_input(encounter_options, encounter_message)
+    match core_io.receive_input():
         case "BATTLE":
             battle(player_party_instance, enemy_party)
         case "FLEE":
             for player_instance in player_party_instance.members:
                 if player_instance.luck >= random.randint(4, 15):
-                    Message.flee_success_message(player_instance.name, enemy_party.name)
+                    core_io.send_output(
+                        {
+                            "message": f"{player_instance.name} has Successfully Escaped the {enemy_party.name}!"
+                        }
+                    )
                 else:
-                    Message.flee_failure_message(player_instance.name, enemy_party.name)
+                    core_io.send_output(
+                        {
+                            "message": f"{player_instance.name} has Failed to Escape the {enemy_party.name}!"
+                        }
+                    )
                     battle(player_party_instance, enemy_party)
                     break
