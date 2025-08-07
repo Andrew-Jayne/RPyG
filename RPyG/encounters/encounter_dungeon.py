@@ -109,7 +109,7 @@ class Dungeon:
                     if len(player_party_instance.members) == 0:
                         return False
                 case _:
-                    core_io.send_output(EmptyDistanceMessage(1))
+                    core_io.send_output(EmptyDistanceMessage(distance=1))
 
         ## THis is horrendus and I hate it
         def send_special_encounter_message(

@@ -1,8 +1,8 @@
 import os
 from typing import Any, Literal
 
+from RPyG import InputRequest, OutputMessage, RPyGInterface
 from RPyG.actors import PlayableActor
-from RPyG.core_io import InputRequest, OutputMessage, RPyGInterface
 from RPyG.utilites import ensure_type
 
 
@@ -31,7 +31,7 @@ class BasicTerminalInterface(RPyGInterface):
         return print(output_data)
 
     def request_input(self, request: InputRequest) -> None:
-        self.input_buffer = {"data": input(str(request.messages))}
+        self.input_buffer = {"data": input(str(request))}
 
     def receive_input(self) -> dict:
         data = self.input_buffer.get("data")
