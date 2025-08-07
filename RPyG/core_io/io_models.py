@@ -37,14 +37,14 @@ class CombatantData:
     stuff: str
 
 
-@dataclass
+@dataclass(kw_only=True)
 class BattleHudMessage(OutputMessage):
     message: str
     combatant_data: CombatantData
     target_element: UIElement = UIElement.BATTLE_HUD
 
 
-@dataclass
+@dataclass(kw_only=True)
 class EmptyDistanceMessage(OutputMessage):
     distance: int
     message: str = ""

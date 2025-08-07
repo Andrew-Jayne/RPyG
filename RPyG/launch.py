@@ -33,7 +33,9 @@ def launch_game(
                 rounds_without_encounter = 1
             case False:
                 rounds_without_encounter += 1
-                core_io.send_output(EmptyDistanceMessage(rounds_without_encounter))
+                core_io.send_output(
+                    EmptyDistanceMessage(distance=rounds_without_encounter)
+                )
 
         if len(player_party_instance.members) == 0:
             break

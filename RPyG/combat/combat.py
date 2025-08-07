@@ -202,10 +202,14 @@ def battle(
     while battle_complete is False:
         core_io.send_output(
             BattleHudMessage(
-                build_hud_data(
+                message=build_hud_data(
                     player_party_instance,
                     enemy_party_instance,
-                )
+                ),
+                combatant_data=build_hud_data(
+                    player_party_instance,
+                    enemy_party_instance,
+                ),
             )
         )
 
