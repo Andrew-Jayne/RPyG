@@ -3,6 +3,7 @@ import random
 # Just for Type Checking
 from RPyG.actors import PlayerParty
 from RPyG.core_io import CoreIO
+from RPyG.core_io.io_models import OutputMessage
 from RPyG.encounters.encounter_enemy import enemy_encounter
 from RPyG.encounters.encounter_special import SpecialEncounters
 from RPyG.encounters.encounter_standard import standard_encounter
@@ -20,7 +21,9 @@ def check_for_encounter(
 
     def send_distance_traveled_message():
         core_io = CoreIO.get_core_io()
-        core_io.send_output({"message": f"After {empty_distance * 10} miles of travel"})
+        core_io.send_output(
+            OutputMessage(f"After {empty_distance * 10} miles of travel")
+        )
 
     if player_party_instance.progress not in [1, 25, 50, 75, 99, 100]:
         encounter_check = random.uniform(0, 1)

@@ -1,3 +1,6 @@
+from typing import Any
+
+
 class SemVerException(Exception):
     """Exception raised for invalid semantic version strings."""
 
@@ -37,7 +40,7 @@ class SemVerString:
     def __repr__(self):
         return f"SemVerString('{self.version}')"
 
-    def __eq__(self, value: object | "SemVerString"):
+    def __eq__(self, value: Any):
         match isinstance(value, SemVerString):
             case False:
                 return NotImplemented
@@ -49,7 +52,7 @@ class SemVerString:
                     "isinstance() returned non boolean value, inform pannenkoek of the bitflip"
                 )
 
-    def __lt__(self, value: object | "SemVerString"):
+    def __lt__(self, value: Any):
         match isinstance(value, SemVerString):
             case False:
                 return NotImplemented
@@ -61,7 +64,7 @@ class SemVerString:
                     "isinstance() returned non boolean value, inform pannenkoek of the bitflip"
                 )
 
-    def __gt__(self, value: object | "SemVerString"):
+    def __gt__(self, value: Any):
         match isinstance(value, SemVerString):
             case False:
                 return NotImplemented
@@ -73,7 +76,7 @@ class SemVerString:
                     "isinstance() returned non boolean value, inform pannenkoek of the bitflip"
                 )
 
-    def __le__(self, value: object | "SemVerString"):
+    def __le__(self, value: Any):
         match isinstance(value, SemVerString):
             case False:
                 return NotImplemented
@@ -85,7 +88,7 @@ class SemVerString:
                     "isinstance() returned non boolean value, inform pannenkoek of the bitflip"
                 )
 
-    def __ge__(self, value: object | "SemVerString"):
+    def __ge__(self, value: Any):
         match isinstance(value, SemVerString):
             case False:
                 return NotImplemented

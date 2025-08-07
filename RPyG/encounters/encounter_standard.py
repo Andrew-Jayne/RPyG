@@ -11,12 +11,14 @@ from RPyG.content.encounter_library import (
     SpecialAction,
 )
 from RPyG.core_io import CoreIO
+from RPyG.core_io.io_models import OutputMessage, UserPromptRequest
 from RPyG.utilites import ensure_type
 
 
 @staticmethod
 def set_encounter_targets(
-    current_event_targets: EncounterTarget, player_party_instance: PlayerParty
+    current_event_targets: EncounterTarget,
+    player_party_instance: PlayerParty,
 ) -> list[PlayableActor]:
     ensure_type(current_event_targets, EncounterTarget, "current_event_targets")
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
@@ -35,8 +37,6 @@ def find_encounter_by_id(
     target_item_id: str,
 ) -> Encounter:
     ensure_type(target_item_id, str, "target_item_id")
-    from RPyG.content import ContentLibrary
-
     content_library: ContentLibrary = ContentLibrary.get_library()
 
     # Directly access the event by its ID
@@ -61,7 +61,7 @@ def execute_actor_action(
 
     magnitude = int(encounter.magnitude / len(target_instance_list))
     if encounter.message is not None:
-        core_io.send_output({"message": encounter.message})
+        core_io.send_output(OutputMessage(encounter.message))
 
     for target in target_instance_list:
         match encounter.actor_action:
@@ -101,27 +101,32 @@ def execute_special_action(encounter: Encounter, player_party_instance: PlayerPa
                 ]
 
                 while player_choice != "LEAVE":
-                    core_io.request_input(merchant_options, merchant_messages)
+                    core_io.request_input(
+                        UserPromptRequest(
+                            options=merchant_options,
+                            prompts=merchant_messages,
+                        )
+                    )
                     player_choice = core_io.receive_input()
                     core_io.send_output(
-                        {
-                            "messages": f"{player_instance.name} has {player_instance.inventory.potions} potions & {player_instance.inventory.gold} gold"
-                        }
+                        OutputMessage(
+                            f"{player_instance.name} has {player_instance.inventory.potions} potions & {player_instance.inventory.gold} gold"
+                        )
                     )
                     match player_choice:
                         case "BUY":
                             if player_instance.inventory.spend_gold(25) is True:
                                 player_instance.inventory.gain_potion(1)
                                 core_io.send_output(
-                                    {
-                                        "messages": f"{player_instance.name} purchases a potion. They now have {player_instance.inventory.potions} & {player_instance.inventory.gold} gold",
-                                    }
+                                    OutputMessage(
+                                        f"{player_instance.name} purchases a potion. They now have {player_instance.inventory.potions} & {player_instance.inventory.gold} gold",
+                                    )
                                 )
                             else:
                                 core_io.send_output(
-                                    {
-                                        "messages": f"{player_instance.name} does not have enough Gold to purchase more potions",
-                                    }
+                                    OutputMessage(
+                                        f"{player_instance.name} does not have enough Gold to purchase more potions",
+                                    )
                                 )
                                 player_choice = "LEAVE"
                         case "BUY MAX":
@@ -172,32 +177,40 @@ def standard_encounter(player_party_instance: PlayerParty) -> None:
     match current_event.encounter_type:
         case EncounterType.REST:
             if current_event.pre_message is not None:
-                core_io.send_output({"message": current_event.pre_message})
+                core_io.send_output(OutputMessage(current_event.pre_message))
 
-            rest_options = ["OPEN", "LEAVE"]
-            rest_message = ["What do you do?:"]
-
-            core_io.request_input(rest_options, rest_message)
-
-            if core_io.receive_input() is True:
-                execute_actor_action(current_event, targets)
-                run_extra_actions(
-                    current_event,
-                    player_party_instance,
+            core_io.request_input(
+                UserPromptRequest(
+                    prompts=["What do you do?:"],
+                    options=["OPEN", "LEAVE"],
                 )
-                if current_event.post_message is not None:
-                    core_io.send_output({"message": current_event.post_message})
-            else:
-                core_io.send_output({"message": "They Travel onwards"})
+            )
+            action = core_io.receive_input()
+            match action:
+                case "OPEN":
+                    execute_actor_action(current_event, targets)
+                    run_extra_actions(
+                        current_event,
+                        player_party_instance,
+                    )
+                    if current_event.post_message is not None:
+                        core_io.send_output(OutputMessage(current_event.post_message))
+                case "LEAVE":
+                    core_io.send_output(OutputMessage("They Travel onwards"))
+                case _:
+                    raise RuntimeError(f"Invalid value {action} in standard_encounter ")
 
         case EncounterType.MYSTERY:
             # this is pretty brittle right now, can be reworked later
             if current_event.pre_message is not None:
-                core_io.send_output({"message": current_event.pre_message})
+                core_io.send_output(OutputMessage(current_event.pre_message))
 
-            rest_options = ["ATTACK", "GREET"]
-            rest_message = ["What do you do?:"]
-            core_io.request_input(rest_message, rest_options)
+            core_io.request_input(
+                UserPromptRequest(
+                    prompts=["What do you do?:"],
+                    options=["ATTACK", "GREET"],
+                )
+            )
 
             match core_io.receive_input():
                 case "GREET":
@@ -207,7 +220,7 @@ def standard_encounter(player_party_instance: PlayerParty) -> None:
                         player_party_instance,
                     )
                     if current_event.post_message is not None:
-                        core_io.send_output({"message": current_event.post_message})
+                        core_io.send_output(OutputMessage(current_event.post_message))
                 case "ATTACK":
                     # if you attack you get attacked
                     static_event: Encounter = find_encounter_by_id("surprise_attack")
@@ -216,13 +229,13 @@ def standard_encounter(player_party_instance: PlayerParty) -> None:
                         current_event,
                         player_party_instance,
                     )
-                    core_io.send_output({"message": static_event.post_message})
+                    core_io.send_output(OutputMessage(static_event.post_message))
                 case _:
                     raise ValueError("Null Action Set MonkaS")
 
         case EncounterType.LOOT:
             if current_event.pre_message is not None:
-                core_io.send_output({"message": current_event.pre_message})
+                core_io.send_output(OutputMessage(current_event.pre_message))
             rest_options = ["OPEN", "LEAVE"]
             rest_message = ["What do you do?:"]
             core_io.request_input(rest_options, rest_message)
@@ -235,9 +248,11 @@ def standard_encounter(player_party_instance: PlayerParty) -> None:
                         player_party_instance,
                     )
                     if current_event.post_message is not None:
-                        core_io.send_output({"message": current_event.post_message})
+                        core_io.send_output(OutputMessage(current_event.post_message))
                 case "LEAVE":
-                    core_io.send_output({"message": "You leave the chest undisturbed"})
+                    core_io.send_output(
+                        OutputMessage("You leave the chest undisturbed")
+                    )
                 case _:
                     raise ValueError("Null Action Set MonkaS")
 

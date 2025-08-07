@@ -6,6 +6,7 @@ import pickle
 # Only used for Type Checking
 from RPyG.actors import PlayerParty
 from RPyG.core_io import CoreIO
+from RPyG.core_io.io_models import OutputMessage, UserPromptRequest
 from RPyG.utilites import ensure_type
 
 
@@ -29,17 +30,20 @@ def save_game(player_party_instance: PlayerParty) -> None:
         save_file.write(signature + serialized_data)
 
     core_io.send_output(
-        {"message": f"Successfully Saved Game for {player_party_instance.name}"}
+        OutputMessage(f"Successfully Saved Game for {player_party_instance.name}")
     )
 
-    save_prompt = ["Would you like to keep playing?"]
-    save_options = ["YES", "NO"]
-    core_io.request_input(save_options, save_prompt)
+    core_io.request_input(
+        UserPromptRequest(
+            options=["YES", "NO"],
+            prompts=["Would you like to keep playing?"],
+        )
+    )
     match core_io.receive_input():
         case "YES":
-            core_io.send_output({"message": "The adventure continues"})
+            core_io.send_output(OutputMessage("The adventure continues"))
         case "NO":
-            core_io.send_output({"message": "exit process requested"})
+            core_io.send_output(OutputMessage("exit process requested"))
         case _:
             raise ValueError("Must be a choice of 'YES' or 'NO'")
 
@@ -76,6 +80,8 @@ def load_game() -> PlayerParty:
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
 
     core_io.send_output(
-        {"message": f"Successfully Loaded Save Game for: {player_party_instance.name}"}
+        OutputMessage(
+            f"Successfully Loaded Save Game for: {player_party_instance.name}"
+        )
     )
     return player_party_instance

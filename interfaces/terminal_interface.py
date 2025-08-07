@@ -1,10 +1,9 @@
-from typing import Any
-
-from RPyG.core_io import RPyGInterface, OutputMessage, InputRequest
-from RPyG.utilites import ensure_type
-
-
 import os
+from typing import Any, Literal
+
+from RPyG.actors import PlayableActor
+from RPyG.core_io import InputRequest, OutputMessage, RPyGInterface
+from RPyG.utilites import ensure_type
 
 
 welcome_message = """
@@ -13,17 +12,20 @@ welcome_message = """
 ----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----
 """
 
-note ="NOTE: All Prompts in this game are case insensitive",
+note = ("NOTE: All Prompts in this game are case insensitive",)
 
 ## Monkas this file is huge lol
+
 
 class BasicTerminalInterface(RPyGInterface):
     input_buffer: dict[str, Any]
     game_mode: Literal["AUTO", "MANUAL"] = "MANUAL"
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, game_mode: Literal["AUTO", "MANUAL"], use_default: bool):
+        RPyGInterface.__init__(self)
         self.input_buffer = {}
+        self.game_mode = game_mode
+        self.use_default = use_default
 
     def show_ouput(self, output_data: OutputMessage) -> None:
         return print(output_data)
@@ -40,7 +42,7 @@ class BasicTerminalInterface(RPyGInterface):
         # reset buffer
         self.input_buffer = {}
         return data
-    
+
     @staticmethod
     def default_party() -> list[PlayableActor]:
         party_members: list[PlayableActor] = []
@@ -50,7 +52,6 @@ class BasicTerminalInterface(RPyGInterface):
             member = (default_names[i], default_specialization[i])
             party_members.append(PlayableActor(member[0], member[1]))
         return party_members
-    
 
     @staticmethod
     def clear_display() -> None:
@@ -167,6 +168,7 @@ class BasicTerminalInterface(RPyGInterface):
         return response
 
 
+trash = """
 #### logic that is interface data that has been expunged from the program itself
 
     ## from New game
@@ -249,7 +251,6 @@ import random
 from RPyG.actors import CombatantParty, PlayableActor, PlayerParty
 
 # Only Used For Type Hinting/Checking
-from RPyG.message.message import Message
 from RPyG.utilites import ensure_type
 
 
@@ -316,7 +317,7 @@ class LEGACYInteraction:
                 ):
                     chosen_action = "HEAL"
                 elif player_instance.inventory.potions == 0:
-                    Message.display_message(
+                    display_message(
                         f"{player_instance.name} has no remaining potions and must make a stand!",
                         1,
                     )
@@ -337,7 +338,7 @@ class LEGACYInteraction:
         import math
 
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
-        Message.display_message("You arrive at a merchant", 1)
+        display_message("You arrive at a merchant", 1)
         match BasicTerminalInterface.game_mode:
             case "AUTO":
                 # init Counts
@@ -357,12 +358,12 @@ class LEGACYInteraction:
                             player_instance.inventory.gain_potion(1)
                             potions_sold += 1
 
-                            Message.display_message(
+                            display_message(
                                 f"{player_instance.name} purchases a potion. They now have {player_instance.inventory.potions}",
                                 1,
                             )
                         else:
-                            Message.display_message(
+                            display_message(
                                 f"{player_instance.name} does not have enough Gold to purchase more potions",
                                 1,
                             )
@@ -394,7 +395,7 @@ class LEGACYInteraction:
                         case "EMBARK":
                             return True
                         case "DRINK":
-                            Message.display_message(
+                            display_message(
                                 "After many drinks, the kings missive sticks in your mind.",
                                 1,
                             )
@@ -431,10 +432,8 @@ from RPyG.utilites import ensure_type
 class LEGACYMessage:
     @staticmethod
     def display_message(message: str, new_line_count: int) -> None:
-        """
         Use this function rather than local 'print()' in functions.
         This does basic processing for optimal display and will allow for better output handling when the UI is redone.
-        """
         ending = "\n" * new_line_count
         wrapped_message = ""
 
@@ -477,3 +476,6 @@ class LEGACYMessage:
 
 
 f"{actor_instance.name} has {actor_instance.health} Health remaining"
+
+
+"""

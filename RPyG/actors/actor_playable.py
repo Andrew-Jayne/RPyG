@@ -1,6 +1,8 @@
 import random
 
 from RPyG.actors.actor_combatant import Combatant, CombatantParty
+from RPyG.core_io import CoreIO
+from RPyG.core_io.io_models import OutputMessage
 from RPyG.utilites import ensure_type
 
 
@@ -25,28 +27,26 @@ class Inventory:
         self.gold += amount
 
     def spend_gold(self, amount: int) -> bool:
-        from RPyG.core_io import CoreIO
-
         core_io = CoreIO.get_core_io()
 
         if self.gold < amount:
-            insufficient_gold_message = f"{self.actor_name} has insufficient gold"
-            core_io.send_output({"messages": insufficient_gold_message})
+            core_io.send_output(
+                OutputMessage(f"{self.actor_name} has insufficient gold")
+            )
             return False
         else:
             Inventory.lose_gold(self, amount)
             return True
 
     def lose_gold(self, amount: int) -> None:
-        from RPyG.core_io import CoreIO
-
         core_io = CoreIO.get_core_io()
 
         self.gold -= amount
         if self.gold < 0:
             self.gold = 0
-            no_gold_message = f"{self.actor_name} has no gold remaining"
-            core_io.send_output({"messages": no_gold_message})
+            core_io.send_output(
+                OutputMessage(f"{self.actor_name} has no gold remaining")
+            )
 
     def gain_potion(self, amount: int) -> None:
         self.potions += amount
@@ -105,27 +105,23 @@ class PlayableActor(Combatant):
         )
 
     def use_potion(self) -> None:
-        from RPyG.core_io import CoreIO
-
         core_io = CoreIO.get_core_io()
 
         if self.inventory.potions != 0 and not self.is_fully_healed():
-            drink_potion_message = f"{self.name} drinks a potion"
-            core_io.send_output({"messages": drink_potion_message})
+            core_io.send_output(OutputMessage(f"{self.name} drinks a potion"))
             self.inventory.lose_potion(1)
             self.heal(100 + random.randint(-20, 20))
-            drank_potion_message = f"""
+            core_io.send_output(
+                OutputMessage(f"""
 {self.name} has {self.inventory.potions} remaining
 {self.name}'s health is now {self.health}
-"""
-            core_io.send_output({"messages": drank_potion_message})
+""")
+            )
 
         elif self.inventory.potions == 0:
-            no_potions_message = f"{self.name} has no remaining potions!"
-            core_io.send_output({"messages": no_potions_message})
+            core_io.send_output(OutputMessage(f"{self.name} has no remaining potions!"))
         else:
-            fully_healed_message = f"{self.name} is already fully healed!"
-            core_io.send_output({"messages": fully_healed_message})
+            core_io.send_output(OutputMessage(f"{self.name} is already fully healed!"))
 
     @staticmethod
     def _get_attack_power(
@@ -338,3 +334,38 @@ class PlayerParty(CombatantParty[PlayableActor]):
 
         self.progress = 0
         self.relics = None
+
+    def end_game_report(self) -> str:
+        player_report = ""
+        for player_instance in self.members:
+            player_report += f"""
+    Player Name: {player_instance.name}
+    Player Base Health: {player_instance.base_health}                             
+    Player Final Health: {player_instance.health}
+    Player Int: {player_instance.intellect}
+    Player Str: {player_instance.strength}
+    Player Agl: {player_instance.agility}
+    Player Lck: {player_instance.luck}
+    Player Gold: {player_instance.inventory.gold}
+    Player Potions: {player_instance.inventory.potions}
+    Player Attack Name: {player_instance.attack_name}
+    Player Attack Power: {player_instance.attack_power}
+    """
+
+        player_report += "Fallen Members\n\n"
+
+        for player_instance in self.dead_members:
+            player_report += f"""
+    Player Name: {player_instance.name}
+    Player Base Health: {player_instance.base_health}                             
+    Player Final Health: {player_instance.health}
+    Player Int: {player_instance.intellect}
+    Player Str: {player_instance.strength}
+    Player Agl: {player_instance.agility}
+    Player Lck: {player_instance.luck}
+    Player Gold: {player_instance.inventory.gold}
+    Player Potions: {player_instance.inventory.potions}
+    Player Attack Name: {player_instance.attack_name}
+    Player Attack Power: {player_instance.attack_power}
+    """
+            return player_report

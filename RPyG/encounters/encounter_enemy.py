@@ -6,6 +6,7 @@ from RPyG.combat import battle
 from RPyG.content import ContentLibrary
 from RPyG.content.enemy_library import EnemySet
 from RPyG.core_io import CoreIO
+from RPyG.core_io.io_models import OutputMessage, UserPromptRequest
 from RPyG.utilites import ensure_type
 
 
@@ -37,10 +38,14 @@ def enemy_encounter(player_party_instance: PlayerParty) -> None:
 
     enemy_party = EnemySet.generate_enemy_party(enemy_set, enemy_count)
 
-    core_io.send_output({"message": f"Your Party encounters a {enemy_party.name}!"})
-    encounter_options = ["BATTLE", "FLEE"]
-    encounter_message = ["Choose an Action:"]
-    core_io.request_input(encounter_options, encounter_message)
+    core_io.send_output(OutputMessage(f"Your Party encounters a {enemy_party.name}!"))
+
+    core_io.request_input(
+        UserPromptRequest(
+            options=["BATTLE", "FLEE"],
+            prompts=["Choose an Action:"],
+        )
+    )
     match core_io.receive_input():
         case "BATTLE":
             battle(player_party_instance, enemy_party)
@@ -60,3 +65,5 @@ def enemy_encounter(player_party_instance: PlayerParty) -> None:
                     )
                     battle(player_party_instance, enemy_party)
                     break
+        case _:
+            raise RuntimeError()

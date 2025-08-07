@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Self
 
-from core_io.models import InputRequest, OutputMessage
+from RPyG.core_io.io_models import InputRequest, OutputMessage
 
 
 class RPyGInterface(ABC):
@@ -16,7 +16,7 @@ class RPyGInterface(ABC):
     def request_input(self, request: InputRequest) -> None:
         pass
 
-    def receive_input(self) -> dict:
+    def receive_input(self) -> str:
         pass
 
 
@@ -43,7 +43,7 @@ class CoreIO:
     def request_input(self, request: InputRequest) -> None:
         return self.interface.request_input(request)
 
-    def receive_input(self) -> dict:
+    def receive_input(self) -> str:
         return self.interface.receive_input()
 
     def send_output(self, output: OutputMessage) -> None:

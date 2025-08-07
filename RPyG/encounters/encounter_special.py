@@ -3,6 +3,7 @@ from RPyG.actors import EnemyParty, PlayerParty
 from RPyG.combat import battle
 from RPyG.content import ContentLibrary
 from RPyG.core_io import CoreIO
+from RPyG.core_io.io_models import OutputMessage, UserPromptRequest
 from RPyG.encounters.encounter_dungeon import Dungeon
 from RPyG.gameState.file import save_game
 from RPyG.utilites import ensure_type
@@ -13,9 +14,12 @@ from RPyG.utilites import ensure_type
 
 class SpecialEncounters:
     @staticmethod
-    def special_encounter_message(
-        progress_value, party_name, message_type
-    ) -> list[str]:
+    def send_special_encounter_message(
+        progress_value,
+        party_name,
+        message_type,
+    ) -> None:
+        core_io = CoreIO.get_core_io()
         content_library = ContentLibrary.get_library()
 
         all_events = content_library.story_events
@@ -36,25 +40,68 @@ class SpecialEncounters:
         for message in active_messages:
             formatted_messages.append(message.format(party_name=party_name))
 
-        return formatted_messages
+        core_io.send_output(OutputMessage(formatted_messages))
+
+    @staticmethod
+    def tavern_notice(player_party_instance: PlayerParty) -> None:
+        ensure_type(player_party_instance, PlayerParty, 'player_party_instance')
+        core_io = CoreIO.get_core_io()
+
+        SpecialEncounters.send_special_encounter_message(
+            player_party_instance.progress,
+            player_party_instance.name,
+            "messages",
+        )
+
+        embark_options = ["EMBARK", "DRINK"]
+        embark_options_message = ["What shall the party do?"]
+        core_io.request_input(
+            UserPromptRequest(
+                options=embark_options,
+                prompts=embark_options_message,
+            )
+        )
+        player_choice = core_io.receive_input()
+
+        while player_choice != "EMBARK":
+            core_io.request_input(
+                UserPromptRequest(
+                    options=embark_options,
+                    prompts=embark_options_message,
+                )
+            )
+            player_choice = core_io.receive_input()
+
+            match player_choice:
+                case "EMBARK":
+                    return
+                case "DRINK":
+                    ## TODO Hard Coded text, needs to be moved to some other system
+                    core_io.send_output(
+                        OutputMessage(
+                            "After many drinks, the kings missive sticks in your minds.",
+                        )
+                    )
+                case _:
+                    return
 
     @staticmethod
     def friendly_keep_visit(player_party_instance: PlayerParty) -> None:
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
         core_io = CoreIO.get_core_io()
 
-        keep_visit_message = f"{player_party_instance.name} is welcomed at the Open Hall by King Stallman"
-
-        core_io.send_output({"messages": keep_visit_message})
+        ## TODO Hard Coded text, needs to be moved to some other system
         core_io.send_output(
-            {
-                "messages": SpecialEncounters.special_encounter_message(
-                    player_party_instance.progress,
-                    player_party_instance.name,
-                    "messages",
-                )
-            }
+            OutputMessage(
+                f"{player_party_instance.name} is welcomed at the Open Hall by King Stallman"
+            )
         )
+        SpecialEncounters.send_special_encounter_message(
+            player_party_instance.progress,
+            player_party_instance.name,
+            "messages",
+        )
+
         quest_options = ["ACCEPT", "DECLINE"]
         quest_message = ["Will you accept this quest from the King?"]
         core_io.request_input(quest_options, quest_message)
@@ -65,10 +112,10 @@ class SpecialEncounters:
             player_choice = core_io.receive_input()
             match player_choice:
                 case "ACCEPT":
-                    return True
+                    pass
                 case "DECLINE":
                     core_io.send_output(
-                        {"messages": "The King insists, and asks again"}
+                        OutputMessage("The King insists, and asks again")
                     )
                 case _:
                     pass
@@ -77,65 +124,48 @@ class SpecialEncounters:
             member_instance.inventory.gain_potion(9)
 
         core_io.send_output(
-            {
-                "messages": f"{player_party_instance.name} is are fully rested and have a full stock of potions"
-            }
+            OutputMessage(
+                f"{player_party_instance.name} is are fully rested and have a full stock of potions"
+            )
         )
 
     @staticmethod
     def midway_boss(player_party_instance: PlayerParty) -> None:
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
-        core_io = CoreIO.get_core_io()
         content_library = ContentLibrary.get_library()
 
         enemy_instance = content_library.special_enemies["midway_boss"]
 
-        core_io.send_output(
-            {
-                "messages": SpecialEncounters.special_encounter_message(
-                    player_party_instance.progress,
-                    player_party_instance.name,
-                    "messages",
-                )
-            }
+        SpecialEncounters.send_special_encounter_message(
+            player_party_instance.progress,
+            player_party_instance.name,
+            "messages",
         )
+
         enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
         battle(player_party_instance, enemy_party)
         if len(player_party_instance.members) != 0:
-            core_io.send_output(
-                {
-                    "messages": SpecialEncounters.special_encounter_message(
-                        player_party_instance.progress,
-                        player_party_instance.name,
-                        "success_messages",
-                    )
-                }
+            SpecialEncounters.send_special_encounter_message(
+                player_party_instance.progress,
+                player_party_instance.name,
+                "success_messages",
             )
         else:
-            core_io.send_output(
-                {
-                    "messages": SpecialEncounters.special_encounter_message(
-                        player_party_instance.progress,
-                        player_party_instance.name,
-                        "failure_messages",
-                    )
-                }
+            SpecialEncounters.send_special_encounter_message(
+                player_party_instance.progress,
+                player_party_instance.name,
+                "failure_messages",
             )
 
     @staticmethod
     def enemy_keep_visit(player_party_instance: PlayerParty) -> None:
-        core_io = CoreIO.get_core_io()
         content_library = ContentLibrary.get_library()
-
-        core_io.send_output(
-            {
-                "messages": SpecialEncounters.special_encounter_message(
-                    player_party_instance.progress,
-                    player_party_instance.name,
-                    "messages",
-                )
-            }
+        SpecialEncounters.send_special_encounter_message(
+            player_party_instance.progress,
+            player_party_instance.name,
+            "messages",
         )
+
         if "algolons_fortress" not in content_library.special_dungeons.keys():
             raise FileNotFoundError(
                 f"Unable to locate Dungeon with the ID algolons_fortress, avalible IDs are {content_library.special_dungeons.keys()}"
@@ -150,28 +180,20 @@ class SpecialEncounters:
         content_library = ContentLibrary.get_library()
 
         enemy_instance = content_library.special_enemies["penultimate_boss"]
-        core_io.send_output({"messages": f"Your Party Battles {enemy_instance.name}!"})
+        core_io.send_output(OutputMessage(f"Your Party Battles {enemy_instance.name}!"))
         enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
         battle(player_party_instance, enemy_party)
         if len(player_party_instance.members) != 0:
-            core_io.send_output(
-                {
-                    "messages": SpecialEncounters.special_encounter_message(
-                        player_party_instance.progress,
-                        player_party_instance.name,
-                        "success_messages",
-                    )
-                }
+            SpecialEncounters.send_special_encounter_message(
+                player_party_instance.progress,
+                player_party_instance.name,
+                "success_messages",
             )
         else:
-            core_io.send_output(
-                {
-                    "messages": SpecialEncounters.special_encounter_message(
-                        player_party_instance.progress,
-                        player_party_instance.name,
-                        "failure_messages",
-                    )
-                }
+            SpecialEncounters.send_special_encounter_message(
+                player_party_instance.progress,
+                player_party_instance.name,
+                "failure_messages",
             )
 
     @staticmethod
@@ -183,28 +205,28 @@ class SpecialEncounters:
         enemy_instance = content_library.special_enemies["ultimate_boss"]
 
         core_io.send_output(
-            {"messages": f"Your Party must now battle {enemy_instance.name}!"}
+            OutputMessage(f"Your Party must now battle {enemy_instance.name}!")
         )
         enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
         battle(player_party_instance, enemy_party)
         if len(player_party_instance.members) != 0:
-            core_io.send_output(
-                {
-                    "messages": SpecialEncounters.special_encounter_message(
-                        player_party_instance.progress,
-                        player_party_instance.name,
-                        "success_messages",
-                    )
-                }
+            SpecialEncounters.send_special_encounter_message(
+                player_party_instance.progress,
+                player_party_instance.name,
+                "success_messages",
             )
             core_io.send_output(
-                {
-                    "messages": f"""
+                OutputMessage(f"""
     Fortranus the Ancient One has been Vanquished at the hands of {player_party_instance.name}
 
 
     Your adventure has been completed, you may start a new adventure if you so choose
-    """
-                }
+    """)
             )
             save_game(player_party_instance)
+        else:
+            SpecialEncounters.send_special_encounter_message(
+                player_party_instance.progress,
+                player_party_instance.name,
+                "failure_messages",
+            )
