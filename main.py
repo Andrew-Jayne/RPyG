@@ -22,8 +22,6 @@ def main(
     use_default_party: bool,
 ):
     RPyG.launch_game(
-        game_mode=game_mode,
-        using_default_party=use_default_party,
         content_paths=RPyG.ContentPaths(
             special_dungeons_path=DUNGEONS_SPECIAL_PATH,
             standard_dungeons_path=DUNGEONS_STANDARD_PATH,
@@ -33,7 +31,7 @@ def main(
             standard_enemies_path=ENEMIES_STANDARD_PATH,
             story_path=STORY_PATH,
         ),
-        interface=BasicTerminalInterface,
+        interface=BasicTerminalInterface(game_mode, use_default_party),
     )
 
 

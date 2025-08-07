@@ -1,17 +1,19 @@
 from abc import ABC, abstractmethod
 from typing import Self
 
+from core_io.models import InputRequest, OutputMessage
+
 
 class RPyGInterface(ABC):
     def __init__(self):
         pass
 
     @abstractmethod
-    def show_ouput(self, output_data: dict) -> None:
+    def show_ouput(self, output: OutputMessage) -> None:
         pass
 
     @abstractmethod
-    def request_input(self, request_data: dict) -> None:
+    def request_input(self, request: InputRequest) -> None:
         pass
 
     def receive_input(self) -> dict:
@@ -38,11 +40,11 @@ class CoreIO:
                 "Attempted to acess CoreIO instance before initialization"
             )
 
-    def request_input(self, request_data: dict) -> dict:
-        return self.interface.request_input(request_data)
+    def request_input(self, request: InputRequest) -> None:
+        return self.interface.request_input(request)
 
     def receive_input(self) -> dict:
         return self.interface.receive_input()
 
-    def send_output(self, output_data: dict) -> dict:
-        return self.interface.show_ouput(output_data)
+    def send_output(self, output: OutputMessage) -> None:
+        return self.interface.show_ouput(output)
