@@ -4,6 +4,25 @@ from RPyG.core_io import RPyGInterface, OutputMessage, InputRequest
 from RPyG.utilites import ensure_type
 
 
+import os
+
+from RPyG.config import Config
+
+
+def clear_display() -> None:
+    "If the game is not in Auto Mode, will clear the display"
+    config = Config.get_config()
+    # Screen is not cleared in Auto mode since It's better for testing
+    # Auto mode is kinda turning into a debug mode (I might make that an option at some point)
+    if config.global_game_mode == "MANUAL":
+        # For Windows
+        if os.name == "nt":
+            os.system("cls")
+        # For macOS and Linux
+        else:
+            os.system("clear")
+
+
 ## Monkas this file is huge lol
 
 class BasicTerminalInterface(RPyGInterface):
@@ -238,21 +257,6 @@ class Interaction:
                 return target_party_instance.members[0].select_combat_target(
                     target_party_instance
                 )
-            case "MANUAL":
-                for i, member in enumerate(target_party_instance.members):
-                    target_options.append(f"{i} {member.name}:{member.health}")
-
-                target_messages = [
-                    "Which enemy will you attack?",
-                ]
-
-                return int(
-                    Interaction.prompt_user(
-                        target_options, target_messages, return_index=True
-                    )
-                )
-            case _:
-                raise ValueError("Invalid Game mode")
 
     @staticmethod
     def encounter_enemy() -> str:
@@ -587,13 +591,13 @@ class Message:
     # Actor Messages
     @staticmethod
     def defeated_message(name: str) -> None:
-        defeated_message = f"{name} has been defeated"
+        defeated_message = 
 
         __class__.display_message(defeated_message, 2)
 
     @staticmethod
     def encounter_message(group_name: str) -> None:
-        encounter_message = f"Your Party encounters a {group_name}!"
+        encounter_message = 
 
         __class__.display_message(encounter_message, 2)
 
@@ -607,44 +611,6 @@ class Message:
 
         __class__.display_message(actor_health_message, 2)
 
-    @staticmethod
-    def actor_attack_message(attacker_instance: Combatant, damage_value: int) -> None:
-        ensure_type(attacker_instance, Combatant, "actor_instance")
-        from RPyG.config import Config
-
-        config = Config.get_config()
-
-        if (
-            config.global_game_mode == "MANUAL"
-            and isinstance(attacker_instance, PlayableActor) is False
-        ):
-            time.sleep(2)
-
-        actor_attack_message = f"{attacker_instance.name} attacks with {attacker_instance.attack_name} inflicting {damage_value} damage"
-
-        __class__.display_message(actor_attack_message, 2)
-
-    @staticmethod
-    def actor_critical_attack_message(
-        attacker_instance: Combatant, damage_value: int
-    ) -> None:
-        ensure_type(attacker_instance, Combatant, "actor_instance")
-        from RPyG.config import Config
-
-        config = Config.get_config()
-
-        if (
-            config.global_game_mode == "MANUAL"
-            and isinstance(attacker_instance, PlayableActor) is False
-        ):
-            time.sleep(2)
-
-        actor_critical_attack_message = f"""
-{attacker_instance.name} attacks with {attacker_instance.attack_name} inflicting {damage_value * 2} damage
-{attacker_instance.name} got a critical hit!!
-"""
-        __class__.display_message(actor_critical_attack_message, 2)
-
     # Battle Messages
     @staticmethod
     def battle_hud_message(
@@ -653,18 +619,7 @@ class Message:
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
         ensure_type(enemy_party_instance, EnemyParty, "enemy_party_instance")
 
-        battle_hud_message = ""
 
-        for playable_instance in player_party_instance.members:
-            battle_hud_message += (
-                f"{playable_instance.name}: {playable_instance.health}"
-            )
-            battle_hud_message += "\n"
-        battle_hud_message += "\n"
-
-        for enemy_instance in enemy_party_instance.members:
-            battle_hud_message += f"{enemy_instance.name}: {enemy_instance.health}\n"
-            battle_hud_message += "\n"
 
         __class__.display_message(battle_hud_message, 2)
 
@@ -705,40 +660,6 @@ class Message:
 
     @staticmethod
     # TODO This function gives me the ick, and sucks
-    def special_encounter_message(
-        progress_value: int,
-        party_name: str,
-        message_type: str,
-    ) -> None:
-        def show_message(message: str) -> None:
-            formatted_message = message.format(party_name=party_name)
-            from RPyG.config import Config
-
-            config = Config.get_config()
-
-            __class__.display_message(formatted_message, 2)
-            if config.global_game_mode == "MANUAL":
-                time.sleep(2)
-
-        from RPyG.content import ContentLibrary
-
-        content_library: ContentLibrary = ContentLibrary.get_library()
-
-        current_event = content_library.story_events[progress_value]
-        match message_type:
-            case "messages":
-                for message in current_event.messages:
-                    show_message(message)
-            case "success_messages":
-                for message in current_event.success_messages:
-                    show_message(message)
-            case "failure_messages":
-                for message in current_event.failure_messages:
-                    show_message(message)
-            case _:
-                raise ValueError(
-                    'Message type must be one of ["messages", "success_messages", "failure_messages"]'
-                )
 
     # Player Messages
     @staticmethod

@@ -3,7 +3,6 @@ import os
 from RPyG.actors import PlayerParty
 from RPyG.actors.actor_playable import PlayableActor
 from RPyG.core_io import CoreIO
-from RPyG.display import clear_display
 from RPyG.gameState.file import load_game
 
 
@@ -32,7 +31,6 @@ def get_start_type() -> str:
         }
     )
     player_action = core_io.receive_input()
-    clear_display()
     return player_action
 
 
@@ -64,7 +62,6 @@ def party_start() -> tuple[list[list[str]], str]:
             }
         )
     )
-    clear_display()
 
     party_member_attribs: list[list[str]] = []
     for _ in range(0, party_size):
@@ -86,7 +83,6 @@ def party_start() -> tuple[list[list[str]], str]:
         member_specialization = core_io.receive_input()
         member_attrib = [member_name, member_specialization]
         party_member_attribs.append(member_attrib)
-        clear_display()
     core_io.request_input(
         {
             "type": "custom_text_entry",
@@ -95,7 +91,6 @@ def party_start() -> tuple[list[list[str]], str]:
         }
     )
     party_name = core_io.receive_input()
-    clear_display()
 
     return party_member_attribs, party_name
 

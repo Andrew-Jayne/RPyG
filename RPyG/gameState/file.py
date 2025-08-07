@@ -5,8 +5,6 @@ import pickle
 
 # Only used for Type Checking
 from RPyG.actors import PlayerParty
-from RPyG.interaction.interaction import Interaction
-from RPyG.message.message import Message
 from RPyG.utilites import ensure_type
 
 

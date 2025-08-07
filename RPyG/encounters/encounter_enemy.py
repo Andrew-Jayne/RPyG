@@ -5,8 +5,6 @@ from RPyG.actors import PlayerParty
 from RPyG.combat import battle
 from RPyG.content import ContentLibrary
 from RPyG.content.enemy_library import EnemySet
-from RPyG.interaction.interaction import Interaction
-from RPyG.message.message import Message
 from RPyG.utilites import ensure_type
 
 

@@ -9,8 +9,6 @@ from RPyG.content.encounter_library import (
     EncounterType,
     SpecialAction,
 )
-from RPyG.interaction.interaction import Interaction
-from RPyG.message.message import Message
 from RPyG.utilites import ensure_type
 
 

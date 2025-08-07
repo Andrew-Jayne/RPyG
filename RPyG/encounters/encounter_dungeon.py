@@ -4,7 +4,6 @@ from typing import Any
 
 from RPyG import combat
 from RPyG.actors import Enemy, EnemyParty, PlayerParty
-from RPyG.config import Config
 from RPyG.content.enemy_library import EnemySet
 from RPyG.utilites import ensure_type
 
@@ -73,28 +72,27 @@ class Dungeon:
         self.enemies = enemy_set_instances
         self.boss = Enemy(**boss)
 
+    ## this function is a crime
     def travese_dungeon(self, player_party_instance: PlayerParty) -> bool:
-        from RPyG.message.message import Message
+        from RPyG.core_io import CoreIO
 
+        core_io = CoreIO.get_core_io()
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
         dungeon_progress = 0
-        Message.display_message(self.messages.start_message, 2)
+        core_io.send_output({"messages": self.messages.start_message})
 
         while dungeon_progress < self.length:
             dungeon_progress += 1
-            config = Config.get_config()
-            if config.global_game_mode == "MANUAL":
-                time.sleep(2)
             encouter_chance = random.randint(0, 5)
             match encouter_chance:
                 case 0:
-                    Message.display_message(self.messages.heal_room_message, 1)
+                    core_io.send_output({"messages": self.messages.heal_room_message})
                     for member_instance in player_party_instance.members:
                         member_instance.inventory.gain_potion(2)
                         member_instance.heal(20)
                 case 1:
                     dungeon_progress += 2
-                    Message.display_message(self.messages.shortcut_message, 1)
+                    core_io.send_output({"messages": self.messages.shortcut_message})
                 case 4:
                     enemy_count = int(
                         len(player_party_instance.members) + random.randint(-2, 2)
@@ -105,15 +103,46 @@ class Dungeon:
                     enemy_party = EnemySet.generate_enemy_party(
                         chosen_enemy, enemy_count
                     )
-                    Message.encounter_message(enemy_party.name)
+                    core_io.send_output(
+                        {"messages": f"Your Party encounters a {enemy_party.name}!"}
+                    )
                     combat.battle(player_party_instance, enemy_party)
                     if len(player_party_instance.members) == 0:
                         return False
                 case _:
-                    Message.empty_travel_message(1)
+                    core_io.send_output({"messages": "empty_travel_message(1)"})
+
+        ## THis is horrendus and I hate it
+        def special_encounter_message(
+            progress_value: int,
+            party_name: str,
+            message_type: str,
+        ) -> None:
+            def show_message(message: str) -> None:
+                return message.format(party_name=party_name)
+
+            from RPyG.content import ContentLibrary
+
+            content_library: ContentLibrary = ContentLibrary.get_library()
+
+            current_event = content_library.story_events[progress_value]
+            match message_type:
+                case "messages":
+                    for message in current_event.messages:
+                        show_message(message)
+                case "success_messages":
+                    for message in current_event.success_messages:
+                        show_message(message)
+                case "failure_messages":
+                    for message in current_event.failure_messages:
+                        show_message(message)
+                case _:
+                    raise ValueError(
+                        'Message type must be one of ["messages", "success_messages", "failure_messages"]'
+                    )
 
         if len(player_party_instance.members) != 0:
-            Message.display_message(self.messages.boss_encounter_message, 1)
+            core_io.send_output({"messages": self.messages.boss_encounter_message})
             enemy_instance = self.boss
             combat.battle(
                 player_party_instance,
@@ -123,17 +152,25 @@ class Dungeon:
                 ),
             )
             if len(player_party_instance.members) != 0:
-                Message.special_encounter_message(
-                    player_party_instance.progress,
-                    player_party_instance.name,
-                    "success_messages",
+                core_io.send_output(
+                    {
+                        "messages": special_encounter_message(
+                            player_party_instance.progress,
+                            player_party_instance.name,
+                            "success_messages",
+                        )
+                    }
                 )
                 return True
             else:
-                Message.special_encounter_message(
-                    player_party_instance.progress,
-                    player_party_instance.name,
-                    "failure_messages",
+                core_io.send_output(
+                    {
+                        "messages": special_encounter_message(
+                            player_party_instance.progress,
+                            player_party_instance.name,
+                            "failure_messages",
+                        )
+                    }
                 )
                 return False
         return False

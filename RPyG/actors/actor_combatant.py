@@ -65,26 +65,31 @@ class Combatant(Actor):
     def damage(self, damage_amount: int) -> None:
         ensure_type(damage_amount, int, "damage_amount")
 
-        from RPyG.message.message import Message
+        from RPyG.core_io import CoreIO
+
+        core_io = CoreIO.get_core_io()
 
         self.health -= damage_amount
         if self.health == 0:
             self.health = 1
-            Message.display_message(f"{self.name} has Narrowly Evaded Death!", 1)
+            core_io.send_output({"messages": f"{self.name} has Narrowly Evaded Death!"})
         elif self.health < 0:
             self.health = 0
-        Message.display_message(f"{self.name} has {self.health} Health Remaining", 2)
+        core_io.send_output(
+            {"messages": f"{self.name} has {self.health} Health Remaining"}
+        )
 
     def heal(self, heal_amount: int) -> None:
         ensure_type(heal_amount, int, "heal_amount")
+        from RPyG.core_io import CoreIO
 
-        from RPyG.message.message import Message
+        core_io = CoreIO.get_core_io()
 
         self.health += heal_amount
         if self.health > self.base_health:
             self.health = self.base_health
             fully_healed_message = f"{self.name} has Fully Healed!"
-            Message.display_message(fully_healed_message, 2)
+            core_io.send_output({"messages": fully_healed_message})
 
     def dismember(self) -> None:
         self.is_dismembered = True
@@ -101,7 +106,9 @@ class Combatant(Actor):
 
     def attack(self, target_instance: "Combatant") -> None:
         from RPyG.actors import Combatant
-        from RPyG.message.message import Message
+        from RPyG.core_io import CoreIO
+
+        core_io = CoreIO.get_core_io()
 
         ensure_type(target_instance, Combatant, "attacker_instance")
 
@@ -112,10 +119,15 @@ class Combatant(Actor):
         )
 
         if self.check_for_critical() is True:
-            Message.actor_critical_attack_message(self, final_damage)
+            actor_critical_attack_message = f"""
+{self.name} attacks with {self.attack_name} inflicting {final_damage * 2} damage
+{self.name} got a critical hit!!
+"""
+            core_io.send_output({"messages": actor_critical_attack_message})
             target_instance.damage(final_damage * 2)
         else:
-            Message.actor_attack_message(self, final_damage)
+            actor_attack_message = f"{self.name} attacks with {self.attack_name} inflicting {final_damage} damage"
+            core_io.send_output({"messages": actor_attack_message})
             target_instance.damage(final_damage)
 
     def react(self) -> bool:
@@ -136,7 +148,9 @@ class Combatant(Actor):
 
     def dismember_attack(self, target_instance: "Combatant") -> None:
         from RPyG.actors import Combatant, Enemy
-        from RPyG.message.message import Message
+        from RPyG.core_io import CoreIO
+
+        core_io = CoreIO.get_core_io()
 
         ensure_type(target_instance, Combatant, "attacker_instance")
 
@@ -145,8 +159,11 @@ class Combatant(Actor):
                 isinstance(target_instance, Enemy)
                 and target_instance.is_special is False
             ):
-                decapitate_message = f"{self.name} decapitates {target_instance.name} killing them instantly"
-                Message.display_message(decapitate_message, 1)
+                core_io.send_output(
+                    {
+                        "messages": f"{self.name} decapitates {target_instance.name} killing them instantly"
+                    }
+                )
                 target_instance.health = 0
 
         damage_variation = int(self.attack_power * 0.1)
@@ -167,15 +184,17 @@ class Combatant(Actor):
         if self.check_for_critical() is True:
             target_instance.dismember()
             target_instance.damage(final_damage * 2)
-            Message.display_message(dismember_critical_message, 2)
+            core_io.send_output({"messages": dismember_critical_message})
         else:
             target_instance.damage(final_damage)
             target_instance.dismember()
-            Message.display_message(dismember_message, 2)
+            core_io.send_output({"messages": dismember_message})
 
     def aoe_attack(self, target_party_instance: "CombatantParty") -> None:
         from RPyG.actors import CombatantParty
-        from RPyG.message.message import Message
+        from RPyG.core_io import CoreIO
+
+        core_io = CoreIO.get_core_io()
 
         ensure_type(target_party_instance, CombatantParty, "target_party_instance")
 
@@ -194,11 +213,11 @@ class Combatant(Actor):
         """
 
         if self.check_for_critical() is True:
-            Message.display_message(aoe_critical_attack_message, 1)
+            core_io.send_output({"messages": aoe_critical_attack_message})
             for target_instance in target_party_instance.members:
                 target_instance.damage(per_target_damage * 2)
         else:
-            Message.display_message(aoe_attack_message, 1)
+            core_io.send_output({"messages": aoe_attack_message})
             for target_instance in target_party_instance.members:
                 target_instance.damage(per_target_damage)
 
@@ -206,11 +225,13 @@ class Combatant(Actor):
             self_damage_amount = int(per_target_damage * 0.125)
             self.damage(self_damage_amount)
             overwhelm_message = f"{self.name} is overwhelmed by the power of {self.special_attack_name} and takes {self_damage_amount} damage"
-            Message.display_message(overwhelm_message, 1)
+            core_io.send_output({"messages": overwhelm_message})
 
     def double_attack(self, target_party_instance: "CombatantParty") -> None:
         from RPyG.actors import CombatantParty
-        from RPyG.message.message import Message
+        from RPyG.core_io import CoreIO
+
+        core_io = CoreIO.get_core_io()
 
         ensure_type(target_party_instance, CombatantParty, "target_party_instance")
 
@@ -232,16 +253,10 @@ class Combatant(Actor):
             -damage_variation, damage_variation
         )
 
-        if self.check_for_critical() is True:
-            Message.actor_critical_attack_message(self, final_damage)
-            primary_instance.damage(final_damage * 2)
-        else:
-            Message.actor_attack_message(self, final_damage)
-            primary_instance.damage(final_damage)
+        self.attack(primary_instance)
 
         # Check if Target Died
         if primary_instance.health == 0:
-            Message.defeated_message(primary_instance.name)
             target_party_instance.lose_member(primary_instance)
 
         # Make Sure a Living target is chosen
@@ -252,35 +267,34 @@ class Combatant(Actor):
 
             if secondary_instance not in target_party_instance.members:
                 while secondary_instance not in target_party_instance.members:
-                    Message.display_message("Select a Living Target", 1)
+                    core_io.send_output({"messages": "Select a Living Target"})
                     secondary_target_index = self.select_combat_target(
                         target_party_instance
                     )
                     secondary_instance = target_party_instance.members[
                         secondary_target_index
                     ]
-
-            if self.check_for_critical() is True:
-                Message.actor_critical_attack_message(self, reduced_damage)
-                secondary_instance.damage(reduced_damage * 2)
-            else:
-                Message.actor_attack_message(self, reduced_damage)
-                secondary_instance.damage(reduced_damage)
+            base_damage = int(self.attack_power)
+            # reduce ATK by 50% for attack 2, we will restore this later
+            # use the int() wrap to create a new instance rather than a ref to the original value (should maybe use copy.deep copy here but will reconsider later)
+            self.attack_power = int(base_damage / 2)
+            self.attack(secondary_instance)
 
             # Check if Target Died
             if secondary_instance.health == 0:
-                Message.defeated_message(secondary_instance.name)
                 target_party_instance.lose_member(secondary_instance)
 
             # luck + agl in 25 to get caught and take 50% target damage from target 2
             if (self.luck + self.agility) < random.randint(0, 25):
                 self.damage(int(secondary_instance.attack_power * 0.5))
                 caught_attack_message = f"{self.name} fails fails to evade an attack from {secondary_instance.name} and takes {int(secondary_instance.attack_power * 0.5)} damage"
-                Message.display_message(caught_attack_message, 2)
+                core_io.send_output({"messages": caught_attack_message})
 
     def special_attack(self, target_party_instance: "CombatantParty") -> None:
         from RPyG.actors import CombatantParty
-        from RPyG.message.message import Message
+        from RPyG.core_io import CoreIO
+
+        core_io = CoreIO.get_core_io()
 
         ensure_type(target_party_instance, CombatantParty, "target_party_instance")
 
@@ -292,8 +306,12 @@ class Combatant(Actor):
                     dumb_check = 0
                     while target_instance.is_dismembered is True:
                         dumb_check += 1
-                        Message.display_message(
-                            f"{target_instance.name} has been dismembered already", 1
+                        core_io.send_output(
+                            {
+                                "messages"
+                                f"{target_instance.name} has been dismembered already",
+                                1,
+                            }
                         )
                         # message that enemy has been dismembered
                         target_index = self.select_combat_target(target_party_instance)
@@ -316,7 +334,9 @@ class Combatant(Actor):
         Takes a full party instance, and returns the index of the target member in the members array/list as an int
         """
         from RPyG.actors import EnemyParty, PlayableActor
-        from RPyG.interaction.interaction import Interaction
+        from RPyG.core_io import CoreIO
+
+        core_io = CoreIO.get_core_io()
 
         ensure_type(target_party_instance, CombatantParty, "target_party_instance")
 
@@ -324,7 +344,22 @@ class Combatant(Actor):
             isinstance(self, PlayableActor) is True
             and isinstance(target_party_instance, EnemyParty) is True
         ):
-            return Interaction.choose_combat_target(target_party_instance)
+            target_options: list = []
+            for index, member in enumerate(target_party_instance.members):
+                member: Combatant
+                target_options.append(f"{index} {member.name}:{member.health}")
+
+                target_messages = [
+                    "Which enemy will you attack?",
+                ]
+            core_io.request_input(
+                {
+                    "options": target_options,
+                    "messages": target_messages,
+                    "return_index": True,
+                }
+            )
+            return core_io.receive_input()
 
         target_party_members = target_party_instance.members
         method_id = random.choice(["MAX_ATK", "MIN_HP", "RANDOM"])
@@ -386,6 +421,10 @@ class CombatantParty(Party, Generic[CombatantType]):
         self.dead_members = []
 
     def lose_member(self, member: CombatantType) -> None:
+        from RPyG.core_io import CoreIO
+
+        core_io = CoreIO.get_core_io()
+        core_io.send_output({"messages": f"{member.name} has been defeated"})
         self.dead_members.append(member)
         self.members.remove(member)
 

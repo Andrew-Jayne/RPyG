@@ -12,7 +12,6 @@ def launch_game(
     from RPyG.core_io import CoreIO
     from RPyG.encounters.encounter import check_for_encounter
     from RPyG.gameState.game_start import start_game
-    from RPyG.message.message import Message
 
     # These are gateway singletons so we just need to create them
     # at a scope where they live for the lifetime of the applications
