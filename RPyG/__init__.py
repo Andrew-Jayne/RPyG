@@ -1,5 +1,3 @@
-from typing import Literal
-
 from RPyG.content import ContentPaths
 from RPyG.core_io import RPyGInterface
 
@@ -22,6 +20,7 @@ def launch_game(
 
     rounds_without_encounter = 0
     # The Key Loop
+    core_io = CoreIO.get_core_io()
     while player_party_instance.progress != 100:
         player_party_instance.progress += 1
         match check_for_encounter(player_party_instance, rounds_without_encounter):
@@ -29,18 +28,53 @@ def launch_game(
                 rounds_without_encounter = 1
             case False:
                 rounds_without_encounter += 1
-                Message.empty_travel_message(rounds_without_encounter)
+                core_io.send_output(
+                    {"message": f"no_events {rounds_without_encounter}"}
+                )
 
         if len(player_party_instance.members) == 0:
             break
 
-    if player_party_instance.members != []:
-        Message.post_game_recap(player_party_instance)
+    if player_party_instance.members == []:
+        # [] means all players are in the dead_members list, this is like... 5% safer than len() == 0
+        # because it is looking at the list as a list rather than a property of it against an int
+        core_io.send_output(
+            {
+                "message": f"{player_party_instance.name} has failed in their quest after {player_party_instance.progress * 10} miles"
+            }
+        )
+    for player_instance in player_party_instance.members:
+        player_report = +f"""
+    Player Name: {player_instance.name}
+    Player Base Health: {player_instance.base_health}                             
+    Player Final Health: {player_instance.health}
+    Player Int: {player_instance.intellect}
+    Player Str: {player_instance.strength}
+    Player Agl: {player_instance.agility}
+    Player Lck: {player_instance.luck}
+    Player Gold: {player_instance.inventory.gold}
+    Player Potions: {player_instance.inventory.potions}
+    Player Attack Name: {player_instance.attack_name}
+    Player Attack Power: {player_instance.attack_power}
+    """
 
-    # [] means all players are in the dead_members list, this is like... 5% safer than len() == 0
-    # because it is looking at the list as a list rather than a property of it against an int
-    else:
-        Message.game_over_message(player_party_instance)
+    player_report += "Fallen Members\n\n"
+    for player_instance in player_party_instance.dead_members:
+        player_report += f"""
+    Player Name: {player_instance.name}
+    Player Base Health: {player_instance.base_health}                             
+    Player Final Health: {player_instance.health}
+    Player Int: {player_instance.intellect}
+    Player Str: {player_instance.strength}
+    Player Agl: {player_instance.agility}
+    Player Lck: {player_instance.luck}
+    Player Gold: {player_instance.inventory.gold}
+    Player Potions: {player_instance.inventory.potions}
+    Player Attack Name: {player_instance.attack_name}
+    Player Attack Power: {player_instance.attack_power}
+    """
+
+    core_io.send_output({"message": f"{player_report}"})
 
 
 __all__ = ["RPyGInterface", "launch_game", "ContentPaths"]

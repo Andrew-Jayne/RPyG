@@ -1,34 +1,62 @@
-["Cave_Trolls"]
-plural_name = "Cave Trolls"
-group_name = "Gang"
-weight_class = "LARGE"
 
-[["Cave_Trolls.variant_lists_data.lesser_variants_data"]]
-name = "Stunted Cave Troll"
+[stunted_cave_troll]
+kind = "Enemy/1.0.0"
+variant_grade = "LESSER"
 health = 200
-strength = 10
+strength = 7
 intellect = 1
 agility = 1
-luck = 2
+luck = 1
 attack_name = "Club Smash"
 is_special = false
 
-[["Cave_Trolls.variant_lists_data.common_variants_data"]]
+[cave_troll]
+kind = "Enemy/1.0.0"
 name = "Cave Troll"
+variant_grade = "COMMON"
 health = 275
-strength = 10
+strength = 9
 intellect = 1
 agility = 1
 luck = 2
 attack_name = "Club Smash"
 is_special = false
 
-[["Cave_Trolls.variant_lists_data.greater_variants_data"]]
+[cave_troll_chief]
+kind = "Enemy/1.0.0"
 name = "Cave Troll Chief"
+variant_grade = "GREATER"
 health = 375
 strength = 10
 intellect = 1
-agility = 1
+agility = 2
 luck = 2
 attack_name = "Club Smash"
 is_special = false
+
+[ancient_cave_troll]
+kind = "Enemy/1.0.0"
+name = "Ancient Cave Troll"
+variant_grade = "LEGENDARY"
+health = 500
+strength = 14
+intellect = 3
+agility = 2
+luck = 6
+attack_name = "Club Smash"
+is_special = false
+
+
+["cave_trolls"]
+kind = "EnemySet/1.0.0"
+plural_name = "Cave Trolls"
+group_name = "Gang"
+weight_class = "LARGE"
+set_type = "STANDARD"
+# key_enemy = None
+enemy_ids = [
+    "cave_troll_chief",
+    "cave_troll",
+    "stunted_cave_troll",
+    "ancient_cave_troll",
+]

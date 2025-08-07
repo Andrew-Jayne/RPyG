@@ -1,4 +1,5 @@
 from RPyG.actors import CombatantParty, Enemy, EnemyParty, PlayableActor, PlayerParty
+from RPyG.core_io import CoreIO
 from RPyG.gameState.file import save_game
 from RPyG.utilites import ensure_type
 
@@ -47,8 +48,29 @@ def process_player_turn(
 
     for player_instance in player_party_instance.members:
         if is_party_alive(enemy_party_instance) is True:
-            player_action = Interaction.in_battle(player_instance)
-            match player_action:
+            battle_options = [
+                "ATTACK",
+                f"{player_instance.special_attack_name}",
+                f"{player_instance.react_action}",
+                "HEAL",
+            ]
+            battle_messages = [f"{player_instance.name}", "Choose an Action:"]
+
+            core_io.request_input(battle_options, battle_messages)
+            battle_choice = core_io.receive_input()
+            if battle_choice == "HEAL" and player_instance.is_fully_healed() is True:
+                core_io.send_output(
+                    {
+                        "message": f"{player_instance.name} is fully healed, it would be unwise to use a potion"
+                    }
+                )
+            core_io.request_input(battle_options, battle_messages)
+            battle_choice = core_io.receive_input()
+            if battle_choice == "HEAL":
+                core_io.send_output(
+                    {"message": "Stubborn aren't you, fine waste the damn potion"}
+                )
+            match battle_choice:
                 case "ATTACK":  # select target
                     target_index = player_instance.select_combat_target(
                         enemy_party_instance
@@ -73,7 +95,7 @@ def process_player_turn(
                 case "HEAL":
                     player_instance.use_potion()
                 case _:
-                    raise ValueError(f"Invalid player_action {player_action}")
+                    raise ValueError(f"Invalid player_action {battle_choice}")
 
             clear_dead_members(enemy_party_instance)
         else:
@@ -84,8 +106,6 @@ def process_enemy_turn(
     player_party_instance: PlayerParty,
     enemy_party_instance: EnemyParty,
 ) -> None:
-    from RPyG.core_io import CoreIO
-
     core_io = CoreIO.get_core_io()
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
     ensure_type(enemy_party_instance, EnemyParty, "enemy_party_instance")
@@ -121,10 +141,14 @@ def process_enemy_turn(
 
 def post_battle(player_party_instance: PlayerParty) -> None:
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
+    core_io = CoreIO.get_core_io()
 
     player_post_action = ""
     while player_post_action != "TRAVEL":
-        player_post_action = Interaction.post_battle(player_party_instance)
+        post_battle_options = ["HEAL", "TRAVEL", "SAVE"]
+        post_battle_message = ["Choose an Action:"]
+        core_io.request_input(post_battle_options, post_battle_message)
+        player_post_action = core_io.receive_input()
         if player_post_action == "HEAL":
             for member_instance in player_party_instance.members:
                 member_instance.use_potion()
@@ -138,7 +162,6 @@ def battle(
 ) -> bool:
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
     ensure_type(enemy_party_instance, EnemyParty, "enemy_party_instance")
-    from RPyG.core_io import CoreIO
 
     core_io = CoreIO.get_core_io()
 

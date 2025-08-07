@@ -7,22 +7,25 @@ from RPyG.gameState.file import load_game
 
 
 def get_start_type() -> str:
-    if os.path.exists("savegame.rpygs") is True:
-        start_game_options = ["NEW", "LOAD"]
-        start_game_messages = [
-            "Would you like to Start a new game or Load an existing save?",
-            "NOTE: All Prompts in this game are case insensitive",
-            "Options are:",
-        ]
+    match os.path.exists("savegame.rpygs"):
+        case True:
+            start_game_options = ["NEW", "LOAD"]
+            start_game_messages = [
+                "Would you like to Start a new game or Load an existing save?",
+                "Options are:",
+            ]
+        case False:
+            start_game_options = ["NEW"]
+            start_game_messages = [
+                "Type 'NEW' to start a new game",
+                "You will be able to save your game later and load it here",
+                "Options are:",
+            ]
+        case _:
+            raise RuntimeError(
+                "os.path.exists('savegame.rpygs') did not return a bool and something is very wrong"
+            )
 
-    else:
-        start_game_options = ["NEW"]
-        start_game_messages = [
-            "Type 'NEW' to start a new game",
-            "You will be able to save your game later and load it here",
-            "NOTE: All Prompts in this game are case insensitive",
-            "Options are:",
-        ]
     core_io = CoreIO.get_core_io()
     core_io.request_input(
         {
@@ -34,7 +37,7 @@ def get_start_type() -> str:
     return player_action
 
 
-def party_start() -> tuple[list[list[str]], str]:
+def party_start() -> tuple[list[tuple[str, str]], str]:
     party_size_choices = ["1", "2", "3"]
     party_size_messages = ["How many members are in your party?"]
 
@@ -81,8 +84,9 @@ def party_start() -> tuple[list[list[str]], str]:
             }
         )
         member_specialization = core_io.receive_input()
-        member_attrib = [member_name, member_specialization]
+        member_attrib: tuple[str, str] = (member_name, member_specialization)
         party_member_attribs.append(member_attrib)
+
     core_io.request_input(
         {
             "type": "custom_text_entry",
@@ -92,30 +96,12 @@ def party_start() -> tuple[list[list[str]], str]:
     )
     party_name = core_io.receive_input()
 
-    return party_member_attribs, party_name
-
-
-def default_party() -> list[PlayableActor]:
-    party_members: list[PlayableActor] = []
-    default_names = ("Conan", "Merlin", "Robin")
-    default_specialization = ("WARRIOR", "MAGE", "ROGUE")
-    for i in range(0, 3):
-        member = (default_names[i], default_specialization[i])
-        party_members.append(PlayableActor(member[0], member[1]))
-    return party_members
+    return (party_member_attribs, party_name)
 
 
 def start_game() -> PlayerParty:
     core_io = CoreIO.get_core_io()
     core_io.send_output("Welcome to RPyG, a text based RPG in Python")
-
-    welcome_message = """
-             This game looks best with a width of at least 80.
-            If the next line is split please widen your terminal.
-----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----
-"""
-    core_io.send_output(welcome_message)
-
     match get_start_type():
         case "LOAD":
             return load_game()

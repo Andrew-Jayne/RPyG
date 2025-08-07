@@ -1,6 +1,6 @@
 from enum import Enum
-from typing import Any
 from types import MappingProxyType
+from typing import Any
 
 from RPyG.utilites import ensure_type
 
