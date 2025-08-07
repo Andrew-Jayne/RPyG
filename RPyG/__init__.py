@@ -5,12 +5,9 @@ from RPyG.core_io import RPyGInterface
 
 
 def launch_game(
-    game_mode: Literal["AUTO", "MANUAL"],
-    using_default_party: bool,
     content_paths: ContentPaths,
     interface: RPyGInterface,
 ) -> None:
-    from RPyG.config import Config
     from RPyG.content import ContentLibrary
     from RPyG.core_io import CoreIO
     from RPyG.encounters.encounter import check_for_encounter
@@ -19,14 +16,10 @@ def launch_game(
 
     # These are gateway singletons so we just need to create them
     # at a scope where they live for the lifetime of the applications
-    Config(
-        global_game_mode=game_mode,
-        debug_enabled=False,
-    )
     ContentLibrary(content_paths)
     CoreIO(interface)
 
-    player_party_instance = start_game(game_mode, using_default_party)
+    player_party_instance = start_game()
 
     rounds_without_encounter = 0
     # The Key Loop
