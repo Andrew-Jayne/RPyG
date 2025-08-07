@@ -1,10 +1,11 @@
 import random
-import time
 from typing import Any
 
 from RPyG import combat
 from RPyG.actors import Enemy, EnemyParty, PlayerParty
 from RPyG.content.enemy_library import EnemySet
+from RPyG.core_io import CoreIO
+from RPyG.core_io.io_models import EmptyDistanceMessage, OutputMessage
 from RPyG.utilites import ensure_type
 
 
@@ -74,25 +75,23 @@ class Dungeon:
 
     ## this function is a crime
     def travese_dungeon(self, player_party_instance: PlayerParty) -> bool:
-        from RPyG.core_io import CoreIO
-
         core_io = CoreIO.get_core_io()
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
         dungeon_progress = 0
-        core_io.send_output({"messages": self.messages.start_message})
+        core_io.send_output(OutputMessage(self.messages.start_message))
 
         while dungeon_progress < self.length:
             dungeon_progress += 1
             encouter_chance = random.randint(0, 5)
             match encouter_chance:
                 case 0:
-                    core_io.send_output({"messages": self.messages.heal_room_message})
+                    core_io.send_output(OutputMessage(self.messages.heal_room_message))
                     for member_instance in player_party_instance.members:
                         member_instance.inventory.gain_potion(2)
                         member_instance.heal(20)
                 case 1:
                     dungeon_progress += 2
-                    core_io.send_output({"messages": self.messages.shortcut_message})
+                    core_io.send_output(OutputMessage(self.messages.shortcut_message))
                 case 4:
                     enemy_count = int(
                         len(player_party_instance.members) + random.randint(-2, 2)
@@ -110,16 +109,20 @@ class Dungeon:
                     if len(player_party_instance.members) == 0:
                         return False
                 case _:
-                    core_io.send_output({"messages": "empty_travel_message(1)"})
+                    core_io.send_output(EmptyDistanceMessage(1))
 
         ## THis is horrendus and I hate it
-        def special_encounter_message(
+        def send_special_encounter_message(
             progress_value: int,
             party_name: str,
             message_type: str,
         ) -> None:
             def show_message(message: str) -> None:
-                return message.format(party_name=party_name)
+                core_io = CoreIO.get_core_io()
+
+                core_io.send_output(
+                    OutputMessage(message.format(party_name=party_name))
+                )
 
             from RPyG.content import ContentLibrary
 
@@ -142,7 +145,7 @@ class Dungeon:
                     )
 
         if len(player_party_instance.members) != 0:
-            core_io.send_output({"messages": self.messages.boss_encounter_message})
+            core_io.send_output(OutputMessage(self.messages.boss_encounter_message))
             enemy_instance = self.boss
             combat.battle(
                 player_party_instance,
@@ -152,25 +155,18 @@ class Dungeon:
                 ),
             )
             if len(player_party_instance.members) != 0:
-                core_io.send_output(
-                    {
-                        "messages": special_encounter_message(
-                            player_party_instance.progress,
-                            player_party_instance.name,
-                            "success_messages",
-                        )
-                    }
+                send_special_encounter_message(
+                    player_party_instance.progress,
+                    player_party_instance.name,
+                    "success_messages",
                 )
                 return True
             else:
-                core_io.send_output(
-                    {
-                        "messages": special_encounter_message(
-                            player_party_instance.progress,
-                            player_party_instance.name,
-                            "failure_messages",
-                        )
-                    }
+                send_special_encounter_message(
+                    player_party_instance.progress,
+                    player_party_instance.name,
+                    "failure_messages",
                 )
+
                 return False
         return False
