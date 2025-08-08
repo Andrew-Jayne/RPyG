@@ -1,4 +1,5 @@
 import random
+import copy
 from typing import Generic, TypeVar
 
 from RPyG.actors.actor_base import Actor, Party
@@ -283,11 +284,13 @@ class Combatant(Actor):
                     secondary_instance = target_party_instance.members[
                         secondary_target_index
                     ]
-            base_damage = int(self.attack_power)
+
+            base_damage = copy.deepcopy(self.attack_power)
             # reduce ATK by 50% for attack 2, we will restore this later
             # use the int() wrap to create a new instance rather than a ref to the original value (should maybe use copy.deep copy here but will reconsider later)
             self.attack_power = int(base_damage / 2)
             self.attack(secondary_instance)
+            self.attack_power = base_damage
 
             # Check if Target Died
             if secondary_instance.health == 0:

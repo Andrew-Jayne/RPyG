@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+from RPyG.utilites import ensure_type
 
 
 # Input requests
@@ -30,6 +31,11 @@ class UIElement(Enum):
 class OutputMessage:
     message: str
     target_element: UIElement = UIElement.QUEST_LOG
+
+    def __post__init__(self) -> None:
+        ensure_type(self.message, str, "output_message")
+        ensure_type(self.target_element, UIElement, "target_element")
+
 
 
 @dataclass
