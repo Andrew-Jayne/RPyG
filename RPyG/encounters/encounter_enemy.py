@@ -53,15 +53,15 @@ def enemy_encounter(player_party_instance: PlayerParty) -> None:
             for player_instance in player_party_instance.members:
                 if player_instance.luck >= random.randint(4, 15):
                     core_io.send_output(
-                        {
-                            "message": f"{player_instance.name} has Successfully Escaped the {enemy_party.name}!"
-                        }
+                        OutputMessage(
+                            f"{player_instance.name} has Successfully Escaped the {enemy_party.name}!"
+                        )
                     )
                 else:
                     core_io.send_output(
-                        {
-                            "message": f"{player_instance.name} has Failed to Escape the {enemy_party.name}!"
-                        }
+                        OutputMessage(
+                            f"{player_instance.name} has Failed to Escape the {enemy_party.name}!"
+                        )
                     )
                     battle(player_party_instance, enemy_party)
                     break

@@ -36,11 +36,8 @@ class SpecialEncounters:
                 raise ValueError(
                     'Message type must be one of ["messages", "success_messages", "failure_messages"]'
                 )
-        formatted_messages: list[str] = []
         for message in active_messages:
-            formatted_messages.append(message.format(party_name=party_name))
-
-        core_io.send_output(OutputMessage(formatted_messages))
+            core_io.send_output(OutputMessage(message.format(party_name=party_name)))
 
     @staticmethod
     def tavern_notice(player_party_instance: PlayerParty) -> None:
@@ -104,11 +101,21 @@ class SpecialEncounters:
 
         quest_options = ["ACCEPT", "DECLINE"]
         quest_message = ["Will you accept this quest from the King?"]
-        core_io.request_input(quest_options, quest_message)
+        core_io.request_input(
+            UserPromptRequest(
+                options=quest_options,
+                prompts=quest_message,
+            )
+        )
         player_choice = core_io.receive_input()
 
         while player_choice != "ACCEPT":
-            core_io.request_input(quest_options, quest_message)
+            core_io.request_input(
+                UserPromptRequest(
+                    options=quest_options,
+                    prompts=quest_message,
+                )
+            )
             player_choice = core_io.receive_input()
             match player_choice:
                 case "ACCEPT":
