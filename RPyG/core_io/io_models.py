@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+
 from RPyG.utilites import ensure_type
 
 
@@ -35,7 +36,6 @@ class OutputMessage:
     def __post__init__(self) -> None:
         ensure_type(self.message, str, "output_message")
         ensure_type(self.target_element, UIElement, "target_element")
-
 
 
 @dataclass

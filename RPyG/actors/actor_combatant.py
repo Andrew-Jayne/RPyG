@@ -1,5 +1,5 @@
-import random
 import copy
+import random
 from typing import Generic, TypeVar
 
 from RPyG.actors.actor_base import Actor, Party
