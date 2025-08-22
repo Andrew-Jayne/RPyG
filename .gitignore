@@ -6,6 +6,7 @@
 *.rpygs
 log.txt
 zest.py
+zmem-test.py
 
 
 # Byte-compiled / optimized / DLL files
