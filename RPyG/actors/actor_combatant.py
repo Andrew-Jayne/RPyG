@@ -42,7 +42,7 @@ class Combatant(Actor):
         ensure_type(attack_name, str, "attack_name")
         ensure_type(attack_power, int, "attack_power")
         if special_attack_name is not None:
-            ensure_type(special_attack_name, str, 'special_attack_name')
+            ensure_type(special_attack_name, str, "special_attack_name")
         Actor.__init__(
             self=self,
             name=name,

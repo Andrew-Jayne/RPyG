@@ -17,7 +17,7 @@ def _unflatten_dict(flat_dict: dict[str, Any]) -> dict[str, Any]:
 
     for key, value in flat_dict.items():
         # Split flattened key at "." into a list of str
-        parts = key.split('.')
+        parts = key.split(".")
         # Copy global result dict into the loop scope
         current = result
 
