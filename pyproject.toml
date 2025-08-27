@@ -4,7 +4,7 @@ target-version = "py313"
 exclude = [".venv", ".git", "__pycache__"]
 
 [tool.ruff.format]
-quote-style = "preserve"
+quote-style = "double"
 indent-style = "space"
 skip-magic-trailing-comma = false
 

@@ -41,7 +41,7 @@ class SpecialEncounters:
 
     @staticmethod
     def tavern_notice(player_party_instance: PlayerParty) -> None:
-        ensure_type(player_party_instance, PlayerParty, 'player_party_instance')
+        ensure_type(player_party_instance, PlayerParty, "player_party_instance")
         core_io = CoreIO.get_core_io()
 
         SpecialEncounters.send_special_encounter_message(
