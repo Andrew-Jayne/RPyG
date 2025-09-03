@@ -1,10 +1,10 @@
 # Just for Type Checking
 from RPyG.actors import EnemyParty, PlayerParty
 from RPyG.combat import battle
+from RPyG.constructs import Dungeon
 from RPyG.content import ContentLibrary
 from RPyG.core_io import CoreIO
 from RPyG.core_io.io_models import OutputMessage, UserPromptRequest
-from RPyG.encounters.encounter_dungeon import Dungeon
 from RPyG.gameState.file import save_game
 from RPyG.utilites import ensure_type
 

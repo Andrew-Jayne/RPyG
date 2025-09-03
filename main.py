@@ -5,16 +5,7 @@ import RPyG
 from interfaces import BasicTerminalInterface
 
 
-DUNGEONS_STANDARD_PATH = "game_content/dungeons/standard"
-DUNGEONS_SPECIAL_PATH = "game_content/dungeons/special"
-
-ENCOUNTERS_STANDARD_PATH = "game_content/encounters/standard"
-ENCOUNTERS_SPECIAL_PATH = "game_content/encounters/special"
-
-ENEMIES_STANDARD_PATH = "game_content/enemies/standard"
-ENEMIES_SPECIAL_PATH = "game_content/enemies/special"
-
-STORY_PATH = "game_content/story"
+CONTENT_PATH = "game_content"
 
 
 def main(
@@ -22,16 +13,11 @@ def main(
     use_default_party: bool,
 ):
     RPyG.launch_game(
-        content_paths=RPyG.ContentPaths(
-            special_dungeons_path=DUNGEONS_SPECIAL_PATH,
-            standard_dungeons_path=DUNGEONS_STANDARD_PATH,
-            special_encounters_path=ENCOUNTERS_SPECIAL_PATH,
-            standard_encounters_path=ENCOUNTERS_STANDARD_PATH,
-            special_enemies_path=ENEMIES_SPECIAL_PATH,
-            standard_enemies_path=ENEMIES_STANDARD_PATH,
-            story_path=STORY_PATH,
+        content_path=CONTENT_PATH,
+        interface=BasicTerminalInterface(
+            game_mode,
+            use_default_party,
         ),
-        interface=BasicTerminalInterface(game_mode, use_default_party),
     )
 
 

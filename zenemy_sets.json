@@ -1,0 +1,100 @@
+{
+  "valericas_minions": {
+    "kind": "EnemySet/v1",
+    "plural_name": "Valerica's Minions",
+    "group_name": "Coven",
+    "weight_class": "SPECIAL",
+    "set_type": "STANDARD",
+    "enemy_ids": [
+      "apprentice_witch",
+      "servant",
+      "witch"
+    ]
+  },
+  "acolytes_of_algolon": {
+    "kind": "EnemySet/v1",
+    "plural_name": "Acolytes of Algolon",
+    "group_name": "Cult",
+    "weight_class": "SPECIAL",
+    "set_type": "STANDARD",
+    "enemy_ids": [
+      "initiate_of_algolon",
+      "acolyte_of_algolon",
+      "high_acolyte_of_algolon"
+    ]
+  },
+  "dire_wolves": {
+    "kind": "EnemySet/v1",
+    "plural_name": "Dire Wolves",
+    "group_name": "Pack",
+    "weight_class": "MEDIUM",
+    "set_type": "STANDARD",
+    "enemy_ids": [
+      "young_dire_wolf",
+      "dire_wolf",
+      "alpha_dire_wolf"
+    ]
+  },
+  "cave_trolls": {
+    "kind": "EnemySet/v1",
+    "plural_name": "Cave Trolls",
+    "group_name": "Gang",
+    "weight_class": "LARGE",
+    "set_type": "STANDARD",
+    "enemy_ids": [
+      "cave_troll_chief",
+      "cave_troll",
+      "stunted_cave_troll",
+      "ancient_cave_troll"
+    ]
+  },
+  "goblins": {
+    "kind": "EnemySet/v1",
+    "plural_name": "Goblins",
+    "group_name": "Horde",
+    "weight_class": "SMALL",
+    "set_type": "STANDARD",
+    "enemy_ids": [
+      "goblin_runt",
+      "goblin",
+      "goblin_chief"
+    ]
+  },
+  "demons": {
+    "kind": "EnemySet/v1",
+    "plural_name": "Demons",
+    "group_name": "Band",
+    "weight_class": "MEDIUM",
+    "set_type": "STANDARD",
+    "enemy_ids": [
+      "demon_fiendling",
+      "abyssal_demon",
+      "demon_archfiend",
+      "demon_overlord"
+    ]
+  },
+  "ice_drakes": {
+    "kind": "EnemySet/v1",
+    "plural_name": "Ice Drakes",
+    "group_name": "Clan",
+    "weight_class": "LARGE",
+    "set_type": "STANDARD",
+    "enemy_ids": [
+      "juvenile_ice_drake",
+      "ice_drake",
+      "ice_drake_matriarch"
+    ]
+  },
+  "feral_imps": {
+    "kind": "EnemySet/v1",
+    "plural_name": "Feral Imps",
+    "group_name": "Mischief",
+    "weight_class": "SMALL",
+    "set_type": "STANDARD",
+    "enemy_ids": [
+      "young_feral_imp",
+      "feral_imp",
+      "painted_feral_imp"
+    ]
+  }
+}

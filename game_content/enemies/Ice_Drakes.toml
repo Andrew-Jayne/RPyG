@@ -1,9 +1,18 @@
-["Ice_Drakes"]
+["ice_drakes"]
+kind = "EnemySet/v1"
 plural_name = "Ice Drakes"
 group_name = "Clan"
 weight_class = "LARGE"
+set_type = "STANDARD"
+enemy_ids = [
+    "juvenile_ice_drake",
+    "ice_drake",
+    "ice_drake_matriarch",
+]
 
-[["Ice_Drakes.variant_lists_data.lesser_variants_data"]]
+["juvenile_ice_drake"]
+kind = "Enemy/v1"
+variant_grade = "LESSER"
 name = "Juvenile Ice Drake"
 health = 175
 strength = 7
@@ -13,7 +22,9 @@ luck = 8
 attack_name = "Blizzard Breath"
 is_special = false
 
-[["Ice_Drakes.variant_lists_data.common_variants_data"]]
+["ice_drake"]
+kind = "Enemy/v1"
+variant_grade = "COMMON"
 name = "Ice Drake"
 health = 250
 strength = 8
@@ -23,7 +34,9 @@ luck = 8
 attack_name = "Blizzard Breath"
 is_special = false
 
-[["Ice_Drakes.variant_lists_data.greater_variants_data"]]
+["ice_drake_matriarch"]
+kind = "Enemy/v1"
+variant_grade = "GREATER"
 name = "Ice Drake Matriarch"
 health = 325
 strength = 9

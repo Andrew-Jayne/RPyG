@@ -1,6 +1,4 @@
 from dataclasses import dataclass
-from types import MappingProxyType
-from typing import Any
 
 from RPyG.utilites import ensure_type
 
@@ -26,20 +24,3 @@ class StoryEvent:
         if len(self.failure_messages) > 0:
             for failure_messages_item in self.failure_messages:
                 ensure_type(failure_messages_item, str, "failure_messages_item")
-
-
-class StoryLibrary:
-    story_events: MappingProxyType[int, StoryEvent]
-
-    def __init__(self, event_data: dict[str, Any]) -> None:
-        ensure_type(event_data, dict, "event_data")
-
-        story_events: dict[int, StoryEvent] = {}
-
-        for event_data_key, event_data_value in event_data.items():
-            ensure_type(event_data_key, str, "event_data_key")
-            ensure_type(event_data_value, dict, "event_data_value")
-
-            story_events[int(event_data_key)] = StoryEvent(**event_data_value)
-
-        self.story_events = MappingProxyType(story_events)

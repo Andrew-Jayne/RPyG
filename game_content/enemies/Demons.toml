@@ -1,0 +1,61 @@
+["demons"]
+kind = "EnemySet/v1"
+plural_name = "Demons"
+group_name = "Band"
+weight_class = "MEDIUM"
+set_type = "STANDARD"
+# key_enemy = None
+enemy_ids = [
+    "demon_fiendling",
+    "abyssal_demon",
+    "demon_archfiend",
+    "demon_overlord",
+]
+
+["demon_fiendling"]
+kind = "Enemy/v1"
+name = "Demon Fiendling"
+variant_grade = "LESSER"
+health = 90
+strength = 3
+intellect = 5
+agility = 6
+luck = 1
+attack_name = "Soul Decay Burst"
+is_special = false
+
+["abyssal_demon"]
+kind = "Enemy/v1"
+name = "Abyssal Demon"
+variant_grade = "COMMON"
+health = 130
+strength = 4
+intellect = 7
+agility = 3
+luck = 2
+attack_name = "Soul Decay Orb"
+is_special = false
+
+["demon_archfiend"]
+kind = "Enemy/v1"
+name = "Demon Archfiend"
+variant_grade = "GREATER"
+health = 180
+strength = 5
+intellect = 9
+agility = 4
+luck = 1
+attack_name = "Soul Decay Wave"
+is_special = false
+
+["demon_overlord"]
+kind = "Enemy/v1"
+name = "Demon Overlord"
+variant_grade = "LEGENDARY"
+health = 280
+strength = 6
+intellect = 10
+agility = 5
+luck = 3
+attack_name = "Soul Decay Typhoon"
+is_special = false

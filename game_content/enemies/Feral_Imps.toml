@@ -1,9 +1,18 @@
-["Feral_Imps"]
+["feral_imps"]
+kind = "EnemySet/v1"
 plural_name = "Feral Imps"
 group_name = "Mischief"
 weight_class = "SMALL"
+set_type = "STANDARD"
+enemy_ids = [
+    "young_feral_imp",
+    "feral_imp",
+    "painted_feral_imp",
+]
 
-[["Feral_Imps.variant_lists_data.lesser_variants_data"]]
+["young_feral_imp"]
+kind = "Enemy/v1"
+variant_grade = "LESSER"
 name = "Young Feral Imp"
 health = 60
 strength = 1
@@ -13,7 +22,9 @@ luck = 6
 attack_name = "Weak Fireball"
 is_special = false
 
-[["Feral_Imps.variant_lists_data.common_variants_data"]]
+["feral_imp"]
+kind = "Enemy/v1"
+variant_grade = "COMMON"
 name = "Feral Imp"
 health = 80
 strength = 3
@@ -23,7 +34,9 @@ luck = 3
 attack_name = "Fireball"
 is_special = false
 
-[["Feral_Imps.variant_lists_data.greater_variants_data"]]
+["painted_feral_imp"]
+kind = "Enemy/v1"
+variant_grade = "GREATER"
 name = "Painted Feral Imp"
 health = 120
 strength = 5

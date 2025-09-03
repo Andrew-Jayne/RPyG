@@ -1,4 +1,5 @@
 ["99"]
+kind = "StoryEvent/v1"
 messages = [
   "You arrive at the summit of Godsblood Peak, and find Algolon engulfed in a typhoon of magical energy!",
   "Could it be? Has the ritual begun alone!? you begin combat at once!"
@@ -14,6 +15,7 @@ failure_messages = [
 ]
 
 ["100"]
+kind = "StoryEvent/v1"
 messages = [
   "It is him, Fortranus the Ancient One. His form grows giant and black the massive beast bellows and releases waves of fire from its great gaping maw, its burning orange eyes lock on to your party. From deep within its massive chest you hear it bellow.",
   "Mortals, embrace the end of this world and submit to me, and I shall make your end swift and painless.",

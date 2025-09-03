@@ -1,5 +1,7 @@
 [midway_boss]
+kind = "Enemy/v1"
 name = "Cobolus The Wizard"
+variant_grade = "SPECIAL"
 health = 350
 strength = 4
 intellect = 8

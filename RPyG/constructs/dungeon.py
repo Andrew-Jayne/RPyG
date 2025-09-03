@@ -3,7 +3,7 @@ from typing import Any
 
 from RPyG import combat
 from RPyG.actors import Enemy, EnemyParty, PlayerParty
-from RPyG.content.enemy_library import EnemySet
+from RPyG.constructs import EnemySet
 from RPyG.core_io import CoreIO
 from RPyG.core_io.io_models import EmptyDistanceMessage, OutputMessage
 from RPyG.utilites import ensure_type

@@ -1,10 +1,9 @@
 import random
 
-# Only for Type Checking / Hinting
 from RPyG.actors import PlayerParty
 from RPyG.combat import battle
+from RPyG.constructs import EnemySet
 from RPyG.content import ContentLibrary
-from RPyG.content.enemy_library import EnemySet
 from RPyG.core_io import CoreIO
 from RPyG.core_io.io_models import OutputMessage, UserPromptRequest
 from RPyG.utilites import ensure_type

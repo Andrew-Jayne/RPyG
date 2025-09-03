@@ -1,6 +1,4 @@
 from enum import Enum
-from types import MappingProxyType
-from typing import Any
 
 from RPyG.utilites import ensure_type
 
@@ -11,6 +9,7 @@ class EncounterType(Enum):
     # None Encounters are used as chain ends, this should be done better
     NONE = "NONE"
     MYSTERY = "MYSTERY"
+    SPECAIAL = "SPECIAL"
 
 
 class EncounterTarget(Enum):
@@ -96,31 +95,3 @@ class Encounter:
         else:
             self.special_action = None
         self.additional_events = additional_events
-
-
-class EncounterLibrary:
-    standard_encounters: MappingProxyType[str, Encounter]
-    special_encounters: MappingProxyType[str, Encounter]
-
-    @staticmethod
-    def create_encounter_instances(
-        encounter_data: dict[str, Any],
-    ) -> dict[str, Encounter]:
-        ensure_type(encounter_data, dict, "encounter_data")
-        encounters: dict[str, Encounter] = {}
-        for encounter_key in encounter_data.keys():
-            ensure_type(encounter_key, str, "encounter_key")
-            encounters[encounter_key] = Encounter(**encounter_data[encounter_key])
-        return encounters
-
-    def __init__(
-        self,
-        standard_encounters_data: dict[str, Any],
-        special_encounters_data: dict[str, Any],
-    ) -> None:
-        self.standard_encounters = MappingProxyType(
-            EncounterLibrary.create_encounter_instances(standard_encounters_data)
-        )
-        self.special_encounters = MappingProxyType(
-            EncounterLibrary.create_encounter_instances(special_encounters_data)
-        )

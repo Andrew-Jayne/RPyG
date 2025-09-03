@@ -1,9 +1,18 @@
-["Goblins"]
+["goblins"]
+kind = "EnemySet/v1"
 plural_name = "Goblins"
 group_name = "Horde"
 weight_class = "SMALL"
+set_type = "STANDARD"
+enemy_ids = [
+    "goblin_runt",
+    "goblin",
+    "goblin_chief",
+]
 
-[["Goblins.variant_lists_data.lesser_variants_data"]]
+["goblin_runt"]
+kind = "Enemy/v1"
+variant_grade = "LESSER"
 name = "Goblin Runt"
 health = 90
 strength = 3
@@ -13,7 +22,9 @@ luck = 5
 attack_name = "Crude Strike"
 is_special = false
 
-[["Goblins.variant_lists_data.common_variants_data"]]
+["goblin"]
+kind = "Enemy/v1"
+variant_grade = "COMMON"
 name = "Goblin"
 health = 120
 strength = 4
@@ -23,7 +34,9 @@ luck = 4
 attack_name = "Goblin Slash"
 is_special = false
 
-[["Goblins.variant_lists_data.greater_variants_data"]]
+["goblin_chief"]
+kind = "Enemy/v1"
+variant_grade = "GREATER"
 name = "Goblin Chief"
 health = 180
 strength = 6

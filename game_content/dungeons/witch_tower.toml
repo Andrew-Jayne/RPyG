@@ -1,24 +1,34 @@
 [witch_tower]
+kind = "Dungeon/v1"
 dungeon_name = "Witch's Tower"
 length = 7
-
-[witch_tower.messages]
+boss_enemy_id = "thunder_demon_lord"
+enemy_set_id = "valericas_minions"
 start_message = "The party finds a stone tower with a pulsing green light eminating from the top"
+shortcut_message = "The party Find a secret passage!"
+heal_room_message = "The party finds a alchemy lab with food & potions!"
 boss_encounter_message = """
 You find Valerica the High preistess a top the tower. 
 The green light is eminating from her as you move forward the light turns blood red and her body evaporates. 
 When she stood a hulking Demonic Figure Roars as a storm gathers around the tower
 """
-shortcut_message = "The party Find a secret passage!"
-heal_room_message = "The party finds a alchemy lab with food & potions!"
 
-[[witch_tower.enemies]]
+["valericas_minions"]
+kind = "EnemySet/v1"
 plural_name = "Valerica's Minions"
 group_name = "Coven"
 weight_class = "SPECIAL"
+set_type = "STANDARD"
+enemy_ids = [
+    "apprentice_witch",
+    "servant",
+    "witch",
+]
 
-[[witch_tower.enemies.variant_lists_data.lesser_variants_data]]
-name = "Appretice Witch"
+["apprentice_witch"]
+kind = "Enemy/v1"
+variant_grade = "COMMON"
+name = "Apprentice Witch"
 health = 100
 strength = 2
 intellect = 6
@@ -27,7 +37,9 @@ luck = 4
 attack_name = "Ice Spear"
 is_special = false
 
-[[witch_tower.enemies.variant_lists_data.lesser_variants_data]]
+["servant"]
+kind = "Enemy/v1"
+variant_grade = "LESSER"
 name = "Servant"
 health = 60
 strength = 3
@@ -37,8 +49,10 @@ luck = 3
 attack_name = "Punch"
 is_special = false
 
-[[witch_tower.enemies.variant_lists_data.common_variants_data]]
-name = "Valerica"
+["witch"]
+kind = "Enemy/v1"
+variant_grade = "Greater"
+name = "Witch"
 health = 140
 strength = 3
 intellect = 7
@@ -47,22 +61,15 @@ luck = 6
 attack_name = "Fire Storm"
 is_special = false
 
-[[witch_tower.enemies.variant_lists_data.greater_variants_data]]
-name = "Ascended Valerica"
-health = 180
-strength = 4
-intellect = 9
-agility = 5
-luck = 8
-attack_name = "Lighing Storm"
-is_special = false
 
-[witch_tower.boss]
+["thunder_demon_lord"]
+kind = "Enemy/v1"
+variant_grade = "SPECIAL"
 name = "Thunder Demon Lord"
 health = 350
 strength = 8
 intellect = 10
 agility = 7
 luck = 2
-attack_name = "Lighting Strike"
+attack_name = "Lightning Strike"
 is_special = true
