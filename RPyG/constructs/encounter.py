@@ -54,6 +54,7 @@ class Encounter:
 
     def __init__(
         self,
+        kind: str,
         encounter_type: EncounterType,
         actor_action: ActorAction,
         targets: EncounterTarget,

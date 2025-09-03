@@ -42,36 +42,27 @@ class Dungeon:
 
     def __init__(
         self,
-        dungeon_name: str,
-        messages: dict[str, str],
+        kind: str,
+        name: str,
         length: int,
-        enemies: list[dict[str, Any]],
-        boss: dict[str, Any],
+        boss_enemy_id: str,
+        enemy_set_id: str,
+        start_message: str,
+        shortcut_message: str,
+        heal_room_message: str,
+        boss_encounter_message: str,
     ):
-        ensure_type(dungeon_name, str, "dungeon_name")
-        ensure_type(messages, dict, "messages")
-        for messages_key, messages_value in messages.items():
-            ensure_type(messages_key, str, "messages_key")
-            ensure_type(messages_value, str, "messages_value")
-        ensure_type(length, int, "length")
-        ensure_type(enemies, list, "enemies")
-        for enemies_item in enemies:
-            ensure_type(enemies_item, dict, "enemies_item")
-            for enemies_item_key in enemies_item.keys():
-                ensure_type(enemies_item_key, str, "enemies_item_key")
-        ensure_type(boss, dict, "boss")
-        for boss_data_key in boss.keys():
-            ensure_type(boss_data_key, str, "boss_data_key")
-
-        self.dungeon_name = dungeon_name
-        self.messages = DungeonMessages(**messages)
+        self.dungeon_name = name
+        self.messages = DungeonMessages(
+            start_message=start_message,
+            shortcut_message=shortcut_message,
+            heal_room_message=heal_room_message,
+            boss_encounter_message=boss_encounter_message,
+        )
         self.length = length
 
-        enemy_set_instances: list[EnemySet] = []
-        for enemy_data in enemies:
-            enemy_set_instances.append(EnemySet(**enemy_data))
-        self.enemies = enemy_set_instances
-        self.boss = Enemy(**boss)
+        # self.enemies = EnemySet(**enemy_sets_data)
+        self.boss = ""
 
     ## this function is a crime
     def travese_dungeon(self, player_party_instance: PlayerParty) -> bool:

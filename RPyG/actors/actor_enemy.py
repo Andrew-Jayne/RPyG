@@ -14,6 +14,7 @@ class Enemy(Combatant):
 
     def __init__(
         self,
+        kind: str,
         name: str,
         health: int,
         strength: int,
@@ -22,6 +23,7 @@ class Enemy(Combatant):
         luck: int,
         attack_name: str,
         is_special: bool,
+        variant_grade: str,
     ) -> None:
         ensure_type(name, str, "name")
         ensure_type(health, int, "health")

@@ -1,6 +1,6 @@
 [algolons_fortress]
 kind = "Dungeon/v1"
-dungeon_name = "Algolon's Fortress"
+name = "Algolon's Fortress"
 length = 20
 boss_enemy_id = "algolons_arch_mage"
 enemy_set_id = "acolytes_of_algolon"

@@ -7,10 +7,16 @@ from RPyG.utilites import ensure_type
 
 
 class EnemyVariantSet:
-    __slots__ = ("lesser_variants", "common_variants", "greater_variants")
+    __slots__ = (
+        "lesser_variants",
+        "common_variants",
+        "greater_variants",
+        "legendary_variants",
+    )
     lesser_variants: tuple[Enemy, ...]
     common_variants: tuple[Enemy, ...]
     greater_variants: tuple[Enemy, ...]
+    legendary_variants: tuple[Enemy, ...]
 
     @staticmethod
     def validate_variant_data(variant_data: list[dict[str, Any]]) -> None:
@@ -33,14 +39,17 @@ class EnemyVariantSet:
         lesser_variants_data: list[dict[str, Any]],
         common_variants_data: list[dict[str, Any]],
         greater_variants_data: list[dict[str, Any]],
+        legendary_variants_data: list[dict[str, Any]],
     ) -> None:
         EnemyVariantSet.validate_variant_data(lesser_variants_data)
         EnemyVariantSet.validate_variant_data(common_variants_data)
         EnemyVariantSet.validate_variant_data(greater_variants_data)
+        EnemyVariantSet.validate_variant_data(legendary_variants_data)
 
         self.lesser_variants = EnemyVariantSet.build_enemies(lesser_variants_data)
         self.common_variants = EnemyVariantSet.build_enemies(common_variants_data)
         self.greater_variants = EnemyVariantSet.build_enemies(greater_variants_data)
+        self.legendary_variants = EnemyVariantSet.build_enemies(legendary_variants_data)
 
 
 class EnemyWeightClass(Enum):
@@ -50,15 +59,30 @@ class EnemyWeightClass(Enum):
     SPECIAL = "SPECIAL"
 
 
+class EnemyVariantGrade(Enum):
+    LESSER = "LESSER"
+    COMMON = "COMMON"
+    GREATER = "GREATER"
+    LEGENDARY = "LEGENDARY"
+    SPECIAL = "SPECIAL"
+
+
+class SetType(Enum):
+    STANDARD = "STANDARD"
+    SPECIAL = "SPECIAL"
+
+
 class EnemySet:
-    __slots__ = ("plural_name", "group_name", "weight_class", "variant_lists")
     plural_name: str
     group_name: str
     weight_class: EnemyWeightClass
     variant_lists: EnemyVariantSet
 
-    @staticmethod
-    def generate_enemy_party(enemy_set: "EnemySet", enemy_count: int) -> EnemyParty:
+    def generate_enemy_party(
+        self,
+        enemy_set: "EnemySet",
+        enemy_count: int,
+    ) -> EnemyParty:
         from RPyG.constructs import EnemySet
 
         ensure_type(enemy_set, EnemySet, "enemy_party_attributes")
@@ -89,24 +113,18 @@ class EnemySet:
 
     def __init__(
         self,
+        kind: str,
         plural_name: str,
         group_name: str,
         weight_class: str,
-        variant_lists_data: dict[str, list[Any]],
+        set_type: SetType,
+        enemy_ids: list[str],
     ) -> None:
-        ensure_type(plural_name, str, "plural_name")
-        ensure_type(group_name, str, "group_name")
-        ensure_type(weight_class, str, "weight_class")
-        ensure_type(variant_lists_data, dict, "variant_lists_data")
-        for variant_lists_data_key in variant_lists_data.keys():
-            ensure_type(variant_lists_data_key, str, "variant_lists_data_key")
-        for variant_lists_data_value in variant_lists_data.values():
-            ensure_type(variant_lists_data_value, list, "variant_lists_data_value")
-
         self.plural_name = plural_name
         self.group_name = group_name
         self.weight_class = EnemyWeightClass(weight_class)
-        self.variant_lists = EnemyVariantSet(**variant_lists_data)
+        self.set_type = SetType(set_type)
+        self.enemy_ids = enemy_ids
 
 
 # from types import MappingProxyType
