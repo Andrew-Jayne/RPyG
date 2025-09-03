@@ -4,6 +4,7 @@ import tomllib
 from enum import Enum
 from typing import Any
 
+from RPyG.actors import Enemy
 from RPyG.constructs import Dungeon, Encounter, EnemySet, StoryEvent
 from RPyG.utilites import ensure_type
 
@@ -17,19 +18,12 @@ class ContentKind(Enum):
 
 
 class ContentLibrary:
-    # Only the leaf class (the furthest out on the inheritence tree) can define slots, and you can't get fancy with concatenaed tuples to just stack them.
-    __slots__ = (
-        "enemy_sets",
-        "story_events",
-        "encounters",
-        "dungeons",
-        "_instance",
-    )
+    enemies: dict[str, Enemy]
     enemy_sets: dict[str, EnemySet]
     story_events: dict[str, StoryEvent]
     encounters: dict[str, Encounter]
     dungeons: dict[str, Dungeon]
-    _instance: "ContentLibrary | None"
+    _instance: "ContentLibrary | None" = None
 
     @staticmethod
     def build_story_events(story_events_data: dict[str, Any]) -> dict[str, StoryEvent]:
@@ -48,32 +42,26 @@ class ContentLibrary:
         return all_encouters
 
     @staticmethod
-    def build_enemy_sets(
-        enemy_sets_data: dict[str, Any],
-        enemies_data: dict[str, Any],
-    ) -> dict[str, EnemySet]:
+    def build_enemy_sets(enemy_sets_data: dict[str, Any]) -> dict[str, EnemySet]:
         all_enemy_sets = {}
         for key, value in enemy_sets_data.items():
-            all_enemy_sets[key] = EnemySet.__init__(
-                set_data=value,
-                enemies_data=enemies_data,
-            )
+            all_enemy_sets[key] = EnemySet(**value)
 
         return all_enemy_sets
 
     @staticmethod
-    def build_dungeons(
-        dungeons_data: dict[str, Any],
-        enemy_sets_data: dict[str, Any],
-        enemies_data: dict[str, Any],
-    ) -> dict[str, Dungeon]:
+    def build_enemies(enemies_data: dict[str, Any]) -> dict[str, Enemy]:
+        all_enemies = {}
+        for key, value in enemies_data.items():
+            all_enemies[key] = Enemy(**value)
+
+        return all_enemies
+
+    @staticmethod
+    def build_dungeons(dungeons_data: dict[str, Any]) -> dict[str, Dungeon]:
         all_dungeons = {}
         for key, value in dungeons_data.items():
-            all_dungeons[key] = Dungeon.__init__(
-                dungeon_data=value,
-                enemy_sets_data=enemy_sets_data,
-                enemies_data=enemies_data,
-            )
+            all_dungeons[key] = Dungeon(**value)
 
         return all_dungeons
 
@@ -153,15 +141,9 @@ class ContentLibrary:
 
             self.story_events = ContentLibrary.build_story_events(story_events_data)
             self.encounters = ContentLibrary.build_encounters(encounters_data)
-            self.enemy_sets = ContentLibrary.build_enemy_sets(
-                enemy_sets_data,
-                enemies_data,
-            )
-            self.dungeons = ContentLibrary.build_dungeons(
-                dungeons_data,
-                enemy_sets_data,
-                enemies_data,
-            )
+            self.enemies = ContentLibrary.build_enemies(enemies_data)
+            self.enemy_sets = ContentLibrary.build_enemy_sets(enemy_sets_data)
+            self.dungeons = ContentLibrary.build_dungeons(dungeons_data)
 
             ContentLibrary._instance = self
         else:

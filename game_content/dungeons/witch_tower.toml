@@ -1,6 +1,6 @@
 [witch_tower]
 kind = "Dungeon/v1"
-dungeon_name = "Witch's Tower"
+name = "Witch's Tower"
 length = 7
 boss_enemy_id = "thunder_demon_lord"
 enemy_set_id = "valericas_minions"

@@ -6,6 +6,7 @@ from RPyG.utilites import ensure_type
 # Fully Runtime Immutable
 @dataclass(frozen=True, slots=True)
 class StoryEvent:
+    kind: str
     messages: tuple[str, ...]
     success_messages: tuple[str, ...]
     failure_messages: tuple[str, ...]
