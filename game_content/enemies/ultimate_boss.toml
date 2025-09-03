@@ -1,5 +1,7 @@
 [ultimate_boss]
+kind = "Enemy/v1"
 name = "Fortranus the Ancient One"
+variant_grade = "SPECIAL"
 health = 1000
 strength = 14
 intellect = 10

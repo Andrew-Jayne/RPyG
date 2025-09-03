@@ -1,10 +1,9 @@
-from RPyG.content import ContentPaths
 from RPyG.core_io import RPyGInterface
 from RPyG.utilites import ensure_type
 
 
 def launch_game(
-    content_paths: ContentPaths,
+    content_path: str,
     interface: RPyGInterface,
 ) -> None:
     from RPyG.content import ContentLibrary
@@ -13,12 +12,12 @@ def launch_game(
     from RPyG.encounters.encounter import check_for_encounter
     from RPyG.gameState.game_start import start_game
 
-    ensure_type(content_paths, ContentPaths, "content_paths")
+    ensure_type(content_path, str, "content_paths")
     ensure_type(interface, RPyGInterface, "interface")
 
     # These are gateway singletons so we just need to create them
     # at a scope where they live for the lifetime of the applications
-    ContentLibrary(content_paths)
+    ContentLibrary(content_path)
     CoreIO(interface)
 
     player_party_instance = start_game()

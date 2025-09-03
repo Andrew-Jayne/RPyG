@@ -1,4 +1,5 @@
 ["1"]
+kind = "StoryEvent/v1"
 messages = [
   "{party_name} gathers around the fire at a local tavern when a rider delivers a notice to the bar keep",
   "the notice reads:",
@@ -14,6 +15,7 @@ failure_messages = [
 ]
 
 ["25"]
+kind = "StoryEvent/v1"
 messages = [
   "Upon arrival the King tells you of the dark rumours which have recently been confirmed to him.",
   "",
@@ -26,6 +28,7 @@ success_messages = []
 failure_messages = []
 
 ["50"]
+kind = "StoryEvent/v1"
 messages = [
   "On the outskirts of Debina, you find the lair of Cobolus and engage him in combat."
 ]
@@ -39,6 +42,7 @@ failure_messages = [
 ]
 
 ["75"]
+kind = "StoryEvent/v1"
 messages = [
   "Deep in the mountains you arrive at the Fortress, the air is still and the world silent, no sign of a living thing can be heard or seen, save for the faint trails of smoke escaping from the depths of fortress.",
   "The cold winds whirl around {party_name} as they move forward towards the fortress"

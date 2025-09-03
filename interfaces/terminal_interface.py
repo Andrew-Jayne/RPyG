@@ -53,7 +53,7 @@ class BasicTerminalInterface(RPyGInterface):
         ensure_type(request, InputRequest, "request")
         match type(request).__name__:
             case "InputRequest":
-                return NotImplemented
+                raise NotImplementedError
             case "UserPromptRequest":
                 prompt_request = cast(UserPromptRequest, request)
                 content = self.prompt_user(
@@ -69,7 +69,7 @@ class BasicTerminalInterface(RPyGInterface):
                 )
             case _:
                 raise ValueError(
-                    f"Got Unknow Child class of InputRequest {type(request).__name__}"
+                    f"Got Unknown Child class of InputRequest {type(request).__name__}"
                 )
 
         self.input_buffer = {"data": content}

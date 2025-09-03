@@ -1,10 +1,20 @@
-["Dire_Wolves"]
+["dire_wolves"]
+kind = "EnemySet/v1"
 plural_name = "Dire Wolves"
 group_name = "Pack"
 weight_class = "MEDIUM"
+set_type = "STANDARD"
+# key_enemy = None
+enemy_ids = [
+    "young_dire_wolf",
+    "dire_wolf",
+    "alpha_dire_wolf",
+]
 
-[["Dire_Wolves.variant_lists_data.lesser_variants_data"]]
+["young_dire_wolf"]
 name = "Young Dire Wolf"
+kind = "Enemy/v1"
+variant_grade = "LESSER"
 health = 75
 strength = 4
 intellect = 3
@@ -13,8 +23,10 @@ luck = 6
 attack_name = "Wolf Bite"
 is_special = false
 
-[["Dire_Wolves.variant_lists_data.common_variants_data"]]
+["dire_wolf"]
 name = "Dire Wolf"
+variant_grade = "COMMON"
+kind = "Enemy/v1"
 health = 100
 strength = 5
 intellect = 3
@@ -23,8 +35,10 @@ luck = 6
 attack_name = "Wolf Bite"
 is_special = false
 
-[["Dire_Wolves.variant_lists_data.greater_variants_data"]]
+["alpha_dire_wolf"]
 name = "Alpha Dire Wolf"
+variant_grade = "GREATER"
+kind = "Enemy/v1"
 health = 150
 strength = 6
 intellect = 4

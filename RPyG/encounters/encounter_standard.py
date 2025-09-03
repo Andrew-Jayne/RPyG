@@ -2,14 +2,14 @@ import math
 import random
 
 from RPyG.actors import PlayableActor, PlayerParty
-from RPyG.content import ContentLibrary
-from RPyG.content.encounter_library import (
+from RPyG.constructs import (
     ActorAction,
     Encounter,
     EncounterTarget,
     EncounterType,
     SpecialAction,
 )
+from RPyG.content import ContentLibrary
 from RPyG.core_io import CoreIO
 from RPyG.core_io.io_models import OutputMessage, UserPromptRequest
 from RPyG.utilites import ensure_type

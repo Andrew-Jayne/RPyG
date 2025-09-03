@@ -1,4 +1,3 @@
-from RPyG.content import ContentPaths
 from RPyG.core_io import RPyGInterface
 from RPyG.core_io.io_models import (
     BattleHudMessage,
@@ -14,7 +13,6 @@ from RPyG.launch import launch_game
 __all__ = [
     "launch_game",
     "RPyGInterface",
-    "ContentPaths",
     "InputRequest",
     "OutputMessage",
     "UIElement",

@@ -1,19 +1,42 @@
 [algolons_fortress]
+kind = "Dungeon/v1"
 dungeon_name = "Algolon's Fortress"
 length = 20
-
-[algolons_fortress.messages]
+boss_enemy_id = "algolons_arch_mage"
+enemy_set_id = "acolytes_of_algolon"
 start_message = "Your Party Enters Algolon's Fortress"
-boss_encounter_message = "At the end of the Keep Your Party encounters Algolon's Arch Mage!"
 shortcut_message = "Your Party finds a Secret Passage!"
 heal_room_message = "Your Party finds a Store Room with some food & potions"
+boss_encounter_message = "At the end of the Keep Your Party encounters Algolon's Arch Mage!"
 
-[[algolons_fortress.enemies]]
+
+["acolytes_of_algolon"]
+kind = "EnemySet/v1"
 plural_name = "Acolytes of Algolon"
 group_name = "Cult"
 weight_class = "SPECIAL"
+set_type = "STANDARD"
+enemy_ids = [
+    "initiate_of_algolon",
+    "acolyte_of_algolon",
+    "high_acolyte_of_algolon",
+]
 
-[[algolons_fortress.enemies.variant_lists_data.lesser_variants_data]]
+["algolons_arch_mage"]
+name = "Algolon's Arch Mage"
+kind = "Enemy/v1"
+variant_grade = "SPECIAL"
+health = 450
+strength = 4
+intellect = 10
+agility = 4
+luck = 6
+attack_name = "Arcane Lightning"
+is_special = true
+
+["initiate_of_algolon"]
+kind = "Enemy/v1"
+variant_grade = "LESSER"
 name = "Initiate of Algolon"
 health = 100
 strength = 2
@@ -23,7 +46,9 @@ luck = 4
 attack_name = "Weak Arcane Bolt"
 is_special = false
 
-[[algolons_fortress.enemies.variant_lists_data.common_variants_data]]
+["acolyte_of_algolon"]
+kind = "Enemy/v1"
+variant_grade = "COMMON"
 name = "Acolyte of Algolon"
 health = 140
 strength = 3
@@ -33,7 +58,9 @@ luck = 6
 attack_name = "Arcane Bolt"
 is_special = false
 
-[[algolons_fortress.enemies.variant_lists_data.greater_variants_data]]
+["high_acolyte_of_algolon"]
+kind = "Enemy/v1"
+variant_grade = "GREATER"
 name = "High Acolyte of Algolon"
 health = 180
 strength = 4
@@ -42,13 +69,3 @@ agility = 5
 luck = 8
 attack_name = "Empowered Arcane Bolt"
 is_special = false
-
-[algolons_fortress.boss]
-name = "Algolon's Arch Mage"
-health = 450
-strength = 4
-intellect = 10
-agility = 4
-luck = 6
-attack_name = "Arcane Lightning"
-is_special = true

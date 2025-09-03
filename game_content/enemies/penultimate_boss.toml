@@ -1,5 +1,7 @@
 [penultimate_boss]
+kind = "Enemy/v1"
 name = "The Great Wizard Algolon"
+variant_grade = "SPECIAL"
 health = 600
 strength = 5
 intellect = 12
