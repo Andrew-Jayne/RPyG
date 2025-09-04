@@ -1,6 +1,7 @@
 # Because MacOS
 .DS_Store
 */.DS_Store
+.claude
 
 # Game Files
 *.rpygs
