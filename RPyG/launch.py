@@ -18,6 +18,7 @@ def launch_game(
     # These are gateway singletons so we just need to create them
     # at a scope where they live for the lifetime of the applications
     ContentLibrary(content_path)
+    ContentLibrary.validate_content()
     CoreIO(interface)
 
     player_party_instance = start_game()

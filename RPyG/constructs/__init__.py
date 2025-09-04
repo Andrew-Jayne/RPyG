@@ -6,6 +6,6 @@ from RPyG.constructs.encounter import (  # noqa: I001
     EncounterType,
     SpecialAction,
 )
-from RPyG.constructs.enemy_set import EnemySet, EnemyVariantSet
+from RPyG.constructs.enemy_set import EnemySet
 from RPyG.constructs.dungeon import Dungeon
 from RPyG.constructs.story_event import StoryEvent

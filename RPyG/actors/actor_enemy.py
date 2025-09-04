@@ -1,5 +1,15 @@
+from enum import Enum
+
 from RPyG.actors.actor_combatant import Combatant, CombatantParty
 from RPyG.utilites import ensure_type
+
+
+class EnemyVariantGrade(Enum):
+    LESSER = "LESSER"
+    COMMON = "COMMON"
+    GREATER = "GREATER"
+    LEGENDARY = "LEGENDARY"
+    SPECIAL = "SPECIAL"
 
 
 class Enemy(Combatant):
@@ -11,6 +21,7 @@ class Enemy(Combatant):
     luck: int
     attack_name: str
     is_special: bool
+    variant_grade: EnemyVariantGrade
 
     def __init__(
         self,
@@ -34,6 +45,7 @@ class Enemy(Combatant):
         ensure_type(attack_name, str, "attack_name")
         ensure_type(is_special, bool, "is_special")
         self.is_special = is_special
+        self.variant_grade = EnemyVariantGrade(variant_grade)
 
         Combatant.__init__(
             self,
@@ -64,6 +76,9 @@ class Enemy(Combatant):
             attack_power = int((strength + intellect) / 2)
 
         return attack_power * 10
+
+    def validate(self) -> bool:
+        return True
 
 
 class EnemyParty(CombatantParty[Enemy]):

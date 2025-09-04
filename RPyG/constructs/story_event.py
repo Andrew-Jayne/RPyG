@@ -25,3 +25,6 @@ class StoryEvent:
         if len(self.failure_messages) > 0:
             for failure_messages_item in self.failure_messages:
                 ensure_type(failure_messages_item, str, "failure_messages_item")
+
+    def validate(self) -> bool:
+        return True

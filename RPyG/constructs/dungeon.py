@@ -161,3 +161,7 @@ class Dungeon:
 
                 return False
         return False
+
+    def validate(self) -> bool:
+        _var = self
+        return True
