@@ -51,7 +51,7 @@ is_special = false
 
 ["witch"]
 kind = "Enemy/v1"
-variant_grade = "Greater"
+variant_grade = "GREATER"
 name = "Witch"
 health = 140
 strength = 3

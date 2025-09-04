@@ -1,69 +1,15 @@
 import random
 from enum import Enum
-from typing import Any
+from functools import cached_property
 
-from RPyG.actors import Enemy, EnemyParty
+from RPyG.actors import Enemy, EnemyParty, EnemyVariantGrade
 from RPyG.utilites import ensure_type
-
-
-class EnemyVariantSet:
-    __slots__ = (
-        "lesser_variants",
-        "common_variants",
-        "greater_variants",
-        "legendary_variants",
-    )
-    lesser_variants: tuple[Enemy, ...]
-    common_variants: tuple[Enemy, ...]
-    greater_variants: tuple[Enemy, ...]
-    legendary_variants: tuple[Enemy, ...]
-
-    @staticmethod
-    def validate_variant_data(variant_data: list[dict[str, Any]]) -> None:
-        ensure_type(variant_data, list, "lesser_variants_data")
-        for variant_data_item in variant_data:
-            ensure_type(variant_data_item, dict, "variant_data_item")
-            for variant_data_item_key in variant_data_item.keys():
-                ensure_type(variant_data_item_key, str, "variant_data_item_key")
-
-    @staticmethod
-    def build_enemies(enemy_data_list: list[dict[str, Any]]) -> tuple[Enemy, ...]:
-        enemy_list: list[Enemy] = []
-        for enemy_data in enemy_data_list:
-            enemy_list.append(Enemy(**enemy_data))
-
-        return tuple(enemy_list)
-
-    def __init__(
-        self,
-        lesser_variants_data: list[dict[str, Any]],
-        common_variants_data: list[dict[str, Any]],
-        greater_variants_data: list[dict[str, Any]],
-        legendary_variants_data: list[dict[str, Any]],
-    ) -> None:
-        EnemyVariantSet.validate_variant_data(lesser_variants_data)
-        EnemyVariantSet.validate_variant_data(common_variants_data)
-        EnemyVariantSet.validate_variant_data(greater_variants_data)
-        EnemyVariantSet.validate_variant_data(legendary_variants_data)
-
-        self.lesser_variants = EnemyVariantSet.build_enemies(lesser_variants_data)
-        self.common_variants = EnemyVariantSet.build_enemies(common_variants_data)
-        self.greater_variants = EnemyVariantSet.build_enemies(greater_variants_data)
-        self.legendary_variants = EnemyVariantSet.build_enemies(legendary_variants_data)
 
 
 class EnemyWeightClass(Enum):
     SMALL = "SMALL"
     MEDIUM = "MEDIUM"
     LARGE = "LARGE"
-    SPECIAL = "SPECIAL"
-
-
-class EnemyVariantGrade(Enum):
-    LESSER = "LESSER"
-    COMMON = "COMMON"
-    GREATER = "GREATER"
-    LEGENDARY = "LEGENDARY"
     SPECIAL = "SPECIAL"
 
 
@@ -76,38 +22,47 @@ class EnemySet:
     plural_name: str
     group_name: str
     weight_class: EnemyWeightClass
-    variant_lists: EnemyVariantSet
 
+    # this function is painful, and needs to be reworked
     def generate_enemy_party(
         self,
-        enemy_set: "EnemySet",
         enemy_count: int,
     ) -> EnemyParty:
-        from RPyG.constructs import EnemySet
-
-        ensure_type(enemy_set, EnemySet, "enemy_party_attributes")
         ensure_type(enemy_count, int, "enemy_count")
 
-        # Create Instances & Add to Instance List
+        # select random grade of enemy on each attempt, 1 in 25 chance of legendary (will have loot later))
         enemy_party_instances: list[Enemy] = []
+        if self.key_enemy is not None:
+            enemy_party_instances.append(self.key_enemy)
+
         for _ in range(0, enemy_count):
-            variant_lists: list[tuple[Enemy, ...]] = [
-                enemy_set.variant_lists.lesser_variants,
-                enemy_set.variant_lists.common_variants,
-                enemy_set.variant_lists.greater_variants,
-            ]
+            match random.randint(1, 25):
+                case 25:
+                    enemy_party_instances.append(
+                        random.choice(
+                            self.variants_by_grade[EnemyVariantGrade.LEGENDARY]
+                        )
+                    )
+                case _:
+                    ## BARF WHY DID I DO THIS
+                    enemy_party_instances.append(
+                        random.choice(
+                            self.variants_by_grade[
+                                random.choice(
+                                    [
+                                        EnemyVariantGrade.LESSER,
+                                        EnemyVariantGrade.COMMON,
+                                        EnemyVariantGrade.GREATER,
+                                    ]
+                                )
+                            ]
+                        )
+                    )
 
-            active_variant_list: tuple[Enemy, ...] = random.choice(variant_lists)
-
-            variant_choice: Enemy = random.choice(active_variant_list)
-
-            enemy_party_instances.append(variant_choice)
-        if enemy_count == 1:
+        if len(enemy_party_instances) == 1:
             enemy_party_name = f"Lone {enemy_party_instances[0].name}"
         else:
-            enemy_party_name = (
-                f"{enemy_set.group_name} of {enemy_count} {enemy_set.plural_name}"
-            )
+            enemy_party_name = f"{self.group_name} of {enemy_count} {self.plural_name}"
 
         return EnemyParty(enemy_party_name, enemy_party_instances)
 
@@ -117,14 +72,66 @@ class EnemySet:
         plural_name: str,
         group_name: str,
         weight_class: str,
-        set_type: SetType,
+        set_type: str,
         enemy_ids: list[str],
+        key_enemy_id: str | None = None,
     ) -> None:
         self.plural_name = plural_name
         self.group_name = group_name
         self.weight_class = EnemyWeightClass(weight_class)
         self.set_type = SetType(set_type)
         self.enemy_ids = enemy_ids
+        self.key_enemy_id = key_enemy_id
+
+    @cached_property
+    def variants_by_grade(self) -> dict[EnemyVariantGrade, list[Enemy]]:
+        from RPyG.content import ContentLibrary
+
+        library = ContentLibrary.get_library()
+
+        enemy_party_instances: list[Enemy] = []
+        # select enemy ids from the enemy library
+        for enemy_id in self.enemy_ids:
+            enemy_party_instances.append(library.enemies[enemy_id])
+
+        variant_lists: dict[EnemyVariantGrade, list[Enemy]] = {
+            EnemyVariantGrade.LESSER: [],
+            EnemyVariantGrade.COMMON: [],
+            EnemyVariantGrade.GREATER: [],
+            EnemyVariantGrade.LEGENDARY: [],
+            EnemyVariantGrade.SPECIAL: [],
+        }
+
+        for variant in enemy_party_instances:
+            match variant.variant_grade:
+                case EnemyVariantGrade.LESSER:
+                    variant_lists[EnemyVariantGrade.LESSER].append(variant)
+                case EnemyVariantGrade.COMMON:
+                    variant_lists[EnemyVariantGrade.COMMON].append(variant)
+                case EnemyVariantGrade.GREATER:
+                    variant_lists[EnemyVariantGrade.GREATER].append(variant)
+                case EnemyVariantGrade.LEGENDARY:
+                    variant_lists[EnemyVariantGrade.LEGENDARY].append(variant)
+                case EnemyVariantGrade.SPECIAL:
+                    variant_lists[EnemyVariantGrade.SPECIAL].append(variant)
+                case _:
+                    raise ValueError()
+
+        return variant_lists
+
+    @cached_property
+    def key_enemy(self) -> Enemy | None:
+        from RPyG.content import ContentLibrary
+
+        library = ContentLibrary.get_library()
+        if self.key_enemy_id is not None:
+            return library.enemies[self.key_enemy_id]
+        return None
+
+    def validate(self) -> bool:
+        _variants = self.variants_by_grade
+        _key_enemy = self.key_enemy
+        return True
 
 
 # from types import MappingProxyType

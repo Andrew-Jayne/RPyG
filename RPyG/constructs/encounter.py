@@ -96,3 +96,6 @@ class Encounter:
         else:
             self.special_action = None
         self.additional_events = additional_events
+
+    def validate(self) -> bool:
+        return True
