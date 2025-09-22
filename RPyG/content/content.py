@@ -20,16 +20,17 @@ class ContentKind(Enum):
 class ContentLibrary:
     enemies: dict[str, Enemy]
     enemy_sets: dict[str, EnemySet]
-    story_events: dict[str, StoryEvent]
+    story_events: dict[int, StoryEvent]
     encounters: dict[str, Encounter]
     dungeons: dict[str, Dungeon]
     _instance: "ContentLibrary | None" = None
 
     @staticmethod
-    def build_story_events(story_events_data: dict[str, Any]) -> dict[str, StoryEvent]:
+    def build_story_events(story_events_data: dict[str, Any]) -> dict[int, StoryEvent]:
         all_events = {}
-        for key, value in story_events_data.items():
-            all_events[key] = StoryEvent(**value)
+        for value in story_events_data.values():
+            event = StoryEvent(**value)
+            all_events[event.progress_trigger] = event
 
         return all_events
 

@@ -1,11 +1,7 @@
 # Just for Type Checking
-from RPyG.actors import EnemyParty, PlayerParty
-from RPyG.combat import battle
-from RPyG.constructs import Dungeon
-from RPyG.content import ContentLibrary
+from RPyG.actors import PlayerParty
 from RPyG.core_io import CoreIO
 from RPyG.core_io.io_models import OutputMessage, UserPromptRequest
-from RPyG.gameState.file import save_game
 from RPyG.utilites import ensure_type
 
 
@@ -13,32 +9,6 @@ from RPyG.utilites import ensure_type
 
 
 class SpecialEncounters:
-    @staticmethod
-    def send_special_encounter_message(
-        progress_value,
-        party_name,
-        message_type,
-    ) -> None:
-        core_io = CoreIO.get_core_io()
-        content_library = ContentLibrary.get_library()
-
-        all_events = content_library.story_events
-
-        current_event = all_events[progress_value]
-        match message_type:
-            case "messages":
-                active_messages = current_event.messages
-            case "success_messages":
-                active_messages = current_event.success_messages
-            case "failure_messages":
-                active_messages = current_event.failure_messages
-            case _:
-                raise ValueError(
-                    'Message type must be one of ["messages", "success_messages", "failure_messages"]'
-                )
-        for message in active_messages:
-            core_io.send_output(OutputMessage(message.format(party_name=party_name)))
-
     @staticmethod
     def tavern_notice(player_party_instance: PlayerParty) -> None:
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
@@ -135,105 +105,3 @@ class SpecialEncounters:
                 f"{player_party_instance.name} is are fully rested and have a full stock of potions"
             )
         )
-
-    @staticmethod
-    def midway_boss(player_party_instance: PlayerParty) -> None:
-        ensure_type(player_party_instance, PlayerParty, "player_party_instance")
-        content_library = ContentLibrary.get_library()
-
-        enemy_instance = content_library.special_enemies["midway_boss"]
-
-        SpecialEncounters.send_special_encounter_message(
-            player_party_instance.progress,
-            player_party_instance.name,
-            "messages",
-        )
-
-        enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
-        battle(player_party_instance, enemy_party)
-        if len(player_party_instance.members) != 0:
-            SpecialEncounters.send_special_encounter_message(
-                player_party_instance.progress,
-                player_party_instance.name,
-                "success_messages",
-            )
-        else:
-            SpecialEncounters.send_special_encounter_message(
-                player_party_instance.progress,
-                player_party_instance.name,
-                "failure_messages",
-            )
-
-    @staticmethod
-    def enemy_keep_visit(player_party_instance: PlayerParty) -> None:
-        content_library = ContentLibrary.get_library()
-        SpecialEncounters.send_special_encounter_message(
-            player_party_instance.progress,
-            player_party_instance.name,
-            "messages",
-        )
-
-        if "algolons_fortress" not in content_library.special_dungeons.keys():
-            raise FileNotFoundError(
-                f"Unable to locate Dungeon with the ID algolons_fortress, avalible IDs are {content_library.special_dungeons.keys()}"
-            )
-        active_dungeon: Dungeon = content_library.special_dungeons["algolons_fortress"]
-        active_dungeon.travese_dungeon(player_party_instance)
-
-    @staticmethod
-    def penultimate_boss(player_party_instance: PlayerParty) -> None:
-        ensure_type(player_party_instance, PlayerParty, "player_party_instance")
-        core_io = CoreIO.get_core_io()
-        content_library = ContentLibrary.get_library()
-
-        enemy_instance = content_library.special_enemies["penultimate_boss"]
-        core_io.send_output(OutputMessage(f"Your Party Battles {enemy_instance.name}!"))
-        enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
-        battle(player_party_instance, enemy_party)
-        if len(player_party_instance.members) != 0:
-            SpecialEncounters.send_special_encounter_message(
-                player_party_instance.progress,
-                player_party_instance.name,
-                "success_messages",
-            )
-        else:
-            SpecialEncounters.send_special_encounter_message(
-                player_party_instance.progress,
-                player_party_instance.name,
-                "failure_messages",
-            )
-
-    @staticmethod
-    def final_boss(player_party_instance: PlayerParty) -> None:
-        ensure_type(player_party_instance, PlayerParty, "player_party_instance")
-        core_io = CoreIO.get_core_io()
-        content_library = ContentLibrary.get_library()
-
-        enemy_instance = content_library.special_enemies["ultimate_boss"]
-
-        core_io.send_output(
-            OutputMessage(f"Your Party must now battle {enemy_instance.name}!")
-        )
-        enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
-        battle(player_party_instance, enemy_party)
-        if len(player_party_instance.members) != 0:
-            SpecialEncounters.send_special_encounter_message(
-                player_party_instance.progress,
-                player_party_instance.name,
-                "success_messages",
-            )
-            core_io.send_output(
-                OutputMessage(f"""
-    Fortranus the Ancient One has been Vanquished at the hands of {player_party_instance.name}
-
-
-    Your adventure has been completed, you may start a new adventure if you so choose
-    """)
-            )
-            save_game(player_party_instance)
-        else:
-            SpecialEncounters.send_special_encounter_message(
-                player_party_instance.progress,
-                player_party_instance.name,
-                "failure_messages",
-            )

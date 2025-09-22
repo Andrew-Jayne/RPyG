@@ -1,5 +1,7 @@
-["1"]
+["tavern_quest_notice"]
 kind = "StoryEvent/v1"
+event_type = "ONE_CHOICE_EVENT"
+progress_trigger = 1
 messages = [
   "{party_name} gathers around the fire at a local tavern when a rider delivers a notice to the bar keep",
   "the notice reads:",
@@ -14,8 +16,10 @@ failure_messages = [
   "And they drank until they passed out."
 ]
 
-["25"]
+["meet_the_king"]
 kind = "StoryEvent/v1"
+event_type = "ONE_CHOICE_EVENT"
+progress_trigger = 25
 messages = [
   "Upon arrival the King tells you of the dark rumours which have recently been confirmed to him.",
   "",
@@ -27,8 +31,10 @@ messages = [
 success_messages = []
 failure_messages = []
 
-["50"]
+["battle_cobolus"]
+progress_trigger = 50
 kind = "StoryEvent/v1"
+event_type = "BOSS_ENCOUNTER"
 messages = [
   "On the outskirts of Debina, you find the lair of Cobolus and engage him in combat."
 ]
@@ -41,7 +47,9 @@ failure_messages = [
   "As their bodies begin to stir from the sleep of death, Cobolus's face turns to an evil grin as he with is new band of undead minions venture deep into his lair..."
 ]
 
-["75"]
+["algolons_fortress_encounter"]
+progress_trigger = 75
+event_type = "DUNGEON_ENCOUNTER"
 kind = "StoryEvent/v1"
 messages = [
   "Deep in the mountains you arrive at the Fortress, the air is still and the world silent, no sign of a living thing can be heard or seen, save for the faint trails of smoke escaping from the depths of fortress.",

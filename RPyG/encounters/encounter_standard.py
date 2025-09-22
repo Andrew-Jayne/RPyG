@@ -1,5 +1,6 @@
 import math
 import random
+from re import I
 
 from RPyG.actors import PlayableActor, PlayerParty
 from RPyG.constructs import (
@@ -40,7 +41,7 @@ def find_encounter_by_id(
     content_library: ContentLibrary = ContentLibrary.get_library()
 
     # Directly access the event by its ID
-    found_item = content_library.standard_encounters.get(target_item_id)
+    found_item = content_library.encounters.get(target_item_id)
     if found_item is None:
         raise FileNotFoundError(
             f"Error: Unable to find an event with the ID {target_item_id}"
@@ -236,9 +237,9 @@ def standard_encounter(player_party_instance: PlayerParty) -> None:
         case EncounterType.LOOT:
             if current_event.pre_message is not None:
                 core_io.send_output(OutputMessage(current_event.pre_message))
-            rest_options = ["OPEN", "LEAVE"]
-            rest_message = ["What do you do?:"]
-            core_io.request_input(rest_options, rest_message)
+            core_io.request_input(
+                UserPromptRequest(["What do you do?:"], ["OPEN", "LEAVE"])
+            )
 
             match core_io.receive_input():
                 case "OPEN":

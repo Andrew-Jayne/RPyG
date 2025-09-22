@@ -1,5 +1,4 @@
 import random
-from typing import Any
 
 from RPyG import combat
 from RPyG.actors import Enemy, EnemyParty, PlayerParty
@@ -60,9 +59,22 @@ class Dungeon:
             boss_encounter_message=boss_encounter_message,
         )
         self.length = length
+        self.boss_enemy_id = boss_enemy_id
+        self.enemy_set_id = enemy_set_id
 
-        # self.enemies = EnemySet(**enemy_sets_data)
-        self.boss = ""
+    @property
+    def boss_enemy(self) -> Enemy:
+        from RPyG.content import ContentLibrary
+
+        library = ContentLibrary.get_library()
+        return library.enemies[self.boss_enemy_id]
+
+    @property
+    def enemy_set(self) -> EnemySet:
+        from RPyG.content import ContentLibrary
+
+        library = ContentLibrary.get_library()
+        return library.enemy_sets[self.enemy_set_id]
 
     ## this function is a crime
     def travese_dungeon(self, player_party_instance: PlayerParty) -> bool:
@@ -89,12 +101,9 @@ class Dungeon:
                     )
                     if enemy_count == 0:
                         enemy_count = 1
-                    chosen_enemy: dict = random.choice(self.enemies)
-                    enemy_party = EnemySet.generate_enemy_party(
-                        chosen_enemy, enemy_count
-                    )
+                    enemy_party = self.enemy_set.generate_enemy_party(enemy_count)
                     core_io.send_output(
-                        {"messages": f"Your Party encounters a {enemy_party.name}!"}
+                        OutputMessage(f"Your Party encounters a {enemy_party.name}!")
                     )
                     combat.battle(player_party_instance, enemy_party)
                     if len(player_party_instance.members) == 0:
