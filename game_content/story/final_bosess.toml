@@ -1,5 +1,7 @@
-["99"]
+["battle_algolon"]
 kind = "StoryEvent/v1"
+event_type = "BOSS_ENCOUNTER"
+progress_trigger = 99
 messages = [
   "You arrive at the summit of Godsblood Peak, and find Algolon engulfed in a typhoon of magical energy!",
   "Could it be? Has the ritual begun alone!? you begin combat at once!"
@@ -14,8 +16,10 @@ failure_messages = [
   "As the rift snaps shut a burning red firestorm engulfs the world beyond..."
 ]
 
-["100"]
+["battle_fortranus"]
 kind = "StoryEvent/v1"
+event_type = "BOSS_ENCOUNTER"
+progress_trigger = 100
 messages = [
   "It is him, Fortranus the Ancient One. His form grows giant and black the massive beast bellows and releases waves of fire from its great gaping maw, its burning orange eyes lock on to your party. From deep within its massive chest you hear it bellow.",
   "Mortals, embrace the end of this world and submit to me, and I shall make your end swift and painless.",
@@ -23,7 +27,9 @@ messages = [
 ]
 success_messages = [
   "The great beast collapses onto the ground, brought to near death by {party_name}, as it lays, ragged breaths spew forth small wisps of smoke, you position yourselves to make the killing blow.",
-  "A crack of blinding light engulfs your party and the body of the great dragon evaporates into a great stone skeleton as cold as the as the snow that begins to fall upon it."
+  "A crack of blinding light engulfs your party and the body of the great dragon evaporates into a great stone skeleton as cold as the as the snow that begins to fall upon it.",
+  "Fortranus the Ancient One has been Vanquished at the hands of {party_name}",
+  "Your adventure has been completed, you may start a new adventure if you so choose"
 ]
 failure_messages = [
   "{party_name} lays defeated, their smoldering corpses lay motionless on the swirl of ash & snow, as the great wings of the ancient dragon carry into the skys.",
