@@ -1,4 +1,4 @@
-# noqa: I001 Dungeon must be imported after enemey Set (for now)
+# noqa: I001 Dungeon must be imported after enemy Set (for now)
 from RPyG.constructs.encounter import (  # noqa: I001
     ActorAction,
     Encounter,
@@ -6,6 +6,6 @@ from RPyG.constructs.encounter import (  # noqa: I001
     EncounterType,
     SpecialAction,
 )
-from RPyG.constructs.enemy_set import EnemySet
+from RPyG.constructs.enemy_set import EnemySet, EnemySetType, EnemyWeightClass
 from RPyG.constructs.dungeon import Dungeon
 from RPyG.constructs.story_event import StoryEvent

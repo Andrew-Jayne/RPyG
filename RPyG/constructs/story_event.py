@@ -5,7 +5,7 @@ from RPyG.combat import battle
 from RPyG.constructs import Dungeon
 from RPyG.content import ContentLibrary
 from RPyG.core_io import CoreIO
-from RPyG.core_io.io_models import InputRequest, OutputMessage
+from RPyG.core_io.io_models import OutputMessage
 from RPyG.gameState.file import save_game
 from RPyG.utilites import ensure_type
 

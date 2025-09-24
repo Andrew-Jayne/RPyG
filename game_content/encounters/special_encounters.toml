@@ -1,1 +1,33 @@
-# None Have been made :(
+[tavern_quest_notice]
+kind = "Encounters/v1"
+primary_encounter = true
+special_encounter = true
+# next_encounter = None
+prompts = []
+success_choice = "EMBARK"
+retry_coice = "DRINK"
+# failure_choice = None
+success_effects = []
+retry_effects = []
+failure_effects = []
+success_messages = []
+retry_messages = ["And they drank until they passed out.", "After many drinks, the kings missive sticks in your minds."]
+failure_messages = []
+
+[meet_the_king]
+kind = "Encounters/v1"
+primary_encounter = true
+special_encounter = true
+# next_encounter = None
+prompts = []
+success_choice = "ACCEPT"
+retry_coice = "DECLINE"
+# failure_choice = None
+success_effects = ["full_heal_full_potions"]
+retry_effects = []
+failure_effects = []
+success_messages = []
+retry_messages = ["The King insists, and asks again"]
+failure_messages = []
+
+

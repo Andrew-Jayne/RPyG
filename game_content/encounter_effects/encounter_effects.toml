@@ -1,0 +1,89 @@
+[heal_30]
+kind = "EncountersEffect/v1"
+actor_action = "HEAL"
+targets = "ALL"
+magnitude = 30
+effect_messages = []
+extra_effects = []
+
+[heal_60]
+kind = "EncountersEffect/v1"
+actor_action = "HEAL"
+targets = "ALL"
+magnitude = 60
+effect_messages = []
+extra_effects = []
+
+[heal_90]
+kind = "EncountersEffect/v1"
+actor_action = "HEAL"
+targets = "ALL"
+magnitude = 90
+effect_messages = []
+extra_effects = []
+
+[heal_120]
+kind = "EncountersEffect/v1"
+actor_action = "HEAL"
+targets = "ALL"
+magnitude = 120
+effect_messages = []
+extra_effects = []
+
+[heal_150]
+kind = "EncountersEffect/v1"
+actor_action = "HEAL"
+targets = "ALL"
+magnitude = 150
+effect_messages = []
+extra_effects = []
+
+[night_robbery_500]
+kind = "EncountersEffect/v1"
+actor_action = "LOSE_GOLD"
+targets = "ALL"
+magnitude = 500
+effect_messages = []
+extra_effects = []
+
+[damage_30]
+kind = "EncountersEffect/v1"
+actor_action = "DAMAGE"
+targets = "ALL"
+magnitude = 30
+effect_message = []
+extra_effects = []
+
+[damage_150]
+kind = "EncountersEffect/v1"
+actor_action = "DAMAGE"
+targets = "ALL"
+magnitude = 150
+effect_message = []
+extra_effects = []
+
+[gold_100]
+kind = "EncountersEffect/v1"
+actor_action = "GAIN_GOLD"
+targets = "ALL"
+magnitude = 100
+effect_message = []
+extra_effects = []
+
+
+[full_heal_full_potions]
+kind = "EncountersEffect/v1"
+actor_action = "HEAL"
+targets = "ALL"
+magnitude = 900
+effect_messages = []
+extra_effects = ["full_potions"]
+
+[full_potions]
+kind = "EncountersEffect/v1"
+actor_action = "GAIN_POTION"
+targets = "ALL"
+magnitude = 9
+effect_messages = []
+extra_effects = []
+

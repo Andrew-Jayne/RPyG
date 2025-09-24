@@ -1,40 +1,51 @@
 ["tavern_quest_notice"]
 kind = "StoryEvent/v1"
-event_type = "ONE_CHOICE_EVENT"
 progress_trigger = 1
+event_type = "ENCOUNTER"
+encounter_id = "tavern_quest_notice"
+# enemy_id = None
+# dungeon_id = None
 messages = [
-  "{party_name} gathers around the fire at a local tavern when a rider delivers a notice to the bar keep",
-  "the notice reads:",
-  "His Highness King Stallman has requested all who favor themselves brave warriors present themselves at the Open Hall as the king has a task which requires great courage for them to undertake.",
-  "After seeing the kings missive the path ahead is clear."
-]
+    "{party_name} gathers around the fire at a local tavern when a rider delivers a notice to the bar keep",
+    "the notice reads:",
+    "His Highness King Stallman has requested all who favor themselves brave warriors present themselves at the Open Hall as the king has a task which requires great courage for them to undertake.",
+    "After seeing the kings missive the path ahead is clear.",
+    ]
 success_messages = [
   "And thus {party_name} began their quest.",
   "If only they knew the trials and triumphs that lay ahead..."
 ]
-failure_messages = [
-  "And they drank until they passed out."
-]
+failure_messages = []
+
 
 ["meet_the_king"]
 kind = "StoryEvent/v1"
-event_type = "ONE_CHOICE_EVENT"
 progress_trigger = 25
+event_type = "ENCOUNTER"
+encounter_id = "meet_the_king"
+# enemy_id = None
+# dungeon_id = None
 messages = [
-  "Upon arrival the King tells you of the dark rumours which have recently been confirmed to him.",
-  "",
-  "The dark wizard Algolon is working to resurrect an ancient evil from the dead.",
-  "The exact location of this is unknown.",
-  "Rumors say that outside the town of Debina on the wizard Cobolus, a known collaborator of Algolon has been sighted.",
-  "The king asks this great task of {party_name}, go forth and find Cobolus, attempt to ascertain the whereabouts of Algolon and where he plans to carry out this ritual."
+    "{party_name} is welcomed at the Open Hall by King Stallman",
+    "Upon arrival the King tells you of the dark rumours which have recently been confirmed to him.",
+    "",
+    "The dark wizard Algolon is working to resurrect an ancient evil from the dead.",
+    "The exact location of this is unknown.",
+    "Rumors say that outside the town of Debina on the wizard Cobolus, a known collaborator of Algolon has been sighted.",
+    "The king asks this great task of {party_name}, go forth and find Cobolus, attempt to ascertain the whereabouts of Algolon and where he plans to carry out this ritual."
 ]
-success_messages = []
+success_messages = [
+  "{party_name} is are fully rested and have a full stock of potions", "And thus {party_name} began their quest.",
+  "If only they knew the trials and triumphs that lay ahead..."]
 failure_messages = []
 
 ["battle_cobolus"]
 progress_trigger = 50
 kind = "StoryEvent/v1"
 event_type = "BOSS_ENCOUNTER"
+# encounter_id = None
+enemy_id = "midway_boss"
+# dungeon_id = None
 messages = [
   "On the outskirts of Debina, you find the lair of Cobolus and engage him in combat."
 ]
@@ -51,6 +62,9 @@ failure_messages = [
 progress_trigger = 75
 event_type = "DUNGEON_ENCOUNTER"
 kind = "StoryEvent/v1"
+# encounter_id = None
+# enemy_id = None
+dungeon_id = "algolons_fortress"
 messages = [
   "Deep in the mountains you arrive at the Fortress, the air is still and the world silent, no sign of a living thing can be heard or seen, save for the faint trails of smoke escaping from the depths of fortress.",
   "The cold winds whirl around {party_name} as they move forward towards the fortress"

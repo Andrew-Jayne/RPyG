@@ -1,11 +1,21 @@
 import json
 import os
+import random
 import tomllib
 from enum import Enum
+from functools import cached_property
 from typing import Any
 
 from RPyG.actors import Enemy
-from RPyG.constructs import Dungeon, Encounter, EnemySet, StoryEvent
+from RPyG.constructs import (
+    Dungeon,
+    Encounter,
+    EncounterType,
+    EnemySet,
+    EnemySetType,
+    EnemyWeightClass,
+    StoryEvent,
+)
 from RPyG.utilites import ensure_type
 
 
@@ -180,3 +190,53 @@ class ContentLibrary:
 
         for dungeon in library.dungeons.values():
             dungeon.validate()
+
+    @cached_property
+    def standard_encounters(self) -> dict[str, Encounter]:
+        encounters = {}
+        for id, encounter in self.encounters.items():
+            if encounter.encounter_type != EncounterType.SPECIAL:
+                encounters[id] = encounter
+
+        return encounters
+
+    @cached_property
+    def small_enemies(self) -> dict[str, EnemySet]:
+        enemy_sets = {}
+        for id, enemy_set in self.enemy_sets.items():
+            if (
+                enemy_set.set_type != EnemySetType.SPECIAL
+                and enemy_set.weight_class == EnemyWeightClass.SMALL
+            ):
+                enemy_sets[id] = enemy_set
+
+        return enemy_sets
+
+    @cached_property
+    def medium_enemies(self) -> dict[str, EnemySet]:
+        enemy_sets = {}
+        for id, enemy_set in self.enemy_sets.items():
+            if (
+                enemy_set.set_type != EnemySetType.SPECIAL
+                and enemy_set.weight_class == EnemyWeightClass.MEDIUM
+            ):
+                enemy_sets[id] = enemy_set
+
+        return enemy_sets
+
+    @cached_property
+    def large_enemies(self) -> dict[str, EnemySet]:
+        enemy_sets = {}
+        for id, enemy_set in self.enemy_sets.items():
+            if (
+                enemy_set.set_type != EnemySetType.SPECIAL
+                and enemy_set.weight_class == EnemyWeightClass.LARGE
+            ):
+                enemy_sets[id] = enemy_set
+
+        return enemy_sets
+
+    @staticmethod
+    def get_standard_encounter() -> Encounter:
+        library = ContentLibrary.get_library()
+        return random.choice(list(library.standard_encounters.values()))
