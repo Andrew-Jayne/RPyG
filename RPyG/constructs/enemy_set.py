@@ -13,7 +13,7 @@ class EnemyWeightClass(Enum):
     SPECIAL = "SPECIAL"
 
 
-class SetType(Enum):
+class EnemySetType(Enum):
     STANDARD = "STANDARD"
     SPECIAL = "SPECIAL"
 
@@ -21,6 +21,7 @@ class SetType(Enum):
 class EnemySet:
     plural_name: str
     group_name: str
+    set_type: EnemySetType
     weight_class: EnemyWeightClass
 
     # this function is painful, and needs to be reworked
@@ -79,7 +80,7 @@ class EnemySet:
         self.plural_name = plural_name
         self.group_name = group_name
         self.weight_class = EnemyWeightClass(weight_class)
-        self.set_type = SetType(set_type)
+        self.set_type = EnemySetType(set_type)
         self.enemy_ids = enemy_ids
         self.key_enemy_id = key_enemy_id
 

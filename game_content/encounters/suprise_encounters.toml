@@ -1,47 +1,63 @@
 [surprise_attack]
 kind = "Encounters/v1"
-encounter_type = "MYSTERY"
-message = ""
-pre_message = "Your party Encounters A Strange Figure!"
-post_message = "The Figure blasts your party with an Arcane Bolt and vanishes into a Flash of Light!"
-actor_action = "DAMAGE"
-# special_action is None
-# additional_events is None
-targets = "ALL"
-magnitude = 30
+primary_encounter = true
+special_encounter = false
+# next_encounter = None
+prompt = "Your party Encounters A Strange Figure!"
+success_choice = "GREET"
+# retry_coice = None
+failure_choice = "ATTACK"
+success_effects = ["damage_30"]
+retry_effects = []
+failure_effects = ["damage_30"]
+success_messages = ["The Figure blasts your party with an Arcane Bolt and vanishes into a Flash of Light!"]
+retry_messages = []
+failure_messages = ["The Figure blasts your party with an Arcane Bolt and vanishes into a Flash of Light!"]
 
 [surprise_heal]
 kind = "Encounters/v1"
-encounter_type = "MYSTERY"
-message = ""
-pre_message = "Your party Encounters A Strange Figure!"
-post_message = "The Figure heals your party and vanishes into the darkness!"
-actor_action = "HEAL"
-# special_action is None
-# additional_events is None
-targets = "ALL"
-magnitude = 30
+primary_encounter = true
+special_encounter = false
+# next_encounter = None
+prompt = "Your party Encounters A Strange Figure!"
+success_choice = "GREET"
+# retry_coice = None
+failure_choice = "ATTACK"
+success_effects = ["heal_30"]
+retry_effects = []
+failure_effects = ["damage_30"]
+success_messages = ["The Figure heals your party and vanishes into the darkness!"]
+retry_messages = []
+failure_messages = ["The Figure blasts your party with an Arcane Bolt and vanishes into a Flash of Light!"]
 
 [surprise_chest]
 kind = "Encounters/v1"
-encounter_type = "LOOT"
-message = ""
-pre_message = "Your party find a small treasure chest"
-post_message = "Upon opening it reveals 100 gold"
-actor_action = "GAIN_GOLD"
-# special_action is None
-# additional_events is None
-targets = "ALL"
-magnitude = 100
+primary_encounter = true
+special_encounter = false
+# next_encounter = None
+prompt = "Your party find a small treasure chest"
+success_choice = "OPEN"
+# retry_coice = None
+failure_choice = "LEAVE"
+success_effects = ["gold_100"]
+retry_effects = []
+failure_effects = []
+success_messages = ["Upon opening it reveals 100 gold"]
+retry_messages = []
+failure_messages = []
 
 [surprise_bomb]
 kind = "Encounters/v1"
-encounter_type = "LOOT"
-message = ""
-pre_message = "Your party find a small treasure chest"
-post_message = "Upon opening an explosion is triggered and everyone is thrown backwards"
-actor_action = "DAMAGE"
-# special_action is None
-# additional_events is None
-targets = "ALL"
-magnitude = 150
+primary_encounter = true
+special_encounter = false
+# next_encounter = None
+prompt = "Your party find a small treasure chest"
+success_choice = "OPEN"
+# retry_coice = None
+failure_choice = "LEAVE"
+success_effects = ["damage_150"]
+retry_effects = []
+failure_effects = []
+success_messages = ["Upon opening an explosion is triggered and everyone is thrown backwards"]
+retry_messages = []
+failure_messages = []
