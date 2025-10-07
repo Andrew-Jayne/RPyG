@@ -7,7 +7,7 @@ import pickle
 from RPyG.actors import PlayerParty
 from RPyG.core_io import CoreIO
 from RPyG.core_io.io_models import OutputMessage, UserPromptRequest
-from RPyG.utilites import ensure_type
+from RPyG.utilities import ensure_type
 
 
 # """Secret""" key for HMAC, if you break your file that's on you

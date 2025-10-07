@@ -1,6 +1,6 @@
 from typing import Generic, TypeVar
 
-from RPyG.utilites import ensure_type
+from RPyG.utilities import ensure_type
 
 
 class Actor:

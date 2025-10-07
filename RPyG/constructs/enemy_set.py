@@ -3,7 +3,7 @@ from enum import Enum
 from functools import cached_property
 
 from RPyG.actors import Enemy, EnemyParty, EnemyVariantGrade
-from RPyG.utilites import ensure_type
+from RPyG.utilities import ensure_type
 
 
 class EnemyWeightClass(Enum):

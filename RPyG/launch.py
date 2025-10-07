@@ -4,7 +4,7 @@ from RPyG.combat import battle
 from RPyG.constructs import EnemySet, StoryEvent
 from RPyG.core_io import RPyGInterface
 from RPyG.exceptions import ImpossibleValueException
-from RPyG.utilites import ensure_type
+from RPyG.utilities import ensure_type
 
 
 ## This funciton is pretty oversized, but this removed the entire encounter module which is pretty damn cool

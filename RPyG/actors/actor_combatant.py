@@ -4,8 +4,8 @@ from typing import Generic, TypeVar
 
 from RPyG.actors.actor_base import Actor, Party
 from RPyG.core_io import CoreIO
-from RPyG.core_io.io_models import OutputMessage
-from RPyG.utilites import ensure_type
+from RPyG.core_io.io_models import OutputMessage, UserPromptRequest
+from RPyG.utilities import ensure_type
 
 
 class Combatant(Actor):
@@ -78,7 +78,7 @@ class Combatant(Actor):
         elif self.health < 0:
             self.health = 0
         core_io.send_output(
-            {"messages": f"{self.name} has {self.health} Health Remaining"}
+            OutputMessage(f"{self.name} has {self.health} Health Remaining")
         )
 
     def heal(self, heal_amount: int) -> None:
@@ -322,11 +322,9 @@ class Combatant(Actor):
                     while target_instance.is_dismembered is True:
                         dumb_check += 1
                         core_io.send_output(
-                            {
-                                "messages"
-                                f"{target_instance.name} has been dismembered already",
-                                1,
-                            }
+                            OutputMessage(
+                                f"{target_instance.name} has been dismembered already"
+                            )
                         )
                         # message that enemy has been dismembered
                         target_index = self.select_combat_target(target_party_instance)
@@ -364,17 +362,13 @@ class Combatant(Actor):
                 member: Combatant
                 target_options.append(f"{index} {member.name}:{member.health}")
 
-                target_messages = [
-                    "Which enemy will you attack?",
-                ]
             core_io.request_input(
-                {
-                    "options": target_options,
-                    "messages": target_messages,
-                    "return_index": True,
-                }
+                UserPromptRequest(
+                    prompts=["Which enemy will you attack?"],
+                    options=target_options,
+                )
             )
-            return core_io.receive_input()
+            return int(core_io.receive_input())
 
         target_party_members = target_party_instance.members
         method_id = random.choice(["MAX_ATK", "MIN_HP", "RANDOM"])

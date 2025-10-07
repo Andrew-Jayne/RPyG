@@ -3,18 +3,17 @@ from enum import Enum
 from RPyG.actors import EnemyParty, PlayerParty
 from RPyG.combat import battle
 from RPyG.constructs import Dungeon
-from RPyG.content import ContentLibrary
 from RPyG.core_io import CoreIO
 from RPyG.core_io.io_models import OutputMessage
+from RPyG.exceptions import ImpossibleValueException
 from RPyG.gameState.file import save_game
-from RPyG.utilites import ensure_type
+from RPyG.utilities import ensure_type
 
 
 class StoryEventType(Enum):
     BOSS_ENCOUNTER = "BOSS_ENCOUNTER"
     DUNGEON_ENCOUNTER = "DUNGEON_ENCOUNTER"
-    ONE_CHOICE_EVENT = "ONE_CHOICE_EVENT"
-    MULTI_CHOICE_EVENT = "MULTI_CHOICE_EVENT"
+    ENCOUNTER = "ENCOUNTER"
 
 
 class StoryEvent:
@@ -27,6 +26,7 @@ class StoryEvent:
         "failure_messages",
         "enemy_id",
         "dungeon_id",
+        "encounter_id",
     )
     kind: str
     event_type: StoryEventType
@@ -36,6 +36,7 @@ class StoryEvent:
     failure_messages: tuple[str, ...]
     enemy_id: str | None
     dungeon_id: str | None
+    encounter_id: str | None
 
     def __init__(
         self,
@@ -47,6 +48,7 @@ class StoryEvent:
         failure_messages: list[str],
         enemy_id: str | None = None,
         dungeon_id: str | None = None,
+        encounter_id: str | None = None,
     ) -> None:
         # Validate types
         ensure_type(kind, str, "kind")
@@ -70,6 +72,9 @@ class StoryEvent:
         if dungeon_id is not None:
             ensure_type(dungeon_id, str, "dungeon_id")
 
+        if encounter_id is not None:
+            ensure_type(encounter_id, str, "encounter_id")
+
         # Set attributes
         self.kind = kind
         self.event_type = StoryEventType(event_type)
@@ -79,6 +84,7 @@ class StoryEvent:
         self.failure_messages = tuple(failure_messages)
         self.enemy_id = enemy_id
         self.dungeon_id = dungeon_id
+        self.encounter_id = encounter_id
 
     @staticmethod
     def send_special_encounter_message(
@@ -86,6 +92,8 @@ class StoryEvent:
         party_name,
         message_type,
     ) -> None:
+        from RPyG.content import ContentLibrary
+
         core_io = CoreIO.get_core_io()
         content_library = ContentLibrary.get_library()
 
@@ -111,6 +119,8 @@ class StoryEvent:
 
     def trigger(self, player_party_instance: PlayerParty) -> None:
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
+        from RPyG.content import ContentLibrary
+
         content_library = ContentLibrary.get_library()
         match self.event_type:
             case StoryEventType.BOSS_ENCOUNTER:
@@ -161,16 +171,16 @@ class StoryEvent:
                 active_dungeon: Dungeon = content_library.dungeons[self.dungeon_id]
                 active_dungeon.travese_dungeon(player_party_instance)
                 save_game(player_party_instance)
-            case StoryEventType.ONE_CHOICE_EVENT:
-                ## needs <- this is A LOT of stuff just for 1 half of the events
-                # options list[str]
-                # success_choice str
-                # prompt str
-                # retry_message str
-                # success_message str
-                # end_actor_actions list(ActionKey: str, Magnitide: int) <- this feels jank
-                pass
-            case StoryEventType.MULTI_CHOICE_EVENT:
-                raise NotImplementedError
+            case StoryEventType.ENCOUNTER:
+                from RPyG.content import ContentLibrary
+
+                content_library = ContentLibrary.get_library()
+                if self.encounter_id not in content_library.encounters.keys():
+                    raise FileNotFoundError(
+                        f"Unable to locate encounter with the ID {self.encounter_id}, avalible IDs are {content_library.encounters.keys()}"
+                    )
+                if self.encounter_id is not None:
+                    encounter = content_library.encounters[self.encounter_id]
+                    encounter.process_encounter(player_party_instance)
             case _:
-                raise ValueError(f"Invalid StoryEvent Type: {self.event_type}")
+                raise ImpossibleValueException(f"self.event_type: {self.event_type}")
