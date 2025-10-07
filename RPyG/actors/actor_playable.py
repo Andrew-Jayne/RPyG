@@ -3,7 +3,7 @@ import random
 from RPyG.actors.actor_combatant import Combatant, CombatantParty
 from RPyG.core_io import CoreIO
 from RPyG.core_io.io_models import OutputMessage
-from RPyG.utilites import ensure_type
+from RPyG.utilities import ensure_type
 
 
 class Inventory:

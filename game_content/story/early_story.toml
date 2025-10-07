@@ -1,4 +1,4 @@
-["tavern_quest_notice"]
+["tavern_quest_notice_event"]
 kind = "StoryEvent/v1"
 progress_trigger = 1
 event_type = "ENCOUNTER"
@@ -18,7 +18,7 @@ success_messages = [
 failure_messages = []
 
 
-["meet_the_king"]
+["meet_the_king_event"]
 kind = "StoryEvent/v1"
 progress_trigger = 25
 event_type = "ENCOUNTER"

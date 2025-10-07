@@ -1,7 +1,7 @@
 from enum import Enum
 
 from RPyG.actors.actor_combatant import Combatant, CombatantParty
-from RPyG.utilites import ensure_type
+from RPyG.utilities import ensure_type
 
 
 class EnemyVariantGrade(Enum):

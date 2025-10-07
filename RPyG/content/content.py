@@ -10,13 +10,13 @@ from RPyG.actors import Enemy
 from RPyG.constructs import (
     Dungeon,
     Encounter,
-    EncounterType,
+    EncounterEffect,
     EnemySet,
     EnemySetType,
     EnemyWeightClass,
     StoryEvent,
 )
-from RPyG.utilites import ensure_type
+from RPyG.utilities import ensure_type
 
 
 class ContentKind(Enum):
@@ -24,6 +24,7 @@ class ContentKind(Enum):
     Dungeon = "Dungeon"
     Enemy = "Enemy"
     Encounters = "Encounters"
+    EncounterEffect = "EncounterEffect"
     StoryEvent = "StoryEvent"
 
 
@@ -32,6 +33,7 @@ class ContentLibrary:
     enemy_sets: dict[str, EnemySet]
     story_events: dict[int, StoryEvent]
     encounters: dict[str, Encounter]
+    encounter_effects: dict[str, EncounterEffect]
     dungeons: dict[str, Dungeon]
     _instance: "ContentLibrary | None" = None
 
@@ -75,6 +77,16 @@ class ContentLibrary:
             all_dungeons[key] = Dungeon(**value)
 
         return all_dungeons
+
+    @staticmethod
+    def build_encounter_effects(
+        encounter_effects_data: dict[str, Any],
+    ) -> dict[str, EncounterEffect]:
+        all_encounter_effects = {}
+        for key, value in encounter_effects_data.items():
+            all_encounter_effects[key] = EncounterEffect(**value)
+
+        return all_encounter_effects
 
     @staticmethod
     def load_content_files(dir_path: str) -> dict[str, dict[str, Any]]:
@@ -121,6 +133,7 @@ class ContentLibrary:
             dungeons_data = {}
             encounters_data = {}
             story_events_data = {}
+            encounter_effects_data = {}
 
             for item, value in all_content.items():
                 try:
@@ -145,6 +158,8 @@ class ContentLibrary:
                         encounters_data[item] = value
                     case ContentKind.StoryEvent:
                         story_events_data[item] = value
+                    case ContentKind.EncounterEffect:
+                        encounter_effects_data[item] = value
                     case _:
                         raise ValueError(
                             f"item {item} has unsupported kind {item_kind}"
@@ -155,6 +170,9 @@ class ContentLibrary:
             self.enemies = ContentLibrary.build_enemies(enemies_data)
             self.enemy_sets = ContentLibrary.build_enemy_sets(enemy_sets_data)
             self.dungeons = ContentLibrary.build_dungeons(dungeons_data)
+            self.encounter_effects = ContentLibrary.build_encounter_effects(
+                encounter_effects_data
+            )
 
             ContentLibrary._instance = self
         else:
@@ -191,11 +209,14 @@ class ContentLibrary:
         for dungeon in library.dungeons.values():
             dungeon.validate()
 
+        for effect in library.encounter_effects.values():
+            effect.validate()
+
     @cached_property
     def standard_encounters(self) -> dict[str, Encounter]:
         encounters = {}
         for id, encounter in self.encounters.items():
-            if encounter.encounter_type != EncounterType.SPECIAL:
+            if encounter.special_encounter is False:
                 encounters[id] = encounter
 
         return encounters

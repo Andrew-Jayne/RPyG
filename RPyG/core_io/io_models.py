@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 
-from RPyG.utilites import ensure_type
+from RPyG.utilities import ensure_type
 
 
 # Input requests

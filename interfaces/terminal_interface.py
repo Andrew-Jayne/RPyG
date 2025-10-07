@@ -12,7 +12,7 @@ from RPyG import (
     UserPromptRequest,
 )
 from RPyG.actors import PlayableActor
-from RPyG.utilites import ensure_type
+from RPyG.utilities import ensure_type
 
 
 welcome_message = """
@@ -283,7 +283,7 @@ import random
 from RPyG.actors import CombatantParty, PlayableActor, PlayerParty
 
 # Only Used For Type Hinting/Checking
-from RPyG.utilites import ensure_type
+from RPyG.utilities import ensure_type
 
 
 # Function Guidelines
@@ -458,7 +458,7 @@ import time
 from RPyG.actors import Combatant, EnemyParty, PlayableActor, PlayerParty
 
 # Only used for Type checking/Hinting
-from RPyG.utilites import ensure_type
+from RPyG.utilities import ensure_type
 
 
 class LEGACYMessage:

@@ -1,4 +1,4 @@
-from RPyG.utilites.semver import SemVerString
+from RPyG.utilities.semver import SemVerString
 
 
 def ensure_type(

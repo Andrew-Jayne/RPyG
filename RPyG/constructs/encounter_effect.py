@@ -1,0 +1,121 @@
+import random
+from enum import Enum
+
+from RPyG.actors import PlayableActor, PlayerParty
+from RPyG.core_io import CoreIO
+from RPyG.core_io.io_models import OutputMessage
+from RPyG.exceptions import ImpossibleValueException
+from RPyG.utilities import ensure_type
+
+
+class EffectTarget(Enum):
+    ALL = "ALL"
+    RANDOM = "RANDOM"
+
+
+class ActorAction(Enum):
+    HEAL = "HEAL"
+    DAMAGE = "DAMAGE"
+    GAIN_GOLD = "GAIN_GOLD"
+    LOSE_GOLD = "LOSE_GOLD"
+    GAIN_POTION = "GAIN_POTION"
+    LOSE_POTION = "LOSE_POTION"
+
+
+class EncounterEffect:
+    __slots__ = (
+        "kind",
+        "actor_action",
+        "targets",
+        "magnitude",
+        "effect_messages",
+        "extra_effects",
+    )
+    kind: str
+    actor_action: ActorAction
+    targets: EffectTarget
+    magnitude: int
+    effect_messages: list[str]
+    extra_effects: list[str]
+
+    def __init__(
+        self,
+        kind: str,
+        actor_action: str,
+        targets: str,
+        magnitude: int,
+        effect_messages: list[str],
+        extra_effects: list[str],
+    ) -> None:
+        ensure_type(kind, str, "kind")
+        self.kind = kind
+        ensure_type(actor_action, str, "actor_action")
+        self.actor_action = ActorAction(actor_action)
+        ensure_type(targets, str, "targets")
+        self.targets = EffectTarget(targets)
+        ensure_type(magnitude, int, "magnitude")
+        self.magnitude = magnitude
+        ensure_type(effect_messages, list, "effect_messages")
+        if effect_messages != []:
+            for effect_message in effect_messages:
+                ensure_type(effect_message, str, "effect_message")
+        self.effect_messages = effect_messages
+        if extra_effects != []:
+            for effect in extra_effects:
+                ensure_type(effect, str, "effect_message")
+        self.extra_effects = extra_effects
+
+    def validate(self) -> bool:
+        return True
+
+    def run_action(self, player_instance: PlayableActor, member_count: int) -> None:
+        ensure_type(player_instance, PlayableActor, "player_instance")
+        scaled_magnitute = int(self.magnitude / member_count)
+        match self.actor_action:
+            # only Heal actions do not get scaled by party size
+            # it does not make sense that 1 person sleeping in 1 bed heals 3x as much as 3 people in 3 beds
+            # random heals are debateble for this concept, but overall this feel fair
+            case ActorAction.HEAL:
+                player_instance.heal(self.magnitude)
+            case ActorAction.DAMAGE:
+                player_instance.damage(scaled_magnitute)
+            case ActorAction.GAIN_GOLD:
+                player_instance.inventory.gain_gold(scaled_magnitute)
+            case ActorAction.LOSE_GOLD:
+                player_instance.inventory.lose_gold(scaled_magnitute)
+            case ActorAction.GAIN_POTION:
+                player_instance.inventory.gain_potion(scaled_magnitute)
+            case ActorAction.LOSE_POTION:
+                player_instance.inventory.lose_potion(scaled_magnitute)
+            case _:
+                raise ImpossibleValueException(f"self.actor_action-{self.actor_action}")
+
+    def process_effect(self, player_party_instance: PlayerParty) -> None:
+        ensure_type(player_party_instance, PlayerParty, "player_party_instance")
+        match self.targets:
+            case EffectTarget.ALL:
+                for member in player_party_instance.members:
+                    self.run_action(
+                        member,
+                        len(player_party_instance.members),
+                    )
+            case EffectTarget.RANDOM:
+                self.run_action(
+                    random.choice(player_party_instance.members),
+                    len(player_party_instance.members),
+                )
+            case _:
+                raise ImpossibleValueException(f"self.targets - {self.targets}")
+
+        # Show any Messages
+        core_io = CoreIO.get_core_io()
+        for message in self.effect_messages:
+            core_io.send_output(OutputMessage(message))
+
+        # Run Any Extra Effects
+        from RPyG.content import ContentLibrary
+
+        library = ContentLibrary.get_library()
+        for effect_id in self.extra_effects:
+            effect = library.encounter_effects[effect_id]
+            effect.process_effect(player_party_instance)

@@ -2,7 +2,7 @@ from RPyG.actors import CombatantParty, Enemy, EnemyParty, PlayableActor, Player
 from RPyG.core_io import CoreIO
 from RPyG.core_io.io_models import BattleHudMessage, OutputMessage, UserPromptRequest
 from RPyG.gameState.file import save_game
-from RPyG.utilites import ensure_type
+from RPyG.utilities import ensure_type
 
 
 def is_party_alive(party_instance: CombatantParty) -> bool:
