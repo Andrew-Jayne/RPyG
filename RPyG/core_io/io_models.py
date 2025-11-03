@@ -38,15 +38,15 @@ class OutputMessage:
         ensure_type(self.target_element, UIElement, "target_element")
 
 
-@dataclass
-class CombatantData:
-    stuff: str
+# @dataclass
+# class CombatantData:
+#     stuff: str
 
 
 @dataclass(kw_only=True)
 class BattleHudMessage(OutputMessage):
     message: str
-    combatant_data: CombatantData
+    # combatant_data: CombatantData
     target_element: UIElement = UIElement.BATTLE_HUD
 
 

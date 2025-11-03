@@ -86,34 +86,6 @@ class StoryEvent:
         self.dungeon_id = dungeon_id
         self.encounter_id = encounter_id
 
-    @staticmethod
-    def send_special_encounter_message(
-        progress_value,
-        party_name,
-        message_type,
-    ) -> None:
-        from RPyG.content import ContentLibrary
-
-        core_io = CoreIO.get_core_io()
-        content_library = ContentLibrary.get_library()
-
-        all_events = content_library.story_events
-
-        current_event = all_events[progress_value]
-        match message_type:
-            case "messages":
-                active_messages = current_event.messages
-            case "success_messages":
-                active_messages = current_event.success_messages
-            case "failure_messages":
-                active_messages = current_event.failure_messages
-            case _:
-                raise ValueError(
-                    'Message type must be one of ["messages", "success_messages", "failure_messages"]'
-                )
-        for message in active_messages:
-            core_io.send_output(OutputMessage(message.format(party_name=party_name)))
-
     def validate(self) -> bool:
         return True
 
@@ -122,6 +94,7 @@ class StoryEvent:
         from RPyG.content import ContentLibrary
 
         content_library = ContentLibrary.get_library()
+        core_io = CoreIO.get_core_io()
         match self.event_type:
             case StoryEventType.BOSS_ENCOUNTER:
                 if self.enemy_id is None:
@@ -131,38 +104,42 @@ class StoryEvent:
 
                 enemy_instance = content_library.enemies[self.enemy_id]
 
-                self.send_special_encounter_message(
-                    player_party_instance.progress,
-                    player_party_instance.name,
-                    "messages",
-                )
+                for message in self.messages:
+                    core_io.send_output(
+                        OutputMessage(
+                            message.format(party_name=player_party_instance.name)
+                        )
+                    )
 
                 enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
                 battle(player_party_instance, enemy_party)
                 if len(player_party_instance.members) != 0:
-                    self.send_special_encounter_message(
-                        player_party_instance.progress,
-                        player_party_instance.name,
-                        "success_messages",
-                    )
+                    for message in self.success_messages:
+                        core_io.send_output(
+                            OutputMessage(
+                                message.format(party_name=player_party_instance.name)
+                            )
+                        )
                     save_game(player_party_instance)
                 else:
-                    self.send_special_encounter_message(
-                        player_party_instance.progress,
-                        player_party_instance.name,
-                        "failure_messages",
-                    )
+                    for message in self.failure_messages:
+                        core_io.send_output(
+                            OutputMessage(
+                                message.format(party_name=player_party_instance.name)
+                            )
+                        )
             case StoryEventType.DUNGEON_ENCOUNTER:
                 ## still a little sloppy
                 if self.dungeon_id is None:
                     raise ValueError(
                         "dungeon_id must be specified for DUNGEON_ENCOUNTER events"
                     )
-                self.send_special_encounter_message(
-                    player_party_instance.progress,
-                    player_party_instance.name,
-                    "messages",
-                )
+                for message in self.messages:
+                    core_io.send_output(
+                        OutputMessage(
+                            message.format(party_name=player_party_instance.name)
+                        )
+                    )
 
                 if self.dungeon_id not in content_library.dungeons.keys():
                     raise FileNotFoundError(
@@ -170,17 +147,48 @@ class StoryEvent:
                     )
                 active_dungeon: Dungeon = content_library.dungeons[self.dungeon_id]
                 active_dungeon.travese_dungeon(player_party_instance)
-                save_game(player_party_instance)
+                if len(player_party_instance.members) != 0:
+                    for message in self.success_messages:
+                        core_io.send_output(
+                            OutputMessage(
+                                message.format(party_name=player_party_instance.name)
+                            )
+                        )
+                    save_game(player_party_instance)
+                else:
+                    for message in self.failure_messages:
+                        core_io.send_output(
+                            OutputMessage(
+                                message.format(party_name=player_party_instance.name)
+                            )
+                        )
             case StoryEventType.ENCOUNTER:
-                from RPyG.content import ContentLibrary
-
-                content_library = ContentLibrary.get_library()
-                if self.encounter_id not in content_library.encounters.keys():
-                    raise FileNotFoundError(
-                        f"Unable to locate encounter with the ID {self.encounter_id}, avalible IDs are {content_library.encounters.keys()}"
+                for message in self.messages:
+                    core_io.send_output(
+                        OutputMessage(
+                            message.format(party_name=player_party_instance.name)
+                        )
                     )
                 if self.encounter_id is not None:
+                    if self.encounter_id not in content_library.encounters.keys():
+                        raise FileNotFoundError(
+                            f"Unable to locate encounter with the ID {self.encounter_id}, avalible IDs are {content_library.encounters.keys()}"
+                        )
                     encounter = content_library.encounters[self.encounter_id]
                     encounter.process_encounter(player_party_instance)
+                if len(player_party_instance.members) != 0:
+                    for message in self.success_messages:
+                        core_io.send_output(
+                            OutputMessage(
+                                message.format(party_name=player_party_instance.name)
+                            )
+                        )
+                else:
+                    for message in self.failure_messages:
+                        core_io.send_output(
+                            OutputMessage(
+                                message.format(party_name=player_party_instance.name)
+                            )
+                        )
             case _:
                 raise ImpossibleValueException(f"self.event_type: {self.event_type}")

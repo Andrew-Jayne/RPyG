@@ -2,6 +2,7 @@ import hashlib
 import hmac
 import os
 import pickle
+import sys
 
 # Only used for Type Checking
 from RPyG.actors import PlayerParty
@@ -41,9 +42,9 @@ def save_game(player_party_instance: PlayerParty) -> None:
     )
     match core_io.receive_input():
         case "YES":
-            core_io.send_output(OutputMessage("The adventure continues"))
+            core_io.send_output(OutputMessage("The adventure continues!"))
         case "NO":
-            core_io.send_output(OutputMessage("exit process requested"))
+            sys.exit()
         case _:
             raise ValueError("Must be a choice of 'YES' or 'NO'")
 

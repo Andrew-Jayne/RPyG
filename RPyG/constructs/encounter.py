@@ -132,13 +132,10 @@ class Encounter:
 
         # Process choices
         choice_options = []
-        if self.success_choice is not None:
-            choice_options.append(self.success_choice)
-        if self.retry_choice is not None:
-            choice_options.append(self.retry_choice)
-        if self.failure_choice is not None:
-            choice_options.append(self.failure_choice)
-        if choice_options != []:
+        choice_options.append(self.success_choice)
+        choice_options.append(self.retry_choice)
+        choice_options.append(self.failure_choice)
+        if choice_options != [None, None, None]:
             core_io.request_input(
                 UserPromptRequest(
                     options=choice_options,
