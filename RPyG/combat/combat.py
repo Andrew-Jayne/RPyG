@@ -67,22 +67,22 @@ def process_player_turn(
                         f"{player_instance.name} is fully healed, it would be unwise to use a potion"
                     )
                 )
-            core_io.request_input(
-                UserPromptRequest(
-                    prompts=[f"{player_instance.name}", "Choose an Action:"],
-                    options=[
-                        "ATTACK",
-                        f"{player_instance.special_attack_name}",
-                        f"{player_instance.react_action}",
-                        "HEAL",
-                    ],
+                core_io.request_input(
+                    UserPromptRequest(
+                        prompts=[f"{player_instance.name}", "Choose an Action:"],
+                        options=[
+                            "ATTACK",
+                            f"{player_instance.special_attack_name}",
+                            f"{player_instance.react_action}",
+                            "HEAL",
+                        ],
+                    )
                 )
-            )
-            battle_choice = core_io.receive_input()
-            if battle_choice == "HEAL":
-                core_io.send_output(
-                    OutputMessage("Stubborn aren't you, fine waste the damn potion")
-                )
+                battle_choice = core_io.receive_input()
+                if battle_choice == "HEAL":
+                    core_io.send_output(
+                        OutputMessage("Stubborn aren't you, fine waste the damn potion")
+                    )
             match battle_choice:
                 case "ATTACK":  # select target
                     target_index = player_instance.select_combat_target(
@@ -207,11 +207,7 @@ def battle(
                 message=build_hud_data(
                     player_party_instance,
                     enemy_party_instance,
-                ),
-                combatant_data=build_hud_data(
-                    player_party_instance,
-                    enemy_party_instance,
-                ),
+                )
             )
         )
 

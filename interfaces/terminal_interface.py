@@ -1,7 +1,6 @@
 import os
 import textwrap
-import time
-from typing import Any, Literal, cast
+from typing import Literal, cast
 
 from RPyG import (
     CustomTextRequest,
@@ -25,7 +24,7 @@ welcome_message = """
 
 
 class BasicTerminalInterface(RPyGInterface):
-    input_buffer: dict[str, Any]
+    input_buffer: dict[str, str]
     game_mode: Literal["AUTO", "MANUAL"] = "MANUAL"
 
     def __init__(self, game_mode: Literal["AUTO", "MANUAL"], use_default: bool):
@@ -35,12 +34,12 @@ class BasicTerminalInterface(RPyGInterface):
         self.use_default = use_default
         self.show_ouput(OutputMessage(welcome_message))
 
-    def show_ouput(self, output_data: OutputMessage) -> None:
+    def show_ouput(self, output: OutputMessage) -> None:
         ending = "\n"
         wrapped_message = ""
 
         # Split the message into lines to handle them individually
-        lines = output_data.message.split("\n")
+        lines = output.message.split("\n")
         for line in lines:
             # Apply text wrapping to each line individually
             wrapped_line = textwrap.fill(line, width=80)
@@ -56,8 +55,12 @@ class BasicTerminalInterface(RPyGInterface):
                 raise NotImplementedError
             case "UserPromptRequest":
                 prompt_request = cast(UserPromptRequest, request)
+                displayable_options = []
+                for item in prompt_request.options:
+                    if item is not None:
+                        displayable_options.append(item)
                 content = self.prompt_user(
-                    options=prompt_request.options,
+                    options=displayable_options,
                     prompts=prompt_request.prompts,
                 )
 
@@ -74,11 +77,11 @@ class BasicTerminalInterface(RPyGInterface):
 
         self.input_buffer = {"data": content}
 
-    def receive_input(self) -> dict:
+    def receive_input(self) -> str:
         data = self.input_buffer.get("data")
         if data is None:
             raise RuntimeError(
-                "Input buffer is empty, did you call request_input before calling receive_input"
+                "Input buffer is empty, did you call request_input before calling receive_input?"
             )
         # reset buffer
         self.input_buffer = {}

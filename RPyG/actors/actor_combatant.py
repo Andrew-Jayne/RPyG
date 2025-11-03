@@ -352,55 +352,58 @@ class Combatant(Actor):
         core_io = CoreIO.get_core_io()
 
         ensure_type(target_party_instance, CombatantParty, "target_party_instance")
-
         if (
             isinstance(self, PlayableActor) is True
             and isinstance(target_party_instance, EnemyParty) is True
         ):
-            target_options: list = []
+            target_messages: list = ["Which enemy will you attack?"]
+            target_indexes: list = []
             for index, member in enumerate(target_party_instance.members):
                 member: Combatant
-                target_options.append(f"{index} {member.name}:{member.health}")
+                target_messages.append(f"{index} {member.name}:{member.health}")
+                target_indexes.append(str(index))
 
             core_io.request_input(
                 UserPromptRequest(
-                    prompts=["Which enemy will you attack?"],
-                    options=target_options,
+                    prompts=target_messages,
+                    options=target_indexes,
                 )
             )
             return int(core_io.receive_input())
+        else:
+            target_party_members = target_party_instance.members
+            method_id = random.choice(["MAX_ATK", "MIN_HP", "RANDOM"])
+            match method_id:
+                case "MAX_ATK":
+                    target_attributes_list: list[tuple[int, int]]
+                    target_attributes_list = []
 
-        target_party_members = target_party_instance.members
-        method_id = random.choice(["MAX_ATK", "MIN_HP", "RANDOM"])
-        match method_id:
-            case "MAX_ATK":
-                target_attributes_list: list[tuple[int, int]]
-                target_attributes_list = []
+                    for index, member in enumerate(target_party_members):
+                        target_attributes: tuple[int, int]
+                        target_attributes = (index, member.attack_power)
 
-                for index, member in enumerate(target_party_members):
-                    target_attributes: tuple[int, int]
-                    target_attributes = (index, member.attack_power)
+                        target_attributes_list.append(target_attributes)
+                    sorted_target_attributes_list = sorted(
+                        target_attributes_list, key=lambda x: x[1], reverse=True
+                    )
+                    return sorted_target_attributes_list[0][0]
 
-                    target_attributes_list.append(target_attributes)
-                sorted_target_attributes_list = sorted(
-                    target_attributes_list, key=lambda x: x[1], reverse=True
-                )
-                return sorted_target_attributes_list[0][0]
+                case "MIN_HP":
+                    target_attributes_list = []
+                    for index, member in enumerate(target_party_members):
+                        target_attributes = (index, member.health)
+                        target_attributes_list.append(target_attributes)
+                    sorted_target_attributes_list = sorted(
+                        target_attributes_list, key=lambda x: x[1]
+                    )
+                    return sorted_target_attributes_list[0][0]
 
-            case "MIN_HP":
-                target_attributes_list = []
-                for index, member in enumerate(target_party_members):
-                    target_attributes = (index, member.health)
-                    target_attributes_list.append(target_attributes)
-                sorted_target_attributes_list = sorted(
-                    target_attributes_list, key=lambda x: x[1]
-                )
-                return sorted_target_attributes_list[0][0]
-
-            case "RANDOM":
-                return random.randint(0, (len(target_party_members) - 1))
-            case _:
-                raise ValueError("Big Problem in Select_Target, Go buy a lotto ticket")
+                case "RANDOM":
+                    return random.randint(0, (len(target_party_members) - 1))
+                case _:
+                    raise ValueError(
+                        "Big Problem in Select_Target, Go buy a lotto ticket"
+                    )
 
 
 CombatantType = TypeVar("CombatantType", bound=Combatant)

@@ -21,7 +21,7 @@ def launch_game(
     )
     from RPyG.gameState.game_start import start_game
 
-    ensure_type(content_path, str, "content_paths")
+    ensure_type(content_path, str, "content_path")
     ensure_type(interface, RPyGInterface, "interface")
 
     # These are gateway singletons so we just need to create them
