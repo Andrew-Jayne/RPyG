@@ -1,6 +1,3 @@
-from RPyG.utilities.semver import SemVerString
-
-
 def ensure_type(
     instance: object,
     expected_type: type,
@@ -15,4 +12,6 @@ Received type: {type(instance).__name__}.
         )
 
 
-__all__ = ["ensure_type", "SemVerString"]
+__all__ = [
+    "ensure_type",
+]

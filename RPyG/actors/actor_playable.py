@@ -1,9 +1,14 @@
 import random
+from typing import TYPE_CHECKING
 
 from RPyG.actors.actor_combatant import Combatant, CombatantParty
 from RPyG.core_io import CoreIO
 from RPyG.core_io.io_models import OutputMessage
 from RPyG.utilities import ensure_type
+
+
+if TYPE_CHECKING is True:
+    from RPyG.constructs import Dungeon
 
 
 class Inventory:
@@ -56,6 +61,10 @@ class Inventory:
 
 
 class PlayableActor(Combatant):
+    in_dungeon: bool
+    dungeon_id: str | None
+    dungeon_progress: int | None
+
     def __init__(self, name: str, specialization: str) -> None:
         ensure_type(name, str, "name")
         ensure_type(specialization, str, "specialization")
@@ -85,7 +94,9 @@ class PlayableActor(Combatant):
                 raise ValueError(f"Error Invalid Specialization {specialization}")
 
         self.inventory = Inventory(
-            gold=strength * 25, potions=int(intellect / 2), actor_name=name
+            gold=strength * 25,
+            potions=int(intellect / 2),
+            actor_name=name,
         )
 
         Combatant.__init__(
@@ -312,6 +323,9 @@ class PlayerParty(CombatantParty[PlayableActor]):
     dead_members: list[PlayableActor]
     progress: int
     relics: object
+    in_dungeon: bool
+    active_dungeon: "Dungeon | None"
+    dungeon_progress: int | None
     """
     Stores the progress of the party, and a list/array of member instances
     """
@@ -331,7 +345,9 @@ class PlayerParty(CombatantParty[PlayableActor]):
             name=name,
             members=members,
         )
-
+        self.in_dungeon = False
+        self.active_dungeon = None
+        self.dungeon_progress = None
         self.progress = 0
         self.relics = None
 
@@ -368,4 +384,5 @@ class PlayerParty(CombatantParty[PlayableActor]):
     Player Attack Name: {player_instance.attack_name}
     Player Attack Power: {player_instance.attack_power}
     """
-            return player_report
+
+        return player_report

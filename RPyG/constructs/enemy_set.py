@@ -1,3 +1,4 @@
+import copy
 import random
 from enum import Enum
 from functools import cached_property
@@ -47,16 +48,18 @@ class EnemySet:
                 case _:
                     ## BARF WHY DID I DO THIS
                     enemy_party_instances.append(
-                        random.choice(
-                            self.variants_by_grade[
-                                random.choice(
-                                    [
-                                        EnemyVariantGrade.LESSER,
-                                        EnemyVariantGrade.COMMON,
-                                        EnemyVariantGrade.GREATER,
-                                    ]
-                                )
-                            ]
+                        copy.deepcopy(
+                            random.choice(
+                                self.variants_by_grade[
+                                    random.choice(
+                                        [
+                                            EnemyVariantGrade.LESSER,
+                                            EnemyVariantGrade.COMMON,
+                                            EnemyVariantGrade.GREATER,
+                                        ]
+                                    )
+                                ]
+                            )
                         )
                     )
 

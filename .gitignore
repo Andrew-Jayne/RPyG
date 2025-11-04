@@ -5,6 +5,7 @@
 
 # Game Files
 *.rpygs
+use_default.flag
 log.txt
 zest.py
 zmem-test.py

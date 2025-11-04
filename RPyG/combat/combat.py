@@ -187,6 +187,8 @@ def build_hud_data(
         battle_hud_message += f"{enemy_instance.name}: {enemy_instance.health}\n"
         battle_hud_message += "\n"
 
+    battle_hud_message += "\n"
+
     return battle_hud_message
 
 
