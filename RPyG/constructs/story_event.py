@@ -6,7 +6,7 @@ from RPyG.constructs import Dungeon
 from RPyG.core_io import CoreIO
 from RPyG.core_io.io_models import OutputMessage
 from RPyG.exceptions import ImpossibleValueException
-from RPyG.game_state.file import save_game
+from RPyG.game_state import save_game
 from RPyG.utilities import ensure_type
 
 
@@ -146,7 +146,7 @@ class StoryEvent:
                         f"Unable to locate Dungeon with the ID {self.dungeon_id}, avalible IDs are {content_library.dungeons.keys()}"
                     )
                 active_dungeon: Dungeon = content_library.dungeons[self.dungeon_id]
-                active_dungeon.travese_dungeon(player_party_instance)
+                active_dungeon.traverse_dungeon(player_party_instance)
                 if len(player_party_instance.members) != 0:
                     for message in self.success_messages:
                         core_io.send_output(

@@ -1,13 +1,30 @@
 import os
 
-from RPyG.actors import PlayerParty
-from RPyG.actors.actor_playable import PlayableActor
+from RPyG.actors import PlayableActor, PlayerParty
 from RPyG.core_io import CoreIO
 from RPyG.core_io.io_models import CustomTextRequest, OutputMessage, UserPromptRequest
-from RPyG.game_state.file import load_game
+from RPyG.exceptions import ImpossibleValueException
+
+
+def default_party() -> PlayerParty:
+    party_members: list[PlayableActor] = []
+    default_names = ("Conan", "Merlin", "Robin")
+    default_specialization = ("WARRIOR", "MAGE", "ROGUE")
+    for i in range(0, 3):
+        member = (default_names[i], default_specialization[i])
+        party_members.append(PlayableActor(member[0], member[1]))
+
+    return PlayerParty(
+        members=party_members,
+        name="The Default Party",
+    )
 
 
 def get_start_type() -> str:
+    core_io = CoreIO.get_core_io()
+    core_io.send_output(OutputMessage("Welcome to RPyG, a text based RPG in Python"))
+    if os.path.exists("use_default.flag"):
+        return "USE_DEFAULT"
     match os.path.exists("savegame.rpygs"):
         case True:
             start_game_options = ["NEW", "LOAD"]
@@ -23,11 +40,10 @@ def get_start_type() -> str:
                 "Options are:",
             ]
         case _:
-            raise RuntimeError(
+            raise ImpossibleValueException(
                 "os.path.exists('savegame.rpygs') did not return a bool and something is very wrong"
             )
 
-    core_io = CoreIO.get_core_io()
     core_io.request_input(
         UserPromptRequest(
             options=start_game_options,
@@ -93,19 +109,3 @@ def party_start() -> tuple[list[tuple[str, str]], str]:
     party_name = core_io.receive_input()
 
     return (party_member_attribs, party_name)
-
-
-def start_game() -> PlayerParty:
-    core_io = CoreIO.get_core_io()
-    core_io.send_output(OutputMessage("Welcome to RPyG, a text based RPG in Python"))
-    match get_start_type():
-        case "LOAD":
-            return load_game()
-        case "NEW":
-            my_party, my_party_name = party_start()
-            my_party_instances: list[PlayableActor] = []
-            for member in my_party:
-                my_party_instances.append(PlayableActor(member[0], member[1]))
-            return PlayerParty(my_party_name, my_party_instances)
-        case _:
-            raise ValueError("Invalid Game Start Type")

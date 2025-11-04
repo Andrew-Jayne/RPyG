@@ -20,6 +20,7 @@ welcome_message = """
 ----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----
 
              NOTE: All Prompts in this game are case insensitive
+
 """
 
 
@@ -27,11 +28,10 @@ class BasicTerminalInterface(RPyGInterface):
     input_buffer: str
     game_mode: Literal["AUTO", "MANUAL"] = "MANUAL"
 
-    def __init__(self, game_mode: Literal["AUTO", "MANUAL"], use_default: bool):
+    def __init__(self, game_mode: Literal["AUTO", "MANUAL"]):
         RPyGInterface.__init__(self)
         self.input_buffer = ""
         self.game_mode = game_mode
-        self.use_default = use_default
         self.show_ouput(OutputMessage(welcome_message))
 
     def show_ouput(self, output: OutputMessage) -> None:
@@ -86,16 +86,6 @@ class BasicTerminalInterface(RPyGInterface):
         # reset buffer
         self.input_buffer = ""
         return data
-
-    @staticmethod
-    def default_party() -> list[PlayableActor]:
-        party_members: list[PlayableActor] = []
-        default_names = ("Conan", "Merlin", "Robin")
-        default_specialization = ("WARRIOR", "MAGE", "ROGUE")
-        for i in range(0, 3):
-            member = (default_names[i], default_specialization[i])
-            party_members.append(PlayableActor(member[0], member[1]))
-        return party_members
 
     @staticmethod
     def clear_display() -> None:
@@ -156,7 +146,7 @@ class BasicTerminalInterface(RPyGInterface):
         Checks that the string input by the user is in the allowed list of responses
         Sanitizes the input then returns up to the max length specified
         """
-        options_list = "\n".join(choice_list)
+        options_list = "\n".join(choice_list) + "\n"
         chosen_action = ""
         dumb_check = 0
         while chosen_action not in choice_list:
@@ -193,9 +183,12 @@ class BasicTerminalInterface(RPyGInterface):
         formatted_message = ""
         for message in prompts:
             formatted_message += f"{message}\n"
+        formatted_message += "\n"
 
         for option in options:
             formatted_message += f"{option}\n"
+
+        formatted_message += "\n"
 
         self.show_ouput(OutputMessage(formatted_message))
 
