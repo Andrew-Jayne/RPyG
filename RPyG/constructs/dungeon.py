@@ -37,7 +37,6 @@ class Dungeon:
     messages: DungeonMessages
     length: int
     enemies: list[EnemySet]
-    boss: Enemy
 
     def __init__(
         self,
@@ -63,7 +62,7 @@ class Dungeon:
         self.enemy_set_id = enemy_set_id
 
     @property
-    def boss_enemy(self) -> Enemy:
+    def boss(self) -> Enemy:
         from RPyG.content import ContentLibrary
 
         library = ContentLibrary.get_library()

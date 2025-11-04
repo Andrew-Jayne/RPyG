@@ -1,7 +1,7 @@
 from RPyG.actors import CombatantParty, Enemy, EnemyParty, PlayableActor, PlayerParty
 from RPyG.core_io import CoreIO
 from RPyG.core_io.io_models import BattleHudMessage, OutputMessage, UserPromptRequest
-from RPyG.gameState.file import save_game
+from RPyG.game_state.file import save_game
 from RPyG.utilities import ensure_type
 
 
