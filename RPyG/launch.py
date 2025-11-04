@@ -19,7 +19,7 @@ def launch_game(
         OutputMessage,
         UserPromptRequest,
     )
-    from RPyG.gameState.game_start import start_game
+    from RPyG.game_state.game_start import start_game
 
     ensure_type(content_path, str, "content_path")
     ensure_type(interface, RPyGInterface, "interface")

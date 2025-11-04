@@ -4,7 +4,7 @@ from RPyG.actors import PlayerParty
 from RPyG.actors.actor_playable import PlayableActor
 from RPyG.core_io import CoreIO
 from RPyG.core_io.io_models import CustomTextRequest, OutputMessage, UserPromptRequest
-from RPyG.gameState.file import load_game
+from RPyG.game_state.file import load_game
 
 
 def get_start_type() -> str:
@@ -64,7 +64,7 @@ def party_start() -> tuple[list[tuple[str, str]], str]:
     )
     party_size = int(core_io.receive_input())
 
-    party_member_attribs: list[list[str]] = []
+    party_member_attribs: list[tuple[str, str]] = []
     for _ in range(0, party_size):
         core_io = CoreIO.get_core_io()
         core_io.request_input(

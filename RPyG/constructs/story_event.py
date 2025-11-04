@@ -6,7 +6,7 @@ from RPyG.constructs import Dungeon
 from RPyG.core_io import CoreIO
 from RPyG.core_io.io_models import OutputMessage
 from RPyG.exceptions import ImpossibleValueException
-from RPyG.gameState.file import save_game
+from RPyG.game_state.file import save_game
 from RPyG.utilities import ensure_type
 
 

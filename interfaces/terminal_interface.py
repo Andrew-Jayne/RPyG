@@ -24,12 +24,12 @@ welcome_message = """
 
 
 class BasicTerminalInterface(RPyGInterface):
-    input_buffer: dict[str, str]
+    input_buffer: str
     game_mode: Literal["AUTO", "MANUAL"] = "MANUAL"
 
     def __init__(self, game_mode: Literal["AUTO", "MANUAL"], use_default: bool):
         RPyGInterface.__init__(self)
-        self.input_buffer = {}
+        self.input_buffer = ""
         self.game_mode = game_mode
         self.use_default = use_default
         self.show_ouput(OutputMessage(welcome_message))
@@ -75,16 +75,16 @@ class BasicTerminalInterface(RPyGInterface):
                     f"Got Unknown Child class of InputRequest {type(request).__name__}"
                 )
 
-        self.input_buffer = {"data": content}
+        self.input_buffer = content
 
     def receive_input(self) -> str:
-        data = self.input_buffer.get("data")
-        if data is None:
+        data = self.input_buffer
+        if data == "":
             raise RuntimeError(
                 "Input buffer is empty, did you call request_input before calling receive_input?"
             )
         # reset buffer
-        self.input_buffer = {}
+        self.input_buffer = ""
         return data
 
     @staticmethod
