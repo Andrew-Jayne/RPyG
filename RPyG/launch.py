@@ -15,7 +15,9 @@ def launch_game(
 
     # These are gateway singletons so we just need to create them
     # at a scope where they live for the lifetime of the application
-    ContentLibrary(content_path)
+    ContentLibrary(content_path)  # pyright: ignore[reportUnusedCallResult]
     ContentLibrary.validate_content()
-    CoreIO(interface)
+
+    CoreIO(interface)  # pyright: ignore[reportUnusedCallResult]
+
     play_game()

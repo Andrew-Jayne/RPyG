@@ -1,6 +1,6 @@
 import copy
 import random
-from typing import Generic, TypeVar
+from typing import Generic, TypeVar, override
 
 from RPyG.actors.actor_base import Actor, Party
 from RPyG.core_io import CoreIO
@@ -409,7 +409,7 @@ class Combatant(Actor):
 CombatantType = TypeVar("CombatantType", bound=Combatant)
 
 
-class CombatantParty(Party, Generic[CombatantType]):
+class CombatantParty(Party[CombatantType], Generic[CombatantType]):
     name: str
     members: list[CombatantType]
     dead_members: list[CombatantType]
@@ -432,6 +432,7 @@ class CombatantParty(Party, Generic[CombatantType]):
         self.name = name
         self.dead_members = []
 
+    @override
     def lose_member(self, member: CombatantType) -> None:
         from RPyG.core_io import CoreIO
 
@@ -440,5 +441,6 @@ class CombatantParty(Party, Generic[CombatantType]):
         self.dead_members.append(member)
         self.members.remove(member)
 
+    @override
     def gain_member(self, member: CombatantType) -> None:
         self.members.append(member)

@@ -12,7 +12,7 @@ class InputRequest:
 
 @dataclass
 class UserPromptRequest(InputRequest):
-    options: list[str]
+    options: list[str | None]
     prompts: list[str]
 
 

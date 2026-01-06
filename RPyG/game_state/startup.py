@@ -39,8 +39,8 @@ def get_start_type() -> str:
                 "You will be able to save your game later and load it here",
                 "Options are:",
             ]
-        case _:
-            raise ImpossibleValueException(
+        case _:  # pyright: ignore[reportUnnecessaryComparison]
+            raise ImpossibleValueException(  # pyright: ignore[reportUnreachable]
                 "os.path.exists('savegame.rpygs') did not return a bool and something is very wrong"
             )
 

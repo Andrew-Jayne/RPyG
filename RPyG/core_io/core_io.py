@@ -16,7 +16,7 @@ class RPyGInterface(ABC):
     def request_input(self, request: InputRequest) -> None:
         pass
 
-    def receive_input(self) -> str:
+    def receive_input(self) -> str:  # pyright: ignore[reportReturnType]
         pass
 
 

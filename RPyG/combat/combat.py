@@ -37,10 +37,9 @@ def is_battle_complete(
 
 
 def process_player_turn(
-    player_party_instance: PlayerParty, enemy_party_instance: EnemyParty
+    player_party_instance: PlayerParty,
+    enemy_party_instance: EnemyParty,
 ) -> None:
-    from RPyG.core_io import CoreIO
-
     core_io = CoreIO.get_core_io()
 
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
@@ -195,7 +194,7 @@ def build_hud_data(
 def battle(
     player_party_instance: PlayerParty,
     enemy_party_instance: EnemyParty,
-) -> bool:
+) -> None:
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
     ensure_type(enemy_party_instance, EnemyParty, "enemy_party_instance")
 
@@ -236,6 +235,6 @@ def battle(
         and battle_complete is True
     ):
         post_battle(player_party_instance)
-        return True
+        return
     else:
-        return False
+        return

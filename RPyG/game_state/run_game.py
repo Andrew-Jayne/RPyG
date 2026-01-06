@@ -10,7 +10,6 @@ from RPyG.core_io.io_models import (
 from RPyG.exceptions import ImpossibleValueException
 from RPyG.game_state.file import load_game
 from RPyG.game_state.startup import default_party, get_start_type, party_start
-from RPyG.utilities import ensure_type
 
 
 def generate_enemy_set(player_count: int):
@@ -99,7 +98,7 @@ def check_for_encounter(
             )
 
             return True
-        case 2, 3:  # 25% chance
+        case 2 | 3:  # 25% chance
             core_io.send_output(
                 OutputMessage(f"After {rounds_without_encounter * 10} miles of travel")
             )
