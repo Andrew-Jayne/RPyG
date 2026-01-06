@@ -6,7 +6,7 @@ from RPyG.utilities import ensure_type
 
 
 class Encounter:
-    __slots__ = (
+    __slots__: tuple[str, ...] = (
         "kind",
         "primary_encounter",
         "special_encounter",
@@ -131,7 +131,7 @@ class Encounter:
         library = ContentLibrary.get_library()
 
         # Process choices
-        choice_options = []
+        choice_options: list[str | None] = []
         choice_options.append(self.success_choice)
         choice_options.append(self.retry_choice)
         choice_options.append(self.failure_choice)

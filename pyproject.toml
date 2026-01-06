@@ -16,3 +16,6 @@ select = ["I"]
 combine-as-imports = true
 force-single-line = false
 lines-after-imports = 2
+
+[tool.pyright]
+reportAny = false

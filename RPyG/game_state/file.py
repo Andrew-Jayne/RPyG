@@ -28,7 +28,7 @@ def save_game(player_party_instance: PlayerParty) -> None:
     signature = hmac.new(secret_key, serialized_data, hashlib.sha256).digest()
 
     with open("savegame.rpygs", "wb") as save_file:
-        save_file.write(signature + serialized_data)
+        save_file.write(signature + serialized_data)  # pyright: ignore[reportUnusedCallResult]
 
     core_io.send_output(
         OutputMessage(f"Successfully Saved Game for {player_party_instance.name}")
@@ -73,8 +73,8 @@ def load_game() -> PlayerParty:
             player_party_instance: PlayerParty = pickle.loads(serialized_data)
         case False:
             raise ValueError("Save file tampered with or corrupted.")
-        case _:
-            raise RuntimeError(
+        case _:  # pyright: ignore[reportUnnecessaryComparison]
+            raise RuntimeError(  # pyright: ignore[reportUnreachable]
                 "Save File tampering is so bad that compare_digest did not return a bool MonkaS"
             )
 

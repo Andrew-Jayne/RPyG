@@ -17,7 +17,7 @@ class StoryEventType(Enum):
 
 
 class StoryEvent:
-    __slots__ = (
+    __slots__: tuple[str, ...] = (
         "kind",
         "event_type",
         "progress_trigger",
@@ -190,5 +190,5 @@ class StoryEvent:
                                 message.format(party_name=player_party_instance.name)
                             )
                         )
-            case _:
-                raise ImpossibleValueException(f"self.event_type: {self.event_type}")
+            case _:  # pyright: ignore[reportUnnecessaryComparison]
+                raise ImpossibleValueException(f"self.event_type: {self.event_type}")  # pyright: ignore[reportUnreachable]

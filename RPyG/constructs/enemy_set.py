@@ -41,8 +41,10 @@ class EnemySet:
             match random.randint(1, 25):
                 case 25:
                     enemy_party_instances.append(
-                        random.choice(
-                            self.variants_by_grade[EnemyVariantGrade.LEGENDARY]
+                        copy.deepcopy(
+                            random.choice(
+                                self.variants_by_grade[EnemyVariantGrade.LEGENDARY]
+                            )
                         )
                     )
                 case _:
@@ -84,8 +86,8 @@ class EnemySet:
         self.group_name = group_name
         self.weight_class = EnemyWeightClass(weight_class)
         self.set_type = EnemySetType(set_type)
-        self.enemy_ids = enemy_ids
-        self.key_enemy_id = key_enemy_id
+        self.enemy_ids: list[str] = enemy_ids
+        self.key_enemy_id: str | None = key_enemy_id
 
     @cached_property
     def variants_by_grade(self) -> dict[EnemyVariantGrade, list[Enemy]]:
@@ -118,8 +120,8 @@ class EnemySet:
                     variant_lists[EnemyVariantGrade.LEGENDARY].append(variant)
                 case EnemyVariantGrade.SPECIAL:
                     variant_lists[EnemyVariantGrade.SPECIAL].append(variant)
-                case _:
-                    raise ValueError()
+                case _:  # pyright: ignore[reportUnnecessaryComparison]
+                    raise ValueError()  # pyright: ignore[reportUnreachable]
 
         return variant_lists
 

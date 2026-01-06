@@ -23,7 +23,7 @@ class ActorAction(Enum):
 
 
 class EncounterEffect:
-    __slots__ = (
+    __slots__: tuple[str, ...] = (
         "kind",
         "actor_action",
         "targets",
@@ -87,8 +87,8 @@ class EncounterEffect:
                 player_instance.inventory.gain_potion(scaled_magnitute)
             case ActorAction.LOSE_POTION:
                 player_instance.inventory.lose_potion(scaled_magnitute)
-            case _:
-                raise ImpossibleValueException(f"self.actor_action-{self.actor_action}")
+            case _:  # pyright: ignore[reportUnnecessaryComparison]
+                raise ImpossibleValueException(f"self.actor_action-{self.actor_action}")  # pyright: ignore[reportUnreachable]
 
     def process_effect(self, player_party_instance: PlayerParty) -> None:
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
@@ -104,8 +104,8 @@ class EncounterEffect:
                     random.choice(player_party_instance.members),
                     len(player_party_instance.members),
                 )
-            case _:
-                raise ImpossibleValueException(f"self.targets - {self.targets}")
+            case _:  # pyright: ignore[reportUnnecessaryComparison]
+                raise ImpossibleValueException(f"self.targets - {self.targets}")  # pyright: ignore[reportUnreachable]
 
         # Show any Messages
         core_io = CoreIO.get_core_io()
