@@ -62,6 +62,7 @@ class BasicTerminalInterface(RPyGInterface):
                 content = self.prompt_user(
                     options=displayable_options,
                     prompts=prompt_request.prompts,
+                    show_options=prompt_request.show_options,
                 )
 
             case "CustomTextRequest":
@@ -174,9 +175,7 @@ class BasicTerminalInterface(RPyGInterface):
         return self.sanitize(input()[:max_length])
 
     def prompt_user(
-        self,
-        options: list[str],
-        prompts: list[str],
+        self, options: list[str], prompts: list[str], show_options: bool = True
     ) -> str:
         ensure_type(options, list, "options")
         ensure_type(prompts, list, "base_messages")
@@ -186,8 +185,9 @@ class BasicTerminalInterface(RPyGInterface):
             formatted_message += f"{message}\n"
         formatted_message += "\n"
 
-        for option in options:
-            formatted_message += f"{option}\n"
+        if show_options is True:
+            for option in options:
+                formatted_message += f"{option}\n"
 
         formatted_message += "\n"
 

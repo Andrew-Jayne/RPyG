@@ -1,3 +1,4 @@
+import math
 import random
 from enum import Enum
 
@@ -20,17 +21,23 @@ class ActorAction(Enum):
     LOSE_POTION = "LOSE_POTION"
 
 
+class SpecialAction(Enum):
+    AT_MERCHANT = "AT_MERCHANT"
+
+
 class EncounterEffect:
     __slots__: tuple[str, ...] = (
         "kind",
         "actor_action",
+        "special_action",
         "targets",
         "magnitude",
         "effect_messages",
         "extra_effects",
     )
     kind: str
-    actor_action: ActorAction
+    actor_action: ActorAction | None
+    special_action: SpecialAction | None
     targets: EffectTarget
     magnitude: int
     effect_messages: list[str]
@@ -39,16 +46,28 @@ class EncounterEffect:
     def __init__(
         self,
         kind: str,
-        actor_action: str,
         targets: str,
         magnitude: int,
         effect_messages: list[str],
         extra_effects: list[str],
+        actor_action: str | None = None,
+        special_action: str | None = None,
     ) -> None:
         ensure_type(kind, str, "kind")
         self.kind = kind
-        ensure_type(actor_action, str, "actor_action")
-        self.actor_action = ActorAction(actor_action)
+
+        if actor_action is not None:
+            ensure_type(actor_action, str, "actor_action")
+            self.actor_action = ActorAction(actor_action)
+        else:
+            self.actor_action = actor_action
+
+        if special_action is not None:
+            ensure_type(special_action, str, "special_action")
+            self.special_action = SpecialAction(special_action)
+        else:
+            self.special_action = special_action
+
         ensure_type(targets, str, "targets")
         self.targets = EffectTarget(targets)
         ensure_type(magnitude, int, "magnitude")
@@ -85,12 +104,20 @@ class EncounterEffect:
                 player_instance.inventory.gain_potion(scaled_magnitute)
             case ActorAction.LOSE_POTION:
                 player_instance.inventory.lose_potion(scaled_magnitute)
+            case None:
+                pass
             case _:  # pyright: ignore[reportUnnecessaryComparison]
                 raise ImpossibleValueException(f"self.actor_action-{self.actor_action}")  # pyright: ignore[reportUnreachable]
 
     def process_effect(self, player_party_instance: PlayerParty) -> None:
+        from RPyG.content import ContentLibrary
         from RPyG.core_io import CoreIO
         from RPyG.core_io.io_models import OutputMessage
+
+        # Show any Messages
+        core_io = CoreIO.get_core_io()
+        for message in self.effect_messages:
+            core_io.send_output(OutputMessage(message))
 
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
         match self.targets:
@@ -108,15 +135,77 @@ class EncounterEffect:
             case _:  # pyright: ignore[reportUnnecessaryComparison]
                 raise ImpossibleValueException(f"self.targets - {self.targets}")  # pyright: ignore[reportUnreachable]
 
-        # Show any Messages
-        core_io = CoreIO.get_core_io()
-        for message in self.effect_messages:
-            core_io.send_output(OutputMessage(message))
+        if self.special_action is not None:
+            self.process_special_action(player_party_instance)
 
         # Run Any Extra Effects
-        from RPyG.content import ContentLibrary
-
         library = ContentLibrary.get_library()
         for effect_id in self.extra_effects:
             effect = library.encounter_effects[effect_id]
             effect.process_effect(player_party_instance)
+
+    def process_special_action(self, player_party_instance: PlayerParty) -> None:
+        ensure_type(player_party_instance, PlayerParty, "player_party_instance")
+        match self.special_action:
+            case None:
+                pass
+            case SpecialAction.AT_MERCHANT:
+                self.visit_merchant(player_party_instance)
+
+    def visit_merchant(
+        self,
+        player_party_instance: PlayerParty,  # merchant_inventory: None = None
+    ) -> None:
+        from RPyG.core_io import CoreIO
+        from RPyG.core_io.io_models import OutputMessage, UserPromptRequest
+
+        core_io = CoreIO.get_core_io()
+        for player_instance in player_party_instance.members:
+            player_choice = ""
+            while player_choice != "LEAVE":
+                core_io.send_output(
+                    OutputMessage(
+                        f"{player_instance.name} has {player_instance.inventory.potions} potions & {player_instance.inventory.gold} gold"
+                    )
+                )
+                core_io.request_input(
+                    UserPromptRequest(
+                        options=[
+                            "BUY",
+                            "LEAVE",
+                            "BUY MAX",
+                        ],
+                        prompts=[
+                            f"{player_instance.name}",
+                            f"Gold: {player_instance.inventory.gold}",
+                            f"Potions: {player_instance.inventory.potions}",
+                            "",
+                            "Choose an Action:",
+                        ],
+                    )
+                )
+                player_choice = core_io.receive_input()
+                match player_choice:
+                    case "BUY":
+                        if player_instance.inventory.spend_gold(25) is True:
+                            player_instance.inventory.gain_potion(1)
+                            core_io.send_output(
+                                OutputMessage(
+                                    f"{player_instance.name} purchases a potion. They now have {player_instance.inventory.potions} potions & {player_instance.inventory.gold} gold",
+                                )
+                            )
+                        else:
+                            core_io.send_output(
+                                OutputMessage(
+                                    f"{player_instance.name} does not have enough Gold to purchase more potions",
+                                )
+                            )
+                            player_choice = "LEAVE"
+                    case "BUY MAX":
+                        # Using floor to make sure you can't buy 10 potions with 245 gold
+                        rounds = math.floor(player_instance.inventory.gold / 25)
+                        player_instance.inventory.spend_gold((rounds * 25))  # pyright: ignore[reportUnusedCallResult]
+                        player_instance.inventory.gain_potion(rounds)
+                        player_choice = "LEAVE"
+                    case _:
+                        player_choice = "LEAVE"

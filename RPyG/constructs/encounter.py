@@ -161,17 +161,18 @@ class Encounter:
                 user_choice = core_io.receive_input()
             match user_choice:
                 case self.success_choice:
+                    for message in self.success_messages:
+                        core_io.send_output(OutputMessage(message))
                     for effect_id in self.success_effects:
                         effect = library.encounter_effects[effect_id]
                         effect.process_effect(player_party_instance)
-                    for message in self.success_messages:
-                        core_io.send_output(OutputMessage(message))
 
                 case self.failure_choice:
+                    for message in self.failure_messages:
+                        core_io.send_output(OutputMessage(message))
                     for effect_id in self.failure_effects:
                         effect = library.encounter_effects[effect_id]
                         effect.process_effect(player_party_instance)
-                    for message in self.failure_messages:
-                        core_io.send_output(OutputMessage(message))
+
                 case _:
                     raise ImpossibleValueException("user_choice")

@@ -376,6 +376,7 @@ class Combatant(Actor):
                 UserPromptRequest(
                     prompts=target_messages,
                     options=target_indexes,
+                    show_options=False,
                 )
             )
             return int(core_io.receive_input())
