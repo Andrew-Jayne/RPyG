@@ -14,6 +14,7 @@ if TYPE_CHECKING is True:
 class Inventory:
     gold: int
     potions: int
+    actor_name: str
 
     def __init__(
         self,
@@ -61,9 +62,13 @@ class Inventory:
 
 
 class PlayableActor(Combatant):
+    name: str
     in_dungeon: bool
     dungeon_id: str | None
     dungeon_progress: int | None
+    react_action: str
+    react_messages: dict[str, str]
+    inventory: Inventory
 
     def __init__(self, name: str, specialization: str) -> None:
         ensure_type(name, str, "name")
@@ -73,6 +78,9 @@ class PlayableActor(Combatant):
         react_messages = PlayableActor._get_react_action(specialization, name)
         self.react_action = react_messages[0]
         self.react_messages = react_messages[1]
+        self.in_dungeon = False
+        self.dungeon_id = None
+        self.dungeon_progress = None
 
         match specialization:
             case "WARRIOR":
@@ -180,48 +188,6 @@ class PlayableActor(Combatant):
         player_skill = str(f"{strength_skill}:{intellect_skill}")
 
         return player_skill
-
-    # def _set_attack_name(self) -> str:
-    #     player_skill = self.__get_skill(self)
-
-    #     match player_skill:
-    #         case "weak:dull":
-    #             self.attack_name = "Clumsy Punch"
-    #         case "fair:dull":
-    #             self.attack_name = "Axe Chop"
-    #         case "strong:dull":
-    #             self.attack_name = "Warhammer Slam"
-    #         case "mighty:dull":
-    #             self.attack_name = "Greatsword Cleave"
-
-    #         case "weak:ordinary":
-    #             self.attack_name = "Dagger Slash"
-    #         case "fair:ordinary":
-    #             self.attack_name = "Shortsword Slash"
-    #         case "strong:ordinary":
-    #             self.attack_name = "Longsword Thrust"
-    #         case "mighty:ordinary":
-    #             self.attack_name = "Greatsword Thrust"
-
-    #         case "weak:smart":
-    #             self.attack_name = "Arcane Bolt"
-    #         case "fair:smart":
-    #             self.attack_name = "Fireball"
-    #         case "strong:smart":
-    #             self.attack_name = "Arcane Longsword Strike"
-    #         case "mighty:smart":
-    #             self.attack_name = "Arcane Greatsword Cleave"
-
-    #         case "weak:brilliant":
-    #             self.attack_name = "Arcane Lighting"
-    #         case "fair:brilliant":
-    #             self.attack_name = "Great Fireball"
-    #         case "strong:brilliant":
-    #             self.attack_name = "Seismic Hammer Slam"
-    #         case "mighty:brilliant":
-    #             self.attack_name = "Cosmic Greatsword Cleave"
-
-    #     return self.attack_name
 
     @staticmethod
     def _get_attack_name(specialization: str) -> str:

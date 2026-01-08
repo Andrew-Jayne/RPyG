@@ -2,8 +2,6 @@ import random
 from enum import Enum
 
 from RPyG.actors import PlayableActor, PlayerParty
-from RPyG.core_io import CoreIO
-from RPyG.core_io.io_models import OutputMessage
 from RPyG.exceptions import ImpossibleValueException
 from RPyG.utilities import ensure_type
 
@@ -91,6 +89,9 @@ class EncounterEffect:
                 raise ImpossibleValueException(f"self.actor_action-{self.actor_action}")  # pyright: ignore[reportUnreachable]
 
     def process_effect(self, player_party_instance: PlayerParty) -> None:
+        from RPyG.core_io import CoreIO
+        from RPyG.core_io.io_models import OutputMessage
+
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
         match self.targets:
             case EffectTarget.ALL:

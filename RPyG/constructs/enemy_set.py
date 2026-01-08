@@ -2,9 +2,14 @@ import copy
 import random
 from enum import Enum
 from functools import cached_property
+from typing import TYPE_CHECKING
 
-from RPyG.actors import Enemy, EnemyParty, EnemyVariantGrade
+from RPyG.actors import EnemyParty, EnemyVariantGrade
 from RPyG.utilities import ensure_type
+
+
+if TYPE_CHECKING is True:
+    from RPyG.actors import Enemy
 
 
 class EnemyWeightClass(Enum):

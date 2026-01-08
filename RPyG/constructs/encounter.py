@@ -1,8 +1,11 @@
-from RPyG.actors import PlayerParty
-from RPyG.core_io import CoreIO
-from RPyG.core_io.io_models import OutputMessage, UserPromptRequest
+from typing import TYPE_CHECKING
+
 from RPyG.exceptions import ImpossibleValueException
 from RPyG.utilities import ensure_type
+
+
+if TYPE_CHECKING is True:
+    from RPyG.actors import PlayerParty
 
 
 class Encounter:
@@ -126,6 +129,8 @@ class Encounter:
 
     def process_encounter(self, player_party_instance: PlayerParty) -> None:
         from RPyG.content import ContentLibrary
+        from RPyG.core_io import CoreIO
+        from RPyG.core_io.io_models import OutputMessage, UserPromptRequest
 
         core_io = CoreIO.get_core_io()
         library = ContentLibrary.get_library()

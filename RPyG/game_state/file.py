@@ -22,7 +22,6 @@ def save_game(player_party_instance: PlayerParty) -> None:
     """
 
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
-    core_io = CoreIO.get_core_io()
 
     serialized_data = pickle.dumps(player_party_instance)
     signature = hmac.new(secret_key, serialized_data, hashlib.sha256).digest()
@@ -30,6 +29,7 @@ def save_game(player_party_instance: PlayerParty) -> None:
     with open("savegame.rpygs", "wb") as save_file:
         save_file.write(signature + serialized_data)  # pyright: ignore[reportUnusedCallResult]
 
+    core_io = CoreIO.get_core_io()
     core_io.send_output(
         OutputMessage(f"Successfully Saved Game for {player_party_instance.name}")
     )
@@ -44,7 +44,7 @@ def save_game(player_party_instance: PlayerParty) -> None:
         case "YES":
             core_io.send_output(OutputMessage("The adventure continues!"))
         case "NO":
-            sys.exit()
+            sys.exit(0)
         case _:
             raise ValueError("Must be a choice of 'YES' or 'NO'")
 

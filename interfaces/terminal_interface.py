@@ -1,16 +1,14 @@
 import os
 import textwrap
-from typing import Literal, cast
+from typing import Literal, cast, override
 
 from RPyG import (
     CustomTextRequest,
     InputRequest,
     OutputMessage,
     RPyGInterface,
-    UIElement,
     UserPromptRequest,
 )
-from RPyG.actors import PlayableActor
 from RPyG.utilities import ensure_type
 
 
@@ -34,6 +32,7 @@ class BasicTerminalInterface(RPyGInterface):
         self.game_mode = game_mode
         self.show_ouput(OutputMessage(welcome_message))
 
+    @override
     def show_ouput(self, output: OutputMessage) -> None:
         ending = "\n"
         wrapped_message = ""
@@ -48,6 +47,7 @@ class BasicTerminalInterface(RPyGInterface):
         # Print the final wrapped message, removing the last added newline and adding the custom ending
         print(wrapped_message.rstrip("\n"), end=ending)
 
+    @override
     def request_input(self, request: InputRequest) -> None:
         ensure_type(request, InputRequest, "request")
         match type(request).__name__:
@@ -55,7 +55,7 @@ class BasicTerminalInterface(RPyGInterface):
                 raise NotImplementedError
             case "UserPromptRequest":
                 prompt_request = cast(UserPromptRequest, request)
-                displayable_options = []
+                displayable_options: list[str] = []
                 for item in prompt_request.options:
                     if item is not None:
                         displayable_options.append(item)
@@ -77,6 +77,7 @@ class BasicTerminalInterface(RPyGInterface):
 
         self.input_buffer = content
 
+    @override
     def receive_input(self) -> str:
         data = self.input_buffer
         if data == "":
@@ -95,10 +96,10 @@ class BasicTerminalInterface(RPyGInterface):
         if BasicTerminalInterface.game_mode == "MANUAL":
             # For Windows
             if os.name == "nt":
-                os.system("cls")
+                os.system("cls")  # pyright: ignore[reportUnusedCallResult]
             # For macOS and Linux
             else:
-                os.system("clear")
+                os.system("clear")  # pyright: ignore[reportUnusedCallResult]
 
     @staticmethod
     def sanitize(input_string: str, max_length: int = 32) -> str:
