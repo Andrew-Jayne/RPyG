@@ -9,6 +9,7 @@ enemy_ids = [
     "young_dire_wolf",
     "dire_wolf",
     "alpha_dire_wolf",
+    "albino_dire_wolf"
 ]
 
 ["young_dire_wolf"]
@@ -44,5 +45,17 @@ strength = 6
 intellect = 4
 agility = 8
 luck = 6
+attack_name = "Wolf Bite"
+is_special = false
+
+["albino_dire_wolf"]
+name = "Albino Dire Wolf"
+variant_grade = "LEGENDARY"
+kind = "Enemy/v1"
+health = 200
+strength = 8
+intellect = 6
+agility = 10
+luck = 8
 attack_name = "Wolf Bite"
 is_special = false

@@ -71,6 +71,7 @@ def handle_enemy_encounter(
         case "BATTLE":
             battle(player_party_instance, enemy_party_instance)
         case "FLEE":
+            flee_success = True
             for player_instance in player_party_instance.members:
                 if player_instance.luck >= random.randint(4, 15):
                     core_io.send_output(
@@ -84,8 +85,11 @@ def handle_enemy_encounter(
                             f"{player_instance.name} has Failed to Escape the {enemy_party_instance.name}!"
                         )
                     )
-                    battle(player_party_instance, enemy_party_instance)
-                    break
+                    flee_success = False
+
+            if flee_success is False:
+                battle(player_party_instance, enemy_party_instance)
+
         case _:
             raise RuntimeError()
 

@@ -95,6 +95,7 @@ class StoryEvent:
 
         content_library = ContentLibrary.get_library()
         core_io = CoreIO.get_core_io()
+
         match self.event_type:
             case StoryEventType.BOSS_ENCOUNTER:
                 if self.enemy_id is None:

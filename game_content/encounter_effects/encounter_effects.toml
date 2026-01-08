@@ -87,3 +87,11 @@ magnitude = 9
 effect_messages = []
 extra_effects = []
 
+[visit_generic_merchant]
+kind = "EncounterEffect/v1"
+# actor_action = null
+targets = "ALL"
+magnitude = 0
+special_action = "AT_MERCHANT"
+effect_messages = []
+extra_effects = []

@@ -15,6 +15,7 @@ class UserPromptRequest(InputRequest):
     # Barf this needs to be better
     options: list[str] | list[str | None]
     prompts: list[str]
+    show_options: bool = True
 
 
 @dataclass

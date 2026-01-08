@@ -8,6 +8,7 @@ enemy_ids = [
     "goblin_runt",
     "goblin",
     "goblin_chief",
+    "goblin_overlord"
 ]
 
 ["goblin_runt"]
@@ -44,4 +45,16 @@ intellect = 6
 agility = 6
 luck = 5
 attack_name = "Chief's Cleave"
+is_special = false
+
+["goblin_overlord"]
+kind = "Enemy/v1"
+variant_grade = "LEGENDARY"
+name = "Goblin Overlord"
+health = 200
+strength = 8
+intellect = 7
+agility = 7
+luck = 6
+attack_name = "Blooded Mace Slam"
 is_special = false

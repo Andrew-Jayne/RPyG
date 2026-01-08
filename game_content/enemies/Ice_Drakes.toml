@@ -8,6 +8,7 @@ enemy_ids = [
     "juvenile_ice_drake",
     "ice_drake",
     "ice_drake_matriarch",
+    "ancient_ice_drake"
 ]
 
 ["juvenile_ice_drake"]
@@ -42,6 +43,18 @@ health = 325
 strength = 9
 intellect = 7
 agility = 6
+luck = 8
+attack_name = "Blizzard Breath"
+is_special = false
+
+["ancient_ice_drake"]
+kind = "Enemy/v1"
+variant_grade = "LEGENDARY"
+name = "Ancient Ice Drake"
+health = 400
+strength = 10
+intellect = 10
+agility = 8
 luck = 8
 attack_name = "Blizzard Breath"
 is_special = false

@@ -26,7 +26,7 @@ def is_battle_complete(
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
     ensure_type(enemy_party_instance, EnemyParty, "enemy_party_instance")
 
-    if player_party_instance.members != [] or enemy_party_instance.members != []:
+    if player_party_instance.members == [] or enemy_party_instance.members == []:
         return True
     return False
 
@@ -230,5 +230,4 @@ def battle(
         and enemy_party_instance.members == []
     ):
         post_battle(player_party_instance)
-        return
     return
