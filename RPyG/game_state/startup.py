@@ -4,6 +4,11 @@ from RPyG.actors import PlayableActor, PlayerParty
 from RPyG.core_io import CoreIO
 from RPyG.core_io.io_models import CustomTextRequest, OutputMessage, UserPromptRequest
 from RPyG.exceptions import ImpossibleValueException
+from RPyG.game_state.file import load_game
+from RPyG.utilities import setup_logger
+
+
+logger = setup_logger(__name__)
 
 
 def default_party() -> PlayerParty:
@@ -11,8 +16,12 @@ def default_party() -> PlayerParty:
     default_names = ("Conan", "Merlin", "Robin")
     default_specialization = ("WARRIOR", "MAGE", "ROGUE")
     for i in range(0, 3):
-        member = (default_names[i], default_specialization[i])
-        party_members.append(PlayableActor(member[0], member[1]))
+        party_members.append(
+            PlayableActor(
+                default_names[i],
+                default_specialization[i],
+            )
+        )
 
     return PlayerParty(
         members=party_members,
@@ -21,9 +30,7 @@ def default_party() -> PlayerParty:
 
 
 def get_start_type() -> str:
-    core_io = CoreIO.get_core_io()
-    core_io.send_output(OutputMessage("Welcome to RPyG, a text based RPG in Python"))
-    if os.path.exists("use_default.flag"):
+    if os.path.exists("use_default.flag") is True:
         return "USE_DEFAULT"
     match os.path.exists("savegame.rpygs"):
         case True:
@@ -44,6 +51,8 @@ def get_start_type() -> str:
                 "os.path.exists('savegame.rpygs') did not return a bool and something is very wrong"
             )
 
+    core_io = CoreIO.get_core_io()
+    core_io.send_output(OutputMessage("Welcome to RPyG, a text based RPG in Python"))
     core_io.request_input(
         UserPromptRequest(
             options=start_game_options,
@@ -54,7 +63,7 @@ def get_start_type() -> str:
     return player_action
 
 
-def party_start() -> tuple[list[tuple[str, str]], str]:
+def party_start() -> PlayerParty:
     party_size_choices = ["1", "2", "3"]
     party_size_messages = ["How many members are in your party?"]
 
@@ -80,7 +89,7 @@ def party_start() -> tuple[list[tuple[str, str]], str]:
     )
     party_size = int(core_io.receive_input())
 
-    party_member_attribs: list[tuple[str, str]] = []
+    party_instances: list[PlayableActor] = []
     for _ in range(0, party_size):
         core_io = CoreIO.get_core_io()
         core_io.request_input(
@@ -97,8 +106,8 @@ def party_start() -> tuple[list[tuple[str, str]], str]:
             )
         )
         member_specialization = core_io.receive_input()
-        member_attrib: tuple[str, str] = (member_name, member_specialization)
-        party_member_attribs.append(member_attrib)
+        member = PlayableActor(member_name, member_specialization)
+        party_instances.append(member)
 
     core_io.request_input(
         CustomTextRequest(
@@ -108,4 +117,23 @@ def party_start() -> tuple[list[tuple[str, str]], str]:
     )
     party_name = core_io.receive_input()
 
-    return (party_member_attribs, party_name)
+    return PlayerParty(party_name, party_instances)
+
+
+def get_player_party_instance() -> PlayerParty:
+    # Get Player Party Instance from file or create a new one
+    logger.info("Getting Start type")
+    start_type = get_start_type()
+    match start_type:
+        case "LOAD":
+            player_party_instance = load_game()
+        case "NEW":
+            player_party_instance = party_start()
+        case "USE_DEFAULT":
+            player_party_instance = default_party()
+        case _:
+            raise ValueError("Invalid Game Start Type")
+
+    logger.info("starting game with %s start type", start_type)
+
+    return player_party_instance

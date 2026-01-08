@@ -1,6 +1,7 @@
 import random
+from enum import Enum
 
-from RPyG.actors import EnemyParty, PlayableActor, PlayerParty
+from RPyG.actors import EnemyParty, PlayerParty
 from RPyG.core_io import CoreIO
 from RPyG.core_io.io_models import (
     EmptyDistanceMessage,
@@ -8,13 +9,23 @@ from RPyG.core_io.io_models import (
     UserPromptRequest,
 )
 from RPyG.exceptions import ImpossibleValueException
-from RPyG.game_state.file import load_game
-from RPyG.game_state.startup import default_party, get_start_type, party_start
+from RPyG.game_state.startup import get_player_party_instance
+from RPyG.utilities import ensure_type, setup_logger
+
+
+logger = setup_logger(__name__)
+
+
+class EncounterType(Enum):
+    EnemyEncounter = "EnemyEncounter"
+    StandardEncounter = "StandardEncounter"
 
 
 def generate_enemy_set(player_count: int):
     from RPyG.constructs import EnemySet
     from RPyG.content import ContentLibrary
+
+    ensure_type(player_count, int, "player_count")
 
     content_library = ContentLibrary.get_library()
     match random.randint(1, 5):
@@ -41,6 +52,9 @@ def handle_enemy_encounter(
     enemy_party_instance: EnemyParty,
 ):
     from RPyG.combat import battle
+
+    ensure_type(player_party_instance, PlayerParty, "player_party_instance")
+    ensure_type(enemy_party_instance, EnemyParty, "enemy_party_instance")
 
     core_io = CoreIO.get_core_io()
     core_io.send_output(
@@ -76,105 +90,69 @@ def handle_enemy_encounter(
             raise RuntimeError()
 
 
-def check_for_encounter(
-    player_party_instance: PlayerParty,
-    rounds_without_encounter: int,
-) -> bool:
-    from RPyG.content import ContentLibrary
-
-    core_io = CoreIO.get_core_io()
-    content_library = ContentLibrary.get_library()
+def check_for_encounter() -> EncounterType | None:
     match random.randint(1, 8):
         case 1:  # 12.5% chance
-            core_io.send_output(
-                OutputMessage(f"After {rounds_without_encounter * 10} miles of travel")
-            )
-
-            handle_enemy_encounter(
-                player_party_instance=player_party_instance,
-                enemy_party_instance=generate_enemy_set(
-                    len(player_party_instance.members)
-                ),
-            )
-
-            return True
+            return EncounterType.EnemyEncounter
         case 2 | 3:  # 25% chance
-            core_io.send_output(
-                OutputMessage(f"After {rounds_without_encounter * 10} miles of travel")
-            )
-            encounter = content_library.get_standard_encounter()
-            encounter.process_encounter(player_party_instance)
-
-            return True
-
+            return EncounterType.StandardEncounter
         case _:  # 62.5% chance
-            core_io.send_output(EmptyDistanceMessage(distance=rounds_without_encounter))
-            return False
+            return None
 
 
-def run_story_event(
-    player_party_instance: PlayerParty,
-    rounds_without_encounter: int,
-):
+def play_game():
     from RPyG.constructs import StoryEvent
     from RPyG.content import ContentLibrary
 
     core_io = CoreIO.get_core_io()
     content_library = ContentLibrary.get_library()
-    story_event: StoryEvent = content_library.story_events[
-        player_party_instance.progress
-    ]
-    story_event.trigger(player_party_instance)
-    core_io.send_output(
-        OutputMessage(f"After {rounds_without_encounter * 10} miles of travel")
-    )
-
-
-def play_game():
-    from RPyG.content import ContentLibrary
-
-    core_io = CoreIO.get_core_io()
-    content_library = ContentLibrary.get_library()
-
-    # Get Player Party Instance from file or create a new one
-    match get_start_type():
-        case "LOAD":
-            player_party_instance = load_game()
-        case "NEW":
-            my_party, my_party_name = party_start()
-            my_party_instances: list[PlayableActor] = []
-            for member in my_party:
-                my_party_instances.append(PlayableActor(member[0], member[1]))
-            player_party_instance = PlayerParty(my_party_name, my_party_instances)
-        case "USE_DEFAULT":
-            player_party_instance = default_party()
-        case _:
-            raise ValueError("Invalid Game Start Type")
+    player_party_instance = get_player_party_instance()
 
     # Check if player is in a dungeon
+    logger.info("Checking if player is in a dungeon")
     if player_party_instance.in_dungeon is True:
         if player_party_instance.active_dungeon is not None:
+            logger.info("Player is in dungeon, resuming")
             player_party_instance.active_dungeon.traverse_dungeon(player_party_instance)
+    else:
+        logger.info("Player is not in dungeon")
 
     rounds_without_encounter = 1
     while player_party_instance.progress != 100:
         player_party_instance.progress += 1
-        if player_party_instance.progress not in content_library.story_events.keys():
-            if (
-                check_for_encounter(
-                    player_party_instance,
-                    rounds_without_encounter,
+        if player_party_instance.progress in content_library.story_events.keys():
+            core_io.send_output(
+                OutputMessage(f"After {rounds_without_encounter * 10} miles of travel")
+            )
+            story_event: StoryEvent = content_library.story_events[
+                player_party_instance.progress
+            ]
+            story_event.trigger(player_party_instance)
+        else:
+            check_result = check_for_encounter()
+            if check_result is not None:
+                core_io.send_output(
+                    OutputMessage(
+                        f"After {rounds_without_encounter * 10} miles of travel"
+                    )
                 )
-                is True
-            ):
+                match check_result:
+                    case EncounterType.EnemyEncounter:
+                        handle_enemy_encounter(
+                            player_party_instance=player_party_instance,
+                            enemy_party_instance=generate_enemy_set(
+                                len(player_party_instance.members)
+                            ),
+                        )
+                    case EncounterType.StandardEncounter:
+                        encounter = content_library.get_standard_encounter()
+                        encounter.process_encounter(player_party_instance)
                 rounds_without_encounter = 1
             else:
                 rounds_without_encounter += 1
-        else:
-            run_story_event(
-                player_party_instance,
-                rounds_without_encounter,
-            )
+                core_io.send_output(
+                    EmptyDistanceMessage(distance=rounds_without_encounter)
+                )
 
         if player_party_instance.members == []:
             break

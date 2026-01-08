@@ -12,7 +12,8 @@ class InputRequest:
 
 @dataclass
 class UserPromptRequest(InputRequest):
-    options: list[str | None]
+    # Barf this needs to be better
+    options: list[str] | list[str | None]
     prompts: list[str]
 
 

@@ -15,10 +15,15 @@ class Combatant(Actor):
     agility: int
     luck: int
     health: int
+    base_health: int
     attack_name: str
     attack_power: int
     special_attack_name: str | None
+    special_attack_energy: int
     specialization: str
+    use_special_attack: bool
+    will_react: bool
+    is_dismembered: bool
 
     def __init__(
         self,
@@ -195,7 +200,10 @@ class Combatant(Actor):
     """)
                 )
 
-    def aoe_attack(self, target_party_instance: "CombatantParty") -> None:
+    def aoe_attack(
+        self,
+        target_party_instance: "CombatantParty[CombatantType]",
+    ) -> None:
         from RPyG.actors import CombatantParty
 
         core_io = CoreIO.get_core_io()
@@ -238,7 +246,10 @@ class Combatant(Actor):
                 )
             )
 
-    def double_attack(self, target_party_instance: "CombatantParty") -> None:
+    def double_attack(
+        self,
+        target_party_instance: "CombatantParty[CombatantType]",
+    ) -> None:
         from RPyG.actors import CombatantParty
 
         core_io = CoreIO.get_core_io()
@@ -258,10 +269,6 @@ class Combatant(Actor):
         ]
 
         # Damage Primary Target
-        damage_variation = int(self.attack_power * 0.1)
-        final_damage = self.attack_power + random.randint(
-            -damage_variation, damage_variation
-        )
 
         self.attack(primary_instance)
 
@@ -272,9 +279,6 @@ class Combatant(Actor):
         # Make Sure a Living target is chosen
         # This prevents a softlock, if you kill the last target on attack 1
         if len(target_party_instance.members) != 0:
-            # Damage Secondary Target
-            reduced_damage = int(final_damage * 0.5)
-
             if secondary_instance not in target_party_instance.members:
                 while secondary_instance not in target_party_instance.members:
                     core_io.send_output(OutputMessage("Select a Living Target"))
@@ -305,7 +309,10 @@ class Combatant(Actor):
                     )
                 )
 
-    def special_attack(self, target_party_instance: "CombatantParty") -> None:
+    def special_attack(
+        self,
+        target_party_instance: "CombatantParty[CombatantType]",
+    ) -> None:
         from RPyG.actors import CombatantParty
         from RPyG.core_io import CoreIO
 
@@ -342,7 +349,9 @@ class Combatant(Actor):
             case _:
                 raise ValueError(f"Invalid specialization {self.specialization}")
 
-    def select_combat_target(self, target_party_instance: "CombatantParty") -> int:
+    def select_combat_target(
+        self, target_party_instance: "CombatantParty[CombatantType]"
+    ) -> int:
         """
         Takes a full party instance, and returns the index of the target member in the members array/list as an int
         """
@@ -356,8 +365,8 @@ class Combatant(Actor):
             isinstance(self, PlayableActor) is True
             and isinstance(target_party_instance, EnemyParty) is True
         ):
-            target_messages: list = ["Which enemy will you attack?"]
-            target_indexes: list = []
+            target_messages: list[str] = ["Which enemy will you attack?"]
+            target_indexes: list[str] = []
             for index, member in enumerate(target_party_instance.members):
                 member: Combatant
                 target_messages.append(f"{index} {member.name}:{member.health}")

@@ -3,8 +3,6 @@ from enum import Enum
 from RPyG.actors import EnemyParty, PlayerParty
 from RPyG.combat import battle
 from RPyG.constructs import Dungeon
-from RPyG.core_io import CoreIO
-from RPyG.core_io.io_models import OutputMessage
 from RPyG.exceptions import ImpossibleValueException
 from RPyG.game_state import save_game
 from RPyG.utilities import ensure_type
@@ -92,6 +90,8 @@ class StoryEvent:
     def trigger(self, player_party_instance: PlayerParty) -> None:
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
         from RPyG.content import ContentLibrary
+        from RPyG.core_io import CoreIO
+        from RPyG.core_io.io_models import OutputMessage
 
         content_library = ContentLibrary.get_library()
         core_io = CoreIO.get_core_io()

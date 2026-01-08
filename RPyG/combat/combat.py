@@ -1,21 +1,18 @@
-from RPyG.actors import CombatantParty, Enemy, EnemyParty, PlayableActor, PlayerParty
+from RPyG.actors import (
+    CombatantParty,
+    CombatantType,
+    Enemy,
+    EnemyParty,
+    PlayableActor,
+    PlayerParty,
+)
 from RPyG.core_io import CoreIO
 from RPyG.core_io.io_models import BattleHudMessage, OutputMessage, UserPromptRequest
 from RPyG.game_state.file import save_game
 from RPyG.utilities import ensure_type
 
 
-def is_party_alive(party_instance: CombatantParty) -> bool:
-    ensure_type(party_instance, CombatantParty, "party_instance")
-
-    # Empty list means everyone is dead
-    if party_instance.members == []:
-        return False
-    else:
-        return True
-
-
-def clear_dead_members(party_instance: CombatantParty) -> None:
+def clear_dead_members(party_instance: CombatantParty[CombatantType]) -> None:
     ensure_type(party_instance, CombatantParty, "party_instance")
     for member in party_instance.members:
         if member.health == 0:
@@ -29,11 +26,9 @@ def is_battle_complete(
     ensure_type(player_party_instance, PlayerParty, "player_party_instance")
     ensure_type(enemy_party_instance, EnemyParty, "enemy_party_instance")
 
-    match is_party_alive(player_party_instance), is_party_alive(enemy_party_instance):
-        case (True, True):
-            return False
-        case _:
-            return True
+    if player_party_instance.members != [] or enemy_party_instance.members != []:
+        return True
+    return False
 
 
 def process_player_turn(
@@ -47,7 +42,7 @@ def process_player_turn(
 
     ## Gross Code Dupe, but this whole function sucks ass
     for player_instance in player_party_instance.members:
-        if is_party_alive(enemy_party_instance) is True:
+        if enemy_party_instance.members != []:
             core_io.request_input(
                 UserPromptRequest(
                     prompts=[f"{player_instance.name}", "Choose an Action:"],
@@ -123,7 +118,7 @@ def process_enemy_turn(
     ensure_type(enemy_party_instance, EnemyParty, "enemy_party_instance")
 
     for enemy_instance in enemy_party_instance.members:
-        if is_party_alive(player_party_instance) is True:
+        if player_party_instance.members != []:
             target_index = enemy_instance.select_combat_target(player_party_instance)
             target_player: PlayableActor = player_party_instance.members[target_index]
 
@@ -230,11 +225,10 @@ def battle(
 
     ## Display Victory Message if players do not die
     if (
-        is_party_alive(player_party_instance) is True
-        and is_party_alive(enemy_party_instance) is False
-        and battle_complete is True
+        battle_complete is True
+        and player_party_instance.members != []
+        and enemy_party_instance.members == []
     ):
         post_battle(player_party_instance)
         return
-    else:
-        return
+    return
