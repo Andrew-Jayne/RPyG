@@ -59,73 +59,63 @@ class Encounter:
         failure_choice: str | None = None,
     ) -> None:
         ensure_type(kind, str, "kind")
-        self.kind = kind
-
         ensure_type(primary_encounter, bool, "primary_encounter")
-        self.primary_encounter = primary_encounter
-
         ensure_type(special_encounter, bool, "special_encounter")
-        self.special_encounter = special_encounter
 
         if next_encounter is not None:
             ensure_type(next_encounter, str, "next_encounter")
-        self.next_encounter = next_encounter
 
         ensure_type(prompts, list, "prompts")
         for prompt in prompts:
             ensure_type(prompt, str, "prompt")
-        self.prompts = prompts
 
         if success_choice is not None:
             ensure_type(success_choice, str, "success_choice")
-        self.success_choice = success_choice
 
         if retry_choice is not None:
             ensure_type(retry_choice, str, "retry_choice")
-        self.retry_choice = retry_choice
 
         if failure_choice is not None:
             ensure_type(failure_choice, str, "failure_choice")
-        self.failure_choice = failure_choice
 
         ensure_type(success_effects, list, "success_effects")
-        if success_effects != []:
-            for effect in success_effects:
-                ensure_type(effect, str, "effect")
+        for effect in success_effects:
+            ensure_type(effect, str, "effect")
+
+        ensure_type(retry_effects, list, "retry_effects")
+        for effect in retry_effects:
+            ensure_type(effect, str, "effect")
+
+        ensure_type(failure_effects, list, "failure_effects")
+        for effect in failure_effects:
+            ensure_type(effect, str, "effect")
+
+        ensure_type(success_messages, list, "success_messages")
+        for message in success_messages:
+            ensure_type(message, str, "message")
+
+        ensure_type(retry_messages, list, "retry_messages")
+        for message in retry_messages:
+            ensure_type(message, str, "message")
+
+        ensure_type(failure_messages, list, "failure_messages")
+        for message in failure_messages:
+            ensure_type(message, str, "message")
+
+        self.kind = kind
+        self.primary_encounter = primary_encounter
+        self.special_encounter = special_encounter
+        self.next_encounter = next_encounter
+        self.prompts = prompts
+        self.success_choice = success_choice
+        self.retry_choice = retry_choice
+        self.failure_choice = failure_choice
         self.success_effects = success_effects
-
-        if retry_effects != []:
-            ensure_type(retry_effects, list, "retry_effects")
-            for effect in retry_effects:
-                ensure_type(effect, str, "effect")
         self.retry_effects = retry_effects
-
-        if failure_effects != []:
-            ensure_type(failure_effects, list, "failure_effects")
-            for effect in success_effects:
-                ensure_type(effect, str, "effect")
         self.failure_effects = failure_effects
-
-        if success_messages != []:
-            ensure_type(success_messages, list, "success_messages")
-            for effect in success_messages:
-                ensure_type(effect, str, "effect")
         self.success_messages = success_messages
-
-        if retry_messages != []:
-            ensure_type(retry_messages, list, "retry_messages")
-            for effect in retry_messages:
-                ensure_type(effect, str, "effect")
         self.retry_messages = retry_messages
-
-        if failure_messages != []:
-            ensure_type(failure_messages, list, "failure_messages")
-            for effect in failure_messages:
-                ensure_type(effect, str, "effect")
         self.failure_messages = failure_messages
-
-    def validate(self) -> bool:
-        return True
 
     def process_encounter(self, player_party_instance: PlayerParty) -> None:
         from RPyG.content import ContentLibrary
@@ -176,3 +166,38 @@ class Encounter:
 
                 case _:
                     raise ImpossibleValueException("user_choice")
+
+    def validate(self) -> bool:
+        ensure_type(self.kind, str, "self.kind")
+        ensure_type(self.primary_encounter, bool, "self.primary_encounter")
+        ensure_type(self.special_encounter, bool, "self.special_encounter")
+        if self.next_encounter is not None:
+            ensure_type(self.next_encounter, str, "self.next_encounter")
+        ensure_type(self.prompts, list, "self.prompts")
+        for prompt in self.prompts:
+            ensure_type(prompt, str, "self.prompts item")
+        if self.success_choice is not None:
+            ensure_type(self.success_choice, str, "self.success_choice")
+        if self.retry_choice is not None:
+            ensure_type(self.retry_choice, str, "self.retry_choice")
+        if self.failure_choice is not None:
+            ensure_type(self.failure_choice, str, "self.failure_choice")
+        ensure_type(self.success_effects, list, "self.success_effects")
+        for effect in self.success_effects:
+            ensure_type(effect, str, "self.success_effects item")
+        ensure_type(self.retry_effects, list, "self.retry_effects")
+        for effect in self.retry_effects:
+            ensure_type(effect, str, "self.retry_effects item")
+        ensure_type(self.failure_effects, list, "self.failure_effects")
+        for effect in self.failure_effects:
+            ensure_type(effect, str, "self.failure_effects item")
+        ensure_type(self.success_messages, list, "self.success_messages")
+        for message in self.success_messages:
+            ensure_type(message, str, "self.success_messages item")
+        ensure_type(self.retry_messages, list, "self.retry_messages")
+        for message in self.retry_messages:
+            ensure_type(message, str, "self.retry_messages item")
+        ensure_type(self.failure_messages, list, "self.failure_messages")
+        for message in self.failure_messages:
+            ensure_type(message, str, "self.failure_messages item")
+        return True

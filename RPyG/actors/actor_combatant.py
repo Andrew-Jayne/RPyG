@@ -48,6 +48,7 @@ class Combatant(Actor):
         ensure_type(attack_power, int, "attack_power")
         if special_attack_name is not None:
             ensure_type(special_attack_name, str, "special_attack_name")
+
         Actor.__init__(
             self=self,
             name=name,
@@ -432,7 +433,6 @@ class CombatantParty(Party[CombatantType], Generic[CombatantType]):
     ) -> None:
         ensure_type(name, str, "name")
         ensure_type(members, list, "members")
-
         for party_member in members:
             ensure_type(party_member, Combatant, "party_member")
 
