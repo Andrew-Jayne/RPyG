@@ -41,6 +41,16 @@ class Dungeon:
         heal_room_message: str,
         boss_encounter_message: str,
     ):
+        ensure_type(kind, str, "kind")
+        ensure_type(name, str, "name")
+        ensure_type(length, int, "length")
+        ensure_type(boss_enemy_id, str, "boss_enemy_id")
+        ensure_type(enemy_set_id, str, "enemy_set_id")
+        ensure_type(start_message, str, "start_message")
+        ensure_type(shortcut_message, str, "shortcut_message")
+        ensure_type(heal_room_message, str, "heal_room_message")
+        ensure_type(boss_encounter_message, str, "boss_encounter_message")
+
         self.dungeon_name = name
         self.start_message = start_message
         self.shortcut_message = shortcut_message
@@ -131,4 +141,12 @@ class Dungeon:
         player_party_instance.dungeon_progress = 0
 
     def validate(self) -> bool:
+        ensure_type(self.dungeon_name, str, "self.dungeon_name")
+        ensure_type(self.start_message, str, "self.start_message")
+        ensure_type(self.shortcut_message, str, "self.shortcut_message")
+        ensure_type(self.heal_room_message, str, "self.heal_room_message")
+        ensure_type(self.boss_encounter_message, str, "self.boss_encounter_message")
+        ensure_type(self.boss_enemy_id, str, "self.boss_enemy_id")
+        ensure_type(self.enemy_set_id, str, "self.enemy_set_id")
+        ensure_type(self.length, int, "self.length")
         return True

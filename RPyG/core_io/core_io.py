@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Self
 
 from RPyG.core_io.io_models import InputRequest, OutputMessage
+from RPyG.utilities import ensure_type
 
 
 class RPyGInterface(ABC):
@@ -25,6 +26,7 @@ class CoreIO:
     interface: RPyGInterface
 
     def __init__(self, interface: RPyGInterface):
+        ensure_type(interface, RPyGInterface, "interface")
         if CoreIO._instance is None:
             self.interface = interface
             CoreIO._instance = self

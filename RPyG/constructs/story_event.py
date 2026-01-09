@@ -84,9 +84,6 @@ class StoryEvent:
         self.dungeon_id = dungeon_id
         self.encounter_id = encounter_id
 
-    def validate(self) -> bool:
-        return True
-
     def trigger(self, player_party_instance: PlayerParty) -> None:
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
         from RPyG.content import ContentLibrary
@@ -193,3 +190,19 @@ class StoryEvent:
                         )
             case _:  # pyright: ignore[reportUnnecessaryComparison]
                 raise ImpossibleValueException(f"self.event_type: {self.event_type}")  # pyright: ignore[reportUnreachable]
+
+    def validate(self) -> bool:
+        ensure_type(self.kind, str, "self.kind")
+        ensure_type(self.event_type, StoryEventType, "self.event_type")
+        ensure_type(self.progress_trigger, str, "self.progress_trigger")
+        ensure_type(self.messages, tuple, "self.messages")
+        ensure_type(self.success_messages, tuple, "self.success_messages")
+        ensure_type(self.failure_messages, tuple, "self.failure_messages")
+        if self.enemy_id is not None:
+            ensure_type(self.enemy_id, str, "self.enemy_id")
+        if self.dungeon_id is not None:
+            ensure_type(self.dungeon_id, str, "self.dungeon_id")
+        if self.encounter_id is not None:
+            ensure_type(self.encounter_id, str, "self.encounter_id")
+
+        return True

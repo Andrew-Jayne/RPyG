@@ -44,8 +44,6 @@ class Enemy(Combatant):
         ensure_type(luck, int, "luck")
         ensure_type(attack_name, str, "attack_name")
         ensure_type(is_special, bool, "is_special")
-        self.is_special = is_special
-        self.variant_grade = EnemyVariantGrade(variant_grade)
 
         Combatant.__init__(
             self,
@@ -64,6 +62,9 @@ class Enemy(Combatant):
             specialization="",
         )
 
+        self.is_special = is_special
+        self.variant_grade = EnemyVariantGrade(variant_grade)
+
     @staticmethod
     def _set_enemy_attack_power(strength: int, intellect: int) -> int:
         if strength >= 6 and intellect >= 6:
@@ -78,6 +79,15 @@ class Enemy(Combatant):
         return attack_power * 10
 
     def validate(self) -> bool:
+        ensure_type(self.name, str, "self.name")
+        ensure_type(self.health, int, "self.health")
+        ensure_type(self.strength, int, "self.strength")
+        ensure_type(self.intellect, int, "self.intellect")
+        ensure_type(self.agility, int, "self.agility")
+        ensure_type(self.luck, int, "self.luck")
+        ensure_type(self.attack_name, str, "self.attack_name")
+        ensure_type(self.is_special, bool, "self.is_special")
+        ensure_type(self.variant_grade, EnemyVariantGrade, "self.variant_grade")
         return True
 
 

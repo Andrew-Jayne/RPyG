@@ -54,36 +54,39 @@ class EncounterEffect:
         special_action: str | None = None,
     ) -> None:
         ensure_type(kind, str, "kind")
-        self.kind = kind
 
         if actor_action is not None:
             ensure_type(actor_action, str, "actor_action")
-            self.actor_action = ActorAction(actor_action)
-        else:
-            self.actor_action = actor_action
 
         if special_action is not None:
             ensure_type(special_action, str, "special_action")
-            self.special_action = SpecialAction(special_action)
-        else:
-            self.special_action = special_action
 
         ensure_type(targets, str, "targets")
-        self.targets = EffectTarget(targets)
         ensure_type(magnitude, int, "magnitude")
-        self.magnitude = magnitude
         ensure_type(effect_messages, list, "effect_messages")
-        if effect_messages != []:
-            for effect_message in effect_messages:
-                ensure_type(effect_message, str, "effect_message")
-        self.effect_messages = effect_messages
-        if extra_effects != []:
-            for effect in extra_effects:
-                ensure_type(effect, str, "effect_message")
-        self.extra_effects = extra_effects
+        for effect_message in effect_messages:
+            ensure_type(effect_message, str, "effect_message")
 
-    def validate(self) -> bool:
-        return True
+        ensure_type(extra_effects, list, "extra_effects")
+        for effect in extra_effects:
+            ensure_type(effect, str, "effect")
+
+        self.kind = kind
+
+        if actor_action is not None:
+            self.actor_action = ActorAction(actor_action)
+        else:
+            self.actor_action = None
+
+        if special_action is not None:
+            self.special_action = SpecialAction(special_action)
+        else:
+            self.special_action = None
+
+        self.targets = EffectTarget(targets)
+        self.magnitude = magnitude
+        self.effect_messages = effect_messages
+        self.extra_effects = extra_effects
 
     def run_action(self, player_instance: PlayableActor, member_count: int) -> None:
         ensure_type(player_instance, PlayableActor, "player_instance")
@@ -209,3 +212,19 @@ class EncounterEffect:
                         player_choice = "LEAVE"
                     case _:
                         player_choice = "LEAVE"
+
+    def validate(self) -> bool:
+        ensure_type(self.kind, str, "self.kind")
+        if self.actor_action is not None:
+            ensure_type(self.actor_action, ActorAction, "self.actor_action")
+        if self.special_action is not None:
+            ensure_type(self.special_action, SpecialAction, "self.special_action")
+        ensure_type(self.targets, EffectTarget, "self.targets")
+        ensure_type(self.magnitude, int, "self.magnitude")
+        ensure_type(self.effect_messages, list, "self.effect_messages")
+        for message in self.effect_messages:
+            ensure_type(message, str, "self.effect_messages item")
+        ensure_type(self.extra_effects, list, "self.extra_effects")
+        for effect in self.extra_effects:
+            ensure_type(effect, str, "self.extra_effects item")
+        return True

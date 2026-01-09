@@ -24,6 +24,7 @@ class Inventory:
     ) -> None:
         ensure_type(gold, int, "gold")
         ensure_type(potions, int, "potions")
+        ensure_type(actor_name, str, "actor_name")
 
         self.actor_name = actor_name
         self.gold = gold
@@ -70,7 +71,11 @@ class PlayableActor(Combatant):
     react_messages: dict[str, str]
     inventory: Inventory
 
-    def __init__(self, name: str, specialization: str) -> None:
+    def __init__(
+        self,
+        name: str,
+        specialization: str,
+    ) -> None:
         ensure_type(name, str, "name")
         ensure_type(specialization, str, "specialization")
 

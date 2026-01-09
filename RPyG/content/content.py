@@ -125,6 +125,7 @@ class ContentLibrary:
         return combined_content
 
     def __init__(self, content_path: str):
+        ensure_type(content_path, str, "content_path")
         if ContentLibrary._instance is None:
             all_content = ContentLibrary.load_content_files(content_path)
 
