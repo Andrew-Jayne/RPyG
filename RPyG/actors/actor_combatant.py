@@ -49,6 +49,11 @@ class Combatant(Actor):
         if special_attack_name is not None:
             ensure_type(special_attack_name, str, "special_attack_name")
 
+        if len(name) > 32:
+            raise ValueError("Combatant Name cannot exceed 32 characters")
+        if health > 9999:
+            raise ValueError("Combatant Health cannot exceed 9999")
+
         Actor.__init__(
             self=self,
             name=name,
@@ -58,7 +63,6 @@ class Combatant(Actor):
             luck=luck,
         )
 
-        ## Need to cap at 9999 and error if over
         self.health = health
         self.base_health = health
 
@@ -435,6 +439,9 @@ class CombatantParty(Party[CombatantType], Generic[CombatantType]):
         ensure_type(members, list, "members")
         for party_member in members:
             ensure_type(party_member, Combatant, "party_member")
+
+        if len(name) > 64:
+            raise ValueError("Combatant Party name may not be longer than characters")
 
         ## super() Must be used because of typing and use of generics
         super().__init__(

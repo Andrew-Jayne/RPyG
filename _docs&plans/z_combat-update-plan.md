@@ -94,3 +94,32 @@ Add human actors have the option to have potions and gold?
 add enememy loot?
 
 add leveling system based on damage taken and damage dealt
+
+
+
+ **Damage Types & Resistances:**
+  - Implement damage types: Melee and Magic.
+  - Create resistances based on character specialization 
+    - higher INT provides more magic resistance
+    - lower STR increases vulnerability to melee damage
+  - Introduce hybrid attacks with customizable splits (e.g., a magic sword attack with a 60/40 split between magic and melee). (most likely need to bring back a modified verison of the skill system to select attack?)
+
+- **Expanded Combat Mechanics:**
+  - Add persistent effects (e.g., lingering damage, healing spells, defense buffs).
+  - Create unique attacks for enemies based on their abilities.
+  - Integrate persistent effects into the combat system.
+
+- **Progression Logic:**
+  - Use if logic in attack function (if target or if source is playable_actor) to update exp. 
+  - After battle if exp passes threshold player levels up
+  - On level-up:
+    - Fully heal the player.
+    - Allow the player to boost one stat by 1 point.
+    - Update base health accordingly.
+
+- **Relics System:**
+  - Allow players to find or buy relics that boost party stats.
+  - Implement a relic loot pool for enemies (1 in 25 chance) (part of the enemy JSON?)
+  - Expand merchant system with relic offerings.
+  - Implement party-wide relic boost functions.
+  - Relics can also be stolen 
