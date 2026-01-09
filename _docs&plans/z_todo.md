@@ -4,6 +4,10 @@
 
 ---
 
+Add Logging!!
+Move interface interaction to all used 0-N indexed choices rather than typing the action every time (so you can play 1 handed with a numpad)
+
+
 # Planned Development
 
 - **Damage Types & Resistances:**
@@ -32,11 +36,6 @@
   - Expand merchant system with relic offerings.
   - Implement party-wide relic boost functions.
   - Relics can also be stolen 
-
-- **Non-Special Dungeons:**
-    - Use the existing JSON schema for special dungeons.
-    - Optionally, introduce random encounters ("You find a $dungeon_identify").
-    - this needs more planning and work
   
 - **Travel Encounter:**
   - Create a "TRAVEL" encounter type.
@@ -56,11 +55,3 @@
   - Create biome-specific encounters (forest, plains, foothills, mountains).
   - Tag encounters and enemies based on zones/biomes (frost drakes in mountains, dire wolves in plains).
   - Keep there from being major immersion violations due to RNG (like finding a big city a step 98 right before the final boss)
-
-
----
-
-# Active Development
-
-- **Streamline User Prompts:**
-  - Develop a more generic "choose action" prompt template to avoid redundancy in designing individual interactions.

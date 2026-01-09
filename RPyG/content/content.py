@@ -31,15 +31,15 @@ class ContentKind(Enum):
 class ContentLibrary:
     enemies: dict[str, Enemy]
     enemy_sets: dict[str, EnemySet]
-    story_events: dict[int, StoryEvent]
+    story_events: dict[str, StoryEvent]
     encounters: dict[str, Encounter]
     encounter_effects: dict[str, EncounterEffect]
     dungeons: dict[str, Dungeon]
     _instance: "ContentLibrary | None" = None
 
     @staticmethod
-    def build_story_events(story_events_data: dict[str, Any]) -> dict[int, StoryEvent]:  # pyright: ignore[reportExplicitAny]
-        all_events: dict[int, StoryEvent] = {}
+    def build_story_events(story_events_data: dict[str, Any]) -> dict[str, StoryEvent]:  # pyright: ignore[reportExplicitAny]
+        all_events: dict[str, StoryEvent] = {}
         for value in story_events_data.values():
             event = StoryEvent(**value)
             all_events[event.progress_trigger] = event
@@ -267,3 +267,8 @@ class ContentLibrary:
     def get_standard_encounter() -> Encounter:
         library = ContentLibrary.get_library()
         return random.choice(list(library.standard_encounters.values()))
+
+    @staticmethod
+    def get_standard_dungeon() -> Dungeon:
+        library = ContentLibrary.get_library()
+        return random.choice(list(library.dungeons.values()))

@@ -30,45 +30,33 @@ class EnemySet:
     set_type: EnemySetType
     weight_class: EnemyWeightClass
 
-    # this function is painful, and needs to be reworked
     def generate_enemy_party(
         self,
         enemy_count: int,
     ) -> EnemyParty:
+        from RPyG.constructs.abstract import RandomResultItem, RandomResultTable
+
         ensure_type(enemy_count, int, "enemy_count")
 
-        # select random grade of enemy on each attempt, 1 in 25 chance of legendary (will have loot later))
         enemy_party_instances: list[Enemy] = []
         if self.key_enemy is not None:
             enemy_party_instances.append(self.key_enemy)
 
+        # select random grade of enemy on each attempt, 1 in 25 chance of legendary (will have loot later))
+        grade_table = RandomResultTable(
+            [
+                RandomResultItem(EnemyVariantGrade.LEGENDARY, (1 / 25)),
+                RandomResultItem(EnemyVariantGrade.LESSER, (1 / 3)),
+                RandomResultItem(EnemyVariantGrade.COMMON, (1 / 3)),
+                RandomResultItem(EnemyVariantGrade.GREATER, (1 / 3)),
+            ]
+        )
+
         for _ in range(0, enemy_count):
-            match random.randint(1, 25):
-                case 25:
-                    enemy_party_instances.append(
-                        copy.deepcopy(
-                            random.choice(
-                                self.variants_by_grade[EnemyVariantGrade.LEGENDARY]
-                            )
-                        )
-                    )
-                case _:
-                    ## BARF WHY DID I DO THIS
-                    enemy_party_instances.append(
-                        copy.deepcopy(
-                            random.choice(
-                                self.variants_by_grade[
-                                    random.choice(
-                                        [
-                                            EnemyVariantGrade.LESSER,
-                                            EnemyVariantGrade.COMMON,
-                                            EnemyVariantGrade.GREATER,
-                                        ]
-                                    )
-                                ]
-                            )
-                        )
-                    )
+            enemy_grade = grade_table.generate_result()
+            enemy_party_instances.append(
+                copy.deepcopy(random.choice(self.variants_by_grade[enemy_grade]))
+            )
 
         if len(enemy_party_instances) == 1:
             enemy_party_name = f"Lone {enemy_party_instances[0].name}"

@@ -42,7 +42,9 @@ def save_game(player_party_instance: PlayerParty) -> None:
     )
     match core_io.receive_input():
         case "YES":
-            core_io.send_output(OutputMessage("The adventure continues!"))
+            core_io.send_output(
+                OutputMessage("The adventure continues!", reset_display=True)
+            )
         case "NO":
             sys.exit(0)
         case _:

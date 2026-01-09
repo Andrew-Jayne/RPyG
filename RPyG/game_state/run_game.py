@@ -8,7 +8,6 @@ from RPyG.core_io.io_models import (
     OutputMessage,
     UserPromptRequest,
 )
-from RPyG.exceptions import ImpossibleValueException
 from RPyG.game_state.startup import get_player_party_instance
 from RPyG.utilities import ensure_type, setup_logger
 
@@ -19,30 +18,41 @@ logger = setup_logger(__name__)
 class EncounterType(Enum):
     EnemyEncounter = "EnemyEncounter"
     StandardEncounter = "StandardEncounter"
+    DungeonEncoutner = "DungeonEncoutner"
 
 
 def generate_enemy_set(player_count: int):
-    from RPyG.constructs import EnemySet
+    from RPyG.constructs import EnemySet, RandomResultItem, RandomResultTable
     from RPyG.content import ContentLibrary
 
     ensure_type(player_count, int, "player_count")
-
     content_library = ContentLibrary.get_library()
-    match random.randint(1, 5):
-        case 1 | 2:  # 40% Chance
-            enemy_set = random.choice(list(content_library.small_enemies.values()))
-            enemy_count = player_count + random.randint(-1, 3)
-        case 3 | 4:  # 40% Chance
-            enemy_set = random.choice(list(content_library.medium_enemies.values()))
-            enemy_count = player_count + random.randint(-2, 2)
-        case 5:  # 20% Chance
-            enemy_set = random.choice(list(content_library.large_enemies.values()))
-            enemy_count = player_count + random.randint(-2, 1)
-        case _:
-            raise ImpossibleValueException("random.randint(1, 5)")
 
+    # wholy Type hint batman!
+    enemy_configs: list[RandomResultItem[tuple[list[EnemySet], int, int]]] = [
+        RandomResultItem(
+            (list(content_library.small_enemies.values()), -1, 3),
+            0.4,
+        ),
+        RandomResultItem(
+            (list(content_library.medium_enemies.values()), -1, 3),
+            0.4,
+        ),
+        RandomResultItem(
+            (list(content_library.large_enemies.values()), -2, 1),
+            0.2,
+        ),
+    ]
+
+    enemy_table = RandomResultTable(enemy_configs)
+
+    enemy_list, offset_min, offset_max = enemy_table.generate_result()
+
+    enemy_count = player_count + random.randint(offset_min, offset_max)
     if enemy_count <= 0:
         enemy_count = 1
+
+    enemy_set = random.choice(enemy_list)
 
     return EnemySet.generate_enemy_party(enemy_set, enemy_count)
 
@@ -95,13 +105,16 @@ def handle_enemy_encounter(
 
 
 def check_for_encounter() -> EncounterType | None:
-    match random.randint(1, 8):
-        case 1:  # 12.5% chance
-            return EncounterType.EnemyEncounter
-        case 2 | 3:  # 25% chance
-            return EncounterType.StandardEncounter
-        case _:  # 62.5% chance
-            return None
+    from RPyG.constructs import RandomResultItem, RandomResultTable
+
+    return RandomResultTable[EncounterType | None](
+        [
+            RandomResultItem(EncounterType.EnemyEncounter, (1 / 8)),
+            RandomResultItem(EncounterType.StandardEncounter, (1 / 4)),
+            RandomResultItem(EncounterType.DungeonEncoutner, (1 / 10)),
+            RandomResultItem(None, (5 / 8)),
+        ]
+    ).generate_result()
 
 
 def play_game():
@@ -124,12 +137,12 @@ def play_game():
     rounds_without_encounter = 1
     while player_party_instance.progress != 100:
         player_party_instance.progress += 1
-        if player_party_instance.progress in content_library.story_events.keys():
+        if str(player_party_instance.progress) in content_library.story_events.keys():
             core_io.send_output(
                 OutputMessage(f"After {rounds_without_encounter * 10} miles of travel")
             )
             story_event: StoryEvent = content_library.story_events[
-                player_party_instance.progress
+                str(player_party_instance.progress)
             ]
             story_event.trigger(player_party_instance)
         else:
@@ -151,6 +164,9 @@ def play_game():
                     case EncounterType.StandardEncounter:
                         encounter = content_library.get_standard_encounter()
                         encounter.process_encounter(player_party_instance)
+                    case EncounterType.DungeonEncoutner:
+                        dungeon = content_library.get_standard_dungeon()
+                        dungeon.traverse_dungeon(player_party_instance)
                 rounds_without_encounter = 1
             else:
                 rounds_without_encounter += 1

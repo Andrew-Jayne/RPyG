@@ -4,15 +4,14 @@ This codebase seeks to have ~~perfect~~ very good runtime and static type valida
 
 The use of the `Any` type is restricted to dealing with data who's type is considered "unknowable" or is outside the scope of responsibility of the given function. Examples of this can be seen in the cascading init functions in [`enemy_library.py`](../RPyG/content/enemy_library.py) when `Any` is used to mark where a given class no longer needs to have the data on what it is passing down as those downstream functions are responsible for that. also because having a type hint of `dict[str, dict[str, list[list[dict[str, str | int | bool | None]]]]]` is far less useful to everyone.
 
+The `ensure_type` function should be used to check the to the full depth of the type hint in your function inputs (until you reach the `Any` barrier at least)
 
 This project is hard locked to the standard library of python and is out right forbidden from using any external library (if you need pip to install it, you can't use it). This is part of the core and original goal of this project is to study python and learn the concepts of object oriented programming and programming as a whole.
 
 The code in this project has a very aggressive defensive programming strategy, this leads to less bugs, better debugging, and protection from malformed user input (benign or otherwise). As such the follow code patterns are disallowed entirely.
 
-The `ensure_type` function should be used to check the to the full depth of the type hint in your function inputs (until you reach the `Any` barrier at least)
-
 ### Implicit Boolean
-This serves a dual purpose, it makes the intent of comparison very clear, and also avoids the "Truthiness Trap" where values that are non-truthy can be converted to a truthy by intentional or accidental type conversion. Such as in the example below, where `None` will be converted to `"None"` which is not an empty string and there for is considered Truthy.
+This serves a dual purpose, it makes the intent of comparison very clear, and also avoids the "Truthiness Trap" where values that are non-truthy can be converted to a truthy by intentional or accidental type conversion. Such as in the example below, where `None` will be converted to `"None"` which is not an empty string and therefore is considered Truthy.
 
 ```python
 # Don't do this
@@ -20,16 +19,14 @@ if X:
     print("text")
 if not Y:
     print("Text")
-```
 
-```python
 port = str(os.getenv("port_number"))
 if port:
     database.connect(port)
 ```
 
 ### Inline For Loop (List | Dict Comprehensions)
-This also has 2 benefits, better code clarity as it is bluntly obvious what the intent of the operation is, and maintainability, as inline loop must be re-written as standard for loop if more than Exactly one operation is needed in the loop. Also the net diff in characters of code typed is so small that this is a trick solely reserved for code golf
+This also has 2 benefits, better code clarity as it is bluntly obvious what the intent of the operation is, and maintainability, as inline loop must be re-written as standard for loop if more than Exactly One operation is needed in the loop. Also the net diff in characters of code typed is so small that this is a trick solely reserved for code golf
 ```python
 # Inline (84 char) Don't do this
 class_instances = [Class(**class_content) for class_content in class_data.values()]
@@ -41,7 +38,7 @@ for class_content in class_data.values():
 ```
 
 ### Inline If Statement
-This one is very similar to the last, save about 10 key strokes and mean that someone else needs to rewrite your operation later when it needs to do more than exactly one thing.
+This one is very similar to the last, saves about 10 key strokes and means that someone else needs to rewrite your operation later when it needs to do more than exactly one thing.
 ```python
 # Inline (64 Char) Don't do this
 def get_sign(number: int) -> str:
@@ -89,7 +86,7 @@ for party in parties:
 ### AI
 This project actually predates the release of ChatGPT 3 buy a hand full of months (I started in October of 2022) and at it's core has always been about learning, practice and the joy of writing code to do things that are fun and interesting. 
 
-The simple joy of expressing behavior in logic, and as is stated in [`CONTRIBUTING.MD`](../CONTRIBUTING.md) I know very well how quickly any modern AI tool like claude code (which I use for every single project that is not this by the way) could build any imaginable feature, rewrite the code in Rust, Go and IBM Cobol and add IaC for a server-less micro-service deployment to all 3 major CSP's in less time than a single person could read this whole codebase, and I think that is wonderful. 
+The simple joy of expressing behavior in logic, and as is stated in [`CONTRIBUTING.MD`](../CONTRIBUTING.md) I know very well how quickly any modern AI tool like Claude Code (which I use for every single project that is not this by the way) could build any imaginable feature, rewrite the code in Rust, Go and IBM Cobol and add IaC for a server-less micro-service deployment to all 3 major CSP's in less time than a single person could read this whole codebase, and I think that is wonderful. 
 
 But this is not the place for that. This project is a place to study the process of software craft, which means doing 500 refactors by hand because you notice all the weird stuff. Rewriting the same file 10 time because something about it feels weird. 
 
