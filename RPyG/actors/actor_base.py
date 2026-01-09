@@ -23,8 +23,9 @@ class Actor:
         ensure_type(intellect, int, "intellect")
         ensure_type(agility, int, "agility")
         ensure_type(luck, int, "luck")
+        if name == "":
+            raise ValueError("Actor name must be at least 1 characters")
 
-        ## Need to Cap at 32 char and error if over lenght
         self.name = name
         self.strength = strength
         self.intellect = intellect
