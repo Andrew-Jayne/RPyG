@@ -28,21 +28,35 @@ class CustomTextRequest(InputRequest):
 class UIElement(Enum):
     BATTLE_HUD = "BATTLE_HUD"
     QUEST_LOG = "QUEST_LOG"
+    MERCHANT_MENU = "MERCHANT_MENU"
 
 
 @dataclass
 class OutputMessage:
     message: str
     target_element: UIElement = UIElement.QUEST_LOG
+    line_delay: float = 1.0
+    reset_display: bool = False
 
     def __post__init__(self) -> None:
         ensure_type(self.message, str, "output_message")
         ensure_type(self.target_element, UIElement, "target_element")
+        ensure_type(self.line_delay, float, "line_delay")
 
 
 # @dataclass
 # class CombatantData:
 #     stuff: str
+
+
+@dataclass
+class BattleState:
+    data: dict[str, str]
+
+
+@dataclass
+class BattleEvent:
+    data: dict[str, str]
 
 
 @dataclass(kw_only=True)

@@ -24,6 +24,7 @@ class Actor:
         ensure_type(agility, int, "agility")
         ensure_type(luck, int, "luck")
 
+        ## Need to Cap at 32 char and error if over lenght
         self.name = name
         self.strength = strength
         self.intellect = intellect

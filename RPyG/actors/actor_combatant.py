@@ -57,6 +57,7 @@ class Combatant(Actor):
             luck=luck,
         )
 
+        ## Need to cap at 9999 and error if over
         self.health = health
         self.base_health = health
 
@@ -239,12 +240,12 @@ class Combatant(Actor):
 
         if self.intellect <= random.randint(0, 12):
             self_damage_amount = int(per_target_damage * 0.125)
-            self.damage(self_damage_amount)
             core_io.send_output(
                 OutputMessage(
                     f"{self.name} is overwhelmed by the power of {self.special_attack_name} and takes {self_damage_amount} damage"
                 )
             )
+            self.damage(self_damage_amount)
 
     def double_attack(
         self,

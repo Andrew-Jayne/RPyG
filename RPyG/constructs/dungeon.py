@@ -1,4 +1,5 @@
 import random
+from enum import Enum
 from typing import TYPE_CHECKING
 
 from RPyG import combat
@@ -9,6 +10,13 @@ from RPyG.utilities import ensure_type
 
 if TYPE_CHECKING is True:
     from RPyG.actors import Enemy
+
+
+class DungeonEvent(Enum):
+    HEAL_ROOM = "HEAL_ROOM"
+    SHORTCUT = "SHORTCUT"
+    BATTLE_ENEMY = "BATTLE_ENEMY"
+    NOTHING = "NOTHING"
 
 
 class Dungeon:
@@ -58,6 +66,7 @@ class Dungeon:
 
     ## this function is a crime
     def traverse_dungeon(self, player_party_instance: PlayerParty) -> None:
+        from RPyG.constructs import RandomResultItem, RandomResultTable
         from RPyG.core_io import CoreIO
         from RPyG.core_io.io_models import EmptyDistanceMessage, OutputMessage
 
@@ -71,19 +80,27 @@ class Dungeon:
 
         core_io.send_output(OutputMessage(self.start_message))
 
+        dungeon_table = RandomResultTable(
+            [
+                RandomResultItem(DungeonEvent.HEAL_ROOM, 0.167),
+                RandomResultItem(DungeonEvent.SHORTCUT, 0.167),
+                RandomResultItem(DungeonEvent.BATTLE_ENEMY, 0.167),
+                RandomResultItem(DungeonEvent.NOTHING, 0.5),
+            ]
+        )
+
         while player_party_instance.dungeon_progress < self.length:
             player_party_instance.dungeon_progress += 1
-            encouter_chance = random.randint(0, 5)
-            match encouter_chance:
-                case 0:
+            match dungeon_table.generate_result():
+                case DungeonEvent.HEAL_ROOM:
                     core_io.send_output(OutputMessage(self.heal_room_message))
                     for member_instance in player_party_instance.members:
                         member_instance.inventory.gain_potion(2)
                         member_instance.heal(60)
-                case 1:
+                case DungeonEvent.SHORTCUT:
                     player_party_instance.dungeon_progress += 2
                     core_io.send_output(OutputMessage(self.shortcut_message))
-                case 4:
+                case DungeonEvent.BATTLE_ENEMY:
                     enemy_count = int(
                         len(player_party_instance.members) + random.randint(-2, 2)
                     )
@@ -96,7 +113,7 @@ class Dungeon:
                     combat.battle(player_party_instance, enemy_party)
                     if len(player_party_instance.members) == 0:
                         return
-                case _:
+                case DungeonEvent.NOTHING:
                     core_io.send_output(EmptyDistanceMessage(distance=1))
 
         if len(player_party_instance.members) != 0:
@@ -114,5 +131,4 @@ class Dungeon:
         player_party_instance.dungeon_progress = 0
 
     def validate(self) -> bool:
-        _var = self
         return True

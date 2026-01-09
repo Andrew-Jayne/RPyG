@@ -195,7 +195,7 @@ def battle(
 
     core_io = CoreIO.get_core_io()
 
-    core_io.send_output(OutputMessage("The Battle Begins!"))
+    core_io.send_output(OutputMessage("The Battle Begins!", reset_display=True))
     battle_complete = False
     while battle_complete is False:
         core_io.send_output(

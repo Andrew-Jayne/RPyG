@@ -28,7 +28,7 @@ class StoryEvent:
     )
     kind: str
     event_type: StoryEventType
-    progress_trigger: int
+    progress_trigger: str
     messages: tuple[str, ...]
     success_messages: tuple[str, ...]
     failure_messages: tuple[str, ...]
@@ -76,7 +76,7 @@ class StoryEvent:
         # Set attributes
         self.kind = kind
         self.event_type = StoryEventType(event_type)
-        self.progress_trigger = progress_trigger
+        self.progress_trigger = str(progress_trigger)
         self.messages = tuple(messages)
         self.success_messages = tuple(success_messages)
         self.failure_messages = tuple(failure_messages)

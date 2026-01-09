@@ -7,7 +7,6 @@ When trying to dismember a dismembered enemy if they are the only living target 
 
 ## Minor
 
-
 ## Trivial
 
 ## UI Problems
