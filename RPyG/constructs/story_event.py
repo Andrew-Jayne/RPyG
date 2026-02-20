@@ -1,10 +1,8 @@
 from enum import Enum
 
-from RPyG.actors import EnemyParty, PlayerParty
+from RPyG.actors import EnemyParty
 from RPyG.combat import battle
-from RPyG.constructs import Dungeon
 from RPyG.exceptions import ImpossibleValueException
-from RPyG.game_state import save_game
 from RPyG.utilities import ensure_type
 
 
@@ -84,14 +82,15 @@ class StoryEvent:
         self.dungeon_id = dungeon_id
         self.encounter_id = encounter_id
 
-    def trigger(self, player_party_instance: PlayerParty) -> None:
-        ensure_type(player_party_instance, PlayerParty, "player_party_instance")
+    def trigger(self) -> None:
         from RPyG.content import ContentLibrary
         from RPyG.core_io import CoreIO
         from RPyG.core_io.io_models import OutputMessage
+        from RPyG.game_state import GameState
 
         content_library = ContentLibrary.get_library()
         core_io = CoreIO.get_core_io()
+        game_state = GameState.get_game_state()
 
         match self.event_type:
             case StoryEventType.BOSS_ENCOUNTER:
@@ -105,25 +104,30 @@ class StoryEvent:
                 for message in self.messages:
                     core_io.send_output(
                         OutputMessage(
-                            message.format(party_name=player_party_instance.name)
+                            message.format(party_name=game_state.player_party.name)
                         )
                     )
 
-                enemy_party = EnemyParty(enemy_instance.name, [enemy_instance])
-                battle(player_party_instance, enemy_party)
-                if len(player_party_instance.members) != 0:
+                game_state.set_enemy_party(
+                    EnemyParty(
+                        enemy_instance.name,
+                        [enemy_instance],
+                    )
+                )
+                battle()
+                if len(game_state.player_party.members) != 0:
                     for message in self.success_messages:
                         core_io.send_output(
                             OutputMessage(
-                                message.format(party_name=player_party_instance.name)
+                                message.format(party_name=game_state.player_party.name)
                             )
                         )
-                    save_game(player_party_instance)
+                    core_io.interface.save_game_state(game_state)
                 else:
                     for message in self.failure_messages:
                         core_io.send_output(
                             OutputMessage(
-                                message.format(party_name=player_party_instance.name)
+                                message.format(party_name=game_state.player_party.name)
                             )
                         )
             case StoryEventType.DUNGEON_ENCOUNTER:
@@ -135,7 +139,7 @@ class StoryEvent:
                 for message in self.messages:
                     core_io.send_output(
                         OutputMessage(
-                            message.format(party_name=player_party_instance.name)
+                            message.format(party_name=game_state.player_party.name)
                         )
                     )
 
@@ -143,28 +147,29 @@ class StoryEvent:
                     raise FileNotFoundError(
                         f"Unable to locate Dungeon with the ID {self.dungeon_id}, avalible IDs are {content_library.dungeons.keys()}"
                     )
-                active_dungeon: Dungeon = content_library.dungeons[self.dungeon_id]
-                active_dungeon.traverse_dungeon(player_party_instance)
-                if len(player_party_instance.members) != 0:
+                game_state.set_dungeon(content_library.dungeons[self.dungeon_id])
+                with game_state.borrow_dungeon() as dungeon:
+                    dungeon.traverse_dungeon()
+                if len(game_state.player_party.members) != 0:
                     for message in self.success_messages:
                         core_io.send_output(
                             OutputMessage(
-                                message.format(party_name=player_party_instance.name)
+                                message.format(party_name=game_state.player_party.name)
                             )
                         )
-                    save_game(player_party_instance)
+                    core_io.interface.save_game_state(game_state)
                 else:
                     for message in self.failure_messages:
                         core_io.send_output(
                             OutputMessage(
-                                message.format(party_name=player_party_instance.name)
+                                message.format(party_name=game_state.player_party.name)
                             )
                         )
             case StoryEventType.ENCOUNTER:
                 for message in self.messages:
                     core_io.send_output(
                         OutputMessage(
-                            message.format(party_name=player_party_instance.name)
+                            message.format(party_name=game_state.player_party.name)
                         )
                     )
                 if self.encounter_id is not None:
@@ -173,19 +178,19 @@ class StoryEvent:
                             f"Unable to locate encounter with the ID {self.encounter_id}, avalible IDs are {content_library.encounters.keys()}"
                         )
                     encounter = content_library.encounters[self.encounter_id]
-                    encounter.process_encounter(player_party_instance)
-                if len(player_party_instance.members) != 0:
+                    encounter.process_encounter()
+                if len(game_state.player_party.members) != 0:
                     for message in self.success_messages:
                         core_io.send_output(
                             OutputMessage(
-                                message.format(party_name=player_party_instance.name)
+                                message.format(party_name=game_state.player_party.name)
                             )
                         )
                 else:
                     for message in self.failure_messages:
                         core_io.send_output(
                             OutputMessage(
-                                message.format(party_name=player_party_instance.name)
+                                message.format(party_name=game_state.player_party.name)
                             )
                         )
             case _:  # pyright: ignore[reportUnnecessaryComparison]

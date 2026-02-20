@@ -1,7 +1,13 @@
+import hashlib
+import hmac
+import json
 import os
+import pickle
+import sys
 import textwrap
 import time
-from typing import Literal, cast, override
+import tomllib
+from typing import Any, cast, override
 
 from RPyG import (
     CustomTextRequest,
@@ -10,7 +16,17 @@ from RPyG import (
     RPyGInterface,
     UserPromptRequest,
 )
-from RPyG.utilities import ensure_type
+from RPyG.actors import PlayableActor, PlayerParty
+from RPyG.core_io import CoreIO
+from RPyG.exceptions import ImpossibleValueException
+from RPyG.game_state import GameState
+from RPyG.utilities import ensure_type, setup_logger
+
+
+CONTENT_PATH = "game_content"
+
+# """Secret""" key for HMAC, if you break your file that's on you
+secret_key = b"I_WILL_HACK_MY_SAVE_FILE_AND_PROBLEMS_WILL_BE_MY_FAULT"
 
 
 welcome_message = """
@@ -22,15 +38,15 @@ welcome_message = """
 
 """
 
+logger = setup_logger(__name__)
+
 
 class BasicTerminalInterface(RPyGInterface):
     input_buffer: str
-    game_mode: Literal["AUTO", "MANUAL"] = "MANUAL"
 
-    def __init__(self, game_mode: Literal["AUTO", "MANUAL"]):
+    def __init__(self):
         RPyGInterface.__init__(self)
         self.input_buffer = ""
-        self.game_mode = game_mode
         self.show_ouput(OutputMessage(welcome_message, line_delay=0))
 
     @override
@@ -93,6 +109,96 @@ class BasicTerminalInterface(RPyGInterface):
         # reset buffer
         self.input_buffer = ""
         return data
+
+    @override
+    def get_content_data(self) -> dict[str, dict[str, Any]]:  # pyright: ignore[reportExplicitAny]
+        """
+        Load all JSON files in the given directory and merge their contents into a single dictionary.
+        """
+        dir_path = CONTENT_PATH
+        combined_content: dict[str, dict[str, Any]] = {}  # pyright: ignore[reportExplicitAny]
+
+        # Walk through the directory and look for JSON files
+        for root, _dirs, files in os.walk(dir_path):
+            for file_name in files:
+                file_path = os.path.join(root, file_name)
+                file_extension = os.path.splitext(file_path)[1]
+                content_object: dict[str, dict[str, Any]] = {}  # pyright: ignore[reportExplicitAny]
+                match file_extension:
+                    case ".json":
+                        with open(file_path, "r") as json_file:
+                            content_object = json.load(json_file)
+                    case ".toml":
+                        with open(file_path, "rb") as toml_file:
+                            content_object = tomllib.load(toml_file)
+                    case _:
+                        pass
+
+                new_object = set(content_object.keys())
+                all_content = set(combined_content.keys())
+                conflicts = new_object.intersection(all_content)
+                if conflicts == set():
+                    combined_content.update(content_object)
+                else:
+                    raise ValueError(
+                        f"Duplicate Key Declaration found while processing {file_path} conflicting keys {conflicts}"
+                    )
+
+        return combined_content
+
+    @override
+    def get_game_state(self) -> "GameState":
+        logger.info("Getting Start type")
+        start_type = self.get_start_type()
+        match start_type:
+            case "LOAD":
+                game_state = self.load_game()
+            case "NEW":
+                game_state = self.party_start()
+            case "USE_DEFAULT":
+                game_state = GameState(self.default_party())
+            case _:
+                raise ValueError("Invalid Game Start Type")
+
+        logger.info("starting game with %s start type", start_type)
+
+        return game_state
+
+    @override
+    def save_game_state(self, game_state: GameState) -> None:
+        """
+        Call this to Save the current state of the player party object to a pickle file then exits the program
+        This serves to save all progress of the party
+        """
+
+        ensure_type(game_state, GameState, "game_state")
+
+        serialized_data = pickle.dumps(game_state)
+        signature = hmac.new(secret_key, serialized_data, hashlib.sha256).digest()
+
+        with open("savegame.rpygs", "wb") as save_file:
+            save_file.write(signature + serialized_data)  # pyright: ignore[reportUnusedCallResult]
+
+        core_io = CoreIO.get_core_io()
+        core_io.send_output(
+            OutputMessage(f"Successfully Saved Game for {game_state.player_party.name}")
+        )
+
+        core_io.request_input(
+            UserPromptRequest(
+                options=["YES", "NO"],
+                prompts=["Would you like to keep playing?"],
+            )
+        )
+        match core_io.receive_input():
+            case "YES":
+                core_io.send_output(
+                    OutputMessage("The adventure continues!", reset_display=True)
+                )
+            case "NO":
+                sys.exit(0)
+            case _:
+                raise ValueError("Must be a choice of 'YES' or 'NO'")
 
     @staticmethod
     def clear_display() -> None:
@@ -196,3 +302,157 @@ class BasicTerminalInterface(RPyGInterface):
 
         response = self.validate_input(options)
         return response
+
+    @staticmethod
+    def default_party() -> PlayerParty:
+        party_members: list[PlayableActor] = []
+        default_names = ("Conan", "Merlin", "Robin")
+        default_specialization = ("WARRIOR", "MAGE", "ROGUE")
+        for i in range(0, 3):
+            party_members.append(
+                PlayableActor(
+                    default_names[i],
+                    default_specialization[i],
+                )
+            )
+
+        return PlayerParty(
+            members=party_members,
+            name="The Default Party",
+        )
+
+    @staticmethod
+    def get_start_type() -> str:
+        if os.path.exists("use_default.flag") is True:
+            return "USE_DEFAULT"
+        match os.path.exists("savegame.rpygs"):
+            case True:
+                start_game_options = ["NEW", "LOAD"]
+                start_game_messages = [
+                    "Would you like to Start a new game or Load an existing save?",
+                    "Options are:",
+                ]
+            case False:
+                start_game_options = ["NEW"]
+                start_game_messages = [
+                    "Type 'NEW' to start a new game",
+                    "You will be able to save your game later and load it here",
+                    "Options are:",
+                ]
+            case _:  # pyright: ignore[reportUnnecessaryComparison]
+                raise ImpossibleValueException(  # pyright: ignore[reportUnreachable]
+                    "os.path.exists('savegame.rpygs') did not return a bool and something is very wrong"
+                )
+
+        core_io = CoreIO.get_core_io()
+        core_io.send_output(
+            OutputMessage("Welcome to RPyG, a text based RPG in Python")
+        )
+        core_io.request_input(
+            UserPromptRequest(
+                options=start_game_options,
+                prompts=start_game_messages,
+            )
+        )
+        player_action = core_io.receive_input()
+        return player_action
+
+    @staticmethod
+    def party_start() -> GameState:
+        party_size_choices = ["1", "2", "3"]
+        party_size_messages = ["How many members are in your party?"]
+
+        specialization_choices = ["WARRIOR", "MAGE", "ROGUE"]
+        specialization_messages = ["What Specialization will this member use?"]
+
+        member_name_messages = [
+            "Before their journey can begin you must name your Character",
+            "NOTE: Case is respected but names longer than 32 characters will be truncated",
+        ]
+
+        party_name_messages = [
+            "Before their journey can begin you must name your Party",
+            "NOTE: Case is respected but names longer than 64 characters will be truncated",
+        ]
+        core_io = CoreIO.get_core_io()
+
+        core_io.request_input(
+            UserPromptRequest(
+                options=party_size_choices,
+                prompts=party_size_messages,
+            )
+        )
+        party_size = int(core_io.receive_input())
+
+        party_instances: list[PlayableActor] = []
+        for _ in range(0, party_size):
+            core_io = CoreIO.get_core_io()
+            core_io.request_input(
+                CustomTextRequest(
+                    prompts=member_name_messages,
+                    max_length=32,
+                )
+            )
+            member_name = core_io.receive_input()
+            core_io.request_input(
+                UserPromptRequest(
+                    prompts=specialization_messages,
+                    options=specialization_choices,
+                )
+            )
+            member_specialization = core_io.receive_input()
+            member = PlayableActor(member_name, member_specialization)
+            party_instances.append(member)
+
+        core_io.request_input(
+            CustomTextRequest(
+                prompts=party_name_messages,
+                max_length=64,
+            )
+        )
+        party_name = core_io.receive_input()
+
+        return GameState(PlayerParty(party_name, party_instances))
+
+    @staticmethod
+    def load_game() -> GameState:
+        """
+        Call this to load the game stored in the pickle file called 'savegame.rpygs'.
+        Any other .rpygs files will be ignored
+        """
+        save_file_path = "savegame.rpygs"
+        core_io = CoreIO.get_core_io()
+
+        # Check if the save file exists
+        if not os.path.exists(save_file_path):
+            raise FileNotFoundError(
+                "Save file not found. Please check file path & try again, or start a new game"
+            )
+
+        with open(save_file_path, "rb") as save_file:
+            content = save_file.read()
+        signature, serialized_data = content[:32], content[32:]  # Assuming SHA-256 hash
+        expected_signature = hmac.new(
+            secret_key, serialized_data, hashlib.sha256
+        ).digest()
+
+        match hmac.compare_digest(expected_signature, signature):
+            case True:
+                game_state: GameState = pickle.loads(serialized_data)
+            case False:
+                raise ValueError("Save file tampered with or corrupted.")
+            case _:  # pyright: ignore[reportUnnecessaryComparison]
+                raise RuntimeError(  # pyright: ignore[reportUnreachable]
+                    "Save File tampering is so bad that compare_digest did not return a bool MonkaS"
+                )
+
+        ensure_type(game_state, GameState, "game_state")
+
+        core_io.send_output(
+            OutputMessage(
+                f"Successfully Loaded Save Game for: {game_state.player_party.name}"
+            )
+        )
+        ## yuck but I am moving off of pickle soon anyways
+        GameState._instance = game_state  # pyright: ignore[reportPrivateUsage]
+        return game_state

@@ -1,14 +1,9 @@
 import random
-from typing import TYPE_CHECKING
 
 from RPyG.actors.actor_combatant import Combatant, CombatantParty
 from RPyG.core_io import CoreIO
 from RPyG.core_io.io_models import OutputMessage
 from RPyG.utilities import ensure_type
-
-
-if TYPE_CHECKING is True:
-    from RPyG.constructs import Dungeon
 
 
 class Inventory:
@@ -64,9 +59,6 @@ class Inventory:
 
 class PlayableActor(Combatant):
     name: str
-    in_dungeon: bool
-    dungeon_id: str | None
-    dungeon_progress: int | None
     react_action: str
     react_messages: dict[str, str]
     inventory: Inventory
@@ -83,9 +75,6 @@ class PlayableActor(Combatant):
         react_messages = PlayableActor._get_react_action(specialization, name)
         self.react_action = react_messages[0]
         self.react_messages = react_messages[1]
-        self.in_dungeon = False
-        self.dungeon_id = None
-        self.dungeon_progress = None
 
         match specialization:
             case "WARRIOR":
@@ -292,11 +281,7 @@ class PlayableActor(Combatant):
 class PlayerParty(CombatantParty[PlayableActor]):
     members: list[PlayableActor]
     dead_members: list[PlayableActor]
-    progress: int
     relics: object
-    in_dungeon: bool
-    active_dungeon: "Dungeon | None"
-    dungeon_progress: int | None
     """
     Stores the progress of the party, and a list/array of member instances
     """
@@ -316,10 +301,6 @@ class PlayerParty(CombatantParty[PlayableActor]):
             name=name,
             members=members,
         )
-        self.in_dungeon = False
-        self.active_dungeon = None
-        self.dungeon_progress = None
-        self.progress = 0
         self.relics = None
 
     def end_game_report(self) -> str:

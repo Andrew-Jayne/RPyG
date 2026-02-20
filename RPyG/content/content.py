@@ -1,7 +1,4 @@
-import json
-import os
 import random
-import tomllib
 from enum import Enum
 from functools import cached_property
 from typing import Any
@@ -16,7 +13,6 @@ from RPyG.constructs import (
     EnemyWeightClass,
     StoryEvent,
 )
-from RPyG.utilities import ensure_type
 
 
 class ContentKind(Enum):
@@ -88,47 +84,10 @@ class ContentLibrary:
 
         return all_encounter_effects
 
-    @staticmethod
-    def load_content_files(dir_path: str) -> dict[str, dict[str, Any]]:  # pyright: ignore[reportExplicitAny]
-        """
-        Load all JSON files in the given directory and merge their contents into a single dictionary.
-        """
-        ensure_type(dir_path, str, "dir_path")
-        combined_content: dict[str, dict[str, Any]] = {}  # pyright: ignore[reportExplicitAny]
-
-        # Walk through the directory and look for JSON files
-        for root, _dirs, files in os.walk(dir_path):
-            for file_name in files:
-                file_path = os.path.join(root, file_name)
-                file_extension = os.path.splitext(file_path)[1]
-                content_object: dict[str, dict[str, Any]] = {}  # pyright: ignore[reportExplicitAny]
-                match file_extension:
-                    case ".json":
-                        with open(file_path, "r") as json_file:
-                            content_object = json.load(json_file)
-                    case ".toml":
-                        with open(file_path, "rb") as toml_file:
-                            content_object = tomllib.load(toml_file)
-                    case _:
-                        pass
-
-                new_object = set(content_object.keys())
-                all_content = set(combined_content.keys())
-                conflicts = new_object.intersection(all_content)
-                if conflicts == set():
-                    combined_content.update(content_object)
-                else:
-                    raise ValueError(
-                        f"Duplicate Key Declaration found while processing {file_path} conflicting keys {conflicts}"
-                    )
-
-        return combined_content
-
-    def __init__(self, content_path: str):
-        ensure_type(content_path, str, "content_path")
+    # TBH the input of this should be a typed dict to explain what the hell this even is lol
+    def __init__(self, content_data: dict[str, dict[str, Any]]):  # pyright: ignore[reportExplicitAny]
+        # ensure_type(content_path, str, "content_path")
         if ContentLibrary._instance is None:
-            all_content = ContentLibrary.load_content_files(content_path)
-
             enemies_data: dict[str, Any] = {}  # pyright: ignore[reportExplicitAny]
             enemy_sets_data: dict[str, Any] = {}  # pyright: ignore[reportExplicitAny]
             dungeons_data: dict[str, Any] = {}  # pyright: ignore[reportExplicitAny]
@@ -136,7 +95,7 @@ class ContentLibrary:
             story_events_data: dict[str, Any] = {}  # pyright: ignore[reportExplicitAny]
             encounter_effects_data: dict[str, Any] = {}  # pyright: ignore[reportExplicitAny]
 
-            for item, value in all_content.items():
+            for item, value in content_data.items():
                 try:
                     item_kind = ContentKind(
                         str(value["kind"]).split("/")[0]

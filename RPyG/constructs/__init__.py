@@ -4,10 +4,15 @@ from RPyG.constructs.encounter_effect import EncounterEffect
 from RPyG.constructs.enemy_set import EnemySet, EnemySetType, EnemyWeightClass
 from RPyG.constructs.dungeon import Dungeon
 from RPyG.constructs.story_event import StoryEvent
-from RPyG.constructs.abstract import RandomResultItem, RandomResultTable
+from RPyG.constructs.abstract import (
+    RandomResultItem,
+    RandomResultTable,
+    BorrowTrackedResource,
+)
 
 
 __all__ = [
+    "BorrowTrackedResource",
     "Dungeon",
     "Encounter",
     "EncounterEffect",

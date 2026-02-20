@@ -1,8 +1,12 @@
 from abc import ABC, abstractmethod
-from typing import Self
+from typing import TYPE_CHECKING, Any, Self
 
 from RPyG.core_io.io_models import InputRequest, OutputMessage
 from RPyG.utilities import ensure_type
+
+
+if TYPE_CHECKING is True:
+    from RPyG.game_state import GameState
 
 
 class RPyGInterface(ABC):
@@ -17,7 +21,20 @@ class RPyGInterface(ABC):
     def request_input(self, request: InputRequest) -> None:
         pass
 
-    def receive_input(self) -> str:  # pyright: ignore[reportReturnType]
+    @abstractmethod
+    def receive_input(self) -> str:
+        pass
+
+    @abstractmethod
+    def get_content_data(self) -> dict[str, dict[str, Any]]:  # pyright: ignore[reportExplicitAny]
+        pass
+
+    @abstractmethod
+    def get_game_state(self) -> "GameState":
+        pass
+
+    @abstractmethod
+    def save_game_state(sel, game_state: "GameState") -> None:
         pass
 
 
@@ -50,3 +67,7 @@ class CoreIO:
 
     def send_output(self, output: OutputMessage) -> None:
         return self.interface.show_ouput(output)
+
+    def validate(self) -> None:
+        ## this should have some kind of round trip test or something
+        return
