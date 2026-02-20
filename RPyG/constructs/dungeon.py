@@ -1,15 +1,10 @@
 import random
 from enum import Enum
-from typing import TYPE_CHECKING
 
 from RPyG import combat
-from RPyG.actors import EnemyParty, PlayerParty
+from RPyG.actors import Enemy, EnemyParty
 from RPyG.constructs import EnemySet
 from RPyG.utilities import ensure_type
-
-
-if TYPE_CHECKING is True:
-    from RPyG.actors import Enemy
 
 
 class DungeonEvent(Enum):
@@ -20,6 +15,11 @@ class DungeonEvent(Enum):
 
 
 class Dungeon:
+    """
+    Immutable, Stateless object
+    This represents the required data and logic to handle player actions inside of a dungeon scene
+    """
+
     dungeon_name: str
     start_message: str
     shortcut_message: str
@@ -75,18 +75,14 @@ class Dungeon:
         return library.enemy_sets[self.enemy_set_id]
 
     ## this function is a crime
-    def traverse_dungeon(self, player_party_instance: PlayerParty) -> None:
+    def traverse_dungeon(self) -> None:
         from RPyG.constructs import RandomResultItem, RandomResultTable
         from RPyG.core_io import CoreIO
         from RPyG.core_io.io_models import EmptyDistanceMessage, OutputMessage
+        from RPyG.game_state import GameState
 
         core_io = CoreIO.get_core_io()
-        ensure_type(player_party_instance, PlayerParty, "player_party_instance")
-
-        # this allows saving and resuming inside of dungeons
-        player_party_instance.in_dungeon = True
-        player_party_instance.active_dungeon = self
-        player_party_instance.dungeon_progress = 0
+        game_state = GameState.get_game_state()
 
         core_io.send_output(OutputMessage(self.start_message))
 
@@ -98,21 +94,22 @@ class Dungeon:
                 RandomResultItem(DungeonEvent.NOTHING, 0.5),
             ]
         )
-
-        while player_party_instance.dungeon_progress < self.length:
-            player_party_instance.dungeon_progress += 1
+        if game_state.dungeon_progress is None:
+            raise RuntimeError()
+        while game_state.dungeon_progress < self.length:
+            game_state.progress_dungeon(1)
             match dungeon_table.generate_result():
                 case DungeonEvent.HEAL_ROOM:
                     core_io.send_output(OutputMessage(self.heal_room_message))
-                    for member_instance in player_party_instance.members:
+                    for member_instance in game_state.player_party.members:
                         member_instance.inventory.gain_potion(2)
                         member_instance.heal(60)
                 case DungeonEvent.SHORTCUT:
-                    player_party_instance.dungeon_progress += 2
+                    game_state.progress_dungeon(2)
                     core_io.send_output(OutputMessage(self.shortcut_message))
                 case DungeonEvent.BATTLE_ENEMY:
                     enemy_count = int(
-                        len(player_party_instance.members) + random.randint(-2, 2)
+                        len(game_state.player_party.members) + random.randint(-2, 2)
                     )
                     if enemy_count == 0:
                         enemy_count = 1
@@ -120,25 +117,23 @@ class Dungeon:
                     core_io.send_output(
                         OutputMessage(f"Your Party encounters a {enemy_party.name}!")
                     )
-                    combat.battle(player_party_instance, enemy_party)
-                    if len(player_party_instance.members) == 0:
+                    game_state.set_enemy_party(enemy_party)
+                    combat.battle()
+                    if len(game_state.player_party.members) == 0:
                         return
                 case DungeonEvent.NOTHING:
                     core_io.send_output(EmptyDistanceMessage(distance=1))
 
-        if len(player_party_instance.members) != 0:
+        if len(game_state.player_party.members) != 0:
             core_io.send_output(OutputMessage(self.boss_encounter_message))
-            enemy_instance = self.boss
-            combat.battle(
-                player_party_instance,
+            game_state.set_enemy_party(
                 EnemyParty(
-                    enemy_instance.name,
-                    [enemy_instance],
-                ),
+                    self.boss.name,
+                    [self.boss],
+                )
             )
-        player_party_instance.in_dungeon = False
-        player_party_instance.active_dungeon = None
-        player_party_instance.dungeon_progress = 0
+            combat.battle()
+        game_state.reset_dungeon()
 
     def validate(self) -> bool:
         ensure_type(self.dungeon_name, str, "self.dungeon_name")

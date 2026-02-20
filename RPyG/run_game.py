@@ -1,14 +1,12 @@
 import random
 from enum import Enum
 
-from RPyG.actors import EnemyParty, PlayerParty
 from RPyG.core_io import CoreIO
 from RPyG.core_io.io_models import (
     EmptyDistanceMessage,
     OutputMessage,
     UserPromptRequest,
 )
-from RPyG.game_state.startup import get_player_party_instance
 from RPyG.utilities import ensure_type, setup_logger
 
 
@@ -57,51 +55,49 @@ def generate_enemy_set(player_count: int):
     return EnemySet.generate_enemy_party(enemy_set, enemy_count)
 
 
-def handle_enemy_encounter(
-    player_party_instance: PlayerParty,
-    enemy_party_instance: EnemyParty,
-):
+def handle_enemy_encounter():
     from RPyG.combat import battle
+    from RPyG.game_state import GameState
 
-    ensure_type(player_party_instance, PlayerParty, "player_party_instance")
-    ensure_type(enemy_party_instance, EnemyParty, "enemy_party_instance")
-
+    game_state = GameState.get_game_state()
     core_io = CoreIO.get_core_io()
-    core_io.send_output(
-        OutputMessage(f"Your Party encounters a {enemy_party_instance.name}!")
-    )
-
-    core_io.request_input(
-        UserPromptRequest(
-            options=["BATTLE", "FLEE"],
-            prompts=["Choose an Action:"],
+    game_state.set_enemy_party(generate_enemy_set(len(game_state.player_party.members)))
+    with game_state.borrow_enemy_party() as enemy_party:
+        core_io.send_output(
+            OutputMessage(f"Your Party encounters a {enemy_party.name}!")
         )
-    )
-    match core_io.receive_input():
-        case "BATTLE":
-            battle(player_party_instance, enemy_party_instance)
-        case "FLEE":
-            flee_success = True
-            for player_instance in player_party_instance.members:
-                if player_instance.luck >= random.randint(4, 15):
-                    core_io.send_output(
-                        OutputMessage(
-                            f"{player_instance.name} has Successfully Escaped the {enemy_party_instance.name}!"
-                        )
-                    )
-                else:
-                    core_io.send_output(
-                        OutputMessage(
-                            f"{player_instance.name} has Failed to Escape the {enemy_party_instance.name}!"
-                        )
-                    )
-                    flee_success = False
 
-            if flee_success is False:
-                battle(player_party_instance, enemy_party_instance)
+        core_io.request_input(
+            UserPromptRequest(
+                options=["BATTLE", "FLEE"],
+                prompts=["Choose an Action:"],
+            )
+        )
+        match core_io.receive_input():
+            case "BATTLE":
+                battle()
+            case "FLEE":
+                flee_success = True
+                for player_instance in game_state.player_party.members:
+                    if player_instance.luck >= random.randint(4, 15):
+                        core_io.send_output(
+                            OutputMessage(
+                                f"{player_instance.name} has Successfully Escaped the {enemy_party.name}!"
+                            )
+                        )
+                    else:
+                        core_io.send_output(
+                            OutputMessage(
+                                f"{player_instance.name} has Failed to Escape the {enemy_party.name}!"
+                            )
+                        )
+                        flee_success = False
 
-        case _:
-            raise RuntimeError()
+                if flee_success is False:
+                    battle()
+
+            case _:
+                raise RuntimeError()
 
 
 def check_for_encounter() -> EncounterType | None:
@@ -120,31 +116,32 @@ def check_for_encounter() -> EncounterType | None:
 def play_game():
     from RPyG.constructs import StoryEvent
     from RPyG.content import ContentLibrary
+    from RPyG.game_state import GameState
 
     core_io = CoreIO.get_core_io()
     content_library = ContentLibrary.get_library()
-    player_party_instance = get_player_party_instance()
+    game_state = GameState.get_game_state()
 
     # Check if player is in a dungeon
     logger.info("Checking if player is in a dungeon")
-    if player_party_instance.in_dungeon is True:
-        if player_party_instance.active_dungeon is not None:
-            logger.info("Player is in dungeon, resuming")
-            player_party_instance.active_dungeon.traverse_dungeon(player_party_instance)
+    if game_state.dungeon_progress is not None:
+        logger.info("Player is in dungeon, resuming")
+        with game_state.borrow_dungeon() as dungeon:
+            dungeon.traverse_dungeon()
     else:
         logger.info("Player is not in dungeon")
 
     rounds_without_encounter = 1
-    while player_party_instance.progress != 100:
-        player_party_instance.progress += 1
-        if str(player_party_instance.progress) in content_library.story_events.keys():
+    while game_state.progress != 100:
+        game_state.progress += 1
+        if str(game_state.progress) in content_library.story_events.keys():
             core_io.send_output(
                 OutputMessage(f"After {rounds_without_encounter * 10} miles of travel")
             )
             story_event: StoryEvent = content_library.story_events[
-                str(player_party_instance.progress)
+                str(game_state.progress)
             ]
-            story_event.trigger(player_party_instance)
+            story_event.trigger()
         else:
             check_result = check_for_encounter()
             if check_result is not None:
@@ -155,18 +152,13 @@ def play_game():
                 )
                 match check_result:
                     case EncounterType.EnemyEncounter:
-                        handle_enemy_encounter(
-                            player_party_instance=player_party_instance,
-                            enemy_party_instance=generate_enemy_set(
-                                len(player_party_instance.members)
-                            ),
-                        )
+                        handle_enemy_encounter()
                     case EncounterType.StandardEncounter:
                         encounter = content_library.get_standard_encounter()
-                        encounter.process_encounter(player_party_instance)
+                        encounter.process_encounter()
                     case EncounterType.DungeonEncoutner:
                         dungeon = content_library.get_standard_dungeon()
-                        dungeon.traverse_dungeon(player_party_instance)
+                        dungeon.traverse_dungeon()
                 rounds_without_encounter = 1
             else:
                 rounds_without_encounter += 1
@@ -174,16 +166,16 @@ def play_game():
                     EmptyDistanceMessage(distance=rounds_without_encounter)
                 )
 
-        if player_party_instance.members == []:
+        if game_state.player_party.members == []:
             break
 
-    if player_party_instance.members == []:
+    if game_state.player_party.members == []:
         # [] means all players are in the dead_members list, this is like... 5% safer than len() == 0
         # because it is looking at the list as a list rather than a property of it against an int
         core_io.send_output(
             OutputMessage(
-                f"{player_party_instance.name} has failed in their quest after {player_party_instance.progress * 10} miles"
+                f"{game_state.player_party.name} has failed in their quest after {game_state.progress * 10} miles"
             )
         )
 
-    core_io.send_output(OutputMessage(player_party_instance.end_game_report()))
+    core_io.send_output(OutputMessage(game_state.player_party.end_game_report()))

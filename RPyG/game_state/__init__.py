@@ -1,8 +1,6 @@
-from RPyG.game_state.file import save_game
-from RPyG.game_state.run_game import play_game
+from RPyG.game_state.game_state import GameState
 
 
 __all__ = [
-    "save_game",
-    "play_game",
+    "GameState",
 ]

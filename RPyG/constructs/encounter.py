@@ -1,11 +1,5 @@
-from typing import TYPE_CHECKING
-
 from RPyG.exceptions import ImpossibleValueException
 from RPyG.utilities import ensure_type
-
-
-if TYPE_CHECKING is True:
-    from RPyG.actors import PlayerParty
 
 
 class Encounter:
@@ -117,7 +111,7 @@ class Encounter:
         self.retry_messages = retry_messages
         self.failure_messages = failure_messages
 
-    def process_encounter(self, player_party_instance: PlayerParty) -> None:
+    def process_encounter(self) -> None:
         from RPyG.content import ContentLibrary
         from RPyG.core_io import CoreIO
         from RPyG.core_io.io_models import OutputMessage, UserPromptRequest
@@ -147,7 +141,7 @@ class Encounter:
                 )
                 for effect_id in self.retry_effects:
                     effect = library.encounter_effects[effect_id]
-                    effect.process_effect(player_party_instance)
+                    effect.process_effect()
                 user_choice = core_io.receive_input()
             match user_choice:
                 case self.success_choice:
@@ -155,14 +149,14 @@ class Encounter:
                         core_io.send_output(OutputMessage(message))
                     for effect_id in self.success_effects:
                         effect = library.encounter_effects[effect_id]
-                        effect.process_effect(player_party_instance)
+                        effect.process_effect()
 
                 case self.failure_choice:
                     for message in self.failure_messages:
                         core_io.send_output(OutputMessage(message))
                     for effect_id in self.failure_effects:
                         effect = library.encounter_effects[effect_id]
-                        effect.process_effect(player_party_instance)
+                        effect.process_effect()
 
                 case _:
                     raise ImpossibleValueException("user_choice")

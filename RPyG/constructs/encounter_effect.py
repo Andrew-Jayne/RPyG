@@ -112,40 +112,41 @@ class EncounterEffect:
             case _:  # pyright: ignore[reportUnnecessaryComparison]
                 raise ImpossibleValueException(f"self.actor_action-{self.actor_action}")  # pyright: ignore[reportUnreachable]
 
-    def process_effect(self, player_party_instance: PlayerParty) -> None:
+    def process_effect(self) -> None:
         from RPyG.content import ContentLibrary
         from RPyG.core_io import CoreIO
         from RPyG.core_io.io_models import OutputMessage
+        from RPyG.game_state import GameState
 
         # Show any Messages
+        game_state = GameState.get_game_state()
         core_io = CoreIO.get_core_io()
         for message in self.effect_messages:
             core_io.send_output(OutputMessage(message))
 
-        ensure_type(player_party_instance, PlayerParty, "player_party_instance")
         match self.targets:
             case EffectTarget.ALL:
-                for member in player_party_instance.members:
+                for member in game_state.player_party.members:
                     self.run_action(
                         member,
-                        len(player_party_instance.members),
+                        len(game_state.player_party.members),
                     )
             case EffectTarget.RANDOM:
                 self.run_action(
-                    random.choice(player_party_instance.members),
-                    len(player_party_instance.members),
+                    random.choice(game_state.player_party.members),
+                    len(game_state.player_party.members),
                 )
             case _:  # pyright: ignore[reportUnnecessaryComparison]
                 raise ImpossibleValueException(f"self.targets - {self.targets}")  # pyright: ignore[reportUnreachable]
 
         if self.special_action is not None:
-            self.process_special_action(player_party_instance)
+            self.process_special_action(game_state.player_party)
 
         # Run Any Extra Effects
         library = ContentLibrary.get_library()
         for effect_id in self.extra_effects:
             effect = library.encounter_effects[effect_id]
-            effect.process_effect(player_party_instance)
+            effect.process_effect()
 
     def process_special_action(self, player_party_instance: PlayerParty) -> None:
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
