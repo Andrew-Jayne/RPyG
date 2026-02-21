@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Self
+from typing import TYPE_CHECKING, Any, Self, final
 
 from RPyG.core_io.io_models import InputRequest, OutputMessage
 from RPyG.utilities import ensure_type
@@ -34,10 +34,11 @@ class RPyGInterface(ABC):
         pass
 
     @abstractmethod
-    def save_game_state(sel, game_state: "GameState") -> None:
+    def save_game_state(self, game_state: "GameState") -> None:
         pass
 
 
+@final
 class CoreIO:
     _instance: Self | None = None
     interface: RPyGInterface

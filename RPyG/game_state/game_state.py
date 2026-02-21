@@ -1,11 +1,16 @@
 from contextlib import AbstractContextManager
-from typing import Self
+from typing import TYPE_CHECKING, Self, final
 
-from RPyG.actors import EnemyParty, PlayerParty
-from RPyG.constructs import BorrowTrackedResource, Dungeon
+from RPyG.constructs import BorrowTrackedResource
 from RPyG.utilities import ensure_type
 
 
+if TYPE_CHECKING is True:
+    from RPyG.actors import EnemyParty, PlayerParty
+    from RPyG.constructs import Dungeon
+
+
+@final
 class GameState:
     player_party: PlayerParty
     progress: int
@@ -22,6 +27,9 @@ class GameState:
     )
 
     def __init__(self, player_party: PlayerParty):
+        from RPyG.actors import EnemyParty, PlayerParty
+        from RPyG.constructs import Dungeon
+
         ensure_type(player_party, PlayerParty, "player_party")
         if GameState._instance is None:
             GameState._instance = self
@@ -41,6 +49,8 @@ class GameState:
         return self._dungeon_progress
 
     def set_dungeon(self, dungeon_instance: Dungeon) -> None:
+        from RPyG.constructs import Dungeon
+
         ensure_type(dungeon_instance, Dungeon, "dungeon_instance")
         self._dungeon.load_resource(dungeon_instance)
         # progress can only be set to a non None value by this function
@@ -59,8 +69,6 @@ class GameState:
         self._dungeon_progress += progress_amount
 
     def reset_dungeon(self) -> None:
-        # I want to add more safety in this process, something like a borrow checker or something like that
-        # also want to match this model for enemy party
         self._dungeon.destroy_resource()
         self._dungeon_progress = None
 
@@ -68,12 +76,12 @@ class GameState:
         return self._enemy_party.borrow_resource()
 
     def set_enemy_party(self, enemy_party_instance: EnemyParty) -> None:
+        from RPyG.actors import EnemyParty
+
         ensure_type(enemy_party_instance, EnemyParty, "enemy_party_instance")
         self._enemy_party.load_resource(enemy_party_instance)
 
     def reset_enemy_party(self) -> None:
-        # I want to add more safety in this process, something like a borrow checker or something like that
-        # also want to match this model for enemy party
         self._enemy_party.destroy_resource()
 
     @classmethod
@@ -82,7 +90,7 @@ class GameState:
             return GameState._instance
         else:
             raise RuntimeError(
-                "Attempted to acess GameState instance before initialization"
+                "Attempted to access GameState instance before initialization"
             )
 
     def validate(self) -> None:

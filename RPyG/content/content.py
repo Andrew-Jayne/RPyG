@@ -1,7 +1,7 @@
 import random
 from enum import Enum
 from functools import cached_property
-from typing import Any
+from typing import Any, final
 
 from RPyG.actors import Enemy
 from RPyG.constructs import (
@@ -24,6 +24,7 @@ class ContentKind(Enum):
     StoryEvent = "StoryEvent"
 
 
+@final
 class ContentLibrary:
     enemies: dict[str, Enemy]
     enemy_sets: dict[str, EnemySet]
