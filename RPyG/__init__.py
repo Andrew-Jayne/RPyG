@@ -4,7 +4,6 @@ from RPyG.core_io.io_models import (
     CustomTextRequest,
     InputRequest,
     OutputMessage,
-    UIElement,
     UserPromptRequest,
 )
 from RPyG.launch import launch_game
@@ -15,7 +14,6 @@ __all__ = [
     "RPyGInterface",
     "InputRequest",
     "OutputMessage",
-    "UIElement",
     "UserPromptRequest",
     "CustomTextRequest",
     "BattleHudMessage",

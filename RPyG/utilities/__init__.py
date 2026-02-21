@@ -28,9 +28,11 @@ class JSONFormatter(Formatter):
         return json.dumps(log_data)
 
 
+## i have no clue how this shit works, I don't like how logging is being handled RN.
 def setup_logger(source_module_name: str) -> Logger:
     # Create a handler that writes to a file
     handler = FileHandler("rpyg.jsonl", mode="a")
+    ## Ew gross non centralized env managment..... could be done much better
     handler.setLevel(level=os.environ.get("RPYG_LOG_LEVEL", INFO))
 
     # Create a formatter
@@ -46,4 +48,7 @@ def setup_logger(source_module_name: str) -> Logger:
     return getLogger(source_module_name)
 
 
-__all__ = ["ensure_type", "setup_logger"]
+__all__ = [
+    "ensure_type",
+    "setup_logger",
+]

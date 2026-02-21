@@ -7,7 +7,7 @@ import sys
 import textwrap
 import time
 import tomllib
-from typing import Any, cast, override
+from typing import Any, override
 
 from RPyG import (
     CustomTextRequest,
@@ -42,7 +42,7 @@ logger = setup_logger(__name__)
 
 
 class BasicTerminalInterface(RPyGInterface):
-    input_buffer: str
+    input_buffer: str | None
 
     def __init__(self):
         RPyGInterface.__init__(self)
@@ -71,43 +71,43 @@ class BasicTerminalInterface(RPyGInterface):
     @override
     def request_input(self, request: InputRequest) -> None:
         ensure_type(request, InputRequest, "request")
-        match type(request).__name__:
-            case "InputRequest":
-                raise NotImplementedError
-            case "UserPromptRequest":
-                prompt_request = cast(UserPromptRequest, request)
+        match request:
+            case UserPromptRequest():
                 displayable_options: list[str] = []
-                for item in prompt_request.options:
+                for item in request.options:
                     if item is not None:
                         displayable_options.append(item)
                 content = self.prompt_user(
                     options=displayable_options,
-                    prompts=prompt_request.prompts,
-                    show_options=prompt_request.show_options,
+                    prompts=request.prompts,
+                    show_options=request.show_options,
                 )
 
-            case "CustomTextRequest":
-                text_request = cast(CustomTextRequest, request)
+            case CustomTextRequest():
                 content = self.custom_text_entry(
-                    text_request.prompts,
-                    text_request.max_length,
+                    request.prompts,
+                    request.max_length,
                 )
             case _:
                 raise ValueError(
                     f"Got Unknown Child class of InputRequest {type(request).__name__}"
                 )
 
+        if self.input_buffer is None:
+            raise RuntimeError(
+                "Input Buffer is not empty, receive_input() must be called to empty buffer"
+            )
         self.input_buffer = content
 
     @override
     def receive_input(self) -> str:
         data = self.input_buffer
-        if data == "":
+        if data is None:
             raise RuntimeError(
-                "Input buffer is empty, did you call request_input before calling receive_input?"
+                "Input buffer is empty, did you call request_input() before calling receive_input()?"
             )
         # reset buffer
-        self.input_buffer = ""
+        self.input_buffer = None
         return data
 
     @override
@@ -210,7 +210,11 @@ class BasicTerminalInterface(RPyGInterface):
             os.system('clear && printf "\\e[3J"')  # pyright: ignore[reportUnusedCallResult]
 
     @staticmethod
-    def sanitize(input_string: str, max_length: int = 32) -> str:
+    def sanitize(
+        input_string: str,
+        *,
+        max_length: int = 32,
+    ) -> str:
         """
         This function Sanitizes strings passed into it and returns up to the max length chars (Default is 32)
         With most escape sequences and control chars removed
@@ -282,7 +286,11 @@ class BasicTerminalInterface(RPyGInterface):
         return self.sanitize(input()[:max_length])
 
     def prompt_user(
-        self, options: list[str], prompts: list[str], show_options: bool = True
+        self,
+        options: list[str],
+        prompts: list[str],
+        *,
+        show_options: bool = True,
     ) -> str:
         ensure_type(options, list, "options")
         ensure_type(prompts, list, "base_messages")

@@ -4,7 +4,6 @@ from RPyG.actors import (
     Enemy,
     PlayableActor,
 )
-from RPyG.core_io import CoreIO
 from RPyG.core_io.io_models import BattleHudMessage, OutputMessage, UserPromptRequest
 from RPyG.utilities import ensure_type
 
@@ -27,6 +26,7 @@ def is_battle_complete() -> bool:
 
 
 def process_player_turn() -> None:
+    from RPyG.core_io import CoreIO
     from RPyG.game_state import GameState
 
     core_io = CoreIO.get_core_io()
@@ -108,6 +108,7 @@ def process_player_turn() -> None:
 
 
 def process_enemy_turn() -> None:
+    from RPyG.core_io import CoreIO
     from RPyG.game_state import GameState
 
     core_io = CoreIO.get_core_io()
@@ -152,6 +153,7 @@ def process_enemy_turn() -> None:
 
 
 def post_battle() -> None:
+    from RPyG.core_io import CoreIO
     from RPyG.game_state import GameState
 
     core_io = CoreIO.get_core_io()
@@ -197,6 +199,7 @@ def build_hud_data() -> str:
 
 
 def battle() -> None:
+    from RPyG.core_io import CoreIO
     from RPyG.game_state import GameState
 
     core_io = CoreIO.get_core_io()
