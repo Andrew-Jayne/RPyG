@@ -114,15 +114,14 @@ class EncounterEffect:
 
     def process_effect(self) -> None:
         from RPyG.content import ContentLibrary
-        from RPyG.core_io import CoreIO
-        from RPyG.core_io.io_models import OutputMessage
+        from RPyG.core_io import CoreIO, output_models
         from RPyG.game_state import GameState
 
         # Show any Messages
         game_state = GameState.get_game_state()
         core_io = CoreIO.get_core_io()
         for message in self.effect_messages:
-            core_io.send_output(OutputMessage(message))
+            core_io.send_output(output_models.OutputMessage(message))
 
         match self.targets:
             case EffectTarget.ALL:
@@ -160,20 +159,19 @@ class EncounterEffect:
         self,
         player_party_instance: PlayerParty,  # merchant_inventory: None = None
     ) -> None:
-        from RPyG.core_io import CoreIO
-        from RPyG.core_io.io_models import OutputMessage, UserPromptRequest
+        from RPyG.core_io import CoreIO, input_models, output_models
 
         core_io = CoreIO.get_core_io()
         for player_instance in player_party_instance.members:
             player_choice = ""
             while player_choice != "LEAVE":
                 core_io.send_output(
-                    OutputMessage(
+                    output_models.OutputMessage(
                         f"{player_instance.name} has {player_instance.inventory.potions} potions & {player_instance.inventory.gold} gold"
                     )
                 )
                 core_io.request_input(
-                    UserPromptRequest(
+                    input_models.UserPromptRequest(
                         options=[
                             "BUY",
                             "LEAVE",
@@ -194,13 +192,13 @@ class EncounterEffect:
                         if player_instance.inventory.spend_gold(25) is True:
                             player_instance.inventory.gain_potion(1)
                             core_io.send_output(
-                                OutputMessage(
+                                output_models.OutputMessage(
                                     f"{player_instance.name} purchases a potion. They now have {player_instance.inventory.potions} potions & {player_instance.inventory.gold} gold",
                                 )
                             )
                         else:
                             core_io.send_output(
-                                OutputMessage(
+                                output_models.OutputMessage(
                                     f"{player_instance.name} does not have enough Gold to purchase more potions",
                                 )
                             )

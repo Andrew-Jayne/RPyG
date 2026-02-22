@@ -1,12 +1,7 @@
 import random
 from enum import Enum
 
-from RPyG.core_io import CoreIO
-from RPyG.core_io.io_models import (
-    EmptyDistanceMessage,
-    OutputMessage,
-    UserPromptRequest,
-)
+from RPyG.core_io import CoreIO, input_models, output_models
 from RPyG.utilities import ensure_type, setup_logger
 
 
@@ -64,11 +59,11 @@ def handle_enemy_encounter():
     game_state.set_enemy_party(generate_enemy_set(len(game_state.player_party.members)))
     with game_state.borrow_enemy_party() as enemy_party:
         core_io.send_output(
-            OutputMessage(f"Your Party encounters a {enemy_party.name}!")
+            output_models.OutputMessage(f"Your Party encounters a {enemy_party.name}!")
         )
 
         core_io.request_input(
-            UserPromptRequest(
+            input_models.UserPromptRequest(
                 options=["BATTLE", "FLEE"],
                 prompts=["Choose an Action:"],
             )
@@ -81,13 +76,13 @@ def handle_enemy_encounter():
                 for player_instance in game_state.player_party.members:
                     if player_instance.luck >= random.randint(4, 15):
                         core_io.send_output(
-                            OutputMessage(
+                            output_models.OutputMessage(
                                 f"{player_instance.name} has Successfully Escaped the {enemy_party.name}!"
                             )
                         )
                     else:
                         core_io.send_output(
-                            OutputMessage(
+                            output_models.OutputMessage(
                                 f"{player_instance.name} has Failed to Escape the {enemy_party.name}!"
                             )
                         )
@@ -136,7 +131,9 @@ def play_game():
         game_state.progress += 1
         if str(game_state.progress) in content_library.story_events.keys():
             core_io.send_output(
-                OutputMessage(f"After {rounds_without_encounter * 10} miles of travel")
+                output_models.OutputMessage(
+                    f"After {rounds_without_encounter * 10} miles of travel"
+                )
             )
             story_event: StoryEvent = content_library.story_events[
                 str(game_state.progress)
@@ -146,7 +143,7 @@ def play_game():
             check_result = check_for_encounter()
             if check_result is not None:
                 core_io.send_output(
-                    OutputMessage(
+                    output_models.OutputMessage(
                         f"After {rounds_without_encounter * 10} miles of travel"
                     )
                 )
@@ -163,7 +160,9 @@ def play_game():
             else:
                 rounds_without_encounter += 1
                 core_io.send_output(
-                    EmptyDistanceMessage(distance=rounds_without_encounter)
+                    output_models.EmptyDistanceMessage(
+                        distance=rounds_without_encounter
+                    )
                 )
 
         if game_state.player_party.members == []:
@@ -173,9 +172,11 @@ def play_game():
         # [] means all players are in the dead_members list, this is like... 5% safer than len() == 0
         # because it is looking at the list as a list rather than a property of it against an int
         core_io.send_output(
-            OutputMessage(
+            output_models.OutputMessage(
                 f"{game_state.player_party.name} has failed in their quest after {game_state.progress * 10} miles"
             )
         )
 
-    core_io.send_output(OutputMessage(game_state.player_party.end_game_report()))
+    core_io.send_output(
+        output_models.OutputMessage(game_state.player_party.end_game_report())
+    )

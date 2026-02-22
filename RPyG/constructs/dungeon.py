@@ -82,14 +82,13 @@ class Dungeon:
         from RPyG import combat
         from RPyG.actors import EnemyParty
         from RPyG.constructs import RandomResultItem, RandomResultTable
-        from RPyG.core_io import CoreIO
-        from RPyG.core_io.io_models import EmptyDistanceMessage, OutputMessage
+        from RPyG.core_io import CoreIO, output_models
         from RPyG.game_state import GameState
 
         core_io = CoreIO.get_core_io()
         game_state = GameState.get_game_state()
 
-        core_io.send_output(OutputMessage(self.start_message))
+        core_io.send_output(output_models.OutputMessage(self.start_message))
 
         dungeon_table = RandomResultTable(
             [
@@ -105,13 +104,17 @@ class Dungeon:
             game_state.progress_dungeon(1)
             match dungeon_table.generate_result():
                 case DungeonEvent.HEAL_ROOM:
-                    core_io.send_output(OutputMessage(self.heal_room_message))
+                    core_io.send_output(
+                        output_models.OutputMessage(self.heal_room_message)
+                    )
                     for member_instance in game_state.player_party.members:
                         member_instance.inventory.gain_potion(2)
                         member_instance.heal(60)
                 case DungeonEvent.SHORTCUT:
                     game_state.progress_dungeon(2)
-                    core_io.send_output(OutputMessage(self.shortcut_message))
+                    core_io.send_output(
+                        output_models.OutputMessage(self.shortcut_message)
+                    )
                 case DungeonEvent.BATTLE_ENEMY:
                     enemy_count = int(
                         len(game_state.player_party.members) + random.randint(-2, 2)
@@ -120,17 +123,21 @@ class Dungeon:
                         enemy_count = 1
                     enemy_party = self.enemy_set.generate_enemy_party(enemy_count)
                     core_io.send_output(
-                        OutputMessage(f"Your Party encounters a {enemy_party.name}!")
+                        output_models.OutputMessage(
+                            f"Your Party encounters a {enemy_party.name}!"
+                        )
                     )
                     game_state.set_enemy_party(enemy_party)
                     combat.battle()
                     if len(game_state.player_party.members) == 0:
                         return
                 case DungeonEvent.NOTHING:
-                    core_io.send_output(EmptyDistanceMessage(distance=1))
+                    core_io.send_output(output_models.EmptyDistanceMessage(distance=1))
 
         if len(game_state.player_party.members) != 0:
-            core_io.send_output(OutputMessage(self.boss_encounter_message))
+            core_io.send_output(
+                output_models.OutputMessage(self.boss_encounter_message)
+            )
             game_state.set_enemy_party(
                 EnemyParty(
                     self.boss.name,

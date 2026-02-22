@@ -3,8 +3,7 @@ import random
 from typing import Generic, TypeVar, override
 
 from RPyG.actors.actor_base import Actor, Party
-from RPyG.core_io import CoreIO
-from RPyG.core_io.io_models import OutputMessage, UserPromptRequest
+from RPyG.core_io import CoreIO, input_models, output_models
 from RPyG.utilities import ensure_type
 
 
@@ -84,12 +83,14 @@ class Combatant(Actor):
         if self.health == 0:
             self.health = 1
             core_io.send_output(
-                OutputMessage(f"{self.name} has Narrowly Evaded Death!")
+                output_models.OutputMessage(f"{self.name} has Narrowly Evaded Death!")
             )
         elif self.health < 0:
             self.health = 0
         core_io.send_output(
-            OutputMessage(f"{self.name} has {self.health} Health Remaining")
+            output_models.OutputMessage(
+                f"{self.name} has {self.health} Health Remaining"
+            )
         )
 
     def heal(self, heal_amount: int) -> None:
@@ -100,7 +101,7 @@ class Combatant(Actor):
         if self.health > self.base_health:
             self.health = self.base_health
             fully_healed_message = f"{self.name} has Fully Healed!"
-            core_io.send_output(OutputMessage(fully_healed_message))
+            core_io.send_output(output_models.OutputMessage(fully_healed_message))
 
     def dismember(self) -> None:
         self.is_dismembered = True
@@ -130,7 +131,7 @@ class Combatant(Actor):
 
         if self.check_for_critical() is True:
             core_io.send_output(
-                OutputMessage(f"""
+                output_models.OutputMessage(f"""
 {self.name} attacks with {self.attack_name} inflicting {final_damage * 2} damage
 {self.name} got a critical hit!!
 """)
@@ -138,7 +139,7 @@ class Combatant(Actor):
             target_instance.damage(final_damage * 2)
         else:
             core_io.send_output(
-                OutputMessage(
+                output_models.OutputMessage(
                     f"{self.name} attacks with {self.attack_name} inflicting {final_damage} damage"
                 )
             )
@@ -173,7 +174,7 @@ class Combatant(Actor):
                 and target_instance.is_special is False
             ):
                 core_io.send_output(
-                    OutputMessage(
+                    output_models.OutputMessage(
                         f"{self.name} decapitates {target_instance.name} killing them instantly"
                     )
                 )
@@ -190,7 +191,7 @@ class Combatant(Actor):
                 target_instance.dismember()
                 target_instance.damage(final_damage * 2)
                 core_io.send_output(
-                    OutputMessage(f"""
+                    output_models.OutputMessage(f"""
         {self.name} got a critical hit!
         {self.name} dismembers {target_instance.name} inflicting {final_damage * 2} damage
         {target_instance.name}'s attack power has been reduced by 25%
@@ -200,7 +201,7 @@ class Combatant(Actor):
                 target_instance.damage(final_damage)
                 target_instance.dismember()
                 core_io.send_output(
-                    OutputMessage(f"""
+                    output_models.OutputMessage(f"""
     {self.name} dismembers {target_instance.name} inflicting {final_damage} damage
     {target_instance.name}'s attack power has been reduced by 25%
     """)
@@ -227,7 +228,7 @@ class Combatant(Actor):
         match self.check_for_critical():
             case True:
                 core_io.send_output(
-                    OutputMessage(f"""
+                    output_models.OutputMessage(f"""
         {self.name} attacks with {self.special_attack_name} dealing {per_target_damage * 2} damage to all enemies
         {self.name} dealt critical hits to all enemies!
             """)
@@ -236,7 +237,7 @@ class Combatant(Actor):
                     target_instance.damage(per_target_damage * 2)
             case False:
                 core_io.send_output(
-                    OutputMessage(
+                    output_models.OutputMessage(
                         f"{self.name} attacks with {self.special_attack_name} dealing {per_target_damage} damage to all enemies"
                     )
                 )
@@ -246,7 +247,7 @@ class Combatant(Actor):
         if self.intellect <= random.randint(0, 12):
             self_damage_amount = int(per_target_damage * 0.125)
             core_io.send_output(
-                OutputMessage(
+                output_models.OutputMessage(
                     f"{self.name} is overwhelmed by the power of {self.special_attack_name} and takes {self_damage_amount} damage"
                 )
             )
@@ -287,7 +288,9 @@ class Combatant(Actor):
         if len(target_party_instance.members) != 0:
             if secondary_instance not in target_party_instance.members:
                 while secondary_instance not in target_party_instance.members:
-                    core_io.send_output(OutputMessage("Select a Living Target"))
+                    core_io.send_output(
+                        output_models.OutputMessage("Select a Living Target")
+                    )
                     secondary_target_index = self.select_combat_target(
                         target_party_instance
                     )
@@ -310,7 +313,7 @@ class Combatant(Actor):
             if (self.luck + self.agility) < random.randint(0, 25):
                 self.damage(int(secondary_instance.attack_power * 0.5))
                 core_io.send_output(
-                    OutputMessage(
+                    output_models.OutputMessage(
                         f"{self.name} fails fails to evade an attack from {secondary_instance.name} and takes {int(secondary_instance.attack_power * 0.5)} damage"
                     )
                 )
@@ -335,7 +338,7 @@ class Combatant(Actor):
                     while target_instance.is_dismembered is True:
                         dumb_check += 1
                         core_io.send_output(
-                            OutputMessage(
+                            output_models.OutputMessage(
                                 f"{target_instance.name} has been dismembered already"
                             )
                         )
@@ -379,7 +382,7 @@ class Combatant(Actor):
                 target_indexes.append(str(index))
 
             core_io.request_input(
-                UserPromptRequest(
+                input_models.UserPromptRequest(
                     prompts=target_messages,
                     options=target_indexes,
                     show_options=False,
@@ -455,7 +458,9 @@ class CombatantParty(Party[CombatantType], Generic[CombatantType]):
         from RPyG.core_io import CoreIO
 
         core_io = CoreIO.get_core_io()
-        core_io.send_output(OutputMessage(f"{member.name} has been defeated"))
+        core_io.send_output(
+            output_models.OutputMessage(f"{member.name} has been defeated")
+        )
         self.dead_members.append(member)
         self.members.remove(member)
 

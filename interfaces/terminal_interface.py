@@ -9,15 +9,8 @@ import time
 import tomllib
 from typing import Any, override
 
-from RPyG import (
-    CustomTextRequest,
-    InputRequest,
-    OutputMessage,
-    RPyGInterface,
-    UserPromptRequest,
-)
 from RPyG.actors import PlayableActor, PlayerParty
-from RPyG.core_io import CoreIO
+from RPyG.core_io import CoreIO, RPyGInterface, input_models, output_models
 from RPyG.exceptions import ImpossibleValueException
 from RPyG.game_state import GameState
 from RPyG.utilities import ensure_type, setup_logger
@@ -47,10 +40,10 @@ class BasicTerminalInterface(RPyGInterface):
     def __init__(self):
         RPyGInterface.__init__(self)
         self.input_buffer = ""
-        self.show_ouput(OutputMessage(welcome_message, line_delay=0))
+        self.show_ouput(output_models.OutputMessage(welcome_message, line_delay=0))
 
     @override
-    def show_ouput(self, output: OutputMessage) -> None:
+    def show_ouput(self, output: output_models.OutputMessage) -> None:
         ending = "\n"
         wrapped_message = ""
 
@@ -69,10 +62,10 @@ class BasicTerminalInterface(RPyGInterface):
         print(wrapped_message.rstrip("\n"), end=ending)
 
     @override
-    def request_input(self, request: InputRequest) -> None:
-        ensure_type(request, InputRequest, "request")
+    def request_input(self, request: input_models.InputRequest) -> None:
+        ensure_type(request, input_models.InputRequest, "request")
         match request:
-            case UserPromptRequest():
+            case input_models.UserPromptRequest():
                 displayable_options: list[str] = []
                 for item in request.options:
                     if item is not None:
@@ -83,14 +76,14 @@ class BasicTerminalInterface(RPyGInterface):
                     show_options=request.show_options,
                 )
 
-            case CustomTextRequest():
+            case input_models.CustomTextRequest():
                 content = self.custom_text_entry(
                     request.prompts,
                     request.max_length,
                 )
             case _:
                 raise ValueError(
-                    f"Got Unknown Child class of InputRequest {type(request).__name__}"
+                    f"Got Unknown Child class of input_models.InputRequest {type(request).__name__}"
                 )
 
         if self.input_buffer is None:
@@ -181,11 +174,13 @@ class BasicTerminalInterface(RPyGInterface):
 
         core_io = CoreIO.get_core_io()
         core_io.send_output(
-            OutputMessage(f"Successfully Saved Game for {game_state.player_party.name}")
+            output_models.OutputMessage(
+                f"Successfully Saved Game for {game_state.player_party.name}"
+            )
         )
 
         core_io.request_input(
-            UserPromptRequest(
+            input_models.UserPromptRequest(
                 options=["YES", "NO"],
                 prompts=["Would you like to keep playing?"],
             )
@@ -193,7 +188,9 @@ class BasicTerminalInterface(RPyGInterface):
         match core_io.receive_input():
             case "YES":
                 core_io.send_output(
-                    OutputMessage("The adventure continues!", reset_display=True)
+                    output_models.OutputMessage(
+                        "The adventure continues!", reset_display=True
+                    )
                 )
             case "NO":
                 sys.exit(0)
@@ -266,7 +263,7 @@ class BasicTerminalInterface(RPyGInterface):
             chosen_action = self.sanitize(input("").upper())
             if chosen_action not in choice_list:
                 self.show_ouput(
-                    OutputMessage(
+                    output_models.OutputMessage(
                         f"That is not a Valid Option. Try again, valid options are \n{options_list}"
                     )
                 )
@@ -282,7 +279,7 @@ class BasicTerminalInterface(RPyGInterface):
         input_messages: list[str],
         max_length: int,
     ) -> str:
-        self.show_ouput(OutputMessage("\n".join(input_messages)))
+        self.show_ouput(output_models.OutputMessage("\n".join(input_messages)))
         return self.sanitize(input()[:max_length])
 
     def prompt_user(
@@ -306,7 +303,7 @@ class BasicTerminalInterface(RPyGInterface):
 
         formatted_message += "\n"
 
-        self.show_ouput(OutputMessage(formatted_message))
+        self.show_ouput(output_models.OutputMessage(formatted_message))
 
         response = self.validate_input(options)
         return response
@@ -354,10 +351,10 @@ class BasicTerminalInterface(RPyGInterface):
 
         core_io = CoreIO.get_core_io()
         core_io.send_output(
-            OutputMessage("Welcome to RPyG, a text based RPG in Python")
+            output_models.OutputMessage("Welcome to RPyG, a text based RPG in Python")
         )
         core_io.request_input(
-            UserPromptRequest(
+            input_models.UserPromptRequest(
                 options=start_game_options,
                 prompts=start_game_messages,
             )
@@ -385,7 +382,7 @@ class BasicTerminalInterface(RPyGInterface):
         core_io = CoreIO.get_core_io()
 
         core_io.request_input(
-            UserPromptRequest(
+            input_models.UserPromptRequest(
                 options=party_size_choices,
                 prompts=party_size_messages,
             )
@@ -396,14 +393,14 @@ class BasicTerminalInterface(RPyGInterface):
         for _ in range(0, party_size):
             core_io = CoreIO.get_core_io()
             core_io.request_input(
-                CustomTextRequest(
+                input_models.CustomTextRequest(
                     prompts=member_name_messages,
                     max_length=32,
                 )
             )
             member_name = core_io.receive_input()
             core_io.request_input(
-                UserPromptRequest(
+                input_models.UserPromptRequest(
                     prompts=specialization_messages,
                     options=specialization_choices,
                 )
@@ -413,7 +410,7 @@ class BasicTerminalInterface(RPyGInterface):
             party_instances.append(member)
 
         core_io.request_input(
-            CustomTextRequest(
+            input_models.CustomTextRequest(
                 prompts=party_name_messages,
                 max_length=64,
             )
@@ -457,7 +454,7 @@ class BasicTerminalInterface(RPyGInterface):
         ensure_type(game_state, GameState, "game_state")
 
         core_io.send_output(
-            OutputMessage(
+            output_models.OutputMessage(
                 f"Successfully Loaded Save Game for: {game_state.player_party.name}"
             )
         )
