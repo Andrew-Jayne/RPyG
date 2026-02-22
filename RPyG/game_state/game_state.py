@@ -1,12 +1,12 @@
 from contextlib import AbstractContextManager
 from typing import TYPE_CHECKING, Self, final
 
+from RPyG.actors import EnemyParty, PlayerParty
 from RPyG.constructs import BorrowTrackedResource
 from RPyG.utilities import ensure_type
 
 
 if TYPE_CHECKING is True:
-    from RPyG.actors import EnemyParty, PlayerParty
     from RPyG.constructs import Dungeon
 
 
@@ -27,7 +27,6 @@ class GameState:
     )
 
     def __init__(self, player_party: PlayerParty):
-        from RPyG.actors import EnemyParty, PlayerParty
         from RPyG.constructs import Dungeon
 
         ensure_type(player_party, PlayerParty, "player_party")

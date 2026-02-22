@@ -1,8 +1,7 @@
 import random
 
 from RPyG.actors.actor_combatant import Combatant, CombatantParty
-from RPyG.core_io import CoreIO
-from RPyG.core_io.io_models import OutputMessage
+from RPyG.core_io import CoreIO, output_models
 from RPyG.utilities import ensure_type
 
 
@@ -33,7 +32,7 @@ class Inventory:
 
         if self.gold < amount:
             core_io.send_output(
-                OutputMessage(f"{self.actor_name} has insufficient gold")
+                output_models.OutputMessage(f"{self.actor_name} has insufficient gold")
             )
             return False
         else:
@@ -47,7 +46,7 @@ class Inventory:
         if self.gold < 0:
             self.gold = 0
             core_io.send_output(
-                OutputMessage(f"{self.actor_name} has no gold remaining")
+                output_models.OutputMessage(f"{self.actor_name} has no gold remaining")
             )
 
     def gain_potion(self, amount: int) -> None:
@@ -121,20 +120,26 @@ class PlayableActor(Combatant):
         core_io = CoreIO.get_core_io()
 
         if self.inventory.potions != 0 and not self.is_fully_healed():
-            core_io.send_output(OutputMessage(f"{self.name} drinks a potion"))
+            core_io.send_output(
+                output_models.OutputMessage(f"{self.name} drinks a potion")
+            )
             self.inventory.lose_potion(1)
             self.heal(100 + random.randint(-20, 20))
             core_io.send_output(
-                OutputMessage(f"""
+                output_models.OutputMessage(f"""
 {self.name} has {self.inventory.potions} remaining
 {self.name}'s health is now {self.health}
 """)
             )
 
         elif self.inventory.potions == 0:
-            core_io.send_output(OutputMessage(f"{self.name} has no remaining potions!"))
+            core_io.send_output(
+                output_models.OutputMessage(f"{self.name} has no remaining potions!")
+            )
         else:
-            core_io.send_output(OutputMessage(f"{self.name} is already fully healed!"))
+            core_io.send_output(
+                output_models.OutputMessage(f"{self.name} is already fully healed!")
+            )
 
     @staticmethod
     def _get_attack_power(

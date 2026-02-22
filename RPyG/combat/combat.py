@@ -4,7 +4,7 @@ from RPyG.actors import (
     Enemy,
     PlayableActor,
 )
-from RPyG.core_io.io_models import BattleHudMessage, OutputMessage, UserPromptRequest
+from RPyG.core_io import input_models, output_models
 from RPyG.utilities import ensure_type
 
 
@@ -37,7 +37,7 @@ def process_player_turn() -> None:
         for player_instance in game_state.player_party.members:
             if enemy_party.members != []:
                 core_io.request_input(
-                    UserPromptRequest(
+                    input_models.UserPromptRequest(
                         prompts=[f"{player_instance.name}", "Choose an Action:"],
                         options=[
                             "ATTACK",
@@ -53,12 +53,12 @@ def process_player_turn() -> None:
                     and player_instance.is_fully_healed() is True
                 ):
                     core_io.send_output(
-                        OutputMessage(
+                        output_models.OutputMessage(
                             f"{player_instance.name} is fully healed, it would be unwise to use a potion"
                         )
                     )
                     core_io.request_input(
-                        UserPromptRequest(
+                        input_models.UserPromptRequest(
                             prompts=[f"{player_instance.name}", "Choose an Action:"],
                             options=[
                                 "ATTACK",
@@ -71,7 +71,7 @@ def process_player_turn() -> None:
                     battle_choice = core_io.receive_input()
                     if battle_choice == "HEAL":
                         core_io.send_output(
-                            OutputMessage(
+                            output_models.OutputMessage(
                                 "Stubborn aren't you, fine waste the damn potion"
                             )
                         )
@@ -91,7 +91,7 @@ def process_player_turn() -> None:
 
                     case player_instance.react_action:
                         core_io.send_output(
-                            OutputMessage(
+                            output_models.OutputMessage(
                                 player_instance.react_messages["prep_message"]
                             )
                         )
@@ -127,13 +127,13 @@ def process_enemy_turn() -> None:
                 if target_player.will_react is True:
                     if target_player.react() is True:
                         core_io.send_output(
-                            OutputMessage(
+                            output_models.OutputMessage(
                                 target_player.react_messages["success_message"]
                             )
                         )
                     else:
                         core_io.send_output(
-                            OutputMessage(
+                            output_models.OutputMessage(
                                 target_player.react_messages["failure_message"]
                             )
                         )
@@ -162,7 +162,7 @@ def post_battle() -> None:
     player_post_action = ""
     while player_post_action != "TRAVEL":
         core_io.request_input(
-            UserPromptRequest(
+            input_models.UserPromptRequest(
                 prompts=["Choose an Action:"],
                 options=["HEAL", "TRAVEL", "SAVE"],
             )
@@ -205,10 +205,14 @@ def battle() -> None:
     core_io = CoreIO.get_core_io()
     game_state = GameState.get_game_state()
     with game_state.borrow_enemy_party() as enemy_party:
-        core_io.send_output(OutputMessage("The Battle Begins!", reset_display=True))
+        core_io.send_output(
+            output_models.OutputMessage("The Battle Begins!", reset_display=True)
+        )
         battle_complete = False
         while battle_complete is False:
-            core_io.send_output(BattleHudMessage(message=build_hud_data()))
+            core_io.send_output(
+                output_models.BattleHudMessage(message=build_hud_data())
+            )
 
             ## Check if all parties are alive before running player turn
             if is_battle_complete() is False:

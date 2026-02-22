@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Any, Self, final
 
-from RPyG.core_io.io_models import InputRequest, OutputMessage
+from RPyG.core_io import input_models, output_models
 from RPyG.utilities import ensure_type
 
 
@@ -14,17 +14,18 @@ class RPyGInterface(ABC):
         pass
 
     @abstractmethod
-    def show_ouput(self, output: OutputMessage) -> None:
+    def show_ouput(self, output: output_models.OutputMessage) -> None:
         pass
 
     @abstractmethod
-    def request_input(self, request: InputRequest) -> None:
+    def request_input(self, request: input_models.InputRequest) -> None:
         pass
 
     @abstractmethod
     def receive_input(self) -> str:
         pass
 
+    # Needs the big ass typed dict thing
     @abstractmethod
     def get_content_data(self) -> dict[str, dict[str, Any]]:  # pyright: ignore[reportExplicitAny]
         pass
@@ -60,13 +61,13 @@ class CoreIO:
                 "Attempted to acess CoreIO instance before initialization"
             )
 
-    def request_input(self, request: InputRequest) -> None:
+    def request_input(self, request: input_models.InputRequest) -> None:
         return self.interface.request_input(request)
 
     def receive_input(self) -> str:
         return self.interface.receive_input()
 
-    def send_output(self, output: OutputMessage) -> None:
+    def send_output(self, output: output_models.OutputMessage) -> None:
         return self.interface.show_ouput(output)
 
     def validate(self) -> None:

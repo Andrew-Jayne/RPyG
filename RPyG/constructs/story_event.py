@@ -84,8 +84,7 @@ class StoryEvent:
 
     def trigger(self) -> None:
         from RPyG.content import ContentLibrary
-        from RPyG.core_io import CoreIO
-        from RPyG.core_io.io_models import OutputMessage
+        from RPyG.core_io import CoreIO, output_models
         from RPyG.game_state import GameState
 
         content_library = ContentLibrary.get_library()
@@ -103,7 +102,7 @@ class StoryEvent:
 
                 for message in self.messages:
                     core_io.send_output(
-                        OutputMessage(
+                        output_models.OutputMessage(
                             message.format(party_name=game_state.player_party.name)
                         )
                     )
@@ -118,7 +117,7 @@ class StoryEvent:
                 if len(game_state.player_party.members) != 0:
                     for message in self.success_messages:
                         core_io.send_output(
-                            OutputMessage(
+                            output_models.OutputMessage(
                                 message.format(party_name=game_state.player_party.name)
                             )
                         )
@@ -126,7 +125,7 @@ class StoryEvent:
                 else:
                     for message in self.failure_messages:
                         core_io.send_output(
-                            OutputMessage(
+                            output_models.OutputMessage(
                                 message.format(party_name=game_state.player_party.name)
                             )
                         )
@@ -138,7 +137,7 @@ class StoryEvent:
                     )
                 for message in self.messages:
                     core_io.send_output(
-                        OutputMessage(
+                        output_models.OutputMessage(
                             message.format(party_name=game_state.player_party.name)
                         )
                     )
@@ -153,7 +152,7 @@ class StoryEvent:
                 if len(game_state.player_party.members) != 0:
                     for message in self.success_messages:
                         core_io.send_output(
-                            OutputMessage(
+                            output_models.OutputMessage(
                                 message.format(party_name=game_state.player_party.name)
                             )
                         )
@@ -161,14 +160,14 @@ class StoryEvent:
                 else:
                     for message in self.failure_messages:
                         core_io.send_output(
-                            OutputMessage(
+                            output_models.OutputMessage(
                                 message.format(party_name=game_state.player_party.name)
                             )
                         )
             case StoryEventType.ENCOUNTER:
                 for message in self.messages:
                     core_io.send_output(
-                        OutputMessage(
+                        output_models.OutputMessage(
                             message.format(party_name=game_state.player_party.name)
                         )
                     )
@@ -182,14 +181,14 @@ class StoryEvent:
                 if len(game_state.player_party.members) != 0:
                     for message in self.success_messages:
                         core_io.send_output(
-                            OutputMessage(
+                            output_models.OutputMessage(
                                 message.format(party_name=game_state.player_party.name)
                             )
                         )
                 else:
                     for message in self.failure_messages:
                         core_io.send_output(
-                            OutputMessage(
+                            output_models.OutputMessage(
                                 message.format(party_name=game_state.player_party.name)
                             )
                         )

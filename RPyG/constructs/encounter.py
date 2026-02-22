@@ -113,8 +113,7 @@ class Encounter:
 
     def process_encounter(self) -> None:
         from RPyG.content import ContentLibrary
-        from RPyG.core_io import CoreIO
-        from RPyG.core_io.io_models import OutputMessage, UserPromptRequest
+        from RPyG.core_io import CoreIO, input_models, output_models
 
         core_io = CoreIO.get_core_io()
         library = ContentLibrary.get_library()
@@ -126,7 +125,7 @@ class Encounter:
         choice_options.append(self.failure_choice)
         if choice_options != [None, None, None]:
             core_io.request_input(
-                UserPromptRequest(
+                input_models.UserPromptRequest(
                     options=choice_options,
                     prompts=self.prompts,
                 )
@@ -134,7 +133,7 @@ class Encounter:
             user_choice = core_io.receive_input()
             while user_choice == self.retry_choice:
                 core_io.request_input(
-                    UserPromptRequest(
+                    input_models.UserPromptRequest(
                         prompts=self.retry_messages,
                         options=choice_options,
                     )
@@ -146,14 +145,14 @@ class Encounter:
             match user_choice:
                 case self.success_choice:
                     for message in self.success_messages:
-                        core_io.send_output(OutputMessage(message))
+                        core_io.send_output(output_models.OutputMessage(message))
                     for effect_id in self.success_effects:
                         effect = library.encounter_effects[effect_id]
                         effect.process_effect()
 
                 case self.failure_choice:
                     for message in self.failure_messages:
-                        core_io.send_output(OutputMessage(message))
+                        core_io.send_output(output_models.OutputMessage(message))
                     for effect_id in self.failure_effects:
                         effect = library.encounter_effects[effect_id]
                         effect.process_effect()
