@@ -18,7 +18,7 @@ class ContentFileLoaderSource(ContentSource):
     @staticmethod
     def get_content() -> dict[str, ContentDataDict]:
         """
-        Load all JSON files in the given directory and merge their contents into a single dictionary.
+        Load all JSON or TOML files in the given directory and merge their contents into a single dictionary.
         """
         import json
         import os

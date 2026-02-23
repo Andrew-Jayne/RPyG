@@ -48,47 +48,6 @@ class GameState:
         else:
             raise RuntimeError("GameState already initialized")
 
-    def borrow_dungeon(self) -> AbstractContextManager[Dungeon]:
-        return self._dungeon.borrow_resource()
-
-    @property
-    def dungeon_progress(self) -> int | None:
-        return self._dungeon_progress
-
-    def set_dungeon(self, dungeon_instance: Dungeon) -> None:
-        from RPyG.constructs import Dungeon
-
-        ensure_type(dungeon_instance, Dungeon, "dungeon_instance")
-        self._dungeon.load_resource(dungeon_instance)
-        # progress can only be set to a non None value by this function
-        # Helps avoid racy behavoir
-        self._dungeon_progress = 0
-
-    def progress_dungeon(self, progress_amount: int) -> None:
-        # have to check the _ version to make the type checker happy
-        if self._dungeon_progress is None:
-            raise RuntimeError()
-        # can't be zero, and can't be more than len of the dungeon
-        with self.borrow_dungeon() as dungeon:
-            if dungeon.length < progress_amount or progress_amount < 0:
-                raise ValueError()
-
-        self._dungeon_progress += progress_amount
-
-    def reset_dungeon(self) -> None:
-        self._dungeon.destroy_resource()
-        self._dungeon_progress = None
-
-    def borrow_enemy_party(self) -> AbstractContextManager[EnemyParty]:
-        return self._enemy_party.borrow_resource()
-
-    def set_enemy_party(self, enemy_party_instance: EnemyParty) -> None:
-        ensure_type(enemy_party_instance, EnemyParty, "enemy_party_instance")
-        self._enemy_party.load_resource(enemy_party_instance)
-
-    def reset_enemy_party(self) -> None:
-        self._enemy_party.destroy_resource()
-
     @classmethod
     def get_game_state(cls) -> "GameState":
         if GameState._instance is not None:
@@ -105,6 +64,7 @@ class GameState:
             raise RuntimeError(" GameState failed to validate")
         return
 
+    # core loop of the whole game
     def play_game(self):
         from RPyG.constructs import StoryEvent
         from RPyG.content import ContentLibrary
@@ -181,3 +141,48 @@ class GameState:
         core_io.send_output(
             output_models.OutputMessage(self.player_party.end_game_report())
         )
+
+    ## Borrow Checked Dungeon Handling
+
+    def borrow_dungeon(self) -> AbstractContextManager[Dungeon]:
+        return self._dungeon.borrow_resource()
+
+    @property
+    def dungeon_progress(self) -> int | None:
+        return self._dungeon_progress
+
+    def set_dungeon(self, dungeon_instance: Dungeon) -> None:
+        from RPyG.constructs import Dungeon
+
+        ensure_type(dungeon_instance, Dungeon, "dungeon_instance")
+        self._dungeon.load_resource(dungeon_instance)
+        # progress can only be set to a non None value by this function
+        # Helps avoid racy behavoir
+        self._dungeon_progress = 0
+
+    def progress_dungeon(self, progress_amount: int) -> None:
+        # have to check the _ version to make the type checker happy
+        if self._dungeon_progress is None:
+            raise RuntimeError()
+        # can't be zero, and can't be more than len of the dungeon
+        with self.borrow_dungeon() as dungeon:
+            if dungeon.length < progress_amount or progress_amount < 0:
+                raise ValueError()
+
+        self._dungeon_progress += progress_amount
+
+    def reset_dungeon(self) -> None:
+        self._dungeon.destroy_resource()
+        self._dungeon_progress = None
+
+    ## Borrow Checked Enemy Party Handling
+
+    def borrow_enemy_party(self) -> AbstractContextManager[EnemyParty]:
+        return self._enemy_party.borrow_resource()
+
+    def set_enemy_party(self, enemy_party_instance: EnemyParty) -> None:
+        ensure_type(enemy_party_instance, EnemyParty, "enemy_party_instance")
+        self._enemy_party.load_resource(enemy_party_instance)
+
+    def reset_enemy_party(self) -> None:
+        self._enemy_party.destroy_resource()
