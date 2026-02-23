@@ -1,13 +1,19 @@
 import copy
 import random
-from typing import Generic, TypeVar, override
+from typing import TYPE_CHECKING
 
-from RPyG.actors.actor_base import Actor, Party
+from RPyG.constructs.actor.actors.base_actor import Actor
 from RPyG.core_io import CoreIO, input_models, output_models
 from RPyG.utilities import ensure_type
 
 
-class Combatant(Actor):
+if TYPE_CHECKING is True:
+    from RPyG.constructs.actor import CombatantParty
+    from RPyG.constructs.actor.actor_containers import CombatantType
+    ## CombatantType is only ever used here so it does not get the full re-export from root
+
+
+class CombatantActor(Actor):
     name: str
     strength: int
     intellect: int
@@ -116,12 +122,12 @@ class Combatant(Actor):
     def check_for_critical(self) -> bool:
         return random.randint(1, 100) <= (self.luck + self.agility)
 
-    def attack(self, target_instance: "Combatant") -> None:
-        from RPyG.actors import Combatant
+    def attack(self, target_instance: "CombatantActor") -> None:
+        from RPyG.constructs.actor import CombatantActor
 
         core_io = CoreIO.get_core_io()
 
-        ensure_type(target_instance, Combatant, "attacker_instance")
+        ensure_type(target_instance, CombatantActor, "attacker_instance")
 
         damage_variation = int(self.attack_power * 0.1)
         final_damage = self.attack_power + random.randint(
@@ -146,7 +152,7 @@ class Combatant(Actor):
             target_instance.damage(final_damage)
 
     def react(self) -> bool:
-        from RPyG.actors import PlayableActor
+        from RPyG.constructs.actor import PlayableActor
 
         if isinstance(self, PlayableActor):
             match self.specialization:
@@ -161,16 +167,16 @@ class Combatant(Actor):
         else:
             return random.randint(1, 30) <= (self.luck + self.agility)
 
-    def dismember_attack(self, target_instance: "Combatant") -> None:
-        from RPyG.actors import Combatant, Enemy
+    def dismember_attack(self, target_instance: "CombatantActor") -> None:
+        from RPyG.constructs.actor import CombatantActor, EnemyActor
 
         core_io = CoreIO.get_core_io()
 
-        ensure_type(target_instance, Combatant, "attacker_instance")
+        ensure_type(target_instance, CombatantActor, "attacker_instance")
 
         if random.randint(0, 99) in list(range(int(self.luck / 2))):
             if (
-                isinstance(target_instance, Enemy)
+                isinstance(target_instance, EnemyActor)
                 and target_instance.is_special is False
             ):
                 core_io.send_output(
@@ -211,7 +217,7 @@ class Combatant(Actor):
         self,
         target_party_instance: "CombatantParty[CombatantType]",
     ) -> None:
-        from RPyG.actors import CombatantParty
+        from RPyG.constructs.actor import CombatantParty
 
         core_io = CoreIO.get_core_io()
 
@@ -257,7 +263,7 @@ class Combatant(Actor):
         self,
         target_party_instance: "CombatantParty[CombatantType]",
     ) -> None:
-        from RPyG.actors import CombatantParty
+        from RPyG.constructs.actor import CombatantParty
 
         core_io = CoreIO.get_core_io()
 
@@ -265,13 +271,13 @@ class Combatant(Actor):
 
         # set primary target
         primary_target_index = self.select_combat_target(target_party_instance)
-        primary_instance: Combatant = target_party_instance.members[
+        primary_instance: CombatantActor = target_party_instance.members[
             primary_target_index
         ]
 
         # set secondary target
         secondary_target_index = self.select_combat_target(target_party_instance)
-        secondary_instance: Combatant = target_party_instance.members[
+        secondary_instance: CombatantActor = target_party_instance.members[
             secondary_target_index
         ]
 
@@ -322,7 +328,7 @@ class Combatant(Actor):
         self,
         target_party_instance: "CombatantParty[CombatantType]",
     ) -> None:
-        from RPyG.actors import CombatantParty
+        from RPyG.constructs.actor import CombatantParty
         from RPyG.core_io import CoreIO
 
         core_io = CoreIO.get_core_io()
@@ -332,7 +338,9 @@ class Combatant(Actor):
         match self.specialization:
             case "WARRIOR":
                 target_index = int(self.select_combat_target(target_party_instance))
-                target_instance: Combatant = target_party_instance.members[target_index]
+                target_instance: CombatantActor = target_party_instance.members[
+                    target_index
+                ]
                 if target_instance.is_dismembered is True:
                     dumb_check = 0
                     while target_instance.is_dismembered is True:
@@ -364,7 +372,7 @@ class Combatant(Actor):
         """
         Takes a full party instance, and returns the index of the target member in the members array/list as an int
         """
-        from RPyG.actors import EnemyParty, PlayableActor
+        from RPyG.constructs.actor import CombatantParty, EnemyParty, PlayableActor
         from RPyG.core_io import CoreIO
 
         core_io = CoreIO.get_core_io()
@@ -377,7 +385,7 @@ class Combatant(Actor):
             target_messages: list[str] = ["Which enemy will you attack?"]
             target_indexes: list[str] = []
             for index, member in enumerate(target_party_instance.members):
-                member: Combatant
+                member: CombatantActor
                 target_messages.append(f"{index} {member.name}:{member.health}")
                 target_indexes.append(str(index))
 
@@ -423,47 +431,3 @@ class Combatant(Actor):
                     raise ValueError(
                         "Big Problem in Select_Target, Go buy a lotto ticket"
                     )
-
-
-CombatantType = TypeVar("CombatantType", bound=Combatant)
-
-
-class CombatantParty(Party[CombatantType], Generic[CombatantType]):
-    name: str
-    members: list[CombatantType]
-    dead_members: list[CombatantType]
-
-    def __init__(
-        self,
-        name: str,
-        members: list[CombatantType],
-    ) -> None:
-        ensure_type(name, str, "name")
-        ensure_type(members, list, "members")
-        for party_member in members:
-            ensure_type(party_member, Combatant, "party_member")
-
-        if len(name) > 64:
-            raise ValueError("Combatant Party name may not be longer than characters")
-
-        ## super() Must be used because of typing and use of generics
-        super().__init__(
-            members=members,
-        )
-        self.name = name
-        self.dead_members = []
-
-    @override
-    def lose_member(self, member: CombatantType) -> None:
-        from RPyG.core_io import CoreIO
-
-        core_io = CoreIO.get_core_io()
-        core_io.send_output(
-            output_models.OutputMessage(f"{member.name} has been defeated")
-        )
-        self.dead_members.append(member)
-        self.members.remove(member)
-
-    @override
-    def gain_member(self, member: CombatantType) -> None:
-        self.members.append(member)

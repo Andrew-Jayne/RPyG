@@ -19,3 +19,4 @@ lines-after-imports = 2
 
 [tool.pyright]
 reportAny = false
+reportImportCycles = false

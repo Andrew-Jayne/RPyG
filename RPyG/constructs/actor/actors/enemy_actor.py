@@ -1,18 +1,14 @@
-from enum import Enum
+from typing import TYPE_CHECKING
 
-from RPyG.actors.actor_combatant import Combatant, CombatantParty
+from RPyG.constructs.actor.actors.combatant_actor import CombatantActor
 from RPyG.utilities import ensure_type
 
 
-class EnemyVariantGrade(Enum):
-    LESSER = "LESSER"
-    COMMON = "COMMON"
-    GREATER = "GREATER"
-    LEGENDARY = "LEGENDARY"
-    SPECIAL = "SPECIAL"
+if TYPE_CHECKING is True:
+    from RPyG.constructs import EnemyVariantGrade
 
 
-class Enemy(Combatant):
+class EnemyActor(CombatantActor):
     name: str
     health: int
     strength: int
@@ -36,6 +32,8 @@ class Enemy(Combatant):
         is_special: bool,
         variant_grade: str,
     ) -> None:
+        from RPyG.constructs import EnemyVariantGrade
+
         ensure_type(name, str, "name")
         ensure_type(health, int, "health")
         ensure_type(strength, int, "'strength")
@@ -45,7 +43,7 @@ class Enemy(Combatant):
         ensure_type(attack_name, str, "attack_name")
         ensure_type(is_special, bool, "is_special")
 
-        Combatant.__init__(
+        CombatantActor.__init__(
             self,
             name=name,
             strength=strength,
@@ -54,7 +52,7 @@ class Enemy(Combatant):
             luck=luck,
             health=health,
             attack_name=attack_name,
-            attack_power=Enemy._set_enemy_attack_power(
+            attack_power=EnemyActor._set_enemy_attack_power(
                 strength,
                 intellect,
             ),
@@ -79,6 +77,8 @@ class Enemy(Combatant):
         return attack_power * 10
 
     def validate(self) -> bool:
+        from RPyG.constructs import EnemyVariantGrade
+
         ensure_type(self.name, str, "self.name")
         ensure_type(self.health, int, "self.health")
         ensure_type(self.strength, int, "self.strength")
@@ -89,27 +89,3 @@ class Enemy(Combatant):
         ensure_type(self.is_special, bool, "self.is_special")
         ensure_type(self.variant_grade, EnemyVariantGrade, "self.variant_grade")
         return True
-
-
-class EnemyParty(CombatantParty[Enemy]):
-    members: list[Enemy]
-    dead_members: list[Enemy]
-    loot: object
-
-    def __init__(
-        self,
-        name: str,
-        members: list[Enemy],
-    ) -> None:
-        ensure_type(name, str, "name")
-        ensure_type(members, list, "members")
-        for party_member in members:
-            ensure_type(party_member, Enemy, "party_member")
-
-        ## super() Must be used because of typing and use of generics
-        super().__init__(
-            name=name,
-            members=members,
-        )
-
-        self.loot = None

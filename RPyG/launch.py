@@ -10,7 +10,6 @@ def launch_game(
 ) -> None:
     from RPyG.content import ContentLibrary
     from RPyG.core_io import CoreIO
-    from RPyG.run_game import play_game
 
     ensure_type(interface, RPyGInterface, "interface")
     # These are gateway singletons so we just need to create them
@@ -39,4 +38,4 @@ def launch_game(
 
     logger.info("All startup checks passed")
     logger.info("Starting game mode with %s interface", interface.__class__.__name__)
-    play_game()
+    global_game_state.play_game()

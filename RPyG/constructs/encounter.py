@@ -119,11 +119,15 @@ class Encounter:
         library = ContentLibrary.get_library()
 
         # Process choices
-        choice_options: list[str | None] = []
-        choice_options.append(self.success_choice)
-        choice_options.append(self.retry_choice)
-        choice_options.append(self.failure_choice)
-        if choice_options != [None, None, None]:
+        choice_options: list[str] = []
+        if self.success_choice is not None:
+            choice_options.append(self.success_choice)
+        if self.retry_choice is not None:
+            choice_options.append(self.retry_choice)
+        if self.failure_choice is not None:
+            choice_options.append(self.failure_choice)
+
+        if choice_options != []:
             core_io.request_input(
                 input_models.UserPromptRequest(
                     options=choice_options,

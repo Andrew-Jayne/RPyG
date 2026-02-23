@@ -1,62 +1,11 @@
 import random
 
-from RPyG.actors.actor_combatant import Combatant, CombatantParty
-from RPyG.core_io import CoreIO, output_models
+from RPyG.constructs.actor.actor_components import Inventory
+from RPyG.constructs.actor.actors.combatant_actor import CombatantActor
 from RPyG.utilities import ensure_type
 
 
-class Inventory:
-    gold: int
-    potions: int
-    actor_name: str
-
-    def __init__(
-        self,
-        gold: int,
-        potions: int,
-        actor_name: str,
-    ) -> None:
-        ensure_type(gold, int, "gold")
-        ensure_type(potions, int, "potions")
-        ensure_type(actor_name, str, "actor_name")
-
-        self.actor_name = actor_name
-        self.gold = gold
-        self.potions = potions
-
-    def gain_gold(self, amount: int) -> None:
-        self.gold += amount
-
-    def spend_gold(self, amount: int) -> bool:
-        core_io = CoreIO.get_core_io()
-
-        if self.gold < amount:
-            core_io.send_output(
-                output_models.OutputMessage(f"{self.actor_name} has insufficient gold")
-            )
-            return False
-        else:
-            Inventory.lose_gold(self, amount)
-            return True
-
-    def lose_gold(self, amount: int) -> None:
-        core_io = CoreIO.get_core_io()
-
-        self.gold -= amount
-        if self.gold < 0:
-            self.gold = 0
-            core_io.send_output(
-                output_models.OutputMessage(f"{self.actor_name} has no gold remaining")
-            )
-
-    def gain_potion(self, amount: int) -> None:
-        self.potions += amount
-
-    def lose_potion(self, amount: int) -> None:
-        self.potions -= amount
-
-
-class PlayableActor(Combatant):
+class PlayableActor(CombatantActor):
     name: str
     react_action: str
     react_messages: dict[str, str]
@@ -100,7 +49,7 @@ class PlayableActor(Combatant):
             actor_name=name,
         )
 
-        Combatant.__init__(
+        CombatantActor.__init__(
             self,
             name=name,
             strength=strength,
@@ -117,6 +66,8 @@ class PlayableActor(Combatant):
         )
 
     def use_potion(self) -> None:
+        from RPyG.core_io import CoreIO, output_models
+
         core_io = CoreIO.get_core_io()
 
         if self.inventory.potions != 0 and not self.is_fully_healed():
@@ -281,65 +232,3 @@ class PlayableActor(Combatant):
                 return "DOUBLE STRIKE"
             case _:
                 raise ValueError(f"Invalid specialization {specialization}")
-
-
-class PlayerParty(CombatantParty[PlayableActor]):
-    members: list[PlayableActor]
-    dead_members: list[PlayableActor]
-    relics: object
-    """
-    Stores the progress of the party, and a list/array of member instances
-    """
-
-    def __init__(
-        self,
-        name: str,
-        members: list[PlayableActor],
-    ) -> None:
-        ensure_type(name, str, "name")
-        ensure_type(members, list, "members")
-        for party_member in members:
-            ensure_type(party_member, PlayableActor, "party_member")
-
-        ## super() Must be used because of typing and use of generics
-        super().__init__(
-            name=name,
-            members=members,
-        )
-        self.relics = None
-
-    def end_game_report(self) -> str:
-        player_report = ""
-        for player_instance in self.members:
-            player_report += f"""
-    Player Name: {player_instance.name}
-    Player Base Health: {player_instance.base_health}                             
-    Player Final Health: {player_instance.health}
-    Player Int: {player_instance.intellect}
-    Player Str: {player_instance.strength}
-    Player Agl: {player_instance.agility}
-    Player Lck: {player_instance.luck}
-    Player Gold: {player_instance.inventory.gold}
-    Player Potions: {player_instance.inventory.potions}
-    Player Attack Name: {player_instance.attack_name}
-    Player Attack Power: {player_instance.attack_power}
-    """
-
-        player_report += "Fallen Members\n\n"
-
-        for player_instance in self.dead_members:
-            player_report += f"""
-    Player Name: {player_instance.name}
-    Player Base Health: {player_instance.base_health}                             
-    Player Final Health: {player_instance.health}
-    Player Int: {player_instance.intellect}
-    Player Str: {player_instance.strength}
-    Player Agl: {player_instance.agility}
-    Player Lck: {player_instance.luck}
-    Player Gold: {player_instance.inventory.gold}
-    Player Potions: {player_instance.inventory.potions}
-    Player Attack Name: {player_instance.attack_name}
-    Player Attack Power: {player_instance.attack_power}
-    """
-
-        return player_report

@@ -2,12 +2,11 @@ import random
 from enum import Enum
 from typing import TYPE_CHECKING
 
-from RPyG.constructs import EnemySet
 from RPyG.utilities import ensure_type
 
 
 if TYPE_CHECKING is True:
-    from RPyG.actors import Enemy
+    from RPyG.constructs import EnemyActor, EnemySet
 
 
 class DungeonEvent(Enum):
@@ -64,7 +63,7 @@ class Dungeon:
         self.enemy_set_id = enemy_set_id
 
     @property
-    def boss(self) -> Enemy:
+    def boss(self) -> EnemyActor:
         from RPyG.content import ContentLibrary
 
         library = ContentLibrary.get_library()
@@ -80,8 +79,7 @@ class Dungeon:
     ## this function is a crime
     def traverse_dungeon(self) -> None:
         from RPyG import combat
-        from RPyG.actors import EnemyParty
-        from RPyG.constructs import RandomResultItem, RandomResultTable
+        from RPyG.constructs import EnemyParty, RandomResultItem, RandomResultTable
         from RPyG.core_io import CoreIO, output_models
         from RPyG.game_state import GameState
 

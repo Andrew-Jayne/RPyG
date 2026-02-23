@@ -1,10 +1,18 @@
 from contextlib import AbstractContextManager
 from typing import TYPE_CHECKING, Self, final
 
-from RPyG.actors import EnemyParty, PlayerParty
-from RPyG.constructs import BorrowTrackedResource
-from RPyG.utilities import ensure_type
+from RPyG.constructs import BorrowTrackedResource, EnemyParty, PlayerParty
 
+## blegh, these things need to go elsewhere
+from RPyG.game_state.state_functions import (
+    EncounterType,
+    check_for_encounter,
+    handle_enemy_encounter,
+)
+from RPyG.utilities import ensure_type, setup_logger
+
+
+logger = setup_logger(__name__)
 
 if TYPE_CHECKING is True:
     from RPyG.constructs import Dungeon
@@ -75,8 +83,6 @@ class GameState:
         return self._enemy_party.borrow_resource()
 
     def set_enemy_party(self, enemy_party_instance: EnemyParty) -> None:
-        from RPyG.actors import EnemyParty
-
         ensure_type(enemy_party_instance, EnemyParty, "enemy_party_instance")
         self._enemy_party.load_resource(enemy_party_instance)
 
@@ -98,3 +104,80 @@ class GameState:
         if valid is not True:
             raise RuntimeError(" GameState failed to validate")
         return
+
+    def play_game(self):
+        from RPyG.constructs import StoryEvent
+        from RPyG.content import ContentLibrary
+        from RPyG.core_io import CoreIO, output_models
+        from RPyG.game_state import GameState
+
+        core_io = CoreIO.get_core_io()
+        game_state = GameState.get_game_state()
+        content_library = ContentLibrary.get_library()
+
+        # Check if player is in a dungeon
+        logger.info("Checking if player is in a dungeon")
+        if self.dungeon_progress is not None:
+            logger.info("Player is in dungeon, resuming")
+            with self.borrow_dungeon() as dungeon:
+                dungeon.traverse_dungeon()
+        else:
+            logger.info("Player is not in dungeon")
+
+        rounds_without_encounter = 1
+        while self.progress != 100:
+            self.progress += 1
+            if str(self.progress) in content_library.story_events.keys():
+                core_io.send_output(
+                    output_models.OutputMessage(
+                        f"After {rounds_without_encounter * 10} miles of travel"
+                    )
+                )
+                story_event: StoryEvent = content_library.story_events[
+                    str(self.progress)
+                ]
+                story_event.trigger()
+            else:
+                check_result = check_for_encounter()
+                if check_result is not None:
+                    core_io.send_output(
+                        output_models.OutputMessage(
+                            f"After {rounds_without_encounter * 10} miles of travel"
+                        )
+                    )
+                    match check_result:
+                        case EncounterType.EnemyEncounter:
+                            handle_enemy_encounter()
+                        case EncounterType.StandardEncounter:
+                            encounter = content_library.get_standard_encounter()
+                            encounter.process_encounter()
+                        case EncounterType.DungeonEncoutner:
+                            game_state.set_dungeon(
+                                content_library.get_standard_dungeon()
+                            )
+                            with game_state.borrow_dungeon() as dungeon:
+                                dungeon.traverse_dungeon()
+                    rounds_without_encounter = 1
+                else:
+                    rounds_without_encounter += 1
+                    core_io.send_output(
+                        output_models.EmptyDistanceMessage(
+                            distance=rounds_without_encounter
+                        )
+                    )
+
+            if self.player_party.members == []:
+                break
+
+        if self.player_party.members == []:
+            # [] means all players are in the dead_members list, this is like... 5% safer than len() == 0
+            # because it is looking at the list as a list rather than a property of it against an int
+            core_io.send_output(
+                output_models.OutputMessage(
+                    f"{self.player_party.name} has failed in their quest after {self.progress * 10} miles"
+                )
+            )
+
+        core_io.send_output(
+            output_models.OutputMessage(self.player_party.end_game_report())
+        )

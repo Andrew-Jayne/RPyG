@@ -1,25 +1,17 @@
-import hashlib
-import hmac
-import json
 import os
-import pickle
-import sys
 import textwrap
 import time
-import tomllib
-from typing import Any, override
+from typing import override
 
-from RPyG.actors import PlayableActor, PlayerParty
+from interfaces.interface_components import (
+    ContentFileLoaderSource,
+    PickleGameStateHandler,
+)
+from RPyG.constructs import ContentDataDict, PlayableActor, PlayerParty
 from RPyG.core_io import CoreIO, RPyGInterface, input_models, output_models
 from RPyG.exceptions import ImpossibleValueException
 from RPyG.game_state import GameState
 from RPyG.utilities import ensure_type, setup_logger
-
-
-CONTENT_PATH = "game_content"
-
-# """Secret""" key for HMAC, if you break your file that's on you
-secret_key = b"I_WILL_HACK_MY_SAVE_FILE_AND_PROBLEMS_WILL_BE_MY_FAULT"
 
 
 welcome_message = """
@@ -39,8 +31,16 @@ class BasicTerminalInterface(RPyGInterface):
 
     def __init__(self):
         RPyGInterface.__init__(self)
-        self.input_buffer = ""
-        self.show_ouput(output_models.OutputMessage(welcome_message, line_delay=0))
+        self.input_buffer = None
+        self.show_ouput(output_models.OutputMessage(welcome_message, line_delay=0.0))
+
+    @override
+    def get_content_data(self) -> dict[str, ContentDataDict]:
+        return ContentFileLoaderSource.get_content()
+
+    @override
+    def save_game_state(self, game_state: GameState) -> None:
+        PickleGameStateHandler.save_game_state(game_state)
 
     @override
     def show_ouput(self, output: output_models.OutputMessage) -> None:
@@ -66,12 +66,8 @@ class BasicTerminalInterface(RPyGInterface):
         ensure_type(request, input_models.InputRequest, "request")
         match request:
             case input_models.UserPromptRequest():
-                displayable_options: list[str] = []
-                for item in request.options:
-                    if item is not None:
-                        displayable_options.append(item)
                 content = self.prompt_user(
-                    options=displayable_options,
+                    options=request.options,
                     prompts=request.prompts,
                     show_options=request.show_options,
                 )
@@ -86,7 +82,7 @@ class BasicTerminalInterface(RPyGInterface):
                     f"Got Unknown Child class of input_models.InputRequest {type(request).__name__}"
                 )
 
-        if self.input_buffer is None:
+        if self.input_buffer is not None:
             raise RuntimeError(
                 "Input Buffer is not empty, receive_input() must be called to empty buffer"
             )
@@ -104,48 +100,12 @@ class BasicTerminalInterface(RPyGInterface):
         return data
 
     @override
-    def get_content_data(self) -> dict[str, dict[str, Any]]:  # pyright: ignore[reportExplicitAny]
-        """
-        Load all JSON files in the given directory and merge their contents into a single dictionary.
-        """
-        dir_path = CONTENT_PATH
-        combined_content: dict[str, dict[str, Any]] = {}  # pyright: ignore[reportExplicitAny]
-
-        # Walk through the directory and look for JSON files
-        for root, _dirs, files in os.walk(dir_path):
-            for file_name in files:
-                file_path = os.path.join(root, file_name)
-                file_extension = os.path.splitext(file_path)[1]
-                content_object: dict[str, dict[str, Any]] = {}  # pyright: ignore[reportExplicitAny]
-                match file_extension:
-                    case ".json":
-                        with open(file_path, "r") as json_file:
-                            content_object = json.load(json_file)
-                    case ".toml":
-                        with open(file_path, "rb") as toml_file:
-                            content_object = tomllib.load(toml_file)
-                    case _:
-                        pass
-
-                new_object = set(content_object.keys())
-                all_content = set(combined_content.keys())
-                conflicts = new_object.intersection(all_content)
-                if conflicts == set():
-                    combined_content.update(content_object)
-                else:
-                    raise ValueError(
-                        f"Duplicate Key Declaration found while processing {file_path} conflicting keys {conflicts}"
-                    )
-
-        return combined_content
-
-    @override
     def get_game_state(self) -> "GameState":
         logger.info("Getting Start type")
         start_type = self.get_start_type()
         match start_type:
             case "LOAD":
-                game_state = self.load_game()
+                game_state = PickleGameStateHandler.load_game_state()
             case "NEW":
                 game_state = self.party_start()
             case "USE_DEFAULT":
@@ -156,46 +116,6 @@ class BasicTerminalInterface(RPyGInterface):
         logger.info("starting game with %s start type", start_type)
 
         return game_state
-
-    @override
-    def save_game_state(self, game_state: GameState) -> None:
-        """
-        Call this to Save the current state of the player party object to a pickle file then exits the program
-        This serves to save all progress of the party
-        """
-
-        ensure_type(game_state, GameState, "game_state")
-
-        serialized_data = pickle.dumps(game_state)
-        signature = hmac.new(secret_key, serialized_data, hashlib.sha256).digest()
-
-        with open("savegame.rpygs", "wb") as save_file:
-            save_file.write(signature + serialized_data)  # pyright: ignore[reportUnusedCallResult]
-
-        core_io = CoreIO.get_core_io()
-        core_io.send_output(
-            output_models.OutputMessage(
-                f"Successfully Saved Game for {game_state.player_party.name}"
-            )
-        )
-
-        core_io.request_input(
-            input_models.UserPromptRequest(
-                options=["YES", "NO"],
-                prompts=["Would you like to keep playing?"],
-            )
-        )
-        match core_io.receive_input():
-            case "YES":
-                core_io.send_output(
-                    output_models.OutputMessage(
-                        "The adventure continues!", reset_display=True
-                    )
-                )
-            case "NO":
-                sys.exit(0)
-            case _:
-                raise ValueError("Must be a choice of 'YES' or 'NO'")
 
     @staticmethod
     def clear_display() -> None:
@@ -418,46 +338,3 @@ class BasicTerminalInterface(RPyGInterface):
         party_name = core_io.receive_input()
 
         return GameState(PlayerParty(party_name, party_instances))
-
-    @staticmethod
-    def load_game() -> GameState:
-        """
-        Call this to load the game stored in the pickle file called 'savegame.rpygs'.
-        Any other .rpygs files will be ignored
-        """
-        save_file_path = "savegame.rpygs"
-        core_io = CoreIO.get_core_io()
-
-        # Check if the save file exists
-        if not os.path.exists(save_file_path):
-            raise FileNotFoundError(
-                "Save file not found. Please check file path & try again, or start a new game"
-            )
-
-        with open(save_file_path, "rb") as save_file:
-            content = save_file.read()
-        signature, serialized_data = content[:32], content[32:]  # Assuming SHA-256 hash
-        expected_signature = hmac.new(
-            secret_key, serialized_data, hashlib.sha256
-        ).digest()
-
-        match hmac.compare_digest(expected_signature, signature):
-            case True:
-                game_state: GameState = pickle.loads(serialized_data)
-            case False:
-                raise ValueError("Save file tampered with or corrupted.")
-            case _:  # pyright: ignore[reportUnnecessaryComparison]
-                raise RuntimeError(  # pyright: ignore[reportUnreachable]
-                    "Save File tampering is so bad that compare_digest did not return a bool MonkaS"
-                )
-
-        ensure_type(game_state, GameState, "game_state")
-
-        core_io.send_output(
-            output_models.OutputMessage(
-                f"Successfully Loaded Save Game for: {game_state.player_party.name}"
-            )
-        )
-        ## yuck but I am moving off of pickle soon anyways
-        GameState._instance = game_state  # pyright: ignore[reportPrivateUsage]
-        return game_state

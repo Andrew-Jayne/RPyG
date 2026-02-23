@@ -40,3 +40,7 @@ class BattleHudMessage(OutputMessage):
 class EmptyDistanceMessage(OutputMessage):
     distance: int
     message: str = ""
+
+    def __post_init__(self) -> None:
+        ensure_type(self.distance, int, "distance")
+        ensure_type(self.message, str, "message")
