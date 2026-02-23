@@ -1,7 +1,7 @@
 from enum import Enum
 
-from RPyG.actors import EnemyParty
 from RPyG.combat import battle
+from RPyG.constructs import EnemyParty
 from RPyG.exceptions import ImpossibleValueException
 from RPyG.utilities import ensure_type
 

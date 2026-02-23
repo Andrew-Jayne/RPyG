@@ -1,42 +1,11 @@
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Self, final
+from typing import TYPE_CHECKING, Self, final
 
 from RPyG.core_io import input_models, output_models
 from RPyG.utilities import ensure_type
 
 
 if TYPE_CHECKING is True:
-    from RPyG.game_state import GameState
-
-
-class RPyGInterface(ABC):
-    def __init__(self):
-        pass
-
-    @abstractmethod
-    def show_ouput(self, output: output_models.OutputMessage) -> None:
-        pass
-
-    @abstractmethod
-    def request_input(self, request: input_models.InputRequest) -> None:
-        pass
-
-    @abstractmethod
-    def receive_input(self) -> str:
-        pass
-
-    # Needs the big ass typed dict thing
-    @abstractmethod
-    def get_content_data(self) -> dict[str, dict[str, Any]]:  # pyright: ignore[reportExplicitAny]
-        pass
-
-    @abstractmethod
-    def get_game_state(self) -> "GameState":
-        pass
-
-    @abstractmethod
-    def save_game_state(self, game_state: "GameState") -> None:
-        pass
+    from RPyG.core_io.rpyg_interface import RPyGInterface
 
 
 @final
@@ -45,6 +14,8 @@ class CoreIO:
     interface: RPyGInterface
 
     def __init__(self, interface: RPyGInterface):
+        from RPyG.core_io import RPyGInterface
+
         ensure_type(interface, RPyGInterface, "interface")
         if CoreIO._instance is None:
             self.interface = interface

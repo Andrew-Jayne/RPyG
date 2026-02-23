@@ -20,10 +20,10 @@ class JSONFormatter(Formatter):
     @override
     def format(self, record: LogRecord) -> str:
         log_data = {
-            "severity": record.levelname,
-            "timestamp": self.formatTime(record, self.datefmt),
+            "level": record.levelname,
+            "time": self.formatTime(record, self.datefmt),
             "module": record.name,
-            "message": record.getMessage(),
+            "text": record.getMessage(),
         }
         return json.dumps(log_data)
 

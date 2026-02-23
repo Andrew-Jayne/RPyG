@@ -1,10 +1,14 @@
 import math
 import random
 from enum import Enum
+from typing import TYPE_CHECKING
 
-from RPyG.actors import PlayableActor, PlayerParty
 from RPyG.exceptions import ImpossibleValueException
 from RPyG.utilities import ensure_type
+
+
+if TYPE_CHECKING is True:
+    from RPyG.constructs import PlayableActor, PlayerParty
 
 
 class EffectTarget(Enum):
@@ -89,6 +93,8 @@ class EncounterEffect:
         self.extra_effects = extra_effects
 
     def run_action(self, player_instance: PlayableActor, member_count: int) -> None:
+        from RPyG.constructs import PlayableActor
+
         ensure_type(player_instance, PlayableActor, "player_instance")
         scaled_magnitute = int(self.magnitude / member_count)
         match self.actor_action:
@@ -148,6 +154,8 @@ class EncounterEffect:
             effect.process_effect()
 
     def process_special_action(self, player_party_instance: PlayerParty) -> None:
+        from RPyG.constructs import PlayerParty
+
         ensure_type(player_party_instance, PlayerParty, "player_party_instance")
         match self.special_action:
             case None:

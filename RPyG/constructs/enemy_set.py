@@ -2,9 +2,21 @@ import copy
 import random
 from enum import Enum
 from functools import cached_property
+from typing import TYPE_CHECKING
 
-from RPyG.actors import Enemy, EnemyParty, EnemyVariantGrade
 from RPyG.utilities import ensure_type
+
+
+if TYPE_CHECKING is True:
+    from RPyG.constructs import EnemyActor, EnemyParty
+
+
+class EnemyVariantGrade(Enum):
+    LESSER = "LESSER"
+    COMMON = "COMMON"
+    GREATER = "GREATER"
+    LEGENDARY = "LEGENDARY"
+    SPECIAL = "SPECIAL"
 
 
 class EnemyWeightClass(Enum):
@@ -57,17 +69,17 @@ class EnemySet:
         self.key_enemy_id = key_enemy_id
 
     @cached_property
-    def variants_by_grade(self) -> dict[EnemyVariantGrade, list[Enemy]]:
+    def variants_by_grade(self) -> dict[EnemyVariantGrade, list[EnemyActor]]:
         from RPyG.content import ContentLibrary
 
         library = ContentLibrary.get_library()
 
-        enemy_party_instances: list[Enemy] = []
+        enemy_party_instances: list[EnemyActor] = []
         # select enemy ids from the enemy library
         for enemy_id in self.enemy_ids:
             enemy_party_instances.append(library.enemies[enemy_id])
 
-        variant_lists: dict[EnemyVariantGrade, list[Enemy]] = {
+        variant_lists: dict[EnemyVariantGrade, list[EnemyActor]] = {
             EnemyVariantGrade.LESSER: [],
             EnemyVariantGrade.COMMON: [],
             EnemyVariantGrade.GREATER: [],
@@ -93,7 +105,7 @@ class EnemySet:
         return variant_lists
 
     @cached_property
-    def key_enemy(self) -> Enemy | None:
+    def key_enemy(self) -> EnemyActor | None:
         from RPyG.content import ContentLibrary
 
         library = ContentLibrary.get_library()
@@ -105,11 +117,11 @@ class EnemySet:
         self,
         enemy_count: int,
     ) -> EnemyParty:
-        from RPyG.constructs.abstract import RandomResultItem, RandomResultTable
+        from RPyG.constructs import EnemyParty, RandomResultItem, RandomResultTable
 
         ensure_type(enemy_count, int, "enemy_count")
 
-        enemy_party_instances: list[Enemy] = []
+        enemy_party_instances: list[EnemyActor] = []
         if self.key_enemy is not None:
             enemy_party_instances.append(self.key_enemy)
 
@@ -137,6 +149,8 @@ class EnemySet:
         return EnemyParty(enemy_party_name, enemy_party_instances)
 
     def validate(self) -> bool:
+        from RPyG.constructs import EnemyActor
+
         ensure_type(self.plural_name, str, "self.plural_name")
         ensure_type(self.group_name, str, "self.group_name")
         ensure_type(self.set_type, EnemySetType, "self.set_type")
@@ -144,7 +158,7 @@ class EnemySet:
 
         key_enemy = self.key_enemy
         if key_enemy is not None:
-            ensure_type(key_enemy, Enemy, "key_enemy")
+            ensure_type(key_enemy, EnemyActor, "key_enemy")
 
         variants_by_grade = self.variants_by_grade
         ensure_type(variants_by_grade, dict, "variants_by_grade")
@@ -154,6 +168,6 @@ class EnemySet:
             for enemy in enemy_list:
                 if enemy_list == []:
                     return False
-                ensure_type(enemy, Enemy, "enemy")
+                ensure_type(enemy, EnemyActor, "enemy")
 
         return True

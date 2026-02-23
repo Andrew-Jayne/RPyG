@@ -1,7 +1,7 @@
-from RPyG.actors import (
+from RPyG.constructs import (
     CombatantParty,
     CombatantType,
-    Enemy,
+    EnemyActor,
     PlayableActor,
 )
 from RPyG.core_io import input_models, output_models
@@ -78,7 +78,7 @@ def process_player_turn() -> None:
                 match battle_choice:
                     case "ATTACK":  # select target
                         target_index = player_instance.select_combat_target(enemy_party)
-                        enemy_instance: Enemy = enemy_party.members[target_index]
+                        enemy_instance: EnemyActor = enemy_party.members[target_index]
                         player_instance.attack(enemy_instance)
                         if enemy_instance.health == 0:
                             enemy_party.lose_member(enemy_instance)
@@ -230,14 +230,18 @@ def battle() -> None:
             if is_battle_complete() is True:
                 battle_complete = True
 
-        ## Display Victory Message if players do not die
+        ## If Battle is done, Player party is dead, and enemy party is not, return
         if (
             battle_complete is True
-            and game_state.player_party.members != []
-            and enemy_party.members == []
+            and game_state.player_party.members == []
+            and enemy_party.members != []
         ):
-            game_state.reset_enemy_party()
-            post_battle()
+            return
+
+    # the previous condition was inverted to allow the final reference to the borrowed
+    # enemy party to be disposed of before reseting the instance
     # the only place enemy party is reset, because death is a game reset (for now)
+    game_state.reset_enemy_party()
+    post_battle()
 
     return

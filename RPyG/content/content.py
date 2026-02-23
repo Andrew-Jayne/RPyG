@@ -1,17 +1,26 @@
 import random
 from enum import Enum
 from functools import cached_property
-from typing import Any, final
+from typing import final
 
-from RPyG.actors import Enemy
 from RPyG.constructs import (
+    ContentDataDict,
     Dungeon,
     Encounter,
     EncounterEffect,
+    EnemyActor,
     EnemySet,
     EnemySetType,
     EnemyWeightClass,
     StoryEvent,
+)
+from RPyG.constructs.data_types import (
+    DungeonDataDict,
+    EncounterDataDict,
+    EncounterEffectDataDict,
+    EnemyDataDict,
+    EnemySetDataDict,
+    StoryEventDataDict,
 )
 
 
@@ -26,7 +35,7 @@ class ContentKind(Enum):
 
 @final
 class ContentLibrary:
-    enemies: dict[str, Enemy]
+    enemies: dict[str, EnemyActor]
     enemy_sets: dict[str, EnemySet]
     story_events: dict[str, StoryEvent]
     encounters: dict[str, Encounter]
@@ -35,7 +44,9 @@ class ContentLibrary:
     _instance: "ContentLibrary | None" = None
 
     @staticmethod
-    def build_story_events(story_events_data: dict[str, Any]) -> dict[str, StoryEvent]:  # pyright: ignore[reportExplicitAny]
+    def build_story_events(
+        story_events_data: dict[str, StoryEventDataDict],
+    ) -> dict[str, StoryEvent]:
         all_events: dict[str, StoryEvent] = {}
         for value in story_events_data.values():
             event = StoryEvent(**value)
@@ -44,7 +55,9 @@ class ContentLibrary:
         return all_events
 
     @staticmethod
-    def build_encounters(encounters_data: dict[str, Any]) -> dict[str, Encounter]:  # pyright: ignore[reportExplicitAny]
+    def build_encounters(
+        encounters_data: dict[str, EncounterDataDict],
+    ) -> dict[str, Encounter]:
         all_encouters: dict[str, Encounter] = {}
         for key, value in encounters_data.items():
             all_encouters[key] = Encounter(**value)
@@ -52,7 +65,9 @@ class ContentLibrary:
         return all_encouters
 
     @staticmethod
-    def build_enemy_sets(enemy_sets_data: dict[str, Any]) -> dict[str, EnemySet]:  # pyright: ignore[reportExplicitAny]
+    def build_enemy_sets(
+        enemy_sets_data: dict[str, EnemySetDataDict],
+    ) -> dict[str, EnemySet]:
         all_enemy_sets: dict[str, EnemySet] = {}
         for key, value in enemy_sets_data.items():
             all_enemy_sets[key] = EnemySet(**value)
@@ -60,15 +75,15 @@ class ContentLibrary:
         return all_enemy_sets
 
     @staticmethod
-    def build_enemies(enemies_data: dict[str, Any]) -> dict[str, Enemy]:  # pyright: ignore[reportExplicitAny]
-        all_enemies: dict[str, Enemy] = {}
+    def build_enemies(enemies_data: dict[str, EnemyDataDict]) -> dict[str, EnemyActor]:
+        all_enemies: dict[str, EnemyActor] = {}
         for key, value in enemies_data.items():
-            all_enemies[key] = Enemy(**value)
+            all_enemies[key] = EnemyActor(**value)
 
         return all_enemies
 
     @staticmethod
-    def build_dungeons(dungeons_data: dict[str, Any]) -> dict[str, Dungeon]:  # pyright: ignore[reportExplicitAny]
+    def build_dungeons(dungeons_data: dict[str, DungeonDataDict]) -> dict[str, Dungeon]:
         all_dungeons: dict[str, Dungeon] = {}
         for key, value in dungeons_data.items():
             all_dungeons[key] = Dungeon(**value)
@@ -77,7 +92,7 @@ class ContentLibrary:
 
     @staticmethod
     def build_encounter_effects(
-        encounter_effects_data: dict[str, Any],  # pyright: ignore[reportExplicitAny]
+        encounter_effects_data: dict[str, EncounterEffectDataDict],
     ) -> dict[str, EncounterEffect]:
         all_encounter_effects: dict[str, EncounterEffect] = {}
         for key, value in encounter_effects_data.items():
@@ -85,16 +100,14 @@ class ContentLibrary:
 
         return all_encounter_effects
 
-    # TBH the input of this should be a typed dict to explain what the hell this even is lol
-    def __init__(self, content_data: dict[str, dict[str, Any]]):  # pyright: ignore[reportExplicitAny]
-        # ensure_type(content_path, str, "content_path")
+    def __init__(self, content_data: dict[str, ContentDataDict]):
         if ContentLibrary._instance is None:
-            enemies_data: dict[str, Any] = {}  # pyright: ignore[reportExplicitAny]
-            enemy_sets_data: dict[str, Any] = {}  # pyright: ignore[reportExplicitAny]
-            dungeons_data: dict[str, Any] = {}  # pyright: ignore[reportExplicitAny]
-            encounters_data: dict[str, Any] = {}  # pyright: ignore[reportExplicitAny]
-            story_events_data: dict[str, Any] = {}  # pyright: ignore[reportExplicitAny]
-            encounter_effects_data: dict[str, Any] = {}  # pyright: ignore[reportExplicitAny]
+            enemies_data: dict[str, EnemyDataDict] = dict()
+            enemy_sets_data: dict[str, EnemySetDataDict] = dict()
+            dungeons_data: dict[str, DungeonDataDict] = dict()
+            encounters_data: dict[str, EncounterDataDict] = dict()
+            story_events_data: dict[str, StoryEventDataDict] = dict()
+            encounter_effects_data: dict[str, EncounterEffectDataDict] = dict()
 
             for item, value in content_data.items():
                 try:
@@ -108,19 +121,22 @@ class ContentLibrary:
                         f"Unknown content kind: {value['kind']}, for item {item}"
                     )
 
+                ## all of the ignores here are because the initialized empty dicts  do not have the expected values
+                ## however as items are sorted into them they will get the correct data
+                ## these typed dicts are around to help with keeping data data structures clear in this this large data store
                 match item_kind:
                     case ContentKind.EnemySet:
-                        enemy_sets_data[item] = value
+                        enemy_sets_data[item] = value  # pyright: ignore[reportArgumentType]
                     case ContentKind.Dungeon:
-                        dungeons_data[item] = value
+                        dungeons_data[item] = value  # pyright: ignore[reportArgumentType]
                     case ContentKind.Enemy:
-                        enemies_data[item] = value
+                        enemies_data[item] = value  # pyright: ignore[reportArgumentType]
                     case ContentKind.Encounters:
-                        encounters_data[item] = value
+                        encounters_data[item] = value  # pyright: ignore[reportArgumentType]
                     case ContentKind.StoryEvent:
-                        story_events_data[item] = value
+                        story_events_data[item] = value  # pyright: ignore[reportArgumentType]
                     case ContentKind.EncounterEffect:
-                        encounter_effects_data[item] = value
+                        encounter_effects_data[item] = value  # pyright: ignore[reportArgumentType]
                     case _:  # pyright: ignore[reportUnnecessaryComparison]
                         raise ValueError(  # pyright: ignore[reportUnreachable]
                             f"item {item} has unsupported kind {item_kind}"
