@@ -78,15 +78,16 @@ def handle_enemy_encounter():
             output_models.OutputMessage(f"Your Party encounters a {enemy_party.name}!")
         )
 
-        core_io.request_input(
+        core_io.request_str_input(
             input_models.UserPromptRequest(
                 options=["BATTLE", "FLEE"],
                 prompts=["Choose an Action:"],
             )
         )
-        match core_io.receive_input():
+        flee_success = False
+        match core_io.receive_str_input():
             case "BATTLE":
-                battle()
+                pass
             case "FLEE":
                 flee_success = True
                 for player_instance in game_state.player_party.members:
@@ -104,8 +105,11 @@ def handle_enemy_encounter():
                         )
                         flee_success = False
 
-                if flee_success is False:
-                    battle()
-
             case _:
                 raise RuntimeError()
+
+    # this is way out here so the borrow on enemy party is
+    # released before the battle starts, so the enemy party
+    # can be disposed of by the battle funciton itself
+    if flee_success is False:
+        battle()

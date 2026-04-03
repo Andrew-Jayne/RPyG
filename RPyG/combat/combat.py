@@ -36,7 +36,7 @@ def process_player_turn() -> None:
         ## Gross Code Dupe, but this whole function sucks ass
         for player_instance in game_state.player_party.members:
             if enemy_party.members != []:
-                core_io.request_input(
+                core_io.request_str_input(
                     input_models.UserPromptRequest(
                         prompts=[f"{player_instance.name}", "Choose an Action:"],
                         options=[
@@ -47,7 +47,7 @@ def process_player_turn() -> None:
                         ],
                     )
                 )
-                battle_choice = core_io.receive_input()
+                battle_choice = core_io.receive_str_input()
                 if (
                     battle_choice == "HEAL"
                     and player_instance.is_fully_healed() is True
@@ -57,7 +57,7 @@ def process_player_turn() -> None:
                             f"{player_instance.name} is fully healed, it would be unwise to use a potion"
                         )
                     )
-                    core_io.request_input(
+                    core_io.request_str_input(
                         input_models.UserPromptRequest(
                             prompts=[f"{player_instance.name}", "Choose an Action:"],
                             options=[
@@ -68,7 +68,7 @@ def process_player_turn() -> None:
                             ],
                         )
                     )
-                    battle_choice = core_io.receive_input()
+                    battle_choice = core_io.receive_str_input()
                     if battle_choice == "HEAL":
                         core_io.send_output(
                             output_models.OutputMessage(
@@ -152,29 +152,6 @@ def process_enemy_turn() -> None:
                 break
 
 
-def post_battle() -> None:
-    from RPyG.core_io import CoreIO
-    from RPyG.game_state import GameState
-
-    core_io = CoreIO.get_core_io()
-    game_state = GameState.get_game_state()
-
-    player_post_action = ""
-    while player_post_action != "TRAVEL":
-        core_io.request_input(
-            input_models.UserPromptRequest(
-                prompts=["Choose an Action:"],
-                options=["HEAL", "TRAVEL", "SAVE"],
-            )
-        )
-        player_post_action = core_io.receive_input()
-        if player_post_action == "HEAL":
-            for member_instance in game_state.player_party.members:
-                member_instance.use_potion()
-        if player_post_action == "SAVE":
-            core_io.interface.save_game_state(game_state)
-
-
 def build_hud_data() -> str:
     from RPyG.game_state import GameState
 
@@ -205,14 +182,10 @@ def battle() -> None:
     core_io = CoreIO.get_core_io()
     game_state = GameState.get_game_state()
     with game_state.borrow_enemy_party() as enemy_party:
-        core_io.send_output(
-            output_models.OutputMessage("The Battle Begins!", reset_display=True)
-        )
+        core_io.send_output(output_models.OutputMessage("The Battle Begins!"))
         battle_complete = False
         while battle_complete is False:
-            core_io.send_output(
-                output_models.BattleHudMessage(message=build_hud_data())
-            )
+            core_io.send_output(output_models.OutputMessage(message=build_hud_data()))
 
             ## Check if all parties are alive before running player turn
             if is_battle_complete() is False:
@@ -242,6 +215,21 @@ def battle() -> None:
     # enemy party to be disposed of before reseting the instance
     # the only place enemy party is reset, because death is a game reset (for now)
     game_state.reset_enemy_party()
-    post_battle()
+
+    # handle post battle
+    player_post_action = ""
+    while player_post_action != "TRAVEL":
+        core_io.request_str_input(
+            input_models.UserPromptRequest(
+                prompts=["Choose an Action:"],
+                options=["HEAL", "TRAVEL", "SAVE"],
+            )
+        )
+        player_post_action = core_io.receive_str_input()
+        if player_post_action == "HEAL":
+            for member_instance in game_state.player_party.members:
+                member_instance.use_potion()
+        if player_post_action == "SAVE":
+            core_io.interface.save_game_state(game_state)
 
     return

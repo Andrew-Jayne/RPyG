@@ -27,12 +27,15 @@ logger = setup_logger(__name__)
 
 
 class BasicTerminalInterface(RPyGInterface):
-    input_buffer: str | None
+    __slots__: tuple[str, ...] = ("string_buffer", "integer_buffer")
+    string_buffer: str | None
+    integer_buffer: int | None
 
     def __init__(self):
         RPyGInterface.__init__(self)
-        self.input_buffer = None
-        self.show_ouput(output_models.OutputMessage(welcome_message, line_delay=0.0))
+        self.string_buffer = None
+        self.integer_buffer = None
+        self.show_ouput(output_models.OutputMessage(welcome_message))
 
     @override
     def get_content_data(self) -> dict[str, ContentDataDict]:
@@ -55,21 +58,17 @@ class BasicTerminalInterface(RPyGInterface):
             wrapped_message += wrapped_line + "\n"
 
         # Print the final wrapped message, removing the last added newline and adding the custom ending
-        # Sleep before print based on line delay
-        if output.reset_display is True:
-            self.clear_display()
-        time.sleep(output.line_delay)
+        time.sleep(1)
         print(wrapped_message.rstrip("\n"), end=ending)
 
     @override
-    def request_input(self, request: input_models.InputRequest) -> None:
+    def request_str_input(self, request: input_models.InputRequest) -> None:
         ensure_type(request, input_models.InputRequest, "request")
         match request:
             case input_models.UserPromptRequest():
                 content = self.prompt_user(
                     options=request.options,
                     prompts=request.prompts,
-                    show_options=request.show_options,
                 )
 
             case input_models.CustomTextRequest():
@@ -82,21 +81,58 @@ class BasicTerminalInterface(RPyGInterface):
                     f"Got Unknown Child class of input_models.InputRequest {type(request).__name__}"
                 )
 
-        if self.input_buffer is not None:
+        if self.string_buffer is not None:
             raise RuntimeError(
                 "Input Buffer is not empty, receive_input() must be called to empty buffer"
             )
-        self.input_buffer = content
+        self.string_buffer = content
 
     @override
-    def receive_input(self) -> str:
-        data = self.input_buffer
+    def request_int_input(self, request: input_models.InputRequest) -> None:
+        ensure_type(request, input_models.InputRequest, "request")
+        match request:
+            case input_models.UserPromptRequest():
+                content = self.prompt_user(
+                    options=request.options,
+                    prompts=request.prompts,
+                )
+
+            case input_models.CustomTextRequest():
+                content = self.custom_text_entry(
+                    request.prompts,
+                    request.max_length,
+                )
+            case _:
+                raise ValueError(
+                    f"Got Unknown Child class of input_models.InputRequest {type(request).__name__}"
+                )
+
+        if self.integer_buffer is not None:
+            raise RuntimeError(
+                "Input Buffer is not empty, receive_input() must be called to empty buffer"
+            )
+        self.integer_buffer = int(content)
+
+    @override
+    def receive_str_input(self) -> str:
+        data = self.string_buffer
         if data is None:
             raise RuntimeError(
                 "Input buffer is empty, did you call request_input() before calling receive_input()?"
             )
         # reset buffer
-        self.input_buffer = None
+        self.string_buffer = None
+        return data
+
+    @override
+    def receive_int_input(self) -> int:
+        data = self.integer_buffer
+        if data is None:
+            raise RuntimeError(
+                "Input buffer is empty, did you call request_input() before calling receive_input()?"
+            )
+        # reset buffer
+        self.integer_buffer = None
         return data
 
     @override
@@ -206,8 +242,6 @@ class BasicTerminalInterface(RPyGInterface):
         self,
         options: list[str],
         prompts: list[str],
-        *,
-        show_options: bool = True,
     ) -> str:
         ensure_type(options, list, "options")
         ensure_type(prompts, list, "base_messages")
@@ -217,9 +251,8 @@ class BasicTerminalInterface(RPyGInterface):
             formatted_message += f"{message}\n"
         formatted_message += "\n"
 
-        if show_options is True:
-            for option in options:
-                formatted_message += f"{option}\n"
+        for option in options:
+            formatted_message += f"{option}\n"
 
         formatted_message += "\n"
 
@@ -248,8 +281,6 @@ class BasicTerminalInterface(RPyGInterface):
 
     @staticmethod
     def get_start_type() -> str:
-        if os.path.exists("use_default.flag") is True:
-            return "USE_DEFAULT"
         match os.path.exists("savegame.rpygs"):
             case True:
                 start_game_options = ["NEW", "LOAD"]
@@ -258,10 +289,11 @@ class BasicTerminalInterface(RPyGInterface):
                     "Options are:",
                 ]
             case False:
-                start_game_options = ["NEW"]
+                start_game_options = ["NEW", "USE_DEFAULT"]
                 start_game_messages = [
                     "Type 'NEW' to start a new game",
                     "You will be able to save your game later and load it here",
+                    "Type 'USE_DEFAULT' to start a new game with the default party",
                     "Options are:",
                 ]
             case _:  # pyright: ignore[reportUnnecessaryComparison]
@@ -273,13 +305,13 @@ class BasicTerminalInterface(RPyGInterface):
         core_io.send_output(
             output_models.OutputMessage("Welcome to RPyG, a text based RPG in Python")
         )
-        core_io.request_input(
+        core_io.request_str_input(
             input_models.UserPromptRequest(
                 options=start_game_options,
                 prompts=start_game_messages,
             )
         )
-        player_action = core_io.receive_input()
+        player_action = core_io.receive_str_input()
         return player_action
 
     @staticmethod
@@ -301,40 +333,40 @@ class BasicTerminalInterface(RPyGInterface):
         ]
         core_io = CoreIO.get_core_io()
 
-        core_io.request_input(
+        core_io.request_int_input(
             input_models.UserPromptRequest(
                 options=party_size_choices,
                 prompts=party_size_messages,
             )
         )
-        party_size = int(core_io.receive_input())
+        party_size = core_io.receive_int_input()
 
         party_instances: list[PlayableActor] = []
         for _ in range(0, party_size):
             core_io = CoreIO.get_core_io()
-            core_io.request_input(
+            core_io.request_str_input(
                 input_models.CustomTextRequest(
                     prompts=member_name_messages,
                     max_length=32,
                 )
             )
-            member_name = core_io.receive_input()
-            core_io.request_input(
+            member_name = core_io.receive_str_input()
+            core_io.request_str_input(
                 input_models.UserPromptRequest(
                     prompts=specialization_messages,
                     options=specialization_choices,
                 )
             )
-            member_specialization = core_io.receive_input()
+            member_specialization = core_io.receive_str_input()
             member = PlayableActor(member_name, member_specialization)
             party_instances.append(member)
 
-        core_io.request_input(
+        core_io.request_str_input(
             input_models.CustomTextRequest(
                 prompts=party_name_messages,
                 max_length=64,
             )
         )
-        party_name = core_io.receive_input()
+        party_name = core_io.receive_str_input()
 
         return GameState(PlayerParty(party_name, party_instances))

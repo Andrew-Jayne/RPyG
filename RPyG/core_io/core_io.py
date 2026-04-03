@@ -10,6 +10,7 @@ if TYPE_CHECKING is True:
 
 @final
 class CoreIO:
+    __slots__: tuple[str, ...] = ("interface",)
     _instance: Self | None = None
     interface: RPyGInterface
 
@@ -32,11 +33,17 @@ class CoreIO:
                 "Attempted to acess CoreIO instance before initialization"
             )
 
-    def request_input(self, request: input_models.InputRequest) -> None:
-        return self.interface.request_input(request)
+    def request_str_input(self, request: input_models.InputRequest) -> None:
+        return self.interface.request_str_input(request)
 
-    def receive_input(self) -> str:
-        return self.interface.receive_input()
+    def request_int_input(self, request: input_models.InputRequest) -> None:
+        return self.interface.request_int_input(request)
+
+    def receive_str_input(self) -> str:
+        return self.interface.receive_str_input()
+
+    def receive_int_input(self) -> int:
+        return self.interface.receive_int_input()
 
     def send_output(self, output: output_models.OutputMessage) -> None:
         return self.interface.show_ouput(output)

@@ -109,18 +109,16 @@ class PickleGameStateHandler(GameStateHandler):
             )
         )
 
-        core_io.request_input(
+        core_io.request_str_input(
             input_models.UserPromptRequest(
                 options=["YES", "NO"],
                 prompts=["Would you like to keep playing?"],
             )
         )
-        match core_io.receive_input():
+        match core_io.receive_str_input():
             case "YES":
                 core_io.send_output(
-                    output_models.OutputMessage(
-                        "The adventure continues!", reset_display=True
-                    )
+                    output_models.OutputMessage("The adventure continues!")
                 )
             case "NO":
                 sys.exit(0)

@@ -50,6 +50,7 @@ class DungeonDataDict(TypedDict):
     kind: str
     name: str
     length: int
+    special_dungeon: bool
     boss_enemy_id: str
     enemy_set_id: str
     start_message: str

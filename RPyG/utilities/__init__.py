@@ -28,6 +28,9 @@ class JSONFormatter(Formatter):
         return json.dumps(log_data)
 
 
+## need to break this out into a setup then use logging.getLogger, I like that style much better
+## so we don't re-setup the root logger on every write,
+# and it would let us reset log files between games
 ## i have no clue how this shit works, I don't like how logging is being handled RN.
 def setup_logger(source_module_name: str) -> Logger:
     # Create a handler that writes to a file

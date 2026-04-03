@@ -1,5 +1,5 @@
 import random
-from enum import Enum
+from enum import StrEnum
 from typing import TYPE_CHECKING
 
 from RPyG.utilities import ensure_type
@@ -9,7 +9,7 @@ if TYPE_CHECKING is True:
     from RPyG.constructs import EnemyActor, EnemySet
 
 
-class DungeonEvent(Enum):
+class DungeonEvent(StrEnum):
     HEAL_ROOM = "HEAL_ROOM"
     SHORTCUT = "SHORTCUT"
     BATTLE_ENEMY = "BATTLE_ENEMY"
@@ -30,12 +30,14 @@ class Dungeon:
     boss_enemy_id: str
     enemy_set_id: str
     length: int
+    special_dungeon: bool
 
     def __init__(
         self,
         kind: str,
         name: str,
         length: int,
+        special_dungeon: bool,
         boss_enemy_id: str,
         enemy_set_id: str,
         start_message: str,
@@ -46,6 +48,7 @@ class Dungeon:
         ensure_type(kind, str, "kind")
         ensure_type(name, str, "name")
         ensure_type(length, int, "length")
+        ensure_type(special_dungeon, bool, "special_dungeon")
         ensure_type(boss_enemy_id, str, "boss_enemy_id")
         ensure_type(enemy_set_id, str, "enemy_set_id")
         ensure_type(start_message, str, "start_message")
@@ -59,6 +62,7 @@ class Dungeon:
         self.heal_room_message = heal_room_message
         self.boss_encounter_message = boss_encounter_message
         self.length = length
+        self.special_dungeon = special_dungeon
         self.boss_enemy_id = boss_enemy_id
         self.enemy_set_id = enemy_set_id
 
@@ -143,7 +147,6 @@ class Dungeon:
                 )
             )
             combat.battle()
-        game_state.reset_dungeon()
 
     def validate(self) -> bool:
         ensure_type(self.dungeon_name, str, "self.dungeon_name")

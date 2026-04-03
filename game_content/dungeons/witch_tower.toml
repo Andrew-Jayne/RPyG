@@ -2,6 +2,7 @@
 kind = "Dungeon/v1"
 name = "Witch's Tower"
 length = 7
+special_dungeon = false
 boss_enemy_id = "thunder_demon_lord"
 enemy_set_id = "valericas_minions"
 start_message = "The party finds a stone tower with a pulsing green light eminating from the top"
@@ -10,7 +11,7 @@ heal_room_message = "The party finds a alchemy lab with food & potions!"
 boss_encounter_message = """
 You find Valerica the High preistess a top the tower. 
 The green light is eminating from her as you move forward the light turns blood red and her body evaporates. 
-When she stood a hulking Demonic Figure Roars as a storm gathers around the tower
+Where she stood a hulking Demonic Figure Roars as a storm gathers around the tower
 """
 
 ["valericas_minions"]

@@ -128,15 +128,15 @@ class Encounter:
             choice_options.append(self.failure_choice)
 
         if choice_options != []:
-            core_io.request_input(
+            core_io.request_str_input(
                 input_models.UserPromptRequest(
                     options=choice_options,
                     prompts=self.prompts,
                 )
             )
-            user_choice = core_io.receive_input()
+            user_choice = core_io.receive_str_input()
             while user_choice == self.retry_choice:
-                core_io.request_input(
+                core_io.request_str_input(
                     input_models.UserPromptRequest(
                         prompts=self.retry_messages,
                         options=choice_options,
@@ -145,7 +145,7 @@ class Encounter:
                 for effect_id in self.retry_effects:
                     effect = library.encounter_effects[effect_id]
                     effect.process_effect()
-                user_choice = core_io.receive_input()
+                user_choice = core_io.receive_str_input()
             match user_choice:
                 case self.success_choice:
                     for message in self.success_messages:

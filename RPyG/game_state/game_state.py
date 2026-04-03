@@ -81,6 +81,7 @@ class GameState:
             logger.info("Player is in dungeon, resuming")
             with self.borrow_dungeon() as dungeon:
                 dungeon.traverse_dungeon()
+            game_state.reset_dungeon()
         else:
             logger.info("Player is not in dungeon")
 
@@ -117,6 +118,7 @@ class GameState:
                             )
                             with game_state.borrow_dungeon() as dungeon:
                                 dungeon.traverse_dungeon()
+                            game_state.reset_dungeon()
                     rounds_without_encounter = 1
                 else:
                     rounds_without_encounter += 1

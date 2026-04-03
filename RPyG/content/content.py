@@ -248,4 +248,10 @@ class ContentLibrary:
     @staticmethod
     def get_standard_dungeon() -> Dungeon:
         library = ContentLibrary.get_library()
-        return random.choice(list(library.dungeons.values()))
+        all_dungeons = list(library.dungeons.values())
+
+        dungeon = random.choice(all_dungeons)
+        while dungeon.special_dungeon is True:
+            dungeon = random.choice(all_dungeons)
+
+        return dungeon

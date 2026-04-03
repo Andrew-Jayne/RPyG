@@ -2,6 +2,7 @@
 kind = "Dungeon/v1"
 name = "Algolon's Fortress"
 length = 20
+special_dungeon = true
 boss_enemy_id = "algolons_arch_mage"
 enemy_set_id = "acolytes_of_algolon"
 start_message = "Your Party Enters Algolon's Fortress"

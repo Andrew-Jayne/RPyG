@@ -18,14 +18,12 @@ class InputRequest:
 class UserPromptRequest(InputRequest):
     options: list[str]
     prompts: list[str]
-    show_options: bool = True
 
     def __post_init__(self) -> None:
         InputRequest.__post_init__(self)
         ensure_type(self.options, list, "options")
         for option in self.options:
             ensure_type(option, str, "option")
-        ensure_type(self.show_options, bool, "show_options")
 
 
 @dataclass

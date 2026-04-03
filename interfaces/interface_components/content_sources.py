@@ -24,11 +24,10 @@ class ContentFileLoaderSource(ContentSource):
         import os
         import tomllib
 
-        dir_path = ContentFileLoaderSource.CONTENT_PATH
         combined_content: dict[str, ContentDataDict] = {}
 
         # Walk through the directory and look for JSON files
-        for root, _dirs, files in os.walk(dir_path):
+        for root, _dirs, files in os.walk(ContentFileLoaderSource.CONTENT_PATH):
             for file_name in files:
                 file_path = os.path.join(root, file_name)
                 file_extension = os.path.splitext(file_path)[1]

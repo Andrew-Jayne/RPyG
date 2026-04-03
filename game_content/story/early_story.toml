@@ -1,6 +1,6 @@
 ["tavern_quest_notice_event"]
 kind = "StoryEvent/v1"
-progress_trigger = 1
+progress_trigger = 0
 event_type = "ENCOUNTER"
 encounter_id = "tavern_quest_notice"
 # enemy_id = None

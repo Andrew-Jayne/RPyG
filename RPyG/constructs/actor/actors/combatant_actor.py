@@ -198,9 +198,9 @@ class CombatantActor(Actor):
                 target_instance.damage(final_damage * 2)
                 core_io.send_output(
                     output_models.OutputMessage(f"""
-        {self.name} got a critical hit!
-        {self.name} dismembers {target_instance.name} inflicting {final_damage * 2} damage
-        {target_instance.name}'s attack power has been reduced by 25%
+{self.name} got a critical hit!
+{self.name} dismembers {target_instance.name} inflicting {final_damage * 2} damage
+{target_instance.name}'s attack power has been reduced by 25%
         """)
                 )
             case False:
@@ -208,8 +208,8 @@ class CombatantActor(Actor):
                 target_instance.dismember()
                 core_io.send_output(
                     output_models.OutputMessage(f"""
-    {self.name} dismembers {target_instance.name} inflicting {final_damage} damage
-    {target_instance.name}'s attack power has been reduced by 25%
+{self.name} dismembers {target_instance.name} inflicting {final_damage} damage
+{target_instance.name}'s attack power has been reduced by 25%
     """)
                 )
 
@@ -235,8 +235,8 @@ class CombatantActor(Actor):
             case True:
                 core_io.send_output(
                     output_models.OutputMessage(f"""
-        {self.name} attacks with {self.special_attack_name} dealing {per_target_damage * 2} damage to all enemies
-        {self.name} dealt critical hits to all enemies!
+{self.name} attacks with {self.special_attack_name} dealing {per_target_damage * 2} damage to all enemies
+{self.name} dealt critical hits to all enemies!
             """)
                 )
                 for target_instance in target_party_instance.members:
@@ -389,14 +389,13 @@ class CombatantActor(Actor):
                 target_messages.append(f"{index} {member.name}:{member.health}")
                 target_indexes.append(str(index))
 
-            core_io.request_input(
+            core_io.request_int_input(
                 input_models.UserPromptRequest(
                     prompts=target_messages,
                     options=target_indexes,
-                    show_options=False,
                 )
             )
-            return int(core_io.receive_input())
+            return core_io.receive_int_input()
         else:
             target_party_members = target_party_instance.members
             method_id = random.choice(["MAX_ATK", "MIN_HP", "RANDOM"])

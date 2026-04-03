@@ -18,14 +18,21 @@ class RPyGInterface(ABC):
         pass
 
     @abstractmethod
-    def request_input(self, request: input_models.InputRequest) -> None:
+    def request_str_input(self, request: input_models.InputRequest) -> None:
         pass
 
     @abstractmethod
-    def receive_input(self) -> str:
+    def request_int_input(self, request: input_models.InputRequest) -> None:
         pass
 
-    # Needs the big ass typed dict thing
+    @abstractmethod
+    def receive_str_input(self) -> str:
+        pass
+
+    @abstractmethod
+    def receive_int_input(self) -> int:
+        pass
+
     @abstractmethod
     def get_content_data(self) -> dict[str, ContentDataDict]:
         pass

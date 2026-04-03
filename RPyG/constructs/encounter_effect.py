@@ -178,7 +178,7 @@ class EncounterEffect:
                         f"{player_instance.name} has {player_instance.inventory.potions} potions & {player_instance.inventory.gold} gold"
                     )
                 )
-                core_io.request_input(
+                core_io.request_str_input(
                     input_models.UserPromptRequest(
                         options=[
                             "BUY",
@@ -194,7 +194,7 @@ class EncounterEffect:
                         ],
                     )
                 )
-                player_choice = core_io.receive_input()
+                player_choice = core_io.receive_str_input()
                 match player_choice:
                     case "BUY":
                         if player_instance.inventory.spend_gold(25) is True:
