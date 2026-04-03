@@ -37,3 +37,5 @@ So please don't turn Claude code or cursor loose on this and open a PR with 8k n
 Just have fun, and enjoy expressing behavior in logic.
 
 - AJ
+
+-2026
