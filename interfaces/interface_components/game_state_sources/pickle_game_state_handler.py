@@ -1,21 +1,13 @@
-from abc import ABC, abstractmethod
 from typing import Final, override
+from warnings import deprecated
 
+from interfaces.interface_components.game_state_sources.abstract_game_state_handler import (
+    GameStateHandler,
+)
 from RPyG.game_state import GameState
 
 
-class GameStateHandler(ABC):
-    @staticmethod
-    @abstractmethod
-    def load_game_state() -> GameState:
-        pass
-
-    @staticmethod
-    @abstractmethod
-    def save_game_state(game_state: GameState) -> None:
-        pass
-
-
+@deprecated("Use JsonGameStateHandler instead")
 class PickleGameStateHandler(GameStateHandler):
     # """Secret""" key for HMAC, if you break your file that's on you
     SECRET_KEY: Final[bytes] = b"I_WILL_HACK_MY_SAVE_FILE_AND_PROBLEMS_WILL_BE_MY_FAULT"

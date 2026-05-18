@@ -1,4 +1,5 @@
 import random
+from collections.abc import Mapping
 from enum import Enum
 from functools import cached_property
 from typing import final
@@ -78,7 +79,7 @@ class ContentLibrary:
     def build_enemies(enemies_data: dict[str, EnemyDataDict]) -> dict[str, EnemyActor]:
         all_enemies: dict[str, EnemyActor] = {}
         for key, value in enemies_data.items():
-            all_enemies[key] = EnemyActor(**value)
+            all_enemies[key] = EnemyActor.build(**value)
 
         return all_enemies
 
@@ -171,29 +172,28 @@ class ContentLibrary:
     @classmethod
     def validate_content(cls) -> None:
         library = ContentLibrary.get_library()
-        for event_id, story_event in library.story_events.items():
-            if story_event.validate() is False:
-                raise RuntimeError(f"{event_id} failed to validate")
-
-        for encounter_id, encounter in library.encounters.items():
-            if encounter.validate() is False:
-                raise RuntimeError(f"{encounter_id} failed to validate")
-
-        for enemy_id, enemy in library.enemies.items():
-            if enemy.validate() is False:
-                raise RuntimeError(f"{enemy_id} failed to validate")
-
-        for enemy_set_id, enemy_set in library.enemy_sets.items():
-            if enemy_set.validate() is False:
-                raise RuntimeError(f"{enemy_set_id} failed to validate")
-
-        for dungeon_id, dungeon in library.dungeons.items():
-            if dungeon.validate() is False:
-                raise RuntimeError(f"{dungeon_id} failed to validate")
-
-        for effect_id, effect in library.encounter_effects.items():
-            if effect.validate() is False:
-                raise RuntimeError(f"{effect_id} failed to validate")
+        content_listings: list[
+            Mapping[
+                str,
+                StoryEvent
+                | Encounter
+                | EnemyActor
+                | EnemySet
+                | Dungeon
+                | EncounterEffect,
+            ]
+        ] = [
+            library.story_events,
+            library.encounters,
+            library.enemies,
+            library.enemy_sets,
+            library.dungeons,
+            library.encounter_effects,
+        ]
+        for content_listing in content_listings:
+            for content_id, content_object in content_listing.items():
+                if content_object.validate() is False:
+                    raise RuntimeError(f"{content_id} failed to validate")
 
     @cached_property
     def standard_encounters(self) -> dict[str, Encounter]:

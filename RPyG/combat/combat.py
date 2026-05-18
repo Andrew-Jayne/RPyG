@@ -10,7 +10,8 @@ from RPyG.utilities import ensure_type
 
 def clear_dead_members(party_instance: CombatantParty[CombatantType]) -> None:
     ensure_type(party_instance, CombatantParty, "party_instance")
-    for member in party_instance.members:
+    # use a copy here since we are mutating the list while iterating it
+    for member in party_instance.members.copy():
         if member.health == 0:
             party_instance.lose_member(member)
 
@@ -85,7 +86,8 @@ def process_player_turn() -> None:
 
                     case player_instance.special_attack_name:
                         player_instance.special_attack(enemy_party)
-                        for enemy_instance in enemy_party.members:
+                        ## same as above, mutation during itteration causes undead enemies
+                        for enemy_instance in enemy_party.members.copy():
                             if enemy_instance.health == 0:
                                 enemy_party.lose_member(enemy_instance)
 

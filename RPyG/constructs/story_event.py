@@ -144,7 +144,7 @@ class StoryEvent:
 
                 if self.dungeon_id not in content_library.dungeons.keys():
                     raise FileNotFoundError(
-                        f"Unable to locate Dungeon with the ID {self.dungeon_id}, avalible IDs are {content_library.dungeons.keys()}"
+                        f"Unable to locate Dungeon with the ID {self.dungeon_id}, available IDs are {content_library.dungeons.keys()}"
                     )
                 game_state.set_dungeon(content_library.dungeons[self.dungeon_id])
                 with game_state.borrow_dungeon() as dungeon:
@@ -174,7 +174,7 @@ class StoryEvent:
                 if self.encounter_id is not None:
                     if self.encounter_id not in content_library.encounters.keys():
                         raise FileNotFoundError(
-                            f"Unable to locate encounter with the ID {self.encounter_id}, avalible IDs are {content_library.encounters.keys()}"
+                            f"Unable to locate encounter with the ID {self.encounter_id}, available IDs are {content_library.encounters.keys()}"
                         )
                     encounter = content_library.encounters[self.encounter_id]
                     encounter.process_encounter()

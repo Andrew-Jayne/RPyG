@@ -5,6 +5,7 @@ class Inventory:
     gold: int
     potions: int
     actor_name: str
+    __slots__: tuple[str, ...] = ("gold", "potions", "actor_name")
 
     def __init__(
         self,
@@ -54,3 +55,5 @@ class Inventory:
 
     def lose_potion(self, amount: int) -> None:
         self.potions -= amount
+        if self.potions < 0:
+            self.potions = 0

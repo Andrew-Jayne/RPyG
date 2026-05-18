@@ -13,7 +13,7 @@ if TYPE_CHECKING is True:
 class EncounterType(Enum):
     EnemyEncounter = "EnemyEncounter"
     StandardEncounter = "StandardEncounter"
-    DungeonEncoutner = "DungeonEncoutner"
+    DungeonEncounter = "DungeonEncounter"
 
 
 def generate_enemy_set(player_count: int) -> EnemyParty:
@@ -59,7 +59,7 @@ def check_for_encounter() -> EncounterType | None:
         [
             RandomResultItem(EncounterType.EnemyEncounter, (1 / 8)),
             RandomResultItem(EncounterType.StandardEncounter, (1 / 4)),
-            RandomResultItem(EncounterType.DungeonEncoutner, (1 / 10)),
+            RandomResultItem(EncounterType.DungeonEncounter, (1 / 10)),
             RandomResultItem(None, (5 / 8)),
         ]
     ).generate_result()

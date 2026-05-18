@@ -14,7 +14,7 @@ class RPyGInterface(ABC):
         pass
 
     @abstractmethod
-    def show_ouput(self, output: output_models.OutputMessage) -> None:
+    def show_output(self, output: output_models.OutputMessage) -> None:
         pass
 
     @abstractmethod

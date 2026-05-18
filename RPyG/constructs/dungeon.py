@@ -31,6 +31,17 @@ class Dungeon:
     enemy_set_id: str
     length: int
     special_dungeon: bool
+    __slots__: tuple[str, ...] = (
+        "dungeon_name",
+        "start_message",
+        "shortcut_message",
+        "heal_room_message",
+        "boss_encounter_message",
+        "boss_enemy_id",
+        "enemy_set_id",
+        "length",
+        "special_dungeon",
+    )
 
     def __init__(
         self,
@@ -121,7 +132,7 @@ class Dungeon:
                     enemy_count = int(
                         len(game_state.player_party.members) + random.randint(-2, 2)
                     )
-                    if enemy_count == 0:
+                    if enemy_count <= 0:
                         enemy_count = 1
                     enemy_party = self.enemy_set.generate_enemy_party(enemy_count)
                     core_io.send_output(

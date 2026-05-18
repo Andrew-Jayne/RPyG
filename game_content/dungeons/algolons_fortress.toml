@@ -21,6 +21,7 @@ enemy_ids = [
     "initiate_of_algolon",
     "acolyte_of_algolon",
     "high_acolyte_of_algolon",
+    "dragon_priestess_of_algolon",
 ]
 
 ["algolons_arch_mage"]
@@ -34,6 +35,19 @@ agility = 4
 luck = 6
 attack_name = "Arcane Lightning"
 is_special = true
+
+["dragon_priestess_of_algolon"]
+kind = "Enemy/v1"
+variant_grade = "LEGENDARY"
+name = "Dragon Priestess of Algolon"
+health = 300
+strength = 6
+intellect = 9
+agility = 5
+luck = 7
+attack_name = "Dragonfire Invocation"
+is_special = false
+
 
 ["initiate_of_algolon"]
 kind = "Enemy/v1"

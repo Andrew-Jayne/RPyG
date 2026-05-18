@@ -1,6 +1,6 @@
 import copy
 import random
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from RPyG.constructs.actor.actors.base_actor import Actor
 from RPyG.core_io import CoreIO, input_models, output_models
@@ -14,21 +14,28 @@ if TYPE_CHECKING is True:
 
 
 class CombatantActor(Actor):
-    name: str
-    strength: int
-    intellect: int
-    agility: int
-    luck: int
     health: int
     base_health: int
     attack_name: str
     attack_power: int
-    special_attack_name: str | None
+    special_attack_name: str
     special_attack_energy: int
     specialization: str
     use_special_attack: bool
     will_react: bool
     is_dismembered: bool
+    __slots__: tuple[str, ...] = (
+        "health",
+        "base_health",
+        "attack_name",
+        "attack_power",
+        "special_attack_name",
+        "special_attack_energy",
+        "specialization",
+        "use_special_attack",
+        "will_react",
+        "is_dismembered",
+    )
 
     def __init__(
         self,
@@ -38,10 +45,14 @@ class CombatantActor(Actor):
         agility: int,
         luck: int,
         health: int,
+        base_health: int,
         attack_name: str,
         attack_power: int,
-        special_attack_name: str | None,
+        special_attack_name: str,
         specialization: str,
+        use_special_attack: bool = False,
+        will_react: bool = False,
+        is_dismembered: bool = False,
     ) -> None:
         ensure_type(name, str, "name")
         ensure_type(strength, int, "strength")
@@ -51,8 +62,7 @@ class CombatantActor(Actor):
         ensure_type(health, int, "health")
         ensure_type(attack_name, str, "attack_name")
         ensure_type(attack_power, int, "attack_power")
-        if special_attack_name is not None:
-            ensure_type(special_attack_name, str, "special_attack_name")
+        ensure_type(special_attack_name, str, "special_attack_name")
 
         if len(name) > 32:
             raise ValueError("Combatant Name cannot exceed 32 characters")
@@ -69,7 +79,7 @@ class CombatantActor(Actor):
         )
 
         self.health = health
-        self.base_health = health
+        self.base_health = base_health
 
         self.attack_name = attack_name
         self.special_attack_name = special_attack_name
@@ -77,9 +87,9 @@ class CombatantActor(Actor):
         self.attack_power = attack_power
         self.specialization = specialization
 
-        self.use_special_attack = False
-        self.will_react = False
-        self.is_dismembered = False
+        self.use_special_attack = use_special_attack
+        self.will_react = will_react
+        self.is_dismembered = is_dismembered
 
     def damage(self, damage_amount: int) -> None:
         ensure_type(damage_amount, int, "damage_amount")
@@ -154,7 +164,7 @@ class CombatantActor(Actor):
     def react(self) -> bool:
         from RPyG.constructs.actor import PlayableActor
 
-        if isinstance(self, PlayableActor):
+        if isinstance(self, PlayableActor) is True:
             match self.specialization:
                 case "WARRIOR":
                     return random.randint(1, 30) <= (self.luck + self.strength)
@@ -175,16 +185,17 @@ class CombatantActor(Actor):
         ensure_type(target_instance, CombatantActor, "attacker_instance")
 
         if random.randint(0, 99) in list(range(int(self.luck / 2))):
-            if (
-                isinstance(target_instance, EnemyActor)
-                and target_instance.is_special is False
-            ):
-                core_io.send_output(
-                    output_models.OutputMessage(
-                        f"{self.name} decapitates {target_instance.name} killing them instantly"
+            if isinstance(target_instance, EnemyActor) is True:
+                target_instance = cast(EnemyActor, target_instance)
+                if target_instance.is_special is False:
+                    core_io.send_output(
+                        output_models.OutputMessage(
+                            f"{self.name} decapitates {target_instance.name} killing them instantly"
+                        )
                     )
-                )
-                target_instance.health = 0
+                    target_instance.health = 0
+
+                    return
 
         damage_variation = int(self.attack_power * 0.1)
         base_damage = self.attack_power + random.randint(
@@ -225,9 +236,9 @@ class CombatantActor(Actor):
 
         # set damage
         damage_variation = int(self.attack_power * 0.1)
-        base_damage = int(
-            self.attack_power
-            + random.randint(-damage_variation, damage_variation) * 1.5
+        base_damage = (
+            int(self.attack_power + random.randint(-damage_variation, damage_variation))
+            * 1.5
         )
         per_target_damage = int(base_damage / len(target_party_instance.members))
 
@@ -314,13 +325,14 @@ class CombatantActor(Actor):
             # Check if Target Died
             if secondary_instance.health == 0:
                 target_party_instance.lose_member(secondary_instance)
+                return
 
             # luck + agl in 25 to get caught and take 50% target damage from target 2
             if (self.luck + self.agility) < random.randint(0, 25):
                 self.damage(int(secondary_instance.attack_power * 0.5))
                 core_io.send_output(
                     output_models.OutputMessage(
-                        f"{self.name} fails fails to evade an attack from {secondary_instance.name} and takes {int(secondary_instance.attack_power * 0.5)} damage"
+                        f"{self.name} fails to evade an attack from {secondary_instance.name} and takes {int(secondary_instance.attack_power * 0.5)} damage"
                     )
                 )
 

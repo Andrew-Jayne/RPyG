@@ -34,17 +34,35 @@ class GameState:
         "_dungeon_progress",
     )
 
-    def __init__(self, player_party: PlayerParty):
+    @classmethod
+    def build(cls, player_party: PlayerParty) -> GameState:
         from RPyG.constructs import Dungeon
 
         ensure_type(player_party, PlayerParty, "player_party")
+        return GameState(
+            player_party=player_party,
+            progress=0,
+            dungeon_progress=None,
+            enemy_party=BorrowTrackedResource(EnemyParty),
+            dungeon=BorrowTrackedResource(Dungeon),
+        )
+
+    def __init__(
+        self,
+        player_party: PlayerParty,
+        progress: int,
+        dungeon_progress: int | None,
+        enemy_party: BorrowTrackedResource[EnemyParty],
+        dungeon: BorrowTrackedResource[Dungeon],
+    ):
+
         if GameState._instance is None:
             GameState._instance = self
             self.player_party = player_party
-            self.progress = 0
-            self._dungeon_progress = None
-            self._enemy_party = BorrowTrackedResource(EnemyParty)
-            self._dungeon = BorrowTrackedResource(Dungeon)
+            self.progress = progress
+            self._dungeon_progress = dungeon_progress
+            self._enemy_party = enemy_party
+            self._dungeon = dungeon
         else:
             raise RuntimeError("GameState already initialized")
 
@@ -57,12 +75,11 @@ class GameState:
                 "Attempted to access GameState instance before initialization"
             )
 
-    def validate(self) -> None:
-        # Ensure type and validate on all object, to runtime check at load
-        valid = True
-        if valid is not True:
-            raise RuntimeError(" GameState failed to validate")
-        return
+    def validate(self) -> bool:
+        if GameState.get_game_state() is self._instance:
+            return True
+        else:
+            return False
 
     # core loop of the whole game
     def play_game(self):
@@ -112,7 +129,7 @@ class GameState:
                         case EncounterType.StandardEncounter:
                             encounter = content_library.get_standard_encounter()
                             encounter.process_encounter()
-                        case EncounterType.DungeonEncoutner:
+                        case EncounterType.DungeonEncounter:
                             game_state.set_dungeon(
                                 content_library.get_standard_dungeon()
                             )
@@ -168,7 +185,7 @@ class GameState:
             raise RuntimeError()
         # can't be zero, and can't be more than len of the dungeon
         with self.borrow_dungeon() as dungeon:
-            if dungeon.length < progress_amount or progress_amount < 0:
+            if dungeon.length < progress_amount or progress_amount <= 0:
                 raise ValueError()
 
         self._dungeon_progress += progress_amount

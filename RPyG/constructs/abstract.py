@@ -2,6 +2,7 @@ import random
 from collections.abc import Generator
 from contextlib import contextmanager
 from dataclasses import dataclass
+from typing import Any
 
 from RPyG.utilities import ensure_type
 
@@ -37,6 +38,11 @@ class BorrowTrackedResource[InstanceType]:
     _resource: InstanceType | None
     _borrow_count: int
     _resource_type: type[InstanceType]
+    __slots__: tuple[str, ...] = (
+        "_resource",
+        "_borrow_count",
+        "_resource_type",
+    )
 
     def __init__(self, resource_type: type[InstanceType]) -> None:
         self._resource = None

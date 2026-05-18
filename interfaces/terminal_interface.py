@@ -5,7 +5,7 @@ from typing import override
 
 from interfaces.interface_components import (
     ContentFileLoaderSource,
-    PickleGameStateHandler,
+    JsonGameStateHandler,
 )
 from RPyG.constructs import ContentDataDict, PlayableActor, PlayerParty
 from RPyG.core_io import CoreIO, RPyGInterface, input_models, output_models
@@ -35,7 +35,7 @@ class BasicTerminalInterface(RPyGInterface):
         RPyGInterface.__init__(self)
         self.string_buffer = None
         self.integer_buffer = None
-        self.show_ouput(output_models.OutputMessage(welcome_message))
+        self.show_output(output_models.OutputMessage(welcome_message))
 
     @override
     def get_content_data(self) -> dict[str, ContentDataDict]:
@@ -43,10 +43,10 @@ class BasicTerminalInterface(RPyGInterface):
 
     @override
     def save_game_state(self, game_state: GameState) -> None:
-        PickleGameStateHandler.save_game_state(game_state)
+        JsonGameStateHandler.save_game_state(game_state)
 
     @override
-    def show_ouput(self, output: output_models.OutputMessage) -> None:
+    def show_output(self, output: output_models.OutputMessage) -> None:
         ending = "\n"
         wrapped_message = ""
 
@@ -141,11 +141,11 @@ class BasicTerminalInterface(RPyGInterface):
         start_type = self.get_start_type()
         match start_type:
             case "LOAD":
-                game_state = PickleGameStateHandler.load_game_state()
+                game_state = JsonGameStateHandler.load_game_state()
             case "NEW":
                 game_state = self.party_start()
             case "USE_DEFAULT":
-                game_state = GameState(self.default_party())
+                game_state = GameState.build(self.default_party())
             case _:
                 raise ValueError("Invalid Game Start Type")
 
@@ -199,11 +199,10 @@ class BasicTerminalInterface(RPyGInterface):
         ]  # Limit the input to the desired length
         for literal in literal_control_strings:
             limited_string = limited_string.replace(literal, "")
-        cleaned_string = "".join(
-            char
-            for char in limited_string
-            if char not in chars_to_remove and char not in control_chars
-        )
+        cleaned_string = ""
+        for char in limited_string:
+            if char not in chars_to_remove and char not in control_chars:
+                cleaned_string += char
 
         return cleaned_string
 
@@ -218,14 +217,14 @@ class BasicTerminalInterface(RPyGInterface):
         while chosen_action not in choice_list:
             chosen_action = self.sanitize(input("").upper())
             if chosen_action not in choice_list:
-                self.show_ouput(
+                self.show_output(
                     output_models.OutputMessage(
                         f"That is not a Valid Option. Try again, valid options are \n{options_list}"
                     )
                 )
                 dumb_check += 1
                 if dumb_check == 10:
-                    raise FileNotFoundError(
+                    raise ValueError(
                         "Look it's not hard, just enter a valid choice...."
                     )
         return chosen_action
@@ -235,7 +234,7 @@ class BasicTerminalInterface(RPyGInterface):
         input_messages: list[str],
         max_length: int,
     ) -> str:
-        self.show_ouput(output_models.OutputMessage("\n".join(input_messages)))
+        self.show_output(output_models.OutputMessage("\n".join(input_messages)))
         return self.sanitize(input()[:max_length])
 
     def prompt_user(
@@ -244,7 +243,7 @@ class BasicTerminalInterface(RPyGInterface):
         prompts: list[str],
     ) -> str:
         ensure_type(options, list, "options")
-        ensure_type(prompts, list, "base_messages")
+        ensure_type(prompts, list, "prompts")
 
         formatted_message = ""
         for message in prompts:
@@ -256,7 +255,7 @@ class BasicTerminalInterface(RPyGInterface):
 
         formatted_message += "\n"
 
-        self.show_ouput(output_models.OutputMessage(formatted_message))
+        self.show_output(output_models.OutputMessage(formatted_message))
 
         response = self.validate_input(options)
         return response
@@ -266,11 +265,11 @@ class BasicTerminalInterface(RPyGInterface):
         party_members: list[PlayableActor] = []
         default_names = ("Conan", "Merlin", "Robin")
         default_specialization = ("WARRIOR", "MAGE", "ROGUE")
-        for i in range(0, 3):
+        for index in range(0, 3):
             party_members.append(
-                PlayableActor(
-                    default_names[i],
-                    default_specialization[i],
+                PlayableActor.build(
+                    default_names[index],
+                    default_specialization[index],
                 )
             )
 
@@ -358,7 +357,7 @@ class BasicTerminalInterface(RPyGInterface):
                 )
             )
             member_specialization = core_io.receive_str_input()
-            member = PlayableActor(member_name, member_specialization)
+            member = PlayableActor.build(member_name, member_specialization)
             party_instances.append(member)
 
         core_io.request_str_input(
@@ -369,4 +368,4 @@ class BasicTerminalInterface(RPyGInterface):
         )
         party_name = core_io.receive_str_input()
 
-        return GameState(PlayerParty(party_name, party_instances))
+        return GameState.build(PlayerParty(party_name, party_instances))

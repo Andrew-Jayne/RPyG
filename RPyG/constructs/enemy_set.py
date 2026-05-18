@@ -38,6 +38,7 @@ class EnemySet:
     weight_class: EnemyWeightClass
     enemy_ids: list[str]
     key_enemy_id: str | None
+    ## __slots__ cannot be used because cached_proptery uses __dict__
 
     def __init__(
         self,
@@ -165,9 +166,18 @@ class EnemySet:
         for grade, enemy_list in variants_by_grade.items():
             ensure_type(grade, EnemyVariantGrade, "grade")
             ensure_type(enemy_list, list, "enemy_list")
+            if (
+                grade
+                in [
+                    EnemyVariantGrade.LESSER,
+                    EnemyVariantGrade.COMMON,
+                    EnemyVariantGrade.GREATER,
+                    EnemyVariantGrade.LEGENDARY,
+                ]
+                and enemy_list == []
+            ):
+                return False
             for enemy in enemy_list:
-                if enemy_list == []:
-                    return False
                 ensure_type(enemy, EnemyActor, "enemy")
 
         return True

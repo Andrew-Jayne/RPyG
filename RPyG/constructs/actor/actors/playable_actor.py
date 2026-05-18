@@ -6,24 +6,19 @@ from RPyG.utilities import ensure_type
 
 
 class PlayableActor(CombatantActor):
-    name: str
     react_action: str
     react_messages: dict[str, str]
     inventory: Inventory
+    __slots__: tuple[str, ...] = ("react_action", "react_messages", "inventory")
 
-    def __init__(
-        self,
+    @classmethod
+    def build(
+        cls,
         name: str,
         specialization: str,
-    ) -> None:
+    ) -> PlayableActor:
         ensure_type(name, str, "name")
         ensure_type(specialization, str, "specialization")
-
-        self.name = name
-        react_messages = PlayableActor._get_react_action(specialization, name)
-        self.react_action = react_messages[0]
-        self.react_messages = react_messages[1]
-
         match specialization:
             case "WARRIOR":
                 strength = random.randint(5, 10)
@@ -42,12 +37,76 @@ class PlayableActor(CombatantActor):
                 luck = random.randint(1, 10)
             case _:
                 raise ValueError(f"Error Invalid Specialization {specialization}")
+        react_messages = PlayableActor._get_react_action(specialization, name)
 
-        self.inventory = Inventory(
-            gold=strength * 25,
-            potions=int(intellect / 2),
-            actor_name=name,
+        player_health = (strength + intellect) * 10
+        return cls(
+            name=name,
+            specialization=specialization,
+            strength=strength,
+            intellect=intellect,
+            agility=agility,
+            luck=luck,
+            health=player_health,
+            base_health=player_health,
+            inventory=Inventory(
+                gold=strength * 25,
+                potions=int(intellect / 2),
+                actor_name=name,
+            ),
+            react_action=react_messages[0],
+            react_messages=react_messages[1],
+            attack_name=PlayableActor._get_attack_name(specialization),
+            attack_power=PlayableActor._get_attack_power(
+                specialization,
+                strength,
+                intellect,
+                agility,
+            ),
+            special_attack_name=PlayableActor._get_special_attack(specialization),
         )
+
+    def __init__(
+        self,
+        name: str,
+        specialization: str,
+        strength: int,
+        intellect: int,
+        agility: int,
+        luck: int,
+        inventory: Inventory,
+        react_action: str,
+        react_messages: dict[str, str],
+        health: int,
+        base_health: int,
+        attack_name: str,
+        attack_power: int,
+        special_attack_name: str,
+        use_special_attack: bool = False,
+        will_react: bool = False,
+        is_dismembered: bool = False,
+        special_attack_energy: int = 0,
+    ) -> None:
+        ensure_type(name, str, "name")
+        ensure_type(specialization, str, "specialization")
+        ensure_type(strength, int, "strength")
+        ensure_type(intellect, int, "intellect")
+        ensure_type(agility, int, "agility")
+        ensure_type(luck, int, "luck")
+        ensure_type(inventory, Inventory, "inventory")
+        ensure_type(react_action, str, "react_action")
+        ensure_type(react_messages, dict, "react_messages")
+        for key, value in react_messages.items():
+            ensure_type(key, str, "key")
+            ensure_type(value, str, "value")
+        ensure_type(health, int, "health")
+        ensure_type(attack_name, str, "attack_name")
+        ensure_type(attack_power, int, "attack_power")
+        ensure_type(special_attack_name, str, "special_attack_name")
+
+        self.react_action = react_action
+        self.react_messages = react_messages
+        self.inventory = inventory
 
         CombatantActor.__init__(
             self,
@@ -56,12 +115,11 @@ class PlayableActor(CombatantActor):
             intellect=intellect,
             agility=agility,
             luck=luck,
-            health=1000 + ((strength + intellect) * 10),
-            attack_name=PlayableActor._get_attack_name(specialization),
-            attack_power=PlayableActor._get_attack_power(
-                specialization, strength, intellect, agility
-            ),
-            special_attack_name=PlayableActor._get_special_attack(specialization),
+            health=health,
+            base_health=base_health,
+            attack_name=attack_name,
+            attack_power=attack_power,
+            special_attack_name=special_attack_name,
             specialization=specialization,
         )
 
@@ -70,7 +128,7 @@ class PlayableActor(CombatantActor):
 
         core_io = CoreIO.get_core_io()
 
-        if self.inventory.potions != 0 and not self.is_fully_healed():
+        if self.inventory.potions != 0 and self.is_fully_healed() is False:
             core_io.send_output(
                 output_models.OutputMessage(f"{self.name} drinks a potion")
             )

@@ -30,7 +30,7 @@ class CoreIO:
             return CoreIO._instance
         else:
             raise RuntimeError(
-                "Attempted to acess CoreIO instance before initialization"
+                "Attempted to access CoreIO instance before initialization"
             )
 
     def request_str_input(self, request: input_models.InputRequest) -> None:
@@ -46,8 +46,10 @@ class CoreIO:
         return self.interface.receive_int_input()
 
     def send_output(self, output: output_models.OutputMessage) -> None:
-        return self.interface.show_ouput(output)
+        return self.interface.show_output(output)
 
-    def validate(self) -> None:
-        ## this should have some kind of round trip test or something
-        return
+    def validate(self) -> bool:
+        if CoreIO.get_core_io() is self._instance:
+            return True
+        else:
+            return False

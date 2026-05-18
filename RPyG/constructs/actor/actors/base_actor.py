@@ -7,6 +7,13 @@ class Actor:
     intellect: int
     agility: int
     luck: int
+    __slots__: tuple[str, ...] = (
+        "name",
+        "strength",
+        "intellect",
+        "agility",
+        "luck",
+    )
 
     def __init__(
         self,

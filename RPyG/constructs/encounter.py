@@ -163,6 +163,9 @@ class Encounter:
 
                 case _:
                     raise ImpossibleValueException("user_choice")
+        if self.next_encounter is not None:
+            next_encounter = library.encounters[self.next_encounter]
+            next_encounter.process_encounter()
 
     def validate(self) -> bool:
         ensure_type(self.kind, str, "self.kind")

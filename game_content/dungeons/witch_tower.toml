@@ -5,12 +5,12 @@ length = 7
 special_dungeon = false
 boss_enemy_id = "thunder_demon_lord"
 enemy_set_id = "valericas_minions"
-start_message = "The party finds a stone tower with a pulsing green light eminating from the top"
+start_message = "The party finds a stone tower with a pulsing green light emanating from the top"
 shortcut_message = "The party Find a secret passage!"
 heal_room_message = "The party finds a alchemy lab with food & potions!"
 boss_encounter_message = """
-You find Valerica the High preistess a top the tower. 
-The green light is eminating from her as you move forward the light turns blood red and her body evaporates. 
+You find Valerica the High priestess a top the tower. 
+The green light is emanating from her as you move forward the light turns blood red and her body evaporates. 
 Where she stood a hulking Demonic Figure Roars as a storm gathers around the tower
 """
 
@@ -19,11 +19,12 @@ kind = "EnemySet/v1"
 plural_name = "Valerica's Minions"
 group_name = "Coven"
 weight_class = "SPECIAL"
-set_type = "STANDARD"
+set_type = "SPECIAL"
 enemy_ids = [
     "apprentice_witch",
     "servant",
     "witch",
+    "thunder_demon",
 ]
 
 ["apprentice_witch"]
@@ -60,6 +61,19 @@ intellect = 7
 agility = 4
 luck = 6
 attack_name = "Fire Storm"
+is_special = false
+
+
+["thunder_demon"]
+kind = "Enemy/v1"
+variant_grade = "LEGENDARY"
+name = "Thunder Demon"
+health = 250
+strength = 7
+intellect = 8
+agility = 6
+luck = 5
+attack_name = "Thunder Clap"
 is_special = false
 
 

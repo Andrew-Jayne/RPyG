@@ -18,7 +18,7 @@ def launch_game(
     logger.info("CoreIO starting")
     global_core_io = CoreIO(interface)
     logger.info("Validating CoreIO")
-    global_core_io.validate
+    global_core_io.validate()
     logger.info("CoreIO validated")
     logger.info("CoreIO ready")
 
