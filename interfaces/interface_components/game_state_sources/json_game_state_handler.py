@@ -317,7 +317,7 @@ class JsonGameStateHandler(GameStateHandler):
         raise RuntimeError("Save file tampered with or corrupted.")
 
     @staticmethod
-    def serilize_game_state(game_state: GameState) -> GameStateDict:
+    def serialize_game_state(game_state: GameState) -> GameStateDict:
 
         ensure_type(game_state, GameState, "game_state")
         return {
@@ -368,7 +368,7 @@ class JsonGameStateHandler(GameStateHandler):
         from RPyG.core_io import CoreIO, input_models, output_models
 
         save_data = dumps(
-            JsonGameStateHandler.serilize_game_state(game_state),
+            JsonGameStateHandler.serialize_game_state(game_state),
             indent=4,
         ).encode("utf-8")
 
