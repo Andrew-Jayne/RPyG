@@ -127,7 +127,7 @@ class EncounterEffect:
         game_state = GameState.get_game_state()
         core_io = CoreIO.get_core_io()
         for message in self.effect_messages:
-            core_io.send_output(output_models.OutputMessage(message))
+            core_io.send_output(output_models.GenericEncounterMessage(message=message))
 
         match self.targets:
             case EffectTarget.ALL:
@@ -174,8 +174,10 @@ class EncounterEffect:
             player_choice = ""
             while player_choice != "LEAVE":
                 core_io.send_output(
-                    output_models.OutputMessage(
-                        f"{player_instance.name} has {player_instance.inventory.potions} potions & {player_instance.inventory.gold} gold"
+                    output_models.MerchantMenuHudDataMessage(
+                        actor_name=player_instance.name,
+                        potion_count=player_instance.inventory.potions,
+                        gold_count=player_instance.inventory.gold,
                     )
                 )
                 core_io.request_str_input(
@@ -197,25 +199,52 @@ class EncounterEffect:
                 player_choice = core_io.receive_str_input()
                 match player_choice:
                     case "BUY":
-                        if player_instance.inventory.spend_gold(25) is True:
+                        potion_cost = 25
+                        can_buy = player_instance.inventory.spend_gold(potion_cost)
+                        if can_buy is True:
                             player_instance.inventory.gain_potion(1)
                             core_io.send_output(
-                                output_models.OutputMessage(
-                                    f"{player_instance.name} purchases a potion. They now have {player_instance.inventory.potions} potions & {player_instance.inventory.gold} gold",
+                                output_models.MerchantInteractionMessage(
+                                    event=output_models.MerchantInteractionMessage.MerchantEvent(
+                                        gold_change=potion_cost,
+                                        success=can_buy,
+                                        item_name="potion",
+                                        item_count_change=1,
+                                        buyer_actor_name=player_instance.name,
+                                    )
                                 )
                             )
                         else:
                             core_io.send_output(
-                                output_models.OutputMessage(
-                                    f"{player_instance.name} does not have enough Gold to purchase more potions",
+                                output_models.MerchantInteractionMessage(
+                                    event=output_models.MerchantInteractionMessage.MerchantEvent(
+                                        gold_change=potion_cost,
+                                        success=can_buy,
+                                        item_name="potion",
+                                        item_count_change=0,
+                                        buyer_actor_name=player_instance.name,
+                                    )
                                 )
                             )
                             player_choice = "LEAVE"
                     case "BUY MAX":
                         # Using floor to make sure you can't buy 10 potions with 245 gold
                         rounds = math.floor(player_instance.inventory.gold / 25)
-                        player_instance.inventory.spend_gold((rounds * 25))  # pyright: ignore[reportUnusedCallResult]
+                        total_cost = rounds * 25
+                        player_instance.inventory.spend_gold(total_cost)  # pyright: ignore[reportUnusedCallResult]
                         player_instance.inventory.gain_potion(rounds)
+                        core_io.send_output(
+                            output_models.MerchantInteractionMessage(
+                                event=output_models.MerchantInteractionMessage.MerchantEvent(
+                                    gold_change=total_cost,
+                                    success=True,
+                                    item_name="potion",
+                                    item_count_change=rounds,
+                                    buyer_actor_name=player_instance.name,
+                                )
+                            )
+                        )
+
                         player_choice = "LEAVE"
                     case _:
                         player_choice = "LEAVE"

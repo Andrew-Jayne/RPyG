@@ -102,8 +102,10 @@ class StoryEvent:
 
                 for message in self.messages:
                     core_io.send_output(
-                        output_models.OutputMessage(
-                            message.format(party_name=game_state.player_party.name)
+                        output_models.GenericStoryMessage(
+                            message=message.format(
+                                party_name=game_state.player_party.name
+                            )
                         )
                     )
 
@@ -117,16 +119,20 @@ class StoryEvent:
                 if len(game_state.player_party.members) != 0:
                     for message in self.success_messages:
                         core_io.send_output(
-                            output_models.OutputMessage(
-                                message.format(party_name=game_state.player_party.name)
+                            output_models.GenericStoryMessage(
+                                message=message.format(
+                                    party_name=game_state.player_party.name
+                                )
                             )
                         )
                     core_io.interface.save_game_state(game_state)
                 else:
                     for message in self.failure_messages:
                         core_io.send_output(
-                            output_models.OutputMessage(
-                                message.format(party_name=game_state.player_party.name)
+                            output_models.GenericStoryMessage(
+                                message=message.format(
+                                    party_name=game_state.player_party.name
+                                )
                             )
                         )
             case StoryEventType.DUNGEON_ENCOUNTER:
@@ -137,8 +143,10 @@ class StoryEvent:
                     )
                 for message in self.messages:
                     core_io.send_output(
-                        output_models.OutputMessage(
-                            message.format(party_name=game_state.player_party.name)
+                        output_models.GenericStoryMessage(
+                            message=message.format(
+                                party_name=game_state.player_party.name
+                            )
                         )
                     )
 
@@ -152,23 +160,29 @@ class StoryEvent:
                 if len(game_state.player_party.members) != 0:
                     for message in self.success_messages:
                         core_io.send_output(
-                            output_models.OutputMessage(
-                                message.format(party_name=game_state.player_party.name)
+                            output_models.GenericStoryMessage(
+                                message=message.format(
+                                    party_name=game_state.player_party.name
+                                )
                             )
                         )
                     core_io.interface.save_game_state(game_state)
                 else:
                     for message in self.failure_messages:
                         core_io.send_output(
-                            output_models.OutputMessage(
-                                message.format(party_name=game_state.player_party.name)
+                            output_models.GenericStoryMessage(
+                                message=message.format(
+                                    party_name=game_state.player_party.name
+                                )
                             )
                         )
             case StoryEventType.ENCOUNTER:
                 for message in self.messages:
                     core_io.send_output(
-                        output_models.OutputMessage(
-                            message.format(party_name=game_state.player_party.name)
+                        output_models.GenericStoryMessage(
+                            message=message.format(
+                                party_name=game_state.player_party.name
+                            )
                         )
                     )
                 if self.encounter_id is not None:
@@ -181,15 +195,19 @@ class StoryEvent:
                 if len(game_state.player_party.members) != 0:
                     for message in self.success_messages:
                         core_io.send_output(
-                            output_models.OutputMessage(
-                                message.format(party_name=game_state.player_party.name)
+                            output_models.GenericStoryMessage(
+                                message=message.format(
+                                    party_name=game_state.player_party.name
+                                )
                             )
                         )
                 else:
                     for message in self.failure_messages:
                         core_io.send_output(
-                            output_models.OutputMessage(
-                                message.format(party_name=game_state.player_party.name)
+                            output_models.GenericStoryMessage(
+                                message=message.format(
+                                    party_name=game_state.player_party.name
+                                )
                             )
                         )
             case _:  # pyright: ignore[reportUnnecessaryComparison]

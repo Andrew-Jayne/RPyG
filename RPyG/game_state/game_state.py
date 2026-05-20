@@ -107,8 +107,8 @@ class GameState:
             self.progress += 1
             if str(self.progress) in content_library.story_events.keys():
                 core_io.send_output(
-                    output_models.OutputMessage(
-                        f"After {rounds_without_encounter * 10} miles of travel"
+                    output_models.EventAfterEmptyMessage(
+                        distance=rounds_without_encounter
                     )
                 )
                 story_event: StoryEvent = content_library.story_events[
@@ -119,8 +119,8 @@ class GameState:
                 check_result = check_for_encounter()
                 if check_result is not None:
                     core_io.send_output(
-                        output_models.OutputMessage(
-                            f"After {rounds_without_encounter * 10} miles of travel"
+                        output_models.EventAfterEmptyMessage(
+                            distance=rounds_without_encounter
                         )
                     )
                     match check_result:
@@ -148,17 +148,11 @@ class GameState:
             if self.player_party.members == []:
                 break
 
-        if self.player_party.members == []:
-            # [] means all players are in the dead_members list, this is like... 5% safer than len() == 0
-            # because it is looking at the list as a list rather than a property of it against an int
-            core_io.send_output(
-                output_models.OutputMessage(
-                    f"{self.player_party.name} has failed in their quest after {self.progress * 10} miles"
-                )
-            )
-
         core_io.send_output(
-            output_models.OutputMessage(self.player_party.end_game_report())
+            output_models.GameEndMessage(
+                success=self.player_party.members == [],
+                post_game_recap=self.player_party.end_game_report(),
+            )
         )
 
     ## Borrow Checked Dungeon Handling

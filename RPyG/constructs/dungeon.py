@@ -17,11 +17,6 @@ class DungeonEvent(StrEnum):
 
 
 class Dungeon:
-    """
-    Immutable, Stateless object
-    This represents the required data and logic to handle player actions inside of a dungeon scene
-    """
-
     dungeon_name: str
     start_message: str
     shortcut_message: str
@@ -101,7 +96,12 @@ class Dungeon:
         core_io = CoreIO.get_core_io()
         game_state = GameState.get_game_state()
 
-        core_io.send_output(output_models.OutputMessage(self.start_message))
+        core_io.send_output(
+            output_models.DungeonStartMessage(
+                message=self.start_message,
+                dungeon_name=self.dungeon_name,
+            )
+        )
 
         dungeon_table = RandomResultTable(
             [
@@ -112,13 +112,17 @@ class Dungeon:
             ]
         )
         if game_state.dungeon_progress is None:
-            raise RuntimeError()
+            raise RuntimeError("Dungeon has not been properly loaded into GameState")
         while game_state.dungeon_progress < self.length:
             game_state.progress_dungeon(1)
             match dungeon_table.generate_result():
                 case DungeonEvent.HEAL_ROOM:
                     core_io.send_output(
-                        output_models.OutputMessage(self.heal_room_message)
+                        output_models.DungeonUpdateMessage(
+                            event=output_models.DungeonUpdateMessage.HealRoomEvent(
+                                message=self.heal_room_message
+                            )
+                        )
                     )
                     for member_instance in game_state.player_party.members:
                         member_instance.inventory.gain_potion(2)
@@ -126,7 +130,11 @@ class Dungeon:
                 case DungeonEvent.SHORTCUT:
                     game_state.progress_dungeon(2)
                     core_io.send_output(
-                        output_models.OutputMessage(self.shortcut_message)
+                        output_models.DungeonUpdateMessage(
+                            event=output_models.DungeonUpdateMessage.ShortcutEvent(
+                                message=self.shortcut_message
+                            )
+                        )
                     )
                 case DungeonEvent.BATTLE_ENEMY:
                     enemy_count = int(
@@ -136,10 +144,13 @@ class Dungeon:
                         enemy_count = 1
                     enemy_party = self.enemy_set.generate_enemy_party(enemy_count)
                     core_io.send_output(
-                        output_models.OutputMessage(
-                            f"Your Party encounters a {enemy_party.name}!"
+                        output_models.DungeonUpdateMessage(
+                            event=output_models.DungeonUpdateMessage.EnemyEncounterEvent(
+                                message=enemy_party.name
+                            )
                         )
                     )
+
                     game_state.set_enemy_party(enemy_party)
                     combat.battle()
                     if len(game_state.player_party.members) == 0:
@@ -149,7 +160,11 @@ class Dungeon:
 
         if len(game_state.player_party.members) != 0:
             core_io.send_output(
-                output_models.OutputMessage(self.boss_encounter_message)
+                output_models.DungeonUpdateMessage(
+                    event=output_models.DungeonUpdateMessage.BossEncounterEvent(
+                        message=self.boss_encounter_message
+                    )
+                )
             )
             game_state.set_enemy_party(
                 EnemyParty(

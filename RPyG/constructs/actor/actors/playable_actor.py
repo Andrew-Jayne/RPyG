@@ -123,32 +123,67 @@ class PlayableActor(CombatantActor):
             specialization=specialization,
         )
 
-    def use_potion(self) -> None:
+    def use_potion(self, ignore_fully_healed: bool = False) -> Inventory.PotionResult:
         from RPyG.core_io import CoreIO, output_models
 
         core_io = CoreIO.get_core_io()
-
-        if self.inventory.potions != 0 and self.is_fully_healed() is False:
-            core_io.send_output(
-                output_models.OutputMessage(f"{self.name} drinks a potion")
-            )
+        if self.inventory.potions != 0 and (
+            self.is_fully_healed() is False or ignore_fully_healed is True
+        ):
             self.inventory.lose_potion(1)
-            self.heal(100 + random.randint(-20, 20))
+            heal_magnitude = 100 + random.randint(-20, 20)
+            self.heal(heal_magnitude)
             core_io.send_output(
-                output_models.OutputMessage(f"""
-{self.name} has {self.inventory.potions} remaining
-{self.name}'s health is now {self.health}
-""")
+                output_models.UsePotionMessage(
+                    actor_name=self.name,
+                    potions_used=1,
+                    heal_amount=heal_magnitude,
+                    potions_remaining=self.inventory.potions,
+                    fully_healed=self.is_fully_healed(),
+                    ignore_fully_healed=ignore_fully_healed,
+                )
             )
 
-        elif self.inventory.potions == 0:
-            core_io.send_output(
-                output_models.OutputMessage(f"{self.name} has no remaining potions!")
+            return Inventory.PotionResult(
+                success=True,
+                no_potions=False,
+                fully_healed=self.is_fully_healed(),
             )
-        else:
+        if (
+            self.inventory.potions != 0
+            and self.is_fully_healed() is True
+            and ignore_fully_healed is False
+        ):
             core_io.send_output(
-                output_models.OutputMessage(f"{self.name} is already fully healed!")
+                output_models.UsePotionMessage(
+                    actor_name=self.name,
+                    potions_used=0,
+                    heal_amount=0,
+                    potions_remaining=self.inventory.potions,
+                    fully_healed=self.is_fully_healed(),
+                    ignore_fully_healed=ignore_fully_healed,
+                )
             )
+            return Inventory.PotionResult(
+                success=False,
+                no_potions=False,
+                fully_healed=self.is_fully_healed(),
+            )
+        core_io.send_output(
+            output_models.UsePotionMessage(
+                actor_name=self.name,
+                potions_used=0,
+                heal_amount=0,
+                potions_remaining=self.inventory.potions,
+                fully_healed=self.is_fully_healed(),
+                ignore_fully_healed=ignore_fully_healed,
+            )
+        )
+        return Inventory.PotionResult(
+            success=False,
+            no_potions=True,
+            fully_healed=self.is_fully_healed(),
+        )
 
     @staticmethod
     def _get_attack_power(

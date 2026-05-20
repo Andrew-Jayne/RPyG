@@ -1,7 +1,15 @@
+from dataclasses import dataclass
+
 from RPyG.utilities import ensure_type
 
 
 class Inventory:
+    @dataclass(kw_only=True)
+    class PotionResult:
+        success: bool
+        no_potions: bool
+        fully_healed: bool
+
     gold: int
     potions: int
     actor_name: str
@@ -31,7 +39,12 @@ class Inventory:
 
         if self.gold < amount:
             core_io.send_output(
-                output_models.OutputMessage(f"{self.actor_name} has insufficient gold")
+                output_models.UseGoldMessage(
+                    actor_name=self.actor_name,
+                    event=output_models.UseGoldMessage.InsufficientGoldEvent(
+                        final_amount=self.gold
+                    ),
+                )
             )
             return False
         else:
@@ -47,7 +60,10 @@ class Inventory:
         if self.gold < 0:
             self.gold = 0
             core_io.send_output(
-                output_models.OutputMessage(f"{self.actor_name} has no gold remaining")
+                output_models.UseGoldMessage(
+                    actor_name=self.actor_name,
+                    event=output_models.UseGoldMessage.NoGoldEvent(),
+                )
             )
 
     def gain_potion(self, amount: int) -> None:

@@ -35,7 +35,7 @@ class BasicTerminalInterface(RPyGInterface):
         RPyGInterface.__init__(self)
         self.string_buffer = None
         self.integer_buffer = None
-        self.show_output(output_models.OutputMessage(welcome_message))
+        self.show_output(output_models.OutputMessage(message=welcome_message))
 
     @override
     def get_content_data(self) -> dict[str, ContentDataDict]:
@@ -219,7 +219,7 @@ class BasicTerminalInterface(RPyGInterface):
             if chosen_action not in choice_list:
                 self.show_output(
                     output_models.OutputMessage(
-                        f"That is not a Valid Option. Try again, valid options are \n{options_list}"
+                        message=f"That is not a Valid Option. Try again, valid options are \n{options_list}"
                     )
                 )
                 dumb_check += 1
@@ -234,7 +234,7 @@ class BasicTerminalInterface(RPyGInterface):
         input_messages: list[str],
         max_length: int,
     ) -> str:
-        self.show_output(output_models.OutputMessage("\n".join(input_messages)))
+        self.show_output(output_models.OutputMessage(message="\n".join(input_messages)))
         return self.sanitize(input()[:max_length])
 
     def prompt_user(
@@ -255,7 +255,7 @@ class BasicTerminalInterface(RPyGInterface):
 
         formatted_message += "\n"
 
-        self.show_output(output_models.OutputMessage(formatted_message))
+        self.show_output(output_models.OutputMessage(message=formatted_message))
 
         response = self.validate_input(options)
         return response
@@ -302,7 +302,9 @@ class BasicTerminalInterface(RPyGInterface):
 
         core_io = CoreIO.get_core_io()
         core_io.send_output(
-            output_models.OutputMessage("Welcome to RPyG, a text based RPG in Python")
+            output_models.OutputMessage(
+                message="Welcome to RPyG, a text based RPG in Python"
+            )
         )
         core_io.request_str_input(
             input_models.UserPromptRequest(

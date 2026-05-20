@@ -80,9 +80,7 @@ class CombatantParty(ActorParty[CombatantType], Generic[CombatantType]):
         from RPyG.core_io import CoreIO, output_models
 
         core_io = CoreIO.get_core_io()
-        core_io.send_output(
-            output_models.OutputMessage(f"{member.name} has been defeated")
-        )
+        core_io.send_output(output_models.ActorDefeatedMessage(actor_name=member.name))
         self.dead_members.append(member)
         self.members.remove(member)
 
@@ -95,7 +93,7 @@ class EnemyParty(CombatantParty[EnemyActor]):
     members: list[EnemyActor]
     dead_members: list[EnemyActor]
     loot: object
-    __slots__: tuple[str, ...] = ("name", "members", "dead_members", "loot")
+    __slots__: tuple[str, ...] = ("members", "dead_members", "loot")
 
     def __init__(
         self,
@@ -122,7 +120,7 @@ class PlayerParty(CombatantParty[PlayableActor]):
     members: list[PlayableActor]
     dead_members: list[PlayableActor]
     relics: object
-    __slots__: tuple[str, ...] = ("name", "members", "dead_members", "relics")
+    __slots__: tuple[str, ...] = ("members", "dead_members", "relics")
     """
     Stores the progress of the party, and a list/array of member instances
     """

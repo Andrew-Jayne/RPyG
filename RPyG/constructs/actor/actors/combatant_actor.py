@@ -99,13 +99,33 @@ class CombatantActor(Actor):
         if self.health == 0:
             self.health = 1
             core_io.send_output(
-                output_models.OutputMessage(f"{self.name} has Narrowly Evaded Death!")
+                output_models.HealthUpdateMessage(
+                    actor_name=self.name,
+                    magnitude=damage_amount * -1,
+                    remaining_health=self.health,
+                    evaded_death=True,
+                )
             )
-        elif self.health < 0:
+            return
+
+        if self.health < 0:
             self.health = 0
+            core_io.send_output(
+                output_models.HealthUpdateMessage(
+                    actor_name=self.name,
+                    magnitude=damage_amount * -1,
+                    remaining_health=self.health,
+                    evaded_death=False,
+                )
+            )
+            return
+
         core_io.send_output(
-            output_models.OutputMessage(
-                f"{self.name} has {self.health} Health Remaining"
+            output_models.HealthUpdateMessage(
+                actor_name=self.name,
+                magnitude=damage_amount * -1,
+                remaining_health=self.health,
+                evaded_death=False,
             )
         )
 
@@ -113,11 +133,20 @@ class CombatantActor(Actor):
         ensure_type(heal_amount, int, "heal_amount")
         core_io = CoreIO.get_core_io()
 
+        fully_healed = False
         self.health += heal_amount
         if self.health > self.base_health:
             self.health = self.base_health
-            fully_healed_message = f"{self.name} has Fully Healed!"
-            core_io.send_output(output_models.OutputMessage(fully_healed_message))
+            fully_healed = True
+
+        core_io.send_output(
+            output_models.HealthUpdateMessage(
+                actor_name=self.name,
+                magnitude=heal_amount,
+                remaining_health=self.health,
+                fully_healed=fully_healed,
+            )
+        )
 
     def dismember(self) -> None:
         self.is_dismembered = True
@@ -144,22 +173,22 @@ class CombatantActor(Actor):
             -damage_variation,
             damage_variation,
         )
+        critical_hit = self.check_for_critical()
+        if critical_hit is True:
+            final_damage = final_damage * 2
 
-        if self.check_for_critical() is True:
-            core_io.send_output(
-                output_models.OutputMessage(f"""
-{self.name} attacks with {self.attack_name} inflicting {final_damage * 2} damage
-{self.name} got a critical hit!!
-""")
-            )
-            target_instance.damage(final_damage * 2)
-        else:
-            core_io.send_output(
-                output_models.OutputMessage(
-                    f"{self.name} attacks with {self.attack_name} inflicting {final_damage} damage"
+        core_io.send_output(
+            output_models.BattleUpdateMessage(
+                event=output_models.BattleUpdateMessage.AttackEvent(
+                    source_actor_name=self.name,
+                    attack_name=self.attack_name,
+                    target_actor_name=target_instance.name,
+                    magnitude=final_damage,
+                    is_critical=critical_hit,
                 )
             )
-            target_instance.damage(final_damage)
+        )
+        target_instance.damage(final_damage)
 
     def react(self) -> bool:
         from RPyG.constructs.actor import PlayableActor
@@ -189,12 +218,15 @@ class CombatantActor(Actor):
                 target_instance = cast(EnemyActor, target_instance)
                 if target_instance.is_special is False:
                     core_io.send_output(
-                        output_models.OutputMessage(
-                            f"{self.name} decapitates {target_instance.name} killing them instantly"
+                        output_models.BattleUpdateMessage(
+                            event=output_models.BattleUpdateMessage.DismemberAttackEvent(
+                                source_actor_name=self.name,
+                                target_actor_name=target_instance.name,
+                                target_decapitated=True,
+                            )
                         )
                     )
                     target_instance.health = 0
-
                     return
 
         damage_variation = int(self.attack_power * 0.1)
@@ -203,26 +235,32 @@ class CombatantActor(Actor):
         )
         final_damage = int(base_damage * 0.25)
 
-        match self.check_for_critical():
-            case True:
-                target_instance.dismember()
-                target_instance.damage(final_damage * 2)
-                core_io.send_output(
-                    output_models.OutputMessage(f"""
-{self.name} got a critical hit!
-{self.name} dismembers {target_instance.name} inflicting {final_damage * 2} damage
-{target_instance.name}'s attack power has been reduced by 25%
-        """)
+        critical_hit = self.check_for_critical()
+        if critical_hit is True:
+            final_damage = final_damage * 2
+
+        core_io.send_output(
+            output_models.BattleUpdateMessage(
+                event=output_models.BattleUpdateMessage.AttackEvent(
+                    source_actor_name=self.name,
+                    attack_name=self.attack_name,
+                    target_actor_name=target_instance.name,
+                    magnitude=final_damage,
+                    is_critical=critical_hit,
                 )
-            case False:
-                target_instance.damage(final_damage)
-                target_instance.dismember()
-                core_io.send_output(
-                    output_models.OutputMessage(f"""
-{self.name} dismembers {target_instance.name} inflicting {final_damage} damage
-{target_instance.name}'s attack power has been reduced by 25%
-    """)
+            )
+        )
+        core_io.send_output(
+            output_models.BattleUpdateMessage(
+                event=output_models.BattleUpdateMessage.DismemberAttackEvent(
+                    source_actor_name=self.name,
+                    target_actor_name=target_instance.name,
+                    target_dismembered=True,
                 )
+            )
+        )
+        target_instance.damage(final_damage)
+        target_instance.dismember()
 
     def aoe_attack(
         self,
@@ -242,32 +280,46 @@ class CombatantActor(Actor):
         )
         per_target_damage = int(base_damage / len(target_party_instance.members))
 
-        match self.check_for_critical():
-            case True:
-                core_io.send_output(
-                    output_models.OutputMessage(f"""
-{self.name} attacks with {self.special_attack_name} dealing {per_target_damage * 2} damage to all enemies
-{self.name} dealt critical hits to all enemies!
-            """)
-                )
-                for target_instance in target_party_instance.members:
-                    target_instance.damage(per_target_damage * 2)
-            case False:
-                core_io.send_output(
-                    output_models.OutputMessage(
-                        f"{self.name} attacks with {self.special_attack_name} dealing {per_target_damage} damage to all enemies"
-                    )
-                )
-                for target_instance in target_party_instance.members:
-                    target_instance.damage(per_target_damage)
-
-        if self.intellect <= random.randint(0, 12):
+        critical_hit = self.check_for_critical()
+        if critical_hit is True:
+            per_target_damage = per_target_damage * 2
+        target_names: list[str] = []
+        for instance in target_party_instance.members:
+            target_names.append(instance.name)
+        self_damage_amount = 0
+        damage_self = self.intellect <= random.randint(0, 12)
+        if damage_self is True:
             self_damage_amount = int(per_target_damage * 0.125)
-            core_io.send_output(
-                output_models.OutputMessage(
-                    f"{self.name} is overwhelmed by the power of {self.special_attack_name} and takes {self_damage_amount} damage"
+
+        core_io.send_output(
+            output_models.BattleUpdateMessage(
+                event=output_models.BattleUpdateMessage.AoeAttackEvent(
+                    attack_name=self.special_attack_name,
+                    source_actor_name=self.name,
+                    target_actor_names=target_names,
+                    per_target_damage=per_target_damage,
+                    is_critical=critical_hit,
+                    self_damage=damage_self,
+                    self_damage_magnitude=self_damage_amount,
                 )
             )
+        )
+
+        for target_instance in target_party_instance.members:
+            core_io.send_output(
+                output_models.BattleUpdateMessage(
+                    event=output_models.BattleUpdateMessage.AttackEvent(
+                        source_actor_name=self.name,
+                        attack_name=self.attack_name,
+                        target_actor_name=target_instance.name,
+                        magnitude=per_target_damage,
+                        is_critical=critical_hit,
+                    )
+                )
+            )
+            target_instance.damage(per_target_damage)
+
+        if damage_self is True:
             self.damage(self_damage_amount)
 
     def double_attack(
@@ -291,8 +343,27 @@ class CombatantActor(Actor):
         secondary_instance: CombatantActor = target_party_instance.members[
             secondary_target_index
         ]
+        self_damage_amount = 0
+        damage_self = (self.luck + self.agility) < random.randint(0, 25)
+        if damage_self is True:
+            self_damage_amount = int(secondary_instance.attack_power * 0.5)
+        is_critical = self.check_for_critical()
+        secondary_target_damage = int(self.attack_power / 2)
+        base_damage = copy.deepcopy(self.attack_power)
 
-        # Damage Primary Target
+        core_io.send_output(
+            output_models.BattleUpdateMessage(
+                event=output_models.BattleUpdateMessage.DoubleAttackEvent(
+                    attack_name=self.special_attack_name,
+                    source_actor_name=self.name,
+                    primary_target_name=primary_instance.name,
+                    secondary_target_name=secondary_instance.name,
+                    is_critical=is_critical,
+                    self_damage=damage_self,
+                    self_damage_magnitude=self_damage_amount,
+                )
+            )
+        )
 
         self.attack(primary_instance)
 
@@ -300,25 +371,14 @@ class CombatantActor(Actor):
         if primary_instance.health == 0:
             target_party_instance.lose_member(primary_instance)
 
-        # Make Sure a Living target is chosen
-        # This prevents a softlock, if you kill the last target on attack 1
-        if len(target_party_instance.members) != 0:
-            if secondary_instance not in target_party_instance.members:
-                while secondary_instance not in target_party_instance.members:
-                    core_io.send_output(
-                        output_models.OutputMessage("Select a Living Target")
-                    )
-                    secondary_target_index = self.select_combat_target(
-                        target_party_instance
-                    )
-                    secondary_instance = target_party_instance.members[
-                        secondary_target_index
-                    ]
-
-            base_damage = copy.deepcopy(self.attack_power)
-            # reduce ATK by 50% for attack 2, we will restore this later
-            # use the int() wrap to create a new instance rather than a ref to the original value (should maybe use copy.deep copy here but will reconsider later)
-            self.attack_power = int(base_damage / 2)
+        # Make Sure a Living target is chosen and party is not all dead
+        # This prevents a softlock if you kill the last target on attack 1
+        if (
+            len(target_party_instance.members) != 0
+            and secondary_instance in target_party_instance.members
+        ):
+            # reduce ATK by 50% for attack 2, then restore
+            self.attack_power = secondary_target_damage
             self.attack(secondary_instance)
             self.attack_power = base_damage
 
@@ -327,14 +387,8 @@ class CombatantActor(Actor):
                 target_party_instance.lose_member(secondary_instance)
                 return
 
-            # luck + agl in 25 to get caught and take 50% target damage from target 2
-            if (self.luck + self.agility) < random.randint(0, 25):
-                self.damage(int(secondary_instance.attack_power * 0.5))
-                core_io.send_output(
-                    output_models.OutputMessage(
-                        f"{self.name} fails to evade an attack from {secondary_instance.name} and takes {int(secondary_instance.attack_power * 0.5)} damage"
-                    )
-                )
+        if damage_self is True:
+            self.damage(self_damage_amount)
 
     def special_attack(
         self,
@@ -354,23 +408,14 @@ class CombatantActor(Actor):
                     target_index
                 ]
                 if target_instance.is_dismembered is True:
-                    dumb_check = 0
-                    while target_instance.is_dismembered is True:
-                        dumb_check += 1
-                        core_io.send_output(
-                            output_models.OutputMessage(
-                                f"{target_instance.name} has been dismembered already"
-                            )
+                    core_io.send_output(
+                        output_models.BattleUpdateMessage(
+                            event=output_models.BattleUpdateMessage.InvalidTargetEvent()
                         )
-                        # message that enemy has been dismembered
-                        target_index = self.select_combat_target(target_party_instance)
-                        target_instance = target_party_instance.members[target_index]
-                        # might be a case where you try to attack the last enemy with dismemeber
-                        # but they have been dismembered, so just skip to attack normal
-                        if dumb_check > 10 or len(target_party_instance.members) == 1:
-                            # dumb message
-                            self.attack(target_party_instance.members[0])
-                self.dismember_attack(target_instance=target_instance)
+                    )
+                    self.attack(target_instance)
+                else:
+                    self.dismember_attack(target_instance=target_instance)
             case "MAGE":
                 self.aoe_attack(target_party_instance)
             case "ROGUE":

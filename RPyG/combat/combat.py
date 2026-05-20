@@ -37,27 +37,10 @@ def process_player_turn() -> None:
         ## Gross Code Dupe, but this whole function sucks ass
         for player_instance in game_state.player_party.members:
             if enemy_party.members != []:
-                core_io.request_str_input(
-                    input_models.UserPromptRequest(
-                        prompts=[f"{player_instance.name}", "Choose an Action:"],
-                        options=[
-                            "ATTACK",
-                            f"{player_instance.special_attack_name}",
-                            f"{player_instance.react_action}",
-                            "HEAL",
-                        ],
-                    )
-                )
-                battle_choice = core_io.receive_str_input()
-                if (
-                    battle_choice == "HEAL"
-                    and player_instance.is_fully_healed() is True
-                ):
-                    core_io.send_output(
-                        output_models.OutputMessage(
-                            f"{player_instance.name} is fully healed, it would be unwise to use a potion"
-                        )
-                    )
+                battle_choice = str()
+                valid_choice = False
+                ignore_full_heal = False
+                while valid_choice is not True:
                     core_io.request_str_input(
                         input_models.UserPromptRequest(
                             prompts=[f"{player_instance.name}", "Choose an Action:"],
@@ -70,39 +53,59 @@ def process_player_turn() -> None:
                         )
                     )
                     battle_choice = core_io.receive_str_input()
-                    if battle_choice == "HEAL":
-                        core_io.send_output(
-                            output_models.OutputMessage(
-                                "Stubborn aren't you, fine waste the damn potion"
+                    match battle_choice:
+                        case "ATTACK":  # select target
+                            valid_choice = True
+                            target_index = player_instance.select_combat_target(
+                                enemy_party
                             )
-                        )
-                match battle_choice:
-                    case "ATTACK":  # select target
-                        target_index = player_instance.select_combat_target(enemy_party)
-                        enemy_instance: EnemyActor = enemy_party.members[target_index]
-                        player_instance.attack(enemy_instance)
-                        if enemy_instance.health == 0:
-                            enemy_party.lose_member(enemy_instance)
-
-                    case player_instance.special_attack_name:
-                        player_instance.special_attack(enemy_party)
-                        ## same as above, mutation during itteration causes undead enemies
-                        for enemy_instance in enemy_party.members.copy():
+                            enemy_instance: EnemyActor = enemy_party.members[
+                                target_index
+                            ]
+                            player_instance.attack(enemy_instance)
                             if enemy_instance.health == 0:
                                 enemy_party.lose_member(enemy_instance)
 
-                    case player_instance.react_action:
-                        core_io.send_output(
-                            output_models.OutputMessage(
-                                player_instance.react_messages["prep_message"]
-                            )
-                        )
-                        player_instance.will_react = True
+                        case player_instance.special_attack_name:
+                            valid_choice = True
+                            player_instance.special_attack(enemy_party)
+                            ## same as above, mutation during itteration causes undead enemies
+                            for enemy_instance in enemy_party.members.copy():
+                                if enemy_instance.health == 0:
+                                    enemy_party.lose_member(enemy_instance)
 
-                    case "HEAL":
-                        player_instance.use_potion()
-                    case _:
-                        raise ValueError(f"Invalid player_action {battle_choice}")
+                        case player_instance.react_action:
+                            valid_choice = True
+                            core_io.send_output(
+                                output_models.BattleUpdateMessage(
+                                    event=output_models.BattleUpdateMessage.PrepareEvent(
+                                        message=player_instance.react_messages[
+                                            "prep_message"
+                                        ],
+                                        actor_name=player_instance.name,
+                                    )
+                                )
+                            )
+                            player_instance.will_react = True
+
+                        case "HEAL":
+                            result = player_instance.use_potion()
+                            if result.success is False:
+                                if (
+                                    result.fully_healed is True
+                                    and ignore_full_heal is False
+                                ):
+                                    ignore_full_heal = True
+                                elif (
+                                    result.fully_healed is True
+                                    and ignore_full_heal is True
+                                ):
+                                    player_instance.use_potion(ignore_fully_healed=True)  # pyright: ignore[reportUnusedCallResult]
+                                    valid_choice = True
+                            else:
+                                valid_choice = True
+                        case _:
+                            raise ValueError(f"Invalid player_action {battle_choice}")
 
                 clear_dead_members(enemy_party)
             else:
@@ -129,14 +132,26 @@ def process_enemy_turn() -> None:
                 if target_player.will_react is True:
                     if target_player.react() is True:
                         core_io.send_output(
-                            output_models.OutputMessage(
-                                target_player.react_messages["success_message"]
+                            output_models.BattleUpdateMessage(
+                                event=output_models.BattleUpdateMessage.ReactEvent(
+                                    actor_name=target_player.name,
+                                    success=True,
+                                    message=target_player.react_messages[
+                                        "success_message"
+                                    ],
+                                )
                             )
                         )
                     else:
                         core_io.send_output(
-                            output_models.OutputMessage(
-                                target_player.react_messages["failure_message"]
+                            output_models.BattleUpdateMessage(
+                                event=output_models.BattleUpdateMessage.ReactEvent(
+                                    actor_name=target_player.name,
+                                    success=False,
+                                    message=target_player.react_messages[
+                                        "failure_message"
+                                    ],
+                                )
                             )
                         )
                         enemy_instance.attack(
@@ -154,27 +169,58 @@ def process_enemy_turn() -> None:
                 break
 
 
-def build_hud_data() -> str:
+def build_hud_data() -> output_models.BattleHudData:
     from RPyG.game_state import GameState
 
     game_state = GameState.get_game_state()
-    with game_state.borrow_enemy_party() as enemy_party:
-        battle_hud_message = ""
 
-        for playable_instance in game_state.player_party.members:
-            battle_hud_message += (
-                f"{playable_instance.name}: {playable_instance.health}"
+    player_stats: list[output_models.BattleHudData.MemberStats] = []
+    for member in game_state.player_party.members:
+        player_stats.append(
+            output_models.BattleHudData.MemberStats(
+                name=member.name,
+                health=member.health,
+                alive=True,
             )
-            battle_hud_message += "\n"
-        battle_hud_message += "\n"
+        )
+    for member in game_state.player_party.dead_members:
+        player_stats.append(
+            output_models.BattleHudData.MemberStats(
+                name=member.name,
+                health=member.health,
+                alive=False,
+            )
+        )
 
-        for enemy_instance in enemy_party.members:
-            battle_hud_message += f"{enemy_instance.name}: {enemy_instance.health}\n"
-            battle_hud_message += "\n"
+    with game_state.borrow_enemy_party() as enemy_party:
+        enemy_stats: list[output_models.BattleHudData.MemberStats] = []
+        for member in enemy_party.members:
+            enemy_stats.append(
+                output_models.BattleHudData.MemberStats(
+                    name=member.name,
+                    health=member.health,
+                    alive=True,
+                )
+            )
+        for member in enemy_party.dead_members:
+            enemy_stats.append(
+                output_models.BattleHudData.MemberStats(
+                    name=member.name,
+                    health=member.health,
+                    alive=False,
+                )
+            )
 
-        battle_hud_message += "\n"
-
-        return battle_hud_message
+        return output_models.BattleHudData(
+            player_party_data=output_models.BattleHudData.PartyStats(
+                name=game_state.player_party.name,
+                member_stats=player_stats,
+            ),
+            enemy_party_data=output_models.BattleHudData.PartyStats(
+                name=enemy_party.name,
+                member_stats=enemy_stats,
+            ),
+        )
 
 
 def battle() -> None:
@@ -184,10 +230,10 @@ def battle() -> None:
     core_io = CoreIO.get_core_io()
     game_state = GameState.get_game_state()
     with game_state.borrow_enemy_party() as enemy_party:
-        core_io.send_output(output_models.OutputMessage("The Battle Begins!"))
+        core_io.send_output(output_models.BattleStartMessage())
         battle_complete = False
         while battle_complete is False:
-            core_io.send_output(output_models.OutputMessage(message=build_hud_data()))
+            core_io.send_output(build_hud_data())
 
             ## Check if all parties are alive before running player turn
             if is_battle_complete() is False:
@@ -211,6 +257,7 @@ def battle() -> None:
             and game_state.player_party.members == []
             and enemy_party.members != []
         ):
+            core_io.send_output(output_models.BattleEndMessage(player_victory=False))
             return
 
     # the previous condition was inverted to allow the final reference to the borrowed
@@ -219,6 +266,7 @@ def battle() -> None:
     game_state.reset_enemy_party()
 
     # handle post battle
+    core_io.send_output(output_models.BattleEndMessage(player_victory=True))
     player_post_action = ""
     while player_post_action != "TRAVEL":
         core_io.request_str_input(
@@ -230,7 +278,8 @@ def battle() -> None:
         player_post_action = core_io.receive_str_input()
         if player_post_action == "HEAL":
             for member_instance in game_state.player_party.members:
-                member_instance.use_potion()
+                _ = member_instance.use_potion()
+
         if player_post_action == "SAVE":
             core_io.interface.save_game_state(game_state)
 

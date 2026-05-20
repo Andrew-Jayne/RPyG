@@ -75,7 +75,7 @@ def handle_enemy_encounter():
     game_state.set_enemy_party(generate_enemy_set(len(game_state.player_party.members)))
     with game_state.borrow_enemy_party() as enemy_party:
         core_io.send_output(
-            output_models.OutputMessage(f"Your Party encounters a {enemy_party.name}!")
+            output_models.EnemyEncouterMessage(enemy_party_name=enemy_party.name)
         )
 
         core_io.request_str_input(
@@ -89,22 +89,17 @@ def handle_enemy_encounter():
             case "BATTLE":
                 pass
             case "FLEE":
-                flee_success = True
                 for player_instance in game_state.player_party.members:
-                    if player_instance.luck >= random.randint(4, 15):
-                        core_io.send_output(
-                            output_models.OutputMessage(
-                                f"{player_instance.name} has Successfully Escaped the {enemy_party.name}!"
-                            )
-                        )
-                    else:
-                        core_io.send_output(
-                            output_models.OutputMessage(
-                                f"{player_instance.name} has Failed to Escape the {enemy_party.name}!"
-                            )
-                        )
+                    flee_success = True
+                    if player_instance.luck <= random.randint(4, 15):
                         flee_success = False
-
+                    core_io.send_output(
+                        output_models.FleeResultMessage(
+                            success=flee_success,
+                            actor_name=player_instance.name,
+                            enemy_party_name=enemy_party.name,
+                        )
+                    )
             case _:
                 raise RuntimeError()
 
