@@ -100,6 +100,8 @@ def handle_enemy_encounter():
                             enemy_party_name=enemy_party.name,
                         )
                     )
+                    if flee_success is False:
+                        break
             case _:
                 raise RuntimeError()
 

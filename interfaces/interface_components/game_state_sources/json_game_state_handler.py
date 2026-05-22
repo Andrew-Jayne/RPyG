@@ -353,7 +353,7 @@ class JsonGameStateHandler(GameStateHandler):
         ensure_type(game_state, GameState, "GameState")
         core_io.send_output(
             output_models.OutputMessage(
-                f"Successfully Loaded Save Game for: {game_state.player_party.name}"
+                message=f"Successfully Loaded Save Game for: {game_state.player_party.name}"
             )
         )
 
@@ -378,7 +378,7 @@ class JsonGameStateHandler(GameStateHandler):
         core_io = CoreIO.get_core_io()
         core_io.send_output(
             output_models.OutputMessage(
-                f"Successfully Saved Game for {game_state.player_party.name}"
+                message=f"Successfully Saved Game for {game_state.player_party.name}"
             )
         )
 
@@ -391,7 +391,7 @@ class JsonGameStateHandler(GameStateHandler):
         match core_io.receive_str_input():
             case "YES":
                 core_io.send_output(
-                    output_models.OutputMessage("The adventure continues!")
+                    output_models.OutputMessage(message="The adventure continues!")
                 )
             case "NO":
                 sys.exit(0)

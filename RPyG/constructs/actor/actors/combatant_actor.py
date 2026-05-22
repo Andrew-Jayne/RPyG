@@ -1,4 +1,3 @@
-import copy
 import random
 from typing import TYPE_CHECKING, cast
 
@@ -345,11 +344,54 @@ class CombatantActor(Actor):
         ]
         self_damage_amount = 0
         damage_self = (self.luck + self.agility) < random.randint(0, 25)
+        primary_target_damage = self.attack_power
         if damage_self is True:
             self_damage_amount = int(secondary_instance.attack_power * 0.5)
         is_critical = self.check_for_critical()
-        secondary_target_damage = int(self.attack_power / 2)
-        base_damage = copy.deepcopy(self.attack_power)
+        if is_critical is True:
+            primary_target_damage = primary_target_damage * 2
+        secondary_target_damage = int(primary_target_damage / 2)
+
+        core_io.send_output(
+            output_models.BattleUpdateMessage(
+                event=output_models.BattleUpdateMessage.AttackEvent(
+                    source_actor_name=self.name,
+                    attack_name=self.attack_name,
+                    target_actor_name=primary_instance.name,
+                    magnitude=primary_target_damage,
+                    is_critical=is_critical,
+                )
+            )
+        )
+        primary_instance.damage(primary_target_damage)
+
+        # Check if Target Died
+        if primary_instance.health == 0:
+            target_party_instance.lose_member(primary_instance)
+
+        # Make Sure a Living target is chosen and party is not all dead
+        # This prevents a softlock if you kill the last target on attack 1
+        if (
+            len(target_party_instance.members) != 0
+            and secondary_instance in target_party_instance.members
+        ):
+            core_io.send_output(
+                output_models.BattleUpdateMessage(
+                    event=output_models.BattleUpdateMessage.AttackEvent(
+                        source_actor_name=self.name,
+                        attack_name=self.attack_name,
+                        target_actor_name=secondary_instance.name,
+                        magnitude=primary_target_damage,
+                        is_critical=is_critical,
+                    )
+                )
+            )
+            secondary_instance.damage(secondary_target_damage)
+
+            # Check if Target Died
+            if secondary_instance.health == 0:
+                target_party_instance.lose_member(secondary_instance)
+                return
 
         core_io.send_output(
             output_models.BattleUpdateMessage(
@@ -364,28 +406,6 @@ class CombatantActor(Actor):
                 )
             )
         )
-
-        self.attack(primary_instance)
-
-        # Check if Target Died
-        if primary_instance.health == 0:
-            target_party_instance.lose_member(primary_instance)
-
-        # Make Sure a Living target is chosen and party is not all dead
-        # This prevents a softlock if you kill the last target on attack 1
-        if (
-            len(target_party_instance.members) != 0
-            and secondary_instance in target_party_instance.members
-        ):
-            # reduce ATK by 50% for attack 2, then restore
-            self.attack_power = secondary_target_damage
-            self.attack(secondary_instance)
-            self.attack_power = base_damage
-
-            # Check if Target Died
-            if secondary_instance.health == 0:
-                target_party_instance.lose_member(secondary_instance)
-                return
 
         if damage_self is True:
             self.damage(self_damage_amount)
@@ -403,19 +423,32 @@ class CombatantActor(Actor):
 
         match self.specialization:
             case "WARRIOR":
-                target_index = int(self.select_combat_target(target_party_instance))
-                target_instance: CombatantActor = target_party_instance.members[
-                    target_index
-                ]
-                if target_instance.is_dismembered is True:
+                target_index = int(
+                    self.select_combat_target(
+                        target_party_instance, skip_dismembered=True
+                    )
+                )
+                if target_index != -1:
+                    target_instance: CombatantActor = target_party_instance.members[
+                        target_index
+                    ]
+                    self.dismember_attack(target_instance=target_instance)
+                else:
                     core_io.send_output(
                         output_models.BattleUpdateMessage(
-                            event=output_models.BattleUpdateMessage.InvalidTargetEvent()
+                            event=output_models.BattleUpdateMessage.DismemberAttackEvent(
+                                source_actor_name=self.name,
+                                target_actor_name="INVALID TARGET",
+                                valid_target=False,
+                            )
                         )
                     )
-                    self.attack(target_instance)
-                else:
-                    self.dismember_attack(target_instance=target_instance)
+
+                    target_index = int(self.select_combat_target(target_party_instance))
+                    valid_instance: CombatantActor = target_party_instance.members[
+                        target_index
+                    ]
+                    self.attack(valid_instance)
             case "MAGE":
                 self.aoe_attack(target_party_instance)
             case "ROGUE":
@@ -424,7 +457,9 @@ class CombatantActor(Actor):
                 raise ValueError(f"Invalid specialization {self.specialization}")
 
     def select_combat_target(
-        self, target_party_instance: "CombatantParty[CombatantType]"
+        self,
+        target_party_instance: "CombatantParty[CombatantType]",
+        skip_dismembered: bool = False,
     ) -> int:
         """
         Takes a full party instance, and returns the index of the target member in the members array/list as an int
@@ -439,17 +474,20 @@ class CombatantActor(Actor):
             isinstance(self, PlayableActor) is True
             and isinstance(target_party_instance, EnemyParty) is True
         ):
-            target_messages: list[str] = ["Which enemy will you attack?"]
-            target_indexes: list[str] = []
+            target_options: list[str] = []
             for index, member in enumerate(target_party_instance.members):
                 member: CombatantActor
-                target_messages.append(f"{index} {member.name}:{member.health}")
-                target_indexes.append(str(index))
+                if skip_dismembered is True:
+                    if member.is_dismembered is True:
+                        continue
+                target_options.append(f"{member.name}:{member.health}")
+            if skip_dismembered is True and target_options == []:
+                return -1
 
             core_io.request_int_input(
                 input_models.UserPromptRequest(
-                    prompts=target_messages,
-                    options=target_indexes,
+                    prompts=["Which enemy will you attack?"],
+                    options=target_options,
                 )
             )
             return core_io.receive_int_input()

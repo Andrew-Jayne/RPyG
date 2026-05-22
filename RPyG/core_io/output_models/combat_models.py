@@ -69,6 +69,7 @@ class BattleUpdateMessage(OutputMessage):
         target_actor_name: str
         target_dismembered: bool = False
         target_decapitated: bool = False
+        valid_target: bool = True
         message: str = ""
 
     @dataclass(kw_only=True, frozen=True, slots=True)
