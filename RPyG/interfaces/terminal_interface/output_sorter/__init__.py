@@ -28,15 +28,11 @@ def output_message(output: output_models.OutputMessage) -> str:
                 return text_strings.already_full_heal_string.format(
                     actor_name=output.actor_name
                 )
-            return text_strings.no_potions_string.format(
-                actor_name=output.actor_name
-            )
+            return text_strings.no_potions_string.format(actor_name=output.actor_name)
 
         case output_models.UseGoldMessage():
             if isinstance(output.event, output_models.UseGoldMessage.NoGoldEvent):
-                return text_strings.no_gold_string.format(
-                    actor_name=output.actor_name
-                )
+                return text_strings.no_gold_string.format(actor_name=output.actor_name)
             if isinstance(
                 output.event, output_models.UseGoldMessage.InsufficientGoldEvent
             ):
@@ -96,7 +92,7 @@ def output_message(output: output_models.OutputMessage) -> str:
             )
 
         case output_models.EmptyDistanceMessage():
-            return text_strings.travel_distance_string.format(distance=output.distance)
+            return "*" * output.distance
 
         case output_models.EventAfterEmptyMessage():
             return text_strings.travel_distance_string.format(distance=output.distance)
