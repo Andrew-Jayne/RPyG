@@ -9,10 +9,8 @@ from RPyG.game_state.state_functions import (
     check_for_encounter,
     handle_enemy_encounter,
 )
-from RPyG.utilities import ensure_type, setup_logger
+from RPyG.utilities import ensure_type
 
-
-logger = setup_logger(__name__)
 
 if TYPE_CHECKING is True:
     from RPyG.constructs import Dungeon
@@ -93,14 +91,12 @@ class GameState:
         content_library = ContentLibrary.get_library()
 
         # Check if player is in a dungeon
-        logger.info("Checking if player is in a dungeon")
         if self.dungeon_progress is not None:
-            logger.info("Player is in dungeon, resuming")
             with self.borrow_dungeon() as dungeon:
                 dungeon.traverse_dungeon()
             game_state.reset_dungeon()
         else:
-            logger.info("Player is not in dungeon")
+            pass
 
         rounds_without_encounter = 1
         while self.progress != 100:

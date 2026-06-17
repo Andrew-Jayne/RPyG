@@ -5,7 +5,7 @@ from typing import final, override
 from RPyG.constructs import ContentDataDict
 from RPyG.core_io import RPyGInterface, input_models, output_models
 from RPyG.game_state import GameState
-from RPyG.utilities import ensure_type, setup_logger
+from RPyG.utilities import ensure_type
 
 from ..interface_components import (
     ContentFileLoaderSource,
@@ -20,9 +20,6 @@ from .utils import (
     party_start,
     prompt_user,
 )
-
-
-logger = setup_logger(__name__)
 
 
 @final
@@ -55,7 +52,6 @@ class BasicTerminalInterface(RPyGInterface):
 
     @override
     def get_game_state(self) -> GameState:
-        logger.info("Getting Start type")
         start_type = get_start_type()
         match start_type:
             case "LOAD":
@@ -66,8 +62,6 @@ class BasicTerminalInterface(RPyGInterface):
                 game_state = GameState.build(default_party())
             case _:
                 raise ValueError("Invalid Game Start Type")
-
-        logger.info("starting game with %s start type", start_type)
 
         return game_state
 
