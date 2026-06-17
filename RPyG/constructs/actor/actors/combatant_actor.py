@@ -90,6 +90,9 @@ class CombatantActor(Actor):
         self.will_react = will_react
         self.is_dismembered = is_dismembered
 
+    def reset_combat_state(self) -> None:
+        self.will_react = False
+
     def damage(self, damage_amount: int) -> None:
         ensure_type(damage_amount, int, "damage_amount")
         core_io = CoreIO.get_core_io()

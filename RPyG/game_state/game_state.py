@@ -150,7 +150,7 @@ class GameState:
 
         core_io.send_output(
             output_models.GameEndMessage(
-                success=self.player_party.members == [],
+                success=self.player_party.members != [],
                 post_game_recap=self.player_party.end_game_report(),
             )
         )

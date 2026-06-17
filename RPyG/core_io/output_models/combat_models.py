@@ -114,3 +114,4 @@ class BattleEndMessage(OutputMessage):
     message: str = ""
     player_victory: bool
     in_combat: bool = False
+    enemy_party_name: str = ""

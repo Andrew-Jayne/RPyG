@@ -210,7 +210,7 @@ def prompt_user(
 
 
 def get_start_type() -> str:
-    if os.path.exists("savegame.rpygs") is True:
+    if os.path.exists(os.path.expanduser("~/.rpyg/savegame.rpygs")) is True:
         start_game_options = ["NEW", "LOAD", "USE_DEFAULT"]
         start_game_messages = [
             "Would you like to Start a new game or Load an existing save?",

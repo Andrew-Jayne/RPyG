@@ -1,6 +1,7 @@
+from pathlib import Path
 from typing import Final, TypedDict, cast, overload, override
 
-from interfaces.interface_components.game_state_sources.abstract_game_state_handler import (
+from RPyG.interfaces.interface_components.game_state_sources.abstract_game_state_handler import (
     GameStateHandler,
 )
 from RPyG.constructs import (
@@ -286,7 +287,8 @@ def build_game_state(save_data: GameStateDict) -> GameState:
 class JsonGameStateHandler(GameStateHandler):
     # """Secret""" key for HMAC, if you break your file that's on you
     SECRET_KEY: Final[bytes] = b"I_WILL_HACK_MY_SAVE_FILE_AND_PROBLEMS_WILL_BE_MY_FAULT"
-    SAVE_FILE_PATH: Final[str] = "savegame.rpygs"
+    SAVE_DIR: Final[str] = str(Path.home() / ".rpyg")
+    SAVE_FILE_PATH: Final[str] = str(Path.home() / ".rpyg" / "savegame.rpygs")
 
     @staticmethod
     def sign_save_file(data: bytes) -> bytes:
@@ -372,6 +374,7 @@ class JsonGameStateHandler(GameStateHandler):
             indent=4,
         ).encode("utf-8")
 
+        Path(JsonGameStateHandler.SAVE_DIR).mkdir(exist_ok=True)
         with open(JsonGameStateHandler.SAVE_FILE_PATH, "wb") as save_file:
             save_file.write(JsonGameStateHandler.sign_save_file(save_data))  # pyright: ignore[reportUnusedCallResult]
 

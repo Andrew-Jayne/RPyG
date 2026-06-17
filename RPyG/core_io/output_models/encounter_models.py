@@ -31,6 +31,8 @@ class MerchantInteractionMessage(OutputMessage):
         item_name: str
         item_count_change: int
         buyer_actor_name: str
+        remaining_gold: int
+        remaining_potions: int
         seller_actor_name: str = "Merchant"
 
     event: MerchantEvent

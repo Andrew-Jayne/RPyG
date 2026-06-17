@@ -173,6 +173,8 @@ class Dungeon:
                 )
             )
             combat.battle()
+            if game_state.player_party.members == []:
+                return
 
     def validate(self) -> bool:
         ensure_type(self.dungeon_name, str, "self.dungeon_name")

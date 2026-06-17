@@ -69,7 +69,20 @@ def output_battle_update(event: output_models.BattleUpdateMessage.BattleEvent) -
                 target_actor_name=event.target_actor_name,
             )
 
-        # case output_models.BattleUpdateMessage.BattleEvent():
-        #     return event.message
+        # React and Prepare carry the character's authored react_messages
+        # (content from the actor's toml) so the text is passed through directly.
+        case output_models.BattleUpdateMessage.ReactEvent():
+            return event.message
+
+        case output_models.BattleUpdateMessage.PrepareEvent():
+            return event.message
+
+        case output_models.BattleUpdateMessage.ActorDefeatedEvent():
+            return text_strings.actor_defeated_string.format(
+                actor_name=event.actor_name
+            )
+
+        # NotEnoughEnergyEvent and InvalidTargetEvent are declared on the model
+        # but not yet emitted by the combat system, so they have no handler yet.
         case _:
-            return str(event)
+            return event.message

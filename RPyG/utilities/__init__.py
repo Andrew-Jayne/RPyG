@@ -1,6 +1,3 @@
-import json
-import os
-from logging import INFO, FileHandler, Formatter, Logger, LogRecord, getLogger
 from typing import override
 
 
@@ -16,42 +13,6 @@ Received type: {type(instance).__name__}."""
         )
 
 
-class JSONFormatter(Formatter):
-    @override
-    def format(self, record: LogRecord) -> str:
-        log_data = {
-            "level": record.levelname,
-            "time": self.formatTime(record, self.datefmt),
-            "module": record.name,
-            "text": record.getMessage(),
-        }
-        return json.dumps(log_data)
-
-
-## need to break this out into a setup then use logging.getLogger, I like that style much better
-## so we don't re-setup the root logger on every write,
-# and it would let us reset log files between games
-## i have no clue how this shit works, I don't like how logging is being handled RN.
-def setup_logger(source_module_name: str) -> Logger:
-    # Create a handler that writes to a file
-    handler = FileHandler("rpyg.jsonl", mode="a")
-    ## Ew gross non centralized env managment..... could be done much better
-    handler.setLevel(level=os.environ.get("RPYG_LOG_LEVEL", INFO))
-
-    # Create a formatter
-    formatter = JSONFormatter()
-    handler.setFormatter(formatter)
-
-    # Configure the root logger
-    root_logger = getLogger()
-    root_logger.handlers = []  # Remove existing handlers
-    root_logger.setLevel(INFO)
-    root_logger.addHandler(handler)
-
-    return getLogger(source_module_name)
-
-
 __all__ = [
     "ensure_type",
-    "setup_logger",
 ]

@@ -211,6 +211,8 @@ class EncounterEffect:
                                         item_name="potion",
                                         item_count_change=1,
                                         buyer_actor_name=player_instance.name,
+                                        remaining_gold=player_instance.inventory.gold,
+                                        remaining_potions=player_instance.inventory.potions,
                                     )
                                 )
                             )
@@ -223,6 +225,8 @@ class EncounterEffect:
                                         item_name="potion",
                                         item_count_change=0,
                                         buyer_actor_name=player_instance.name,
+                                        remaining_gold=player_instance.inventory.gold,
+                                        remaining_potions=player_instance.inventory.potions,
                                     )
                                 )
                             )
@@ -241,6 +245,8 @@ class EncounterEffect:
                                     item_name="potion",
                                     item_count_change=rounds,
                                     buyer_actor_name=player_instance.name,
+                                    remaining_gold=player_instance.inventory.gold,
+                                    remaining_potions=player_instance.inventory.potions,
                                 )
                             )
                         )

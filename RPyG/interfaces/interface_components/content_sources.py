@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from pathlib import Path
 from typing import Final, override
 
 from RPyG.constructs import ContentDataDict
@@ -12,7 +13,9 @@ class ContentSource(ABC):
 
 
 class ContentFileLoaderSource(ContentSource):
-    CONTENT_PATH: Final[str] = "game_content"
+    CONTENT_PATH: Final[str] = str(
+        Path(__file__).resolve().parent.parent.parent / "game_content"
+    )
 
     @override
     @staticmethod

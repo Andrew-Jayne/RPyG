@@ -231,6 +231,8 @@ def battle() -> None:
     game_state = GameState.get_game_state()
     with game_state.borrow_enemy_party() as enemy_party:
         core_io.send_output(output_models.BattleStartMessage())
+        for member in game_state.player_party.members:
+            member.reset_combat_state()
         battle_complete = False
         while battle_complete is False:
             core_io.send_output(build_hud_data())
@@ -257,16 +259,26 @@ def battle() -> None:
             and game_state.player_party.members == []
             and enemy_party.members != []
         ):
-            core_io.send_output(output_models.BattleEndMessage(player_victory=False))
+            core_io.send_output(
+                output_models.BattleEndMessage(
+                    player_victory=False,
+                    enemy_party_name=enemy_party.name,
+                )
+            )
             return
+
+        # handle post battle
+        core_io.send_output(
+            output_models.BattleEndMessage(
+                player_victory=True,
+                enemy_party_name=enemy_party.name,
+            )
+        )
 
     # the previous condition was inverted to allow the final reference to the borrowed
     # enemy party to be disposed of before reseting the instance
     # the only place enemy party is reset, because death is a game reset (for now)
     game_state.reset_enemy_party()
-
-    # handle post battle
-    core_io.send_output(output_models.BattleEndMessage(player_victory=True))
     player_post_action = ""
     while player_post_action != "TRAVEL":
         core_io.request_str_input(
