@@ -25,7 +25,7 @@ def output_battle_update(event: output_models.BattleUpdateMessage.BattleEvent) -
         case output_models.BattleUpdateMessage.AoeAttackEvent():
             aoe_message = text_strings.aoe_attack_string.format(
                 source_actor_name=event.source_actor_name,
-                attack_message=event.attack_name,
+                attack_name=event.attack_name,
                 per_target_damage=event.per_target_damage,
             )
             if event.is_critical is True:
