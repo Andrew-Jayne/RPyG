@@ -1,9 +1,7 @@
 import os
-from typing import overload
 
 from RPyG.constructs import PlayableActor, PlayerParty
 from RPyG.core_io import CoreIO, input_models, output_models
-from RPyG.exceptions import ImpossibleValueException
 from RPyG.game_state import GameState
 from RPyG.utilities import ensure_type
 
@@ -122,7 +120,7 @@ def party_start() -> GameState:
     )
     party_name = core_io.receive_str_input()
 
-    return GameState.build(PlayerParty(party_name, party_instances))
+    return GameState.build(PlayerParty(name=party_name, members=party_instances))
 
 
 def clear_display() -> None:

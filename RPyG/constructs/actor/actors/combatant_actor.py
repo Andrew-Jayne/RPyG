@@ -1,7 +1,8 @@
 import random
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, cast
 
-from RPyG.constructs.actor.actors.base_actor import Actor
+from RPyG.constructs.actor.actors.base_actor import Actor, ActorProperties
 from RPyG.core_io import CoreIO, input_models, output_models
 from RPyG.utilities import ensure_type
 
@@ -10,6 +11,39 @@ if TYPE_CHECKING is True:
     from RPyG.constructs.actor import CombatantParty
     from RPyG.constructs.actor.actor_containers import CombatantType
     ## CombatantType is only ever used here so it does not get the full re-export from root
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class CombatantProperies(ActorProperties):
+    health: int
+    base_health: int
+    attack_name: str
+    attack_power: int
+    special_attack_name: str
+    special_attack_energy: int
+    specialization: str
+    use_special_attack: bool = False
+    will_react: bool = False
+    is_dismembered: bool = False
+
+    def __post_init__(self):
+        ensure_type(self.health, int, "health")
+        ensure_type(self.base_health, int, "base_health")
+        ensure_type(self.attack_name, str, "attack_name")
+        ensure_type(self.attack_power, int, "attack_power")
+        ensure_type(self.special_attack_name, str, "special_attack_name")
+        ensure_type(self.special_attack_energy, int, "special_attack_energy")
+        ensure_type(self.specialization, str, "specialization")
+        ensure_type(self.use_special_attack, bool, "use_special_attack")
+        ensure_type(self.will_react, bool, "will_react")
+        ensure_type(self.is_dismembered, bool, "is_dismembered")
+
+        if len(self.name) > 32:
+            raise ValueError("Combatant Name cannot exceed 32 characters")
+        if self.health > 9999 or self.base_health > 9999:
+            raise ValueError("Combatant Health cannot exceed 9999")
+
+        ActorProperties.__post_init__(self)
 
 
 class CombatantActor(Actor):
@@ -36,59 +70,21 @@ class CombatantActor(Actor):
         "is_dismembered",
     )
 
-    def __init__(
-        self,
-        name: str,
-        strength: int,
-        intellect: int,
-        agility: int,
-        luck: int,
-        health: int,
-        base_health: int,
-        attack_name: str,
-        attack_power: int,
-        special_attack_name: str,
-        specialization: str,
-        use_special_attack: bool = False,
-        will_react: bool = False,
-        is_dismembered: bool = False,
-    ) -> None:
-        ensure_type(name, str, "name")
-        ensure_type(strength, int, "strength")
-        ensure_type(intellect, int, "intellect")
-        ensure_type(agility, int, "agility")
-        ensure_type(luck, int, "luck")
-        ensure_type(health, int, "health")
-        ensure_type(attack_name, str, "attack_name")
-        ensure_type(attack_power, int, "attack_power")
-        ensure_type(special_attack_name, str, "special_attack_name")
+    def __init__(self, properties: CombatantProperies) -> None:
+        Actor.__init__(self=self, properties=properties)
 
-        if len(name) > 32:
-            raise ValueError("Combatant Name cannot exceed 32 characters")
-        if health > 9999:
-            raise ValueError("Combatant Health cannot exceed 9999")
+        self.health = properties.health
+        self.base_health = properties.base_health
 
-        Actor.__init__(
-            self=self,
-            name=name,
-            strength=strength,
-            intellect=intellect,
-            agility=agility,
-            luck=luck,
-        )
+        self.attack_name = properties.attack_name
+        self.special_attack_name = properties.special_attack_name
+        self.special_attack_energy = properties.special_attack_energy
+        self.attack_power = properties.attack_power
+        self.specialization = properties.specialization
 
-        self.health = health
-        self.base_health = base_health
-
-        self.attack_name = attack_name
-        self.special_attack_name = special_attack_name
-        self.special_attack_energy = 2
-        self.attack_power = attack_power
-        self.specialization = specialization
-
-        self.use_special_attack = use_special_attack
-        self.will_react = will_react
-        self.is_dismembered = is_dismembered
+        self.use_special_attack = properties.use_special_attack
+        self.will_react = properties.will_react
+        self.is_dismembered = properties.is_dismembered
 
     def reset_combat_state(self) -> None:
         self.will_react = False

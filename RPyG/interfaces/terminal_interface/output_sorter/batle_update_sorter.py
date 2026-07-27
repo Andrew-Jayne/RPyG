@@ -38,10 +38,14 @@ def output_battle_update(event: output_models.BattleUpdateMessage.BattleEvent) -
                 )
 
             if event.self_damage is True:
-                aoe_message = aoe_message + text_strings.aoe_self_damage_string.format(
-                    source_actor_name=event.source_actor_name,
-                    attack_name=event.attack_name,
-                    self_damage_magnitude=event.self_damage_magnitude,
+                aoe_message = (
+                    aoe_message
+                    + "\n"
+                    + text_strings.aoe_self_damage_string.format(
+                        source_actor_name=event.source_actor_name,
+                        attack_name=event.attack_name,
+                        self_damage_magnitude=event.self_damage_magnitude,
+                    )
                 )
 
             return aoe_message

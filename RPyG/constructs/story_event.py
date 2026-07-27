@@ -111,8 +111,8 @@ class StoryEvent:
 
                 game_state.set_enemy_party(
                     EnemyParty(
-                        enemy_instance.name,
-                        [enemy_instance],
+                        name=enemy_instance.name,
+                        members=[enemy_instance],
                     )
                 )
                 battle()

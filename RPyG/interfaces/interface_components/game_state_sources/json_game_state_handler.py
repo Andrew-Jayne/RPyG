@@ -1,19 +1,21 @@
 from pathlib import Path
 from typing import Final, TypedDict, cast, overload, override
 
-from RPyG.interfaces.interface_components.game_state_sources.abstract_game_state_handler import (
-    GameStateHandler,
-)
 from RPyG.constructs import (
     BorrowTrackedResource,
     Dungeon,
     EnemyActor,
     EnemyParty,
+    EnemyProperties,
     PlayableActor,
+    PlayableActorProperties,
     PlayerParty,
 )
 from RPyG.constructs.actor.actor_components import Inventory
 from RPyG.game_state import GameState
+from RPyG.interfaces.interface_components.game_state_sources.abstract_game_state_handler import (
+    GameStateHandler,
+)
 from RPyG.utilities import ensure_type
 
 
@@ -68,6 +70,7 @@ class EnemyDict(TypedDict):
     attack_name: str
     is_special: bool
     variant_grade: str
+    kind: str
 
 
 class EnemyPartyDict(TypedDict):
@@ -129,6 +132,7 @@ def dump_enemy(enemy_list: list[EnemyActor]) -> list[EnemyDict]:
                 "is_dismembered": enemy.is_dismembered,
                 "is_special": enemy.is_special,
                 "variant_grade": enemy.variant_grade.value,
+                "kind": "EnemySet/v1",
             }
         )
     return enemy_dicts
@@ -246,12 +250,16 @@ def build_game_state(save_data: GameStateDict) -> GameState:
     live_players: list[PlayableActor] = []
     for actor_data in save_data["player_party"]["members"]:
         actor_data["inventory"] = Inventory(**actor_data["inventory"])  # pyright: ignore[reportGeneralTypeIssues]
-        live_players.append(PlayableActor(**actor_data))  # pyright: ignore[reportArgumentType]
+        live_players.append(
+            PlayableActor(properties=PlayableActorProperties(**actor_data))  # pyright: ignore[reportArgumentType]
+        )
 
     dead_players: list[PlayableActor] = []
     for actor_data in save_data["player_party"]["dead_members"]:
         actor_data["inventory"] = Inventory(**actor_data["inventory"])  # pyright: ignore[reportGeneralTypeIssues]
-        dead_players.append(PlayableActor(**actor_data))  # pyright: ignore[reportArgumentType]
+        dead_players.append(
+            PlayableActor(properties=PlayableActorProperties(**actor_data))  # pyright: ignore[reportArgumentType]
+        )
 
     game_state = GameState(
         player_party=PlayerParty(
@@ -269,11 +277,11 @@ def build_game_state(save_data: GameStateDict) -> GameState:
     if save_data["enemy_party"]["_resource"] is not None:
         live_enemies: list[EnemyActor] = []
         for actor_data in save_data["enemy_party"]["_resource"]["members"]:
-            live_enemies.append(EnemyActor(**actor_data))
+            live_enemies.append(EnemyActor(EnemyProperties(**actor_data)))  # pyright: ignore[reportArgumentType]
 
         dead_enemies: list[EnemyActor] = []
         for actor_data in save_data["enemy_party"]["_resource"]["dead_members"]:
-            dead_enemies.append(EnemyActor(**actor_data))
+            dead_enemies.append(EnemyActor(EnemyProperties(**actor_data)))  # pyright: ignore[reportArgumentType]
         game_state.set_enemy_party(
             EnemyParty(
                 name=save_data["enemy_party"]["_resource"]["name"],

@@ -147,7 +147,7 @@ class EnemySet:
         else:
             enemy_party_name = f"{self.group_name} of {enemy_count} {self.plural_name}"
 
-        return EnemyParty(enemy_party_name, enemy_party_instances)
+        return EnemyParty(name=enemy_party_name, members=enemy_party_instances)
 
     def validate(self) -> bool:
         from RPyG.constructs import EnemyActor

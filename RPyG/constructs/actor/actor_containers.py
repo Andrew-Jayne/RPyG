@@ -1,3 +1,4 @@
+from dataclasses import dataclass, field
 from typing import Generic, TypeVar, override
 
 from RPyG.constructs.actor.actors import (
@@ -13,18 +14,14 @@ ActorType = TypeVar("ActorType", bound=Actor)
 CombatantType = TypeVar("CombatantType", bound=CombatantActor)
 
 
+@dataclass(kw_only=True, slots=True)
 class ActorParty(Generic[ActorType]):
     members: list[ActorType]
-    __slots__: tuple[str, ...] = ("members",)
 
     def __init__(
         self,
         members: list[ActorType],
     ) -> None:
-        ensure_type(members, list, "members")
-        for member in members:
-            ensure_type(member, Actor, "member")
-
         self.members = members
 
     def lose_member(self, member: ActorType) -> None:
@@ -33,12 +30,17 @@ class ActorParty(Generic[ActorType]):
     def gain_member(self, member: ActorType) -> None:
         self.members.append(member)
 
+    def __post_init__(self):
+        ensure_type(self.members, list, "members")
+        for member in self.members:
+            ensure_type(member, Actor, "member")
 
+
+@dataclass(kw_only=True, slots=True)
 class CombatantParty(ActorParty[CombatantType], Generic[CombatantType]):
     name: str
     members: list[CombatantType]
-    dead_members: list[CombatantType]
-    __slots__: tuple[str, ...] = ("name", "members", "dead_members")
+    dead_members: list[CombatantType] = field(default_factory=list)
 
     @classmethod
     def build(
@@ -47,33 +49,7 @@ class CombatantParty(ActorParty[CombatantType], Generic[CombatantType]):
         return CombatantParty[CombatantType](
             name=name,
             members=members,
-            dead_members=[],
         )
-
-    def __init__(
-        self,
-        name: str,
-        members: list[CombatantType],
-        dead_members: list[CombatantType],
-    ) -> None:
-        ensure_type(name, str, "name")
-        ensure_type(members, list, "members")
-        for party_member in members:
-            ensure_type(party_member, CombatantActor, "party_member")
-        for party_member in dead_members:
-            ensure_type(party_member, CombatantActor, "party_member")
-
-        if len(name) > 64:
-            raise ValueError(
-                "Combatant Party name may not be longer than 64 characters"
-            )
-
-        ## super() Must be used because of typing and use of generics
-        super().__init__(
-            members=members,
-        )
-        self.name = name
-        self.dead_members = dead_members
 
     @override
     def lose_member(self, member: CombatantType) -> None:
@@ -88,57 +64,56 @@ class CombatantParty(ActorParty[CombatantType], Generic[CombatantType]):
     def gain_member(self, member: CombatantType) -> None:
         self.members.append(member)
 
+    def __post_init__(self):
+        ensure_type(self.name, str, "name")
+        ensure_type(self.members, list, "members")
+        for party_member in self.members:
+            ensure_type(party_member, CombatantActor, "party_member")
+        for party_member in self.dead_members:
+            ensure_type(party_member, CombatantActor, "party_member")
 
+        if len(self.name) > 64:
+            raise ValueError(
+                "Combatant Party name may not be longer than 64 characters"
+            )
+        # Super Because of Generics Gymnastics
+        super().__post_init__()
+
+
+@dataclass(kw_only=True, slots=True)
 class EnemyParty(CombatantParty[EnemyActor]):
     members: list[EnemyActor]
-    dead_members: list[EnemyActor]
-    loot: object
-    __slots__: tuple[str, ...] = ("members", "dead_members", "loot")
+    dead_members: list[EnemyActor] = field(default_factory=list)
+    loot: object | None = None
 
-    def __init__(
-        self,
-        name: str,
-        members: list[EnemyActor],
-        dead_members: list[EnemyActor] = [],
-    ) -> None:
-        ensure_type(name, str, "name")
-        ensure_type(members, list, "members")
-        for party_member in members:
+    def __post_init__(self):
+        ensure_type(self.name, str, "name")
+        ensure_type(self.members, list, "members")
+        for party_member in self.members:
             ensure_type(party_member, EnemyActor, "party_member")
+        if self.loot is not None:
+            ensure_type(self.loot, object, "loot")
 
-        ## super() Must be used because of typing and use of generics
-        super().__init__(
-            name=name,
-            members=members,
-            dead_members=dead_members,
-        )
-
-        self.loot = None
+        # Super Because of Generics Gymnastics
+        super().__post_init__()
 
 
+@dataclass(kw_only=True, slots=True)
 class PlayerParty(CombatantParty[PlayableActor]):
     members: list[PlayableActor]
-    dead_members: list[PlayableActor]
-    relics: object
-    __slots__: tuple[str, ...] = ("members", "dead_members", "relics")
-    """
-    Stores the progress of the party, and a list/array of member instances
-    """
+    dead_members: list[PlayableActor] = field(default_factory=list)
+    relics: object | None = None
 
-    def __init__(
-        self,
-        name: str,
-        members: list[PlayableActor],
-        dead_members: list[PlayableActor] = [],
-    ) -> None:
-        ensure_type(name, str, "name")
-        ensure_type(members, list, "members")
-        for party_member in members:
+    def __post_init__(self):
+        ensure_type(self.name, str, "name")
+        ensure_type(self.members, list, "members")
+        for party_member in self.members:
             ensure_type(party_member, PlayableActor, "party_member")
+        if self.relics is not None:
+            ensure_type(self.relics, object, "loot")
 
-        ## super() Must be used because of typing and use of generics
-        super().__init__(name=name, members=members, dead_members=dead_members)
-        self.relics = None
+        # Super Because of Generics Gymnastics
+        super().__post_init__()
 
     def end_game_report(self) -> str:
         player_report = ""

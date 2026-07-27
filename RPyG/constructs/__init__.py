@@ -9,7 +9,9 @@ from RPyG.constructs.actor import (
     CombatantType,
     EnemyActor,
     EnemyParty,
+    EnemyProperties,
     PlayableActor,
+    PlayableActorProperties,
     PlayerParty,
 )
 from RPyG.constructs.data_types import ContentDataDict
@@ -45,4 +47,6 @@ __all__ = [
     "RandomResultItem",
     "RandomResultTable",
     "StoryEvent",
+    "PlayableActorProperties",
+    "EnemyProperties",
 ]

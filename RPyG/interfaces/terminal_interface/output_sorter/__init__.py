@@ -54,7 +54,6 @@ def output_message(output: output_models.OutputMessage) -> str:
                 return text_strings.battle_victory_string.format(
                     enemy_party_name=output.enemy_party_name
                 )
-            # player defeat ends the game; the recap is handled by GameEndMessage
             return ""
 
         case output_models.EnemyEncouterMessage():
@@ -98,11 +97,11 @@ def output_message(output: output_models.OutputMessage) -> str:
             return text_strings.travel_distance_string.format(distance=output.distance)
 
         case output_models.DungeonUpdateMessage():
-            # Dungeon event flavor text comes from the dungeon's toml content.
             return output.event.message
 
-        # Dungeon start/end, game end, and generic story/encounter text all come
-        # from toml content and are carried directly on the message field.
+        case output_models.GameEndMessage():
+            return output.post_game_recap
+
         case _:
             if output.message != "":
                 return output.message

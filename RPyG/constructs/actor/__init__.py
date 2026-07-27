@@ -10,7 +10,9 @@ from RPyG.constructs.actor.actors import (
     Actor,
     CombatantActor,
     EnemyActor,
+    EnemyProperties,
     PlayableActor,
+    PlayableActorProperties,
 )
 
 
@@ -25,4 +27,6 @@ __all__ = [
     "CombatantParty",
     "EnemyParty",
     "PlayerParty",
+    "EnemyProperties",
+    "PlayableActorProperties",
 ]

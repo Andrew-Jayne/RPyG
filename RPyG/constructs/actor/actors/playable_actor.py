@@ -1,8 +1,28 @@
 import random
+from dataclasses import dataclass
 
 from RPyG.constructs.actor.actor_components import Inventory
-from RPyG.constructs.actor.actors.combatant_actor import CombatantActor
+from RPyG.constructs.actor.actors.combatant_actor import (
+    CombatantActor,
+    CombatantProperies,
+)
 from RPyG.utilities import ensure_type
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class PlayableActorProperties(CombatantProperies):
+    inventory: Inventory
+    react_action: str
+    react_messages: dict[str, str]
+
+    def __post_init__(self):
+        ensure_type(self.inventory, Inventory, "inventory")
+        ensure_type(self.react_action, str, "react_action")
+        ensure_type(self.react_messages, dict, "react_messages")
+        for key, value in self.react_messages.items():
+            ensure_type(key, str, "key")
+            ensure_type(value, str, "value")
+        CombatantProperies.__post_init__(self)
 
 
 class PlayableActor(CombatantActor):
@@ -40,88 +60,41 @@ class PlayableActor(CombatantActor):
         react_messages = PlayableActor._get_react_action(specialization, name)
 
         player_health = (strength + intellect) * 10
-        return cls(
-            name=name,
-            specialization=specialization,
-            strength=strength,
-            intellect=intellect,
-            agility=agility,
-            luck=luck,
-            health=player_health,
-            base_health=player_health,
-            inventory=Inventory(
-                gold=strength * 25,
-                potions=int(intellect / 2),
-                actor_name=name,
-            ),
-            react_action=react_messages[0],
-            react_messages=react_messages[1],
-            attack_name=PlayableActor._get_attack_name(specialization),
-            attack_power=PlayableActor._get_attack_power(
-                specialization,
-                strength,
-                intellect,
-                agility,
-            ),
-            special_attack_name=PlayableActor._get_special_attack(specialization),
+        return PlayableActor(
+            properties=PlayableActorProperties(
+                name=name,
+                specialization=specialization,
+                strength=strength,
+                intellect=intellect,
+                agility=agility,
+                luck=luck,
+                health=player_health,
+                base_health=player_health,
+                inventory=Inventory(
+                    gold=strength * 25,
+                    potions=int(intellect / 2),
+                    actor_name=name,
+                ),
+                react_action=react_messages[0],
+                react_messages=react_messages[1],
+                attack_name=PlayableActor._get_attack_name(specialization),
+                attack_power=PlayableActor._get_attack_power(
+                    specialization,
+                    strength,
+                    intellect,
+                    agility,
+                ),
+                special_attack_name=PlayableActor._get_special_attack(specialization),
+                special_attack_energy=0,
+            )
         )
 
-    def __init__(
-        self,
-        name: str,
-        specialization: str,
-        strength: int,
-        intellect: int,
-        agility: int,
-        luck: int,
-        inventory: Inventory,
-        react_action: str,
-        react_messages: dict[str, str],
-        health: int,
-        base_health: int,
-        attack_name: str,
-        attack_power: int,
-        special_attack_name: str,
-        use_special_attack: bool = False,
-        will_react: bool = False,
-        is_dismembered: bool = False,
-        special_attack_energy: int = 0,
-    ) -> None:
-        ensure_type(name, str, "name")
-        ensure_type(specialization, str, "specialization")
-        ensure_type(strength, int, "strength")
-        ensure_type(intellect, int, "intellect")
-        ensure_type(agility, int, "agility")
-        ensure_type(luck, int, "luck")
-        ensure_type(inventory, Inventory, "inventory")
-        ensure_type(react_action, str, "react_action")
-        ensure_type(react_messages, dict, "react_messages")
-        for key, value in react_messages.items():
-            ensure_type(key, str, "key")
-            ensure_type(value, str, "value")
-        ensure_type(health, int, "health")
-        ensure_type(attack_name, str, "attack_name")
-        ensure_type(attack_power, int, "attack_power")
-        ensure_type(special_attack_name, str, "special_attack_name")
+    def __init__(self, properties: PlayableActorProperties) -> None:
+        self.react_action = properties.react_action
+        self.react_messages = properties.react_messages
+        self.inventory = properties.inventory
 
-        self.react_action = react_action
-        self.react_messages = react_messages
-        self.inventory = inventory
-
-        CombatantActor.__init__(
-            self,
-            name=name,
-            strength=strength,
-            intellect=intellect,
-            agility=agility,
-            luck=luck,
-            health=health,
-            base_health=base_health,
-            attack_name=attack_name,
-            attack_power=attack_power,
-            special_attack_name=special_attack_name,
-            specialization=specialization,
-        )
+        CombatantActor.__init__(self, properties=properties)
 
     def use_potion(self, ignore_fully_healed: bool = False) -> Inventory.PotionResult:
         from RPyG.core_io import CoreIO, output_models
