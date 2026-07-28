@@ -21,7 +21,7 @@ self_damage_str = "{source_actor_name} fails fails to evade an attack from {seco
 # Dismember Attack
 decapitate_string = "{source_actor_name} decapitates {target_actor_name} killing them instantly"
 dismember_string = "{source_actor_name} dismembers {target_actor_name}\n{target_actor_name}'s attack power has been reduced by 25%"
-no_valid_targets_strings = "All avalible enemies have been dismembered, select a target for a normal attack"
+no_valid_targets_strings = "All available enemies have been dismembered, select a target for a normal attack"
 
 # Actor Defeated
 actor_defeated_string = "{actor_name} has been defeated"

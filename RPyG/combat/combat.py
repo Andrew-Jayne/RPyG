@@ -69,7 +69,7 @@ def process_player_turn() -> None:
                         case player_instance.special_attack_name:
                             valid_choice = True
                             player_instance.special_attack(enemy_party)
-                            ## same as above, mutation during itteration causes undead enemies
+                            ## same as above, mutation during iteration causes undead enemies
                             for enemy_instance in enemy_party.members.copy():
                                 if enemy_instance.health == 0:
                                     enemy_party.lose_member(enemy_instance)
@@ -276,7 +276,7 @@ def battle() -> None:
         )
 
     # the previous condition was inverted to allow the final reference to the borrowed
-    # enemy party to be disposed of before reseting the instance
+    # enemy party to be disposed of before resetting the instance
     # the only place enemy party is reset, because death is a game reset (for now)
     game_state.reset_enemy_party()
     player_post_action = ""

@@ -59,11 +59,11 @@ class ContentLibrary:
     def build_encounters(
         encounters_data: dict[str, EncounterDataDict],
     ) -> dict[str, Encounter]:
-        all_encouters: dict[str, Encounter] = {}
+        all_encounters: dict[str, Encounter] = {}
         for key, value in encounters_data.items():
-            all_encouters[key] = Encounter(**value)
+            all_encounters[key] = Encounter(**value)
 
-        return all_encouters
+        return all_encounters
 
     @staticmethod
     def build_enemy_sets(
@@ -160,7 +160,7 @@ class ContentLibrary:
     def get_library(cls) -> "ContentLibrary":
         """
         Gateway style function to access the content library as a global singleton, you should not store the instance when init-ing
-        Rather use this funciton to inject access at the lowest needed scope
+        Rather use this function to inject access at the lowest needed scope
         """
         if ContentLibrary._instance is not None:
             return ContentLibrary._instance

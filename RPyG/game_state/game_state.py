@@ -166,7 +166,7 @@ class GameState:
         ensure_type(dungeon_instance, Dungeon, "dungeon_instance")
         self._dungeon.load_resource(dungeon_instance)
         # progress can only be set to a non None value by this function
-        # Helps avoid racy behavoir
+        # Helps avoid racy behavior
         self._dungeon_progress = 0
 
     def progress_dungeon(self, progress_amount: int) -> None:

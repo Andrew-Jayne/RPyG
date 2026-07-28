@@ -4,13 +4,13 @@ from dataclasses import dataclass
 from RPyG.constructs.actor.actor_components import Inventory
 from RPyG.constructs.actor.actors.combatant_actor import (
     CombatantActor,
-    CombatantProperies,
+    CombatantProperties,
 )
 from RPyG.utilities import ensure_type
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
-class PlayableActorProperties(CombatantProperies):
+class PlayableActorProperties(CombatantProperties):
     inventory: Inventory
     react_action: str
     react_messages: dict[str, str]
@@ -22,7 +22,7 @@ class PlayableActorProperties(CombatantProperies):
         for key, value in self.react_messages.items():
             ensure_type(key, str, "key")
             ensure_type(value, str, "value")
-        CombatantProperies.__post_init__(self)
+        CombatantProperties.__post_init__(self)
 
 
 class PlayableActor(CombatantActor):

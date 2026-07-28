@@ -1,8 +1,8 @@
 """
 A collection of TypedDicts to represent the structure of items
-used in the initialzation of the content library
+used in the initialization of the content library
 these are typed dicts not constructs, and should not be confused
-with the equivilant functional objects found in RPyG.constructs
+with the equivalent functional objects found in RPyG.constructs
 """
 
 from typing import TypedDict

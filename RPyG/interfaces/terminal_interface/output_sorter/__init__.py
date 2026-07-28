@@ -56,7 +56,7 @@ def output_message(output: output_models.OutputMessage) -> str:
                 )
             return ""
 
-        case output_models.EnemyEncouterMessage():
+        case output_models.EnemyEncounterMessage():
             return text_strings.enemy_encounter_string.format(
                 enemy_party_name=output.enemy_party_name
             )

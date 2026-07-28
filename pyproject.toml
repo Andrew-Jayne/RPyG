@@ -32,3 +32,8 @@ lines-after-imports = 2
 [tool.pyright]
 reportAny = false
 reportImportCycles = false
+
+[tool.typos]
+[tool.typos.default.extend-words]
+RPyG = "RPyG"
+Debina ="Debina" # Name Of A town

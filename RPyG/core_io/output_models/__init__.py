@@ -19,7 +19,7 @@ from RPyG.core_io.output_models.dungeon_models import (
     DungeonUpdateMessage,
 )
 from RPyG.core_io.output_models.encounter_models import (
-    EnemyEncouterMessage,
+    EnemyEncounterMessage,
     FleeResultMessage,
     GenericEncounterMessage,
     MerchantInteractionMessage,
@@ -60,7 +60,7 @@ __all__ = [
     "BattleHudData",
     "FleeResultMessage",
     "UseGoldMessage",
-    "EnemyEncouterMessage",
+    "EnemyEncounterMessage",
     "BattleStartMessage",
     "BattleUpdateMessage",
     "DungeonEndMessage",

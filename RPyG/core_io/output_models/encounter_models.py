@@ -9,7 +9,7 @@ class GenericEncounterMessage(OutputMessage):
 
 
 @dataclass(kw_only=True, frozen=True, slots=True)
-class EnemyEncouterMessage(OutputMessage):
+class EnemyEncounterMessage(OutputMessage):
     enemy_party_name: str
     message: str = ""
 

@@ -23,7 +23,7 @@ def generate_enemy_set(player_count: int) -> EnemyParty:
     ensure_type(player_count, int, "player_count")
     content_library = ContentLibrary.get_library()
 
-    # wholy Type hint batman!
+    # wholly Type hint batman!
     enemy_configs: list[RandomResultItem[tuple[list[EnemySet], int, int]]] = [
         RandomResultItem(
             (list(content_library.small_enemies.values()), -1, 3),
@@ -75,7 +75,7 @@ def handle_enemy_encounter():
     game_state.set_enemy_party(generate_enemy_set(len(game_state.player_party.members)))
     with game_state.borrow_enemy_party() as enemy_party:
         core_io.send_output(
-            output_models.EnemyEncouterMessage(enemy_party_name=enemy_party.name)
+            output_models.EnemyEncounterMessage(enemy_party_name=enemy_party.name)
         )
 
         core_io.request_str_input(
@@ -107,6 +107,6 @@ def handle_enemy_encounter():
 
     # this is way out here so the borrow on enemy party is
     # released before the battle starts, so the enemy party
-    # can be disposed of by the battle funciton itself
+    # can be disposed of by the battle function itself
     if flee_success is False:
         battle()

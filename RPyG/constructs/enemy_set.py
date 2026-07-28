@@ -38,7 +38,7 @@ class EnemySet:
     weight_class: EnemyWeightClass
     enemy_ids: list[str]
     key_enemy_id: str | None
-    ## __slots__ cannot be used because cached_proptery uses __dict__
+    ## __slots__ cannot be used because cached_property uses __dict__
 
     def __init__(
         self,

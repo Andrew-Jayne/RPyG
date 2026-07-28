@@ -1,4 +1,4 @@
-Set 3 Archtypes for attack
+Set 3 Archetypes for attack
 
 Melee
 Ranged
@@ -17,9 +17,9 @@ Magic users must use a turn, but can use it to cast "elude" on any one in their 
 
 Magic users can also heal themselves or others without potions
 
-Buff Magic Damange and AOE, Mage becomes glass cannon
+Buff Magic Damage and AOE, Mage becomes glass cannon
 
-Warrior becomes more of a tank (option for greatsword (boosted damage by 50% but a malus to defense of 50%), sword and shield (balanced), or spears and sheild [option for ranged attack + melee at a 25% cost to damage output])
+Warrior becomes more of a tank (option for greatsword (boosted damage by 50% but a malus to defense of 50%), sword and shield (balanced), or spears and shield [option for ranged attack + melee at a 25% cost to damage output])
 
 Mixed Psysical attackers (like a rogue) can use both ranged and melee attacks, (bow, daggers, shortsword) and can mix attacks on double strike
 
@@ -33,11 +33,11 @@ Dire wolves can use double attack and dismember, but do not get a ranged attack
 
 Trolls get a melee (club smash) and a ranged (boulder throw) but don't get dismember because their Int is too low for a special
 
-Imp/goblins would get melee + ranged, and get double strike but not dismember (Stregth to low)
+Imp/goblins would get melee + ranged, and get double strike but not dismember (Strength to low)
 
 Demons get Melee + Magic and get dismember + AOE
 
-Need to build a matix of what stats give what specials as an option and then give a way to set the name for those specails
+Need to build a matrix of what stats give what specials as an option and then give a way to set the name for those specails
 
 also need to have a way to determine the base 3 grades of char
 
@@ -83,11 +83,11 @@ Attack availability determined by stats:
 
 
 
-also want to add elementals to magic use (frost will reduce atk after 3 attacks, or 5% chance to freeze, persistent burning damange (10 per turn for 3 turns), elctric (15% chance to paralize?))
+also want to add elementals to magic use (frost will reduce atk after 3 attacks, or 5% chance to freeze, persistent burning damage (10 per turn for 3 turns), electric (15% chance to paralize?))
 
-add more flavor to melee and ranged attacks (heavy/ light wepons)(consumables?)
+add more flavor to melee and ranged attacks (heavy/ light weapons)(consumables?)
 
-want to add resistences.
+want to add resistances.
 
 Add human actors have the option to have potions and gold?
 
@@ -102,7 +102,7 @@ add leveling system based on damage taken and damage dealt
   - Create resistances based on character specialization 
     - higher INT provides more magic resistance
     - lower STR increases vulnerability to melee damage
-  - Introduce hybrid attacks with customizable splits (e.g., a magic sword attack with a 60/40 split between magic and melee). (most likely need to bring back a modified verison of the skill system to select attack?)
+  - Introduce hybrid attacks with customizable splits (e.g., a magic sword attack with a 60/40 split between magic and melee). (most likely need to bring back a modified version of the skill system to select attack?)
 
 - **Expanded Combat Mechanics:**
   - Add persistent effects (e.g., lingering damage, healing spells, defense buffs).

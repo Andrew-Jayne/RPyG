@@ -14,7 +14,7 @@ if TYPE_CHECKING is True:
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
-class CombatantProperies(ActorProperties):
+class CombatantProperties(ActorProperties):
     health: int
     base_health: int
     attack_name: str
@@ -70,7 +70,7 @@ class CombatantActor(Actor):
         "is_dismembered",
     )
 
-    def __init__(self, properties: CombatantProperies) -> None:
+    def __init__(self, properties: CombatantProperties) -> None:
         Actor.__init__(self=self, properties=properties)
 
         self.health = properties.health

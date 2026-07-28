@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 from RPyG.constructs.actor.actors.combatant_actor import (
     CombatantActor,
-    CombatantProperies,
+    CombatantProperties,
 )
 from RPyG.utilities import ensure_type
 
@@ -13,7 +13,7 @@ if TYPE_CHECKING is True:
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
-class EnemyProperties(CombatantProperies):
+class EnemyProperties(CombatantProperties):
     kind: str
     is_special: bool
     variant_grade: EnemyVariantGrade
@@ -24,7 +24,7 @@ class EnemyProperties(CombatantProperies):
         ensure_type(self.kind, str, "kind")
         ensure_type(self.is_special, bool, "is_special")
         ensure_type(self.variant_grade, EnemyVariantGrade, "variant_grade")
-        CombatantProperies.__post_init__(self)
+        CombatantProperties.__post_init__(self)
 
 
 class EnemyActor(CombatantActor):
