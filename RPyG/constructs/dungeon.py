@@ -168,8 +168,8 @@ class Dungeon:
             )
             game_state.set_enemy_party(
                 EnemyParty(
-                    self.boss.name,
-                    [self.boss],
+                    name=self.boss.name,
+                    members=[self.boss],
                 )
             )
             combat.battle()

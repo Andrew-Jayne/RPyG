@@ -104,6 +104,7 @@ class BorrowTrackedDungeonDict(TypedDict):
 
 class GameStateDict(TypedDict):
     player_party: PlayerPartyDict
+    rounds_without_encounter: int
     progress: int
     dungeon_progress: int | None
     enemy_party: BorrowTrackedEnemyPartyDict
@@ -267,6 +268,7 @@ def build_game_state(save_data: GameStateDict) -> GameState:
             members=live_players,
             dead_members=dead_players,
         ),
+        rounds_without_encounter=save_data["rounds_without_encounter"],
         progress=save_data["progress"],
         dungeon_progress=save_data["dungeon_progress"],
         dungeon=BorrowTrackedResource(Dungeon),
@@ -333,6 +335,7 @@ class JsonGameStateHandler(GameStateHandler):
         return {
             "player_party": dump_player_party(game_state.player_party),
             "progress": game_state.progress,
+            "rounds_without_encounter": game_state.rounds_without_encounter,
             "dungeon_progress": game_state._dungeon_progress,  # pyright: ignore[reportPrivateUsage]
             "dungeon": dump_borrow_tracked_resource(game_state._dungeon),  # pyright: ignore[reportPrivateUsage]
             "enemy_party": dump_borrow_tracked_resource(game_state._enemy_party),  # pyright: ignore[reportPrivateUsage]

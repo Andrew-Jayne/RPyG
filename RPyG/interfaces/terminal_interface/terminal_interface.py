@@ -78,6 +78,7 @@ class BasicTerminalInterface(RPyGInterface):
 
         # Print the final wrapped message, removing the last added newline and adding the custom ending
         time.sleep(1)
+        # this is the only print in the codebase we allow
         print(wrapped_message.rstrip("\n"), end=ending)
 
     @override

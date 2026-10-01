@@ -1,0 +1,6 @@
+# Input requests need to carry some data about their intent
+because they are all generic and that makes it impossible to parse what the game is asking for
+
+
+RPyG.core_io.output_models.dungeon_models.DungeonStartMessage
+RPyG.core_io.output_models.combat_models.BattleStartMessage

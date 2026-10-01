@@ -1,3 +1,5 @@
+from logging import getLogger
+
 from RPyG.core_io import output_models
 
 from .. import text_strings
@@ -5,7 +7,11 @@ from .batle_update_sorter import output_battle_update
 from .hud_builder import output_hud_data
 
 
+logger = getLogger(__name__)
+
+
 def output_message(output: output_models.OutputMessage) -> str:
+    logger.info("Got Message Type: %s", {type(output)})
     match output:
         case output_models.BattleUpdateMessage():
             return output_battle_update(output.event)
@@ -31,15 +37,17 @@ def output_message(output: output_models.OutputMessage) -> str:
             return text_strings.no_potions_string.format(actor_name=output.actor_name)
 
         case output_models.UseGoldMessage():
-            if isinstance(output.event, output_models.UseGoldMessage.NoGoldEvent):
-                return text_strings.no_gold_string.format(actor_name=output.actor_name)
-            if isinstance(
-                output.event, output_models.UseGoldMessage.InsufficientGoldEvent
-            ):
-                return text_strings.insufficient_gold_string.format(
-                    actor_name=output.actor_name
-                )
-            return ""
+            match output.event:
+                case output_models.UseGoldMessage.NoGoldEvent():
+                    return text_strings.no_gold_string.format(
+                        actor_name=output.actor_name
+                    )
+                case output_models.UseGoldMessage.InsufficientGoldEvent():
+                    return text_strings.insufficient_gold_string.format(
+                        actor_name=output.actor_name
+                    )
+                case _:
+                    return ""
 
         case output_models.ActorDefeatedMessage():
             return text_strings.actor_defeated_string.format(

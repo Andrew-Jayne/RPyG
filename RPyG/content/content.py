@@ -1,5 +1,4 @@
 import random
-from collections.abc import Mapping
 from enum import Enum
 from functools import cached_property
 from typing import final
@@ -38,7 +37,7 @@ class ContentKind(Enum):
 class ContentLibrary:
     enemies: dict[str, EnemyActor]
     enemy_sets: dict[str, EnemySet]
-    story_events: dict[str, StoryEvent]
+    story_events: dict[int, StoryEvent]  # this is the only content dict that uses int
     encounters: dict[str, Encounter]
     encounter_effects: dict[str, EncounterEffect]
     dungeons: dict[str, Dungeon]
@@ -46,9 +45,9 @@ class ContentLibrary:
 
     @staticmethod
     def build_story_events(
-        story_events_data: dict[str, StoryEventDataDict],
-    ) -> dict[str, StoryEvent]:
-        all_events: dict[str, StoryEvent] = {}
+        story_events_data: dict[int, StoryEventDataDict],
+    ) -> dict[int, StoryEvent]:
+        all_events: dict[int, StoryEvent] = {}
         for value in story_events_data.values():
             event = StoryEvent(**value)
             all_events[event.progress_trigger] = event
@@ -107,7 +106,7 @@ class ContentLibrary:
             enemy_sets_data: dict[str, EnemySetDataDict] = dict()
             dungeons_data: dict[str, DungeonDataDict] = dict()
             encounters_data: dict[str, EncounterDataDict] = dict()
-            story_events_data: dict[str, StoryEventDataDict] = dict()
+            story_events_data: dict[int, StoryEventDataDict] = dict()
             encounter_effects_data: dict[str, EncounterEffectDataDict] = dict()
 
             for item, value in content_data.items():
@@ -172,25 +171,14 @@ class ContentLibrary:
     @classmethod
     def validate_content(cls) -> None:
         library = ContentLibrary.get_library()
-        content_listings: list[
-            Mapping[
-                str,
-                StoryEvent
-                | Encounter
-                | EnemyActor
-                | EnemySet
-                | Dungeon
-                | EncounterEffect,
-            ]
-        ] = [
+        for content_listing in [
             library.story_events,
             library.encounters,
             library.enemies,
             library.enemy_sets,
             library.dungeons,
             library.encounter_effects,
-        ]
-        for content_listing in content_listings:
+        ]:
             for content_id, content_object in content_listing.items():
                 if content_object.validate() is False:
                     raise RuntimeError(f"{content_id} failed to validate")
@@ -243,7 +231,7 @@ class ContentLibrary:
     @staticmethod
     def get_standard_encounter() -> Encounter:
         library = ContentLibrary.get_library()
-        return random.choice(list(library.standard_encounters.values()))
+        return random.choice(tuple(library.standard_encounters.values()))
 
     @staticmethod
     def get_standard_dungeon() -> Dungeon:
@@ -255,3 +243,13 @@ class ContentLibrary:
             dungeon = random.choice(all_dungeons)
 
         return dungeon
+
+    def total_items(self) -> int:
+        return (
+            len(self.enemies)
+            + len(self.enemy_sets)
+            + len(self.story_events)
+            + len(self.encounters)
+            + len(self.encounter_effects)
+            + len(self.dungeons)
+        )

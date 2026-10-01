@@ -20,6 +20,7 @@ if TYPE_CHECKING is True:
 class GameState:
     player_party: PlayerParty
     progress: int
+    rounds_without_encounter: int
     _dungeon_progress: int | None
     _enemy_party: BorrowTrackedResource[EnemyParty]
     _dungeon: BorrowTrackedResource[Dungeon]
@@ -30,6 +31,7 @@ class GameState:
         "_dungeon",
         "progress",
         "_dungeon_progress",
+        "rounds_without_encounter",
     )
 
     @classmethod
@@ -40,6 +42,7 @@ class GameState:
         return GameState(
             player_party=player_party,
             progress=0,
+            rounds_without_encounter=0,
             dungeon_progress=None,
             enemy_party=BorrowTrackedResource(EnemyParty),
             dungeon=BorrowTrackedResource(Dungeon),
@@ -49,6 +52,7 @@ class GameState:
         self,
         player_party: PlayerParty,
         progress: int,
+        rounds_without_encounter: int,
         dungeon_progress: int | None,
         enemy_party: BorrowTrackedResource[EnemyParty],
         dungeon: BorrowTrackedResource[Dungeon],
@@ -58,6 +62,7 @@ class GameState:
             GameState._instance = self
             self.player_party = player_party
             self.progress = progress
+            self.rounds_without_encounter = rounds_without_encounter
             self._dungeon_progress = dungeon_progress
             self._enemy_party = enemy_party
             self._dungeon = dungeon
@@ -81,65 +86,54 @@ class GameState:
 
     # core loop of the whole game
     def play_game(self):
-        from RPyG.constructs import StoryEvent
         from RPyG.content import ContentLibrary
         from RPyG.core_io import CoreIO, output_models
-        from RPyG.game_state import GameState
 
         core_io = CoreIO.get_core_io()
-        game_state = GameState.get_game_state()
         content_library = ContentLibrary.get_library()
 
         # Check if player is in a dungeon
         if self.dungeon_progress is not None:
             with self.borrow_dungeon() as dungeon:
                 dungeon.traverse_dungeon()
-            game_state.reset_dungeon()
-        else:
-            pass
+            self.reset_dungeon()
 
-        rounds_without_encounter = 1
+        self.rounds_without_encounter = 1
         while self.progress != 100:
             self.progress += 1
-            if str(self.progress) in content_library.story_events.keys():
+            if self.progress in content_library.story_events.keys():
                 core_io.send_output(
                     output_models.EventAfterEmptyMessage(
-                        distance=rounds_without_encounter
+                        distance=self.rounds_without_encounter
                     )
                 )
-                story_event: StoryEvent = content_library.story_events[
-                    str(self.progress)
-                ]
-                story_event.trigger()
+                content_library.story_events[self.progress].trigger()
             else:
-                check_result = check_for_encounter()
-                if check_result is not None:
+                encounter_type = check_for_encounter()
+                if encounter_type is None:
+                    self.rounds_without_encounter += 1
                     core_io.send_output(
-                        output_models.EventAfterEmptyMessage(
-                            distance=rounds_without_encounter
+                        output_models.EmptyDistanceMessage(
+                            distance=self.rounds_without_encounter
                         )
                     )
-                    match check_result:
+                else:
+                    core_io.send_output(
+                        output_models.EventAfterEmptyMessage(
+                            distance=self.rounds_without_encounter
+                        )
+                    )
+                    match encounter_type:
                         case EncounterType.EnemyEncounter:
                             handle_enemy_encounter()
                         case EncounterType.StandardEncounter:
-                            encounter = content_library.get_standard_encounter()
-                            encounter.process_encounter()
+                            content_library.get_standard_encounter().process_encounter()
                         case EncounterType.DungeonEncounter:
-                            game_state.set_dungeon(
-                                content_library.get_standard_dungeon()
-                            )
-                            with game_state.borrow_dungeon() as dungeon:
+                            self.set_dungeon(content_library.get_standard_dungeon())
+                            with self.borrow_dungeon() as dungeon:
                                 dungeon.traverse_dungeon()
-                            game_state.reset_dungeon()
-                    rounds_without_encounter = 1
-                else:
-                    rounds_without_encounter += 1
-                    core_io.send_output(
-                        output_models.EmptyDistanceMessage(
-                            distance=rounds_without_encounter
-                        )
-                    )
+                            self.reset_dungeon()
+                    self.rounds_without_encounter = 1
 
             if self.player_party.members == []:
                 break

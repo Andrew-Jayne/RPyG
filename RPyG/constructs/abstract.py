@@ -1,5 +1,5 @@
 import random
-from collections.abc import Generator
+from collections.abc import Generator, Iterable
 from contextlib import contextmanager
 from dataclasses import dataclass
 
@@ -14,11 +14,11 @@ class RandomResultItem[ResultType]:
 
 @dataclass
 class RandomResultTable[TableResultType]:
-    options: list[RandomResultItem[TableResultType]]
+    options: Iterable[RandomResultItem[TableResultType]]
 
     def generate_result(self) -> TableResultType:
-        results: list[TableResultType] = list()
-        weights: list[float] = list()
+        results: Iterable[TableResultType] = list()
+        weights: Iterable[float] = list()
 
         for item in self.options:
             results.append(item.result)

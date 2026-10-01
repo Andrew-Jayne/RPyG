@@ -1,8 +1,12 @@
 import random
 from enum import Enum
+from logging import getLogger
 from typing import TYPE_CHECKING
 
 from RPyG.utilities import ensure_type
+
+
+logger = getLogger(__name__)
 
 
 if TYPE_CHECKING is True:
@@ -24,38 +28,32 @@ def generate_enemy_set(player_count: int) -> EnemyParty:
     content_library = ContentLibrary.get_library()
 
     # wholly Type hint batman!
-    enemy_configs: list[RandomResultItem[tuple[list[EnemySet], int, int]]] = [
-        RandomResultItem(
-            (list(content_library.small_enemies.values()), -1, 3),
-            0.4,
-        ),
-        RandomResultItem(
-            (list(content_library.medium_enemies.values()), -1, 3),
-            0.4,
-        ),
-        RandomResultItem(
-            (list(content_library.large_enemies.values()), -2, 1),
-            0.2,
-        ),
-    ]
+    # we kwarg here because of way to0 many () closures
+    # fmt: off
+    enemy_configs: tuple[RandomResultItem[tuple[tuple[EnemySet, ...], int, int]], ...] = (
+        RandomResultItem(result=(tuple(content_library.small_enemies.values()),  -1, 3), weight=0.4),
+        RandomResultItem(result=(tuple(content_library.medium_enemies.values()), -1, 3), weight=0.4),
+        RandomResultItem(result=(tuple(content_library.large_enemies.values()),  -2, 1), weight=0.2),
+    )
+    #fmt on
 
-    enemy_table = RandomResultTable(enemy_configs)
+    # ok so this intakes the tuples above
+    # then spits out a tuple containing the enemy list, and min & max counts 
+    # this is a result table of tuples of lists and counts, wtf lol
+    enemy_set, min, max = RandomResultTable(enemy_configs).generate_result()
+    logger.info(f"selecting enemies from list: %s", enemy_set[0].weight_class)
 
-    enemy_list, offset_min, offset_max = enemy_table.generate_result()
-
-    enemy_count = player_count + random.randint(offset_min, offset_max)
+    enemy_count = player_count + random.randint(min, max)
     if enemy_count <= 0:
         enemy_count = 1
 
-    enemy_set = random.choice(enemy_list)
-
-    return EnemySet.generate_enemy_party(enemy_set, enemy_count)
+    return EnemySet.generate_enemy_party(random.choice(enemy_set), enemy_count)
 
 
 def check_for_encounter() -> EncounterType | None:
     from RPyG.constructs import RandomResultItem, RandomResultTable
 
-    return RandomResultTable[EncounterType | None](
+    result = RandomResultTable[EncounterType | None](
         [
             RandomResultItem(EncounterType.EnemyEncounter, (1 / 8)),
             RandomResultItem(EncounterType.StandardEncounter, (1 / 4)),
@@ -63,6 +61,10 @@ def check_for_encounter() -> EncounterType | None:
             RandomResultItem(None, (5 / 8)),
         ]
     ).generate_result()
+
+    logger.info("check for encounter got result %s", result)
+
+    return result
 
 
 def handle_enemy_encounter():
@@ -77,14 +79,13 @@ def handle_enemy_encounter():
         core_io.send_output(
             output_models.EnemyEncounterMessage(enemy_party_name=enemy_party.name)
         )
+        flee_success = False
 
         core_io.request_str_input(
             input_models.UserPromptRequest(
-                options=["BATTLE", "FLEE"],
-                prompts=["Choose an Action:"],
+                options=["BATTLE", "FLEE"], prompts=["Choose an Action:"]
             )
         )
-        flee_success = False
         match core_io.receive_str_input():
             case "BATTLE":
                 pass
@@ -105,8 +106,7 @@ def handle_enemy_encounter():
             case _:
                 raise RuntimeError()
 
-    # this is way out here so the borrow on enemy party is
-    # released before the battle starts, so the enemy party
-    # can be disposed of by the battle function itself
+    # this is way out here so the borrow on enemy party is not held by the code above before the battle starts
+    # so the enemy party can be disposed of by the battle function itself
     if flee_success is False:
         battle()

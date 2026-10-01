@@ -1,5 +1,5 @@
 [project]
-name = "rpyg"
+name = "RPyG"
 version = "3.0.0"
 requires-python = ">=3.14"
 
@@ -11,9 +11,12 @@ build-backend = "hatchling.build"
 rpyg = "RPyG.launch:launch_game"
 
 [tool.ruff]
-line-length = 88
-target-version = "py313"
-exclude = [".venv", ".git", "__pycache__"]
+target-version = "py314"
+line-length = 88 # 88 for formatting: 120 for comments, doc strings, etc
+exclude = [".venv", ".git", "__pycache__",]
+
+[tool.ruff.lint.pycodestyle]
+max-line-length = 120
 
 [tool.ruff.format]
 quote-style = "double"

@@ -1,4 +1,4 @@
-from RPyG.launch import launch_game
+import RPyG
 
 
-launch_game()
+RPyG.launch_game()
