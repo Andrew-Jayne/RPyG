@@ -1,6 +1,3 @@
-from typing import override
-
-
 def ensure_type(
     instance: object,
     expected_type: type,

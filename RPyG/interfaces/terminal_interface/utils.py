@@ -124,12 +124,14 @@ def party_start() -> GameState:
 
 
 def clear_display() -> None:
+    import subprocess
+
     # For Windows
     if os.name == "nt":
-        os.system("cls")  # pyright: ignore[reportUnusedCallResult]
+        subprocess.call("cls")  # pyright: ignore[reportUnusedCallResult]
     # For macOS and Linux
     else:
-        os.system('clear && printf "\\e[3J"')  # pyright: ignore[reportUnusedCallResult]
+        subprocess.call('clear && printf "\\e[3J"')  # pyright: ignore[reportUnusedCallResult]
 
 
 def validate_input(choice_list: list[int]) -> int:
